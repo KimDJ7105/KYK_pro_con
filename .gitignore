@@ -40,9 +40,13 @@ bld/
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
-# Visual Studio packagr directory
+# Visual Studio package directory
 /김동재(서버)/Asio server 연습/server/packages
 /김동재(서버)/Asio server 연습/client/packages
+
+# External Library File (Over 100MB)
+양정우(클라이언트)/DirectX12/Game/Library/Include/FBX
+양정우(클라이언트)/DirectX12/Game/Library/Lib/FBX
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
