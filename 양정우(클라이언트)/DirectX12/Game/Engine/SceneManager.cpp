@@ -504,6 +504,24 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}*/
 #pragma endregion
+
+#pragma region FBX Player
+	{
+		/*shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Animation\\Player.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Player");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			scene->AddGameObject(gameObject);
+			gameObject->AddComponent(make_shared<TestDragon>());
+		}*/
+	}
+#pragma endregion
 	CreateMap(0.f, 0.f, 0.f);
 	CreateAisle(0.f, 0.f, 210.f);
 
