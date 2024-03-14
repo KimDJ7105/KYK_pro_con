@@ -488,7 +488,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region FBX Dragon
-	/*{
+	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
@@ -502,7 +502,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<TestDragon>());
 		}
-	}*/
+	}
 #pragma endregion
 
 #pragma region FBX Player
@@ -522,8 +522,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}*/
 	}
 #pragma endregion
-	CreateMap(0.f, 0.f, 0.f);
-	CreateAisle(0.f, 0.f, 210.f);
+	//CreateMap(0.f, 0.f, 0.f);
+	//CreateAisle(0.f, 0.f, 210.f);
 
 	return scene;
 }
