@@ -355,11 +355,11 @@ void FBXLoader::CreateMaterials()
 					material->SetTexture(2, specularTexture);
 			}
 
-			// 하나의 모델로 여러개를 하고싶어요
-			material->SetInt(0, 0);
+			// 하나의 모델로 여러개를 하고싶어요(0, 1
+			//material->SetInt(0, 1);
 
 			// 하나만 하고싶을때는 0, 0
-			//material->SetInt(0, 0);
+			material->SetInt(0, 0);
 
 			GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
 		}

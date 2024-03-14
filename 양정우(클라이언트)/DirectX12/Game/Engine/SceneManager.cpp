@@ -489,7 +489,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Dragon
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
+		/*shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -501,7 +501,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<TestDragon>());
-		}
+		}*/
 	}
 #pragma endregion
 
@@ -524,6 +524,67 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 	//CreateMap(0.f, 0.f, 0.f);
 	//CreateAisle(0.f, 0.f, 210.f);
+
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			material = gameObject->GetMeshRenderer()->GetMaterial();
+			material->SetInt(0, 1);
+			gameObject->GetMeshRenderer()->SetMaterial(material);
+			//FBXLoader Line358
+			scene->AddGameObject(gameObject);
+		}
+	} {
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(10.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			material = gameObject->GetMeshRenderer()->GetMaterial();
+			material->SetInt(0, 1);
+			gameObject->GetMeshRenderer()->SetMaterial(material);
+			scene->AddGameObject(gameObject);
+		}
+	} {
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(20.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			material = gameObject->GetMeshRenderer()->GetMaterial();
+			material->SetInt(0, 1);
+			gameObject->GetMeshRenderer()->SetMaterial(material);
+			scene->AddGameObject(gameObject);
+		}
+	}
+
 
 	return scene;
 }
@@ -699,6 +760,8 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ)
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
+		shared_ptr<Material> material;
+
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetName(L"Floor");
@@ -707,6 +770,8 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ)
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			scene->AddGameObject(gameObject);
+			//material = gameObject->GetMeshRenderer()->GetMaterial();
+			//material->SetInt()
 		}
 	}
 	//GATE------------------------------------
