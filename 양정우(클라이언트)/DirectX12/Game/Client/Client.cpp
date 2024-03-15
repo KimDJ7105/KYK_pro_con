@@ -13,8 +13,8 @@ Game* _game;
 // 윈도우 실행시 어떤식으로 동작할지
 enum
 {
-    WINDOW_WIDTH = 1280,
-    WINDOW_HEIGHT = 800,
+    WINDOW_WIDTH = 800,
+    WINDOW_HEIGHT = 600,
     IS_WINDOW_MODE = true
 };
 
