@@ -527,19 +527,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		for (int i = 0; i < 4; i++)
 		{
 			CreateAisle(j * 400.f, 0.f, 200.f + i * 400.f);
+			CreateAisle2(200.f + i * 400.f, 0.f, j * 400.f);
 		}
-	}
-	
-
-	for (int j = 0; j < 5; j++)
-	{
 		for (int i = 0; i < 5; i++)
 		{
 			CreateMap(j * 400.f, 0.f, i * 400.f);
 		}
 	}
-	
-
 
 	return scene;
 }
@@ -680,6 +674,101 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ)
 	}
 	
 	
+#pragma endregion
+
+
+}
+
+void SceneManager::CreateAisle2(float aisleX, float aisleY, float aisleZ)
+{
+
+#pragma region Aisle
+	Vec3 aislePosition = Vec3(aisleX, aisleY, aisleZ);	// 0, 0, 210
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeiling.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleCeiling");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeilingPipe.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleCeilingPipe");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleFloor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleFloor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AislePipe.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AislePipe");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(aislePosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 3.14f + 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleWall.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AisleWall");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(aislePosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 3.14f + 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+
+
 #pragma endregion
 
 

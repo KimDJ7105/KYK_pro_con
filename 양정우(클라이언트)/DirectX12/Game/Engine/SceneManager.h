@@ -49,6 +49,7 @@ public:
 	void ChangeObjectLocation(int object_id, float x, float y, float z, float direction);
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ);
+	void CreateAisle2(float aisleX, float aisleY, float aisleZ);
 	void CreateMap(float mapX, float mapY, float mapZ);
 };
 
