@@ -235,7 +235,7 @@ void FBXLoader::GetUV(FbxMesh* mesh, FbxMeshInfo* meshInfo, int32 idx, int32 uvI
 {
 	FbxVector2 uv = mesh->GetElementUV()->GetDirectArray().GetAt(uvIndex);
 	meshInfo->vertices[idx].uv.x = static_cast<float>(uv.mData[0]);
-	meshInfo->vertices[idx].uv.y = 1.f - static_cast<float>(uv.mData[1]);
+	meshInfo->vertices[idx].uv.y = 1.0f - static_cast<float>(uv.mData[1]);
 }
 
 Vec4 FBXLoader::GetMaterialData(FbxSurfaceMaterial* surface, const char* materialName, const char* factorName)
@@ -354,6 +354,12 @@ void FBXLoader::CreateMaterials()
 				if (specularTexture)
 					material->SetTexture(2, specularTexture);
 			}
+
+			// 하나의 모델로 여러개를 하고싶어요(0, 1)
+			material->SetInt(0, 1);
+
+			// 하나만 하고싶을때는 0, 0
+			//material->SetInt(0, 0);
 
 			GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
 		}
