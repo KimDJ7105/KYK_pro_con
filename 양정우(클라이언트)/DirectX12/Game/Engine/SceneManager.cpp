@@ -781,27 +781,44 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ)
 	Vec3 mapPosition = Vec3(mapX, mapY, mapZ); //0, 0, 0
 
 	//FLOOR------------------------------------
-	for (int i = 0; i < 2; i++)
 	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
 		{
-			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(mapPosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+			//material = gameObject->GetMeshRenderer()->GetMaterial();
+			//material->SetInt(0, 1);
+			//gameObject->GetMeshRenderer()->SetMaterial(material);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
 
-			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-			shared_ptr<Material> material;
+		shared_ptr<Material> material;
 
-			for (auto& gameObject : gameObjects)
-			{
-				gameObject->SetName(L"Floor");
-				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(mapPosition);
-				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-				gameObject->GetTransform()->SetLocalRotation(Vec3(i * 3.14f, 0.f, 0.f));
-				scene->AddGameObject(gameObject);
-				//material = gameObject->GetMeshRenderer()->GetMaterial();
-				//material->SetInt(0, 1);
-				//gameObject->GetMeshRenderer()->SetMaterial(material);
-			}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(mapPosition.x, mapPosition.y + 250.f, mapPosition.z));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(3.14f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+			//material = gameObject->GetMeshRenderer()->GetMaterial();
+			//material->SetInt(0, 1);
+			//gameObject->GetMeshRenderer()->SetMaterial(material);
 		}
 	}
 	
