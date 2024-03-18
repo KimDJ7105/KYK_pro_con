@@ -147,23 +147,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region ComputeShader
-	{
-		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
-
-		// UAV 용 Texture 생성
-		shared_ptr<Texture> texture = GET_SINGLE(Resources)->CreateTexture(L"UAVTexture",
-			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024,
-			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE,
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
-
-		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"ComputeShader");
-		material->SetShader(shader);
-		material->SetInt(0, 1);
-		GEngine->GetComputeDescHeap()->SetUAV(texture->GetUAVHandle(), UAV_REGISTER::u0);
-
-		// 쓰레드 그룹 (1 * 1024 * 1)
-		material->Dispatch(1, 1024, 1);
-	}
+	//AddComputeShader(1, 1024, 1);
 #pragma endregion
 
 	//shared_ptr<Scene> scene = make_shared<Scene>(); 전역으로 올림 왜? 변수 쓸라고
@@ -216,16 +200,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			meshRenderer->SetMesh(sphereMesh);
 		}
 		{
-			/*원래 쓰던거
-			shared_ptr<Shader> shader = make_shared<Shader>();
-			shader->Init(L"..\\Resources\\Shader\\skybox.hlsl",
-				{ RASTERIZER_TYPE::CULL_NONE, DEPTH_STENCIL_TYPE::LESS_EQUAL });
-				*/
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
 
-			/*원래 쓰던거
-			shared_ptr<Texture> texture = make_shared<Texture>();
-			texture->Init(L"..\\Resources\\Texture\\Sky01.jpg");*/
 			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\Sky01.jpg");
 
 			shared_ptr<Material> material = make_shared<Material>();
@@ -489,7 +465,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Dragon
 	{
-		/*shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -501,7 +477,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<TestDragon>());
-		}*/
+		}
 	}
 #pragma endregion
 
@@ -537,15 +513,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}*/
 #pragma endregion
-	
-#pragma region OneMap
-	CreateAisle(0.f, 0.f, 200.f);
-	CreateAisle2(200.f, 0.f, 0.f);
-	CreateMap(0.f, 0.f, 0.f);
-
-#pragma endregion
-
-	
 
 	return scene;
 }
@@ -963,3 +930,23 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ)
 
 }
 
+void SceneManager::AddComputeShader(int threadX, int threadY, int threadZ)
+{
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
+
+		// UAV 용 Texture 생성
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->CreateTexture(L"UAVTexture",
+			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE,
+			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+
+		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"ComputeShader");
+		material->SetShader(shader);
+		material->SetInt(0, 1);
+		GEngine->GetComputeDescHeap()->SetUAV(texture->GetUAVHandle(), UAV_REGISTER::u0);
+
+		// 쓰레드 그룹 (1 * 1024 * 1)
+		material->Dispatch(threadX, threadY, threadZ);
+	}
+}

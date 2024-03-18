@@ -31,7 +31,6 @@ public:
 
 private:
 	shared_ptr<Scene> LoadTestScene();
-	shared_ptr<Scene> LoadOtherScene();
 
 private:
 	shared_ptr<Scene> _activeScene;
@@ -52,5 +51,7 @@ public:
 	void CreateAisle(float aisleX, float aisleY, float aisleZ);
 	void CreateAisle2(float aisleX, float aisleY, float aisleZ);
 	void CreateMap(float mapX, float mapY, float mapZ);
+
+	void AddComputeShader(int threadX, int threadY, int threadZ);
 };
 
