@@ -47,7 +47,7 @@ void FBXLoader::Import(const wstring& path)
 	// FbxImporter 객체 생성
 	_scene = FbxScene::Create(_manager, "");
 
-	// 나중에 Texture 경로 계산할 때 쓸 것
+	// 나중에 Texture 경로 계산할 때 쓸 것(일단은 같은경로 내의 같은이름.fbx형식의 폴더 내의 내용을 가져온다)
 	_resourceDirectory = fs::path(path).parent_path().wstring() + L"\\" + fs::path(path).filename().stem().wstring() + L".fbm";
 
 	_importer = FbxImporter::Create(_manager, "");
@@ -59,15 +59,19 @@ void FBXLoader::Import(const wstring& path)
 
 	_scene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::DirectX);
 
-	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다.
+	// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다.(왜냐하면 모델러가 사각형으로 할수도 있으니까)
 	FbxGeometryConverter geometryConverter(_manager);
 	geometryConverter.Triangulate(_scene, true);
 
 	_importer->Destroy();
+
+	// 파일 불러오기 종료
 }
 
 void FBXLoader::ParseNode(FbxNode* node)
 {
+	// 이곳에서 파싱한 내용은 전부 MeshData가 들고 있을 예정이다.
+
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
 
 	if (attribute)
@@ -109,6 +113,7 @@ void FBXLoader::LoadMesh(FbxMesh* mesh)
 	FbxVector4* controlPoints = mesh->GetControlPoints();
 	for (int32 i = 0; i < vertexCount; ++i)
 	{
+		//012순서가 아닌 021인 이유 - fbx가 만들어질때 축이 DirectX의 축과 달라서 이렇게 하였다.
 		meshInfo.vertices[i].pos.x = static_cast<float>(controlPoints[i].mData[0]);
 		meshInfo.vertices[i].pos.y = static_cast<float>(controlPoints[i].mData[2]);
 		meshInfo.vertices[i].pos.z = static_cast<float>(controlPoints[i].mData[1]);
@@ -119,6 +124,7 @@ void FBXLoader::LoadMesh(FbxMesh* mesh)
 
 	FbxGeometryElementMaterial* geometryElementMaterial = mesh->GetElementMaterial();
 
+	// 읽어올때 무조건 삼각형으로 고정했으니...
 	const int32 polygonSize = mesh->GetPolygonSize(0);
 	assert(polygonSize == 3);
 

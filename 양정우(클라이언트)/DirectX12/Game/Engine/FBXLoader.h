@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// 머터리얼에 관련한 정보들
 struct FbxMaterialInfo
 {
 	Vec4			diffuse;
@@ -44,11 +45,12 @@ struct BoneWeight
 	}
 };
 
+// 메쉬의 정보를 받아옴
 struct FbxMeshInfo
 {
-	wstring								name;
-	vector<Vertex>						vertices;
-	vector<vector<uint32>>				indices;
+	wstring								name;	//메쉬 이름
+	vector<Vertex>						vertices;//정점에 대한 정보
+	vector<vector<uint32>>				indices; //인덱스 버퍼가 여러개로 쪼개질 수 있어서 이러한 형태로...
 	vector<FbxMaterialInfo>				materials;
 	vector<BoneWeight>					boneWeights; // 뼈 가중치
 	bool								hasAnimation;

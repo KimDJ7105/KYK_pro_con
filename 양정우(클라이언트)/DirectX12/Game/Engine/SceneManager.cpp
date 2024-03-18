@@ -522,7 +522,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}*/
 	}
 #pragma endregion
-	for (int j = 0; j < 5; j++)
+
+#pragma region AllMap
+	/*for (int j = 0; j < 5; j++)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -533,7 +535,16 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			CreateMap(j * 400.f, 0.f, i * 400.f);
 		}
-	}
+	}*/
+#pragma endregion
+	
+#pragma region OneMap
+	CreateMap(0.f, 0.f, 0.f);
+	CreateAisle(0.f, 0.f, 200.f);
+	CreateAisle2(200.f, 0.f, 0.f);
+
+#pragma endregion
+
 
 	return scene;
 }

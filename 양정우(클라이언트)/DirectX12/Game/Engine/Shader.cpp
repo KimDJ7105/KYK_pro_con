@@ -208,6 +208,7 @@ void Shader::CreateShader(const wstring& path, const string& name, const string&
 	if (FAILED(::D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
 		, name.c_str(), version.c_str(), compileFlag, 0, &blob, &_errBlob)))
 	{
+		// hlsl에 문제가 발생했음.
 		::MessageBoxA(nullptr, "Shader Create Failed !", nullptr, MB_OK);
 	}
 

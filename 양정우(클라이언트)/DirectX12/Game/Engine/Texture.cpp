@@ -46,6 +46,7 @@ void Texture::Load(const wstring& path)
 	D3D12_HEAP_PROPERTIES heapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
+	// 업로드용 힙을 만든다.
 	ComPtr<ID3D12Resource> textureUploadHeap;
 	hr = DEVICE->CreateCommittedResource(
 		&heapProperty,
@@ -58,6 +59,7 @@ void Texture::Load(const wstring& path)
 	if (FAILED(hr))
 		assert(nullptr);
 
+	// 리소스용 커맨드리스트를 사용한다
 	::UpdateSubresources(RESOURCE_CMD_LIST.Get(),
 		_tex2D.Get(),
 		textureUploadHeap.Get(),

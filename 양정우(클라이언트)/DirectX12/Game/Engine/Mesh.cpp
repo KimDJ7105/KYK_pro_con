@@ -77,6 +77,7 @@ void Mesh::CreateVertexBuffer(const vector<Vertex>& buffer)
 	D3D12_HEAP_PROPERTIES heapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
+	// GPU메모리에 버퍼를 만들어 위 정점정보를 복사한다.
 	DEVICE->CreateCommittedResource(
 		&heapProperty,
 		D3D12_HEAP_FLAG_NONE,

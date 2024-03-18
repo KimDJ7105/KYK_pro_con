@@ -50,15 +50,15 @@ private:
 	D3D12_VIEWPORT		_viewport = {};
 	D3D12_RECT			_scissorRect = {};
 
-	shared_ptr<Device>				_device = make_shared<Device>();
-	shared_ptr<GraphicsCommandQueue>_graphicsCmdQueue = make_shared<GraphicsCommandQueue>();
-	shared_ptr<ComputeCommandQueue>	_computeCmdQueue = make_shared<ComputeCommandQueue>();
-	shared_ptr<SwapChain>			_swapChain = make_shared<SwapChain>();
-	shared_ptr<RootSignature>		_rootSignature = make_shared<RootSignature>();
-	shared_ptr<GraphicsDescriptorHeap> _graphicsDescHeap = make_shared<GraphicsDescriptorHeap>();
-	shared_ptr<ComputeDescriptorHeap> _computeDescHeap = make_shared<ComputeDescriptorHeap>();
+	shared_ptr<Device>					_device = make_shared<Device>();
+	shared_ptr<GraphicsCommandQueue>	_graphicsCmdQueue = make_shared<GraphicsCommandQueue>();
+	shared_ptr<ComputeCommandQueue>		_computeCmdQueue = make_shared<ComputeCommandQueue>();
+	shared_ptr<SwapChain>				_swapChain = make_shared<SwapChain>();
+	shared_ptr<RootSignature>			_rootSignature = make_shared<RootSignature>();
+	shared_ptr<GraphicsDescriptorHeap>	_graphicsDescHeap = make_shared<GraphicsDescriptorHeap>();
+	shared_ptr<ComputeDescriptorHeap>	_computeDescHeap = make_shared<ComputeDescriptorHeap>();
 
-	vector<shared_ptr<ConstantBuffer>> _constantBuffers;
+	vector<shared_ptr<ConstantBuffer>>	_constantBuffers;
 	std::array<shared_ptr<RenderTargetGroup>, RENDER_TARGET_GROUP_COUNT> _rtGroups;
 };
 

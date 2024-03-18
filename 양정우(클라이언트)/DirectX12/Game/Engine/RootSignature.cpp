@@ -10,6 +10,7 @@ void RootSignature::Init()
 
 void RootSignature::CreateGraphicsRootSignature()
 {
+	// 보간을 하거나, 초과하는 공간을 채우거나 하는 등등....
 	_samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	CD3DX12_DESCRIPTOR_RANGE ranges[] =
@@ -25,6 +26,7 @@ void RootSignature::CreateGraphicsRootSignature()
 	D3D12_ROOT_SIGNATURE_DESC sigDesc = CD3DX12_ROOT_SIGNATURE_DESC(_countof(param), param, 1, &_samplerDesc);
 	sigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT; // 입력 조립기 단계
 
+	// 위 정보를 토대로 Root Signature를 생성
 	ComPtr<ID3DBlob> blobSignature;
 	ComPtr<ID3DBlob> blobError;
 	::D3D12SerializeRootSignature(&sigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &blobSignature, &blobError);

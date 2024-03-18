@@ -1,24 +1,46 @@
-소켓이 필요
-소켓에 연결하고자 하는 서버의 IP와 포트번호를 입력
-연결
-===============
-일단 서버는
+Engine을 빌드하여 Engine.lib를 생성
+생성한 Engine.lib를 이용하여 Client가 실행.
+(해당 출력물들은 모두 Output폴더 내에 존재한다.)
 
-보내기 받기만 있을 뿐이지
-뭘 보내고 뭘 받을지는 전적으로 우리의 몫이다.
-(예로 오브젝트의 움직임에 대한 행렬만 옮길지, 아니면 오브젝트를 다 움직인 데이터를 옮길지)
+---
+Device
+ - device : GPU관련
+ - dxgi : 화면 랜더링관련
 
-서버전용 소켓
-클라이언트 전용 소켓(여기에 IP와 포트번호가 존재)
+SwapChain
+ - 랜더링할 화면 두개, Front Buffer와 Back Buffer
+ - SWAP_CHAIN_BUFFER_COUNT = 2
 
-서버 소켓에서 Assept(문열어줌)
+DescriptorHeap->SwapChain으로 이동
+ - 어떤 용도로 쓸것인지를 설명해주는 역할을 한다.
+ - RTV(Render Target View) : 어떤 렌더타겟에 그릴것인가?(UAV, SRV, CBV등등...)
+ - SwapChain에서 만든 리소스를 어떻게 활용할 것이다를 명시해주는 역할.
 
-클라이언트에서 Connect를 시도해서
-서버가 Connect된 클라이언트의 IP와 포트번호를 받아둔다.
+CommandQueue
+ - Device가 주는 명령들을 효율적으로 처리하기위한 역할
+ - 배열 단위로 명령 처리
+ - 그래서 Swapchain과 DescriptorHeap에 대한 정보를 필요로 한다.
 
-Blocking이란게 있는데
-Send라는 과정에서
-통신버퍼와 수신버퍼중
-클라가 보낼 내용을 통신버퍼에 복사를 하는 과정이 있다.
-이때 다음거로 안넘어가게 하는 것이 Blocking이다.
+RenderBegin
+ - Viewport와 ScissorRect Set
+ - BackBufferView를 꺼내서 Clear하고 RenderTarget으로 Set해준다.
+ - 위 명령은 CommandList에 쌓일 뿐 아직 동작하지 않는다.
 
+RenderEnd
+ - CommandList를 Close하고, Close한 CommandList를 실행한다.
+ - 화면에 그림을 그려준다
+
+RootSignature
+ - CPU가 할일을 GPU한테 맞기는 상황에서 어떤 일을 할것이라고 명시하는것
+
+Mesh
+ - 정점정보를 GPU메모리에 올림(Upload Heap형식으로)
+ - 물체를 그려줌
+
+Shader
+ - 물체를 어떻게 그릴지에 대한 내용이 들어가있는것.
+ - RootSignature가 명시한 것에대한 세부적인 내용이 들어있다.
+ - hlsl파일을 이용한다.
+
+
+Mesh, Shader, Hlsl, EnginPch 모두 SRVUAV등과 연관이 있으니 주의할것
