@@ -206,7 +206,7 @@ void FBXLoader::GetTangent(FbxMesh* mesh, FbxMeshInfo* meshInfo, int32 idx, int3
 {
 	if (mesh->GetElementTangentCount() == 0)
 	{
-		// TEMP : 원래는 이런 저런 알고리즘으로 Tangent 만들어줘야 함
+		// TEMP : 원래는 이런 저런 알고리즘으로 Tangent 만들어줘야 함(일단은 공란으로...)
 		meshInfo->vertices[idx].tangent.x = 1.f;
 		meshInfo->vertices[idx].tangent.y = 0.f;
 		meshInfo->vertices[idx].tangent.z = 0.f;
@@ -452,6 +452,7 @@ void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 		}
 	}
 
+	// EnginePch에 있는 Vertex구조체에서 weights와 indices를 4개씩 담는 과정 
 	FillBoneWeight(mesh, meshInfo);
 }
 
@@ -484,6 +485,7 @@ void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* 
 	const int32 indicesCount = cluster->GetControlPointIndicesCount();
 	for (int32 i = 0; i < indicesCount; i++)
 	{
+		// 하나의 정점의 가중치(영향주는거)
 		double weight = cluster->GetControlPointWeights()[i];
 		int32 vtxIdx = cluster->GetControlPointIndices()[i];
 		meshInfo->boneWeights[vtxIdx].AddWeights(boneIdx, weight);
@@ -541,13 +543,14 @@ void FBXLoader::LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster
 	FbxLongLong startFrame = _animClips[animIndex]->startTime.GetFrameCount(timeMode);
 	FbxLongLong endFrame = _animClips[animIndex]->endTime.GetFrameCount(timeMode);
 
+	//toRoot를 긁어오는 과정(최적화 과정을 할때 개선이 필요할지도...)
 	for (FbxLongLong frame = startFrame; frame < endFrame; frame++)
 	{
 		FbxKeyFrameInfo keyFrameInfo = {};
 		FbxTime fbxTime = 0;
 
 		fbxTime.SetFrame(frame, timeMode);
-
+		//특히 이 부분
 		FbxAMatrix matFromNode = node->EvaluateGlobalTransform(fbxTime);
 		FbxAMatrix matTransform = matFromNode.Inverse() * cluster->GetLink()->EvaluateGlobalTransform(fbxTime);
 		matTransform = matReflect * matTransform * matReflect;

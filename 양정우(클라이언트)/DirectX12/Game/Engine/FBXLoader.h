@@ -19,6 +19,7 @@ struct BoneWeight
 	using Pair = pair<int32, double>;
 	vector<Pair> boneWeights;
 
+	// 가중치는 최대 4개로
 	void AddWeights(uint32 index, double weight)
 	{
 		if (weight <= 0.f)
@@ -37,6 +38,7 @@ struct BoneWeight
 			boneWeights.pop_back();
 	}
 
+	// 합을 1로 보정
 	void Normalize()
 	{
 		double sum = 0.f;
@@ -71,11 +73,11 @@ struct FbxBoneInfo
 
 struct FbxAnimClipInfo
 {
-	wstring			name;
-	FbxTime			startTime;
+	wstring			name;//애니메이션 이름
+	FbxTime			startTime;//시작시간
 	FbxTime			endTime;
 	FbxTime::EMode	mode;
-	vector<vector<FbxKeyFrameInfo>>	keyFrames;
+	vector<vector<FbxKeyFrameInfo>>	keyFrames;//본 갯수 * 프레임 갯수
 };
 
 class FBXLoader

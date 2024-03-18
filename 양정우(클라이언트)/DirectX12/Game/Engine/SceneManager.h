@@ -31,6 +31,7 @@ public:
 
 private:
 	shared_ptr<Scene> LoadTestScene();
+	shared_ptr<Scene> LoadOtherScene();
 
 private:
 	shared_ptr<Scene> _activeScene;
