@@ -539,47 +539,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 	
 #pragma region OneMap
-	/*CreateMap(0.f, 0.f, 0.f);
 	CreateAisle(0.f, 0.f, 200.f);
-	CreateAisle2(200.f, 0.f, 0.f);*/
+	CreateAisle2(200.f, 0.f, 0.f);
+	CreateMap(0.f, 0.f, 0.f);
 
 #pragma endregion
-
-	for (int i = 0; i < 100; i++)
-	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate001.fbx");
-
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetName(L"WellDone");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(i * 100.f, 0.f, 0.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-			scene->AddGameObject(gameObject);
-		}
-	}
-	for (int i = 0; i < 100; i++)
-	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeilingPipe.fbx");
-
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetName(L"WellDone");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(i * 100.f, 0.f, 0.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-			scene->AddGameObject(gameObject);
-		}
-	}
-
 
 	
 
@@ -890,13 +854,13 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ)
 			}
 		}
 		{
-			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate002.fbx");
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate001-2.fbx");
 
 			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 			for (auto& gameObject : gameObjects)
 			{
-				gameObject->SetName(L"Gate002");
+				gameObject->SetName(L"Gate001-2");
 				gameObject->SetCheckFrustum(false);
 				gameObject->GetTransform()->SetLocalPosition(mapPosition);
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
