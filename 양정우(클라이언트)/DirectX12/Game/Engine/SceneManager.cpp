@@ -501,7 +501,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region AllMap
-	/*for (int j = 0; j < 5; j++)
+	for (int j = 0; j < 5; j++)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -512,11 +512,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			CreateMap(j * 400.f, 0.f, i * 400.f);
 		}
-	}*/
+	}
 #pragma endregion
 
 
-	{
+	/*{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\debug\\RoomPipe.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
@@ -531,7 +531,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 		}
-	}
+	}*/
 
 	return scene;
 }
