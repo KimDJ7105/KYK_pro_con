@@ -43,4 +43,4 @@ Shader
  - hlsl파일을 이용한다.
 
 
-Mesh, Shader, Hlsl, EnginPch 모두 SRVUAV등과 연관이 있으니 주의할것
+Mesh, Shader, Hlsl, EnginPch, RootSignature, TableDescriptorHeap 모두 SRVUAV등과 연관이 있으니 주의할것

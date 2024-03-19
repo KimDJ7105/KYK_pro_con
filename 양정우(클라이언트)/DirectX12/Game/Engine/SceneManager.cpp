@@ -386,7 +386,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0.f, 1000.f, 500.f));
+		light->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 50.f));
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0.f, -1.f, 1.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
@@ -433,14 +433,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region ParticleSystem
-	{
-		/*shared_ptr<GameObject> particle = make_shared<GameObject>();
+	/*{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
 		particle->AddComponent(make_shared<Transform>());
 		particle->AddComponent(make_shared<ParticleSystem>());
 		particle->SetCheckFrustum(false);
 		particle->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
-		scene->AddGameObject(particle);*/
-	}
+		scene->AddGameObject(particle);
+	}*/
 #pragma endregion
 
 #pragma region Tessellation Test
@@ -464,21 +464,22 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region FBX Dragon
-	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
+	//{
+	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
 
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetName(L"Dragon");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<TestDragon>());
-		}
-	}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetName(L"Dragon");
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+	//		scene->AddGameObject(gameObject);
+	//		//gameObject->AddComponent(make_shared<TestDragon>());
+	//	}
+	//}
 #pragma endregion
 
 #pragma region FBX Player
@@ -513,6 +514,24 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}*/
 #pragma endregion
+
+
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\debug\\RoomPipe.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Debug");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 10.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+		}
+	}
 
 	return scene;
 }
