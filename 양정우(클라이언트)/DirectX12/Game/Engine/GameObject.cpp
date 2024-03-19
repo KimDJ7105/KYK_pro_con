@@ -64,7 +64,7 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::LateUpdate()
+void GameObject::LateUpdate() //오브젝트 생성 중 여기서 문제 터짐
 {
 	for (shared_ptr<Component>& component : _components)
 	{
