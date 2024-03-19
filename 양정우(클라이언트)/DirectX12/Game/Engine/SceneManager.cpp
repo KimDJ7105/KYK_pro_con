@@ -515,23 +515,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-
-	/*{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\debug\\RoomPipe.fbx");
-
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetName(L"Debug");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 10.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.0f, 1.0f, 1.0f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-			scene->AddGameObject(gameObject);
-		}
-	}*/
+	
 
 	return scene;
 }
@@ -553,7 +537,7 @@ void SceneManager::CreateObject(int object_type, int object_id, float x, float y
 	cube->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 	cube->GetTransform()->SetObjectType(object_type);
 	cube->GetTransform()->SetObjectID(object_id);
-	cube->GetTransform()->LookAt(Vec3(&direction));
+	//cube->GetTransform()->LookAt(Vec3(&direction));
 	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 	{
 		shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
@@ -570,8 +554,8 @@ void SceneManager::CreateObject(int object_type, int object_id, float x, float y
 		meshRenderer->SetMaterial(material);
 	}
 	cube->AddComponent(meshRenderer);
-	//scene->AddGameObject(cube);
-	_otherPlayer.push_back(cube);
+	scene->AddGameObject(cube);
+	//_otherPlayer.push_back(cube);
 }
 
 void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float direction)

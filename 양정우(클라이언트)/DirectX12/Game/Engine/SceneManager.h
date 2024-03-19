@@ -53,5 +53,7 @@ public:
 	void CreateMap(float mapX, float mapY, float mapZ);
 
 	void AddComputeShader(int threadX, int threadY, int threadZ);
+
+	shared_ptr<GameObject> GetPlayer() { return _player; }
 };
 

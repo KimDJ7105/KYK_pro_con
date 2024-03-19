@@ -67,6 +67,15 @@ void TestCameraScript::LateUpdate()
 		GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 	}
 
+	//J를 누르면
+	if (INPUT->GetButton(KEY_TYPE::J))
+	{
+		//오브젝트를 소환한다.
+ 		GET_SINGLE(SceneManager)->CreateObject(type, id, pos.x, pos.y, pos.z, 0, 0.0f);
+		type++;
+		id++;
+	}
+
 	cs_packet_pos_info packet;
 	packet.size = sizeof(cs_packet_pos_info);
 	packet.type = CS_POS_INFO;

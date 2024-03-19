@@ -11,5 +11,10 @@ public:
 
 private:
 	float		_speed = 300.f;
+
+	std::shared_ptr<GameObject> _player;
+	int type = 0;
+	int id = 0;
+
 };
 
