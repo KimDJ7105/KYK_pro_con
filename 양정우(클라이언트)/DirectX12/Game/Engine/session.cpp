@@ -47,12 +47,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_POS:
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
-		int object_id = p->id;
-		float x = p->x;
-		float y = p->y;
-		float z = p->z;		// sock log info에 z에 해당하는 것이 없어 0으로 하였음
-		float direction = 0;
+		//int object_id = p->id;
+		//float x = p->x;
+		//float y = p->y;
+		//float z = p->z;		// sock log info에 z에 해당하는 것이 없어 0으로 하였음
+		//float direction = 0;
 		//game->ChangeObjectLocation(object_id, x, y, z, direction);
+		_sceneManager->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 		break;
 	}
 	case SC_CREATE_BOX :

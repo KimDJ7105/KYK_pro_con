@@ -570,6 +570,8 @@ void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z
 	}
 }
 
+
+
 void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ)
 {
 	
