@@ -538,7 +538,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
 {
-	return;
+	{
+		scene->GetMainCamera()->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+		scene->GetMainCamera()->GetTransform()->SetObjectType(object_type);
+		scene->GetMainCamera()->GetTransform()->SetObjectID(object_id);
+	}
 }
 
 void SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
