@@ -501,7 +501,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region AllMap
-	for (int j = 0; j < 5; j++)
+	/*for (int j = 0; j < 5; j++)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -512,12 +512,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			CreateMap(j * 400.f, 0.f, i * 400.f);
 		}
-	}
+	}*/
 #pragma endregion
 
 
-	/*{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\debug\\RoomPipe.fbx");
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\debug\\Floor.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -531,8 +531,25 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 		}
-	}*/
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
 
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(300.f, 0.f, 10.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+		}
+	}
 	return scene;
 }
 
