@@ -60,6 +60,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
 
 		_sceneManager->CreateObject(type,p->id, p->x, p->y, p->z, 0, 0.0f);
+		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
