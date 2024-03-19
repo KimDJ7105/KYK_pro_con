@@ -31,7 +31,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player == nullptr) continue;
-			if (player->my_id_ != my_id_) continue;
+			if (player->my_id_ == my_id_) continue;
 
 			player->Send_Packet(&pos_pack);
 		}
