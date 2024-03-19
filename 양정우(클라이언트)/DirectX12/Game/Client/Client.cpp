@@ -57,6 +57,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
+
+    MSG msg;
+
+    GWindowInfo.width = WINDOW_WIDTH;
+    GWindowInfo.height = WINDOW_HEIGHT;
+    GWindowInfo.windowed = IS_WINDOW_MODE;
+
+    std::unique_ptr<Game> game = std::make_unique<Game>();
+    game->Init(GWindowInfo);
+
     //----------------------------------------------------------------
     io_context io_con;
     tcp::resolver resolver(io_con);
@@ -70,16 +81,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     std::thread serverthread(workerthread, &io_con);
     //-----------------------------------------------------------------
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
-
-    MSG msg;
-
-    GWindowInfo.width = WINDOW_WIDTH;
-    GWindowInfo.height = WINDOW_HEIGHT;
-    GWindowInfo.windowed = IS_WINDOW_MODE;
-
-    std::unique_ptr<Game> game = std::make_unique<Game>();
-    game->Init(GWindowInfo);
 
     // 기본 메시지 루프입니다:
     while (true)

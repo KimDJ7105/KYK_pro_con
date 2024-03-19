@@ -33,8 +33,14 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			player->Send_Packet(&pos_pack);
 		}
 
-		std::cout << "Packet Sended From Client " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
+		//std::cout << "Packet Sended From Client " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 
+		break;
+	}
+	case CS_BOX_CREATE: {
+		cs_packet_box_create* p = (cs_packet_box_create*)packet;
+
+		std::cout<< "Box Is Created! orderID : " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
@@ -159,6 +165,7 @@ void SESSION::start()
 			Send_Packet(&p);
 		}
 	}
+
 }
 
 void SESSION::Send_Packet(void* packet)
