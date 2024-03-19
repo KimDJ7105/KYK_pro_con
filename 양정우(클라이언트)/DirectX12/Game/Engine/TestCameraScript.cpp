@@ -70,10 +70,14 @@ void TestCameraScript::LateUpdate()
 	//J를 누르면
 	if (INPUT->GetButton(KEY_TYPE::J))
 	{
-		//오브젝트를 소환한다.
- 		GET_SINGLE(SceneManager)->CreateObject(type, id, pos.x, pos.y, pos.z, 0, 0.0f);
-		type++;
-		id++;
+		cs_packet_box_create bc;
+		bc.size = sizeof(cs_packet_box_create);
+		bc.type = CS_BOX_CREATE;
+		bc.x = pos.x;
+		bc.y = pos.y;
+		bc.z = pos.z;
+
+		session->Send_Packet(&bc);
 	}
 
 	cs_packet_pos_info packet;
