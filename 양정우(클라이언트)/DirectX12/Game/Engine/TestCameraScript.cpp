@@ -68,8 +68,21 @@ void TestCameraScript::LateUpdate()
 	}
 
 	//J를 누르면
-	if (INPUT->GetButton(KEY_TYPE::J))
+	/*if (INPUT->GetButton(KEY_TYPE::J))
 	{
+		cs_packet_box_create bc;
+		bc.size = sizeof(cs_packet_box_create);
+		bc.type = CS_BOX_CREATE;
+		bc.x = pos.x;
+		bc.y = pos.y;
+		bc.z = pos.z;
+
+		session->Send_Packet(&bc);
+	}*/
+	// J가 눌렸다가 떼어지면
+	if (INPUT->GetButtonUp(KEY_TYPE::J))
+	{
+		// 아래 내용이 실행된다.
 		cs_packet_box_create bc;
 		bc.size = sizeof(cs_packet_box_create);
 		bc.type = CS_BOX_CREATE;
