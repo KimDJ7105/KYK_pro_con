@@ -1,6 +1,8 @@
 #pragma once
 #include "session.h"
 
+int id = 15;
+
 void SESSION::Send_Packet(void* packet, unsigned id)
 {
 	int packet_size = reinterpret_cast<unsigned char*>(packet)[0];
@@ -28,6 +30,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ != my_id_) continue;
 
 			player->Send_Packet(&pos_pack);
@@ -40,7 +43,24 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case CS_BOX_CREATE: {
 		cs_packet_box_create* p = (cs_packet_box_create*)packet;
 
-		std::cout<< "Box Is Created! orderID : " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
+		sc_packet_create_box cb;
+		cb.size = sizeof(sc_packet_create_box);
+		cb.type = SC_CREATE_BOX;
+		cb.x = p->x;
+		cb.y = p->y;
+		cb.z = p->z;
+		cb.id = ++id;
+
+		for (auto& pl : players) {
+			shared_ptr<SESSION> player = pl.second;
+			if (player == nullptr) continue;
+
+			std::cout << "Send Create Box Packet\n";
+
+			player->Send_Packet(&cb);
+		}
+
+		std::cout << "Box Is Created! orderID : " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
