@@ -557,6 +557,7 @@ void SceneManager::CreateObject(int object_type, int object_id, float x, float y
 	cube->AddComponent(meshRenderer);
 	scene->AddGameObject(cube);
 	//_otherPlayer.push_back(cube);
+
 }
 
 void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float direction)
