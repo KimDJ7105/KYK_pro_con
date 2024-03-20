@@ -162,6 +162,9 @@
     <ClCompile Include="session.cpp">
       <Filter>Server</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -295,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="session.h">
       <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

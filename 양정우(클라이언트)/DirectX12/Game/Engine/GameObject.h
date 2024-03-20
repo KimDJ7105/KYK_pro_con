@@ -12,15 +12,6 @@ class Terrain;
 class BaseCollider;
 class Animator;
 
-enum class GAMEOBJECT_TYPE
-{
-	DEFAULT,
-	PLAYER,
-	OTHER_PLAYER,
-
-	TYPE_END
-};
-
 class GameObject : public Object, public std::enable_shared_from_this<GameObject>
 {
 public:
@@ -63,12 +54,5 @@ private:
 	uint8 _layerIndex = 0;
 	bool _static = true;
 
-	//³»°¡ Â§ ÄÚµå--------------------------------
-private:
-	GAMEOBJECT_TYPE _type = GAMEOBJECT_TYPE::DEFAULT;
-
-public:
-	void SetObjectType(GAMEOBJECT_TYPE type) { _type = type; }
-	GAMEOBJECT_TYPE GetObjectType() { return _type; }
 };
 

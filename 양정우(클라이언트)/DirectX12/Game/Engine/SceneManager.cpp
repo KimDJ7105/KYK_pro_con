@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
+#include "ObjectManager.h"
 
 #include "TestCameraScript.h"
 #include "Resources.h"
@@ -36,6 +37,7 @@ void SceneManager::Update()
 
 	// 플레이어의 좌표 확인
 	Vec3 temp = _player->GetTransform()->GetLocalPosition();
+	Vec3 temp2 = _player->GetTransform()->GetLook();
 	
 	// other player의 좌표 확인
 	for (auto& otherPlayer : _otherPlayer)
@@ -167,7 +169,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 
-		camera->SetObjectType(GAMEOBJECT_TYPE::PLAYER);
 		scene->AddGameObject(camera);
 
 		_player = camera;//카메라를 플레이어로 설정
@@ -537,7 +538,7 @@ void SceneManager::CreateObject(int object_type, int object_id, float x, float y
 	cube->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 	cube->GetTransform()->SetObjectType(object_type);
 	cube->GetTransform()->SetObjectID(object_id);
-	//cube->GetTransform()->LookAt(Vec3(&direction));
+	cube->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 	{
 		shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
