@@ -31,3 +31,7 @@ void MoveSession(tcp::socket& sock);
 extern SESSION* session;
 
 SESSION* GetSession();
+
+class SceneManager;
+
+std::shared_ptr<SceneManager> _activeScene;

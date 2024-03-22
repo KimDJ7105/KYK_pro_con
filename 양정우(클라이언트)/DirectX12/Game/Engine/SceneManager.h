@@ -28,6 +28,7 @@ public:
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
+	void SetActiveScene(shared_ptr<Scene> activeScene) { activeScene = _activeScene; }
 
 private:
 	shared_ptr<Scene> LoadTestScene();
@@ -56,10 +57,6 @@ public:
 
 	shared_ptr<GameObject> GetPlayer() { return _player; }
 
-	/*
-	2. id를 통해 플레이어를 지정 가능하도록 구현
-
-	3. posObj(이동) API 구현
-	*/
+	
 };
 

@@ -19,6 +19,8 @@
 #include "MeshData.h"
 #include "TestDragon.h"
 
+#include "session.h"
+
 shared_ptr<Scene> scene = make_shared<Scene>();
 
 void SceneManager::Update()
@@ -26,24 +28,15 @@ void SceneManager::Update()
 	if (_activeScene == nullptr)
 		return;
 
-	// TODO: 플레이어가 입장했을때 오브젝트를 추가함
-	/*if (판단변수 == true)
-	{
-		add object;
-		add object to object manager;
-		set object OTHER_PLAYER
-		판단변수 false
-	}*/
-
 	// 플레이어의 좌표 확인
-	Vec3 temp = _player->GetTransform()->GetLocalPosition();
-	Vec3 temp2 = _player->GetTransform()->GetLook();
+	//Vec3 temp = _player->GetTransform()->GetLocalPosition();
+	//Vec3 temp2 = _player->GetTransform()->GetLook();
 	
 	// other player의 좌표 확인
-	for (auto& otherPlayer : _otherPlayer)
+	/*for (auto& otherPlayer : _otherPlayer)
 	{
 		Vec3 temp2 = otherPlayer->GetTransform()->GetLocalPosition();
-	}
+	}*/
 
 	_activeScene->Update();
 	_activeScene->LateUpdate();

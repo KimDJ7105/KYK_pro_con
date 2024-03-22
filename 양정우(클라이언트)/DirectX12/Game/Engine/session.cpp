@@ -3,9 +3,6 @@
 #include "session.h"
 #include "SceneManager.h"
 
-class SceneManager;
-SceneManager* _sceneManager;
-
 int type = 5;
 
 SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
@@ -21,7 +18,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_LOGIN_INFO:
 	{
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
-		_sceneManager->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
+		_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
 		break;
 	}
 	case SC_PUT_PLAYER:
@@ -34,7 +31,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		float z = p->z;
 		int animation_id = 0;
 		float direction = 0;
-		//game->CreateObject(object_type, object_id, x, y, z, animation_id, direction);
+		//_activeScene->CreateObject(object_type, object_id, x, y, z, animation_id, direction);
 		break;
 	}
 	case SC_POS:
@@ -45,15 +42,18 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//float y = p->y;
 		//float z = p->z;		// sock log info에 z에 해당하는 것이 없어 0으로 하였음
 		//float direction = 0;
-		//game->ChangeObjectLocation(object_id, x, y, z, direction);
-		//_sceneManager->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
+		//_activeScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 		break;
 	}
 	case SC_CREATE_BOX :
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
 
-		_sceneManager->CreateObject(type,p->id, p->x, p->y, p->z, 0, 0.0f);
+		if (_activeScene)
+		{
+			_activeScene->GetActiveScene();
+		}
+		_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
 		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때

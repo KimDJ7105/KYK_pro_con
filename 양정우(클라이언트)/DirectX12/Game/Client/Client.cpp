@@ -7,8 +7,8 @@
 
 #define MAX_LOADSTRING 100
 
-class Game;
-Game* _game;
+class Game;     //전방선언
+Game* _game;    //Game 내에 존재하는 함수들을 사용하기 위한 null객체
 
 // 윈도우 실행시 어떤식으로 동작할지
 enum
