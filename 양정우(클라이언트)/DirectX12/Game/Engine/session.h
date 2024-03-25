@@ -1,5 +1,7 @@
 #pragma once
 #include "pch.h"
+class Scene;
+class SceneManager;
 
 //================================================================================
 //서버 통신을 위한 SESSION Class
@@ -10,6 +12,9 @@ private:
 	int prev_data_size_;
 	unsigned char data_[1024];
 	unsigned char packet_[1024];
+
+	std::shared_ptr<SceneManager> _activeSessionScene;
+
 public:
 
 	SESSION(tcp::socket socket_);
@@ -32,6 +37,4 @@ extern SESSION* session;
 
 SESSION* GetSession();
 
-class SceneManager;
 
-std::shared_ptr<SceneManager> _activeScene;

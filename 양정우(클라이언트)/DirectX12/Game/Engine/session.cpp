@@ -1,7 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "session.h"
-#include "SceneManager.h"
+#include "SceneManager.cpp"
+
 
 int type = 5;
 
@@ -18,7 +19,10 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_LOGIN_INFO:
 	{
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
-		_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
+		
+
+		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
+		//_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
 		break;
 	}
 	case SC_PUT_PLAYER:
@@ -31,6 +35,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		float z = p->z;
 		int animation_id = 0;
 		float direction = 0;
+		//scene->AddGameObject();
 		//_activeScene->CreateObject(object_type, object_id, x, y, z, animation_id, direction);
 		break;
 	}
@@ -49,11 +54,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
 
-		if (_activeScene)
-		{
-			_activeScene->GetActiveScene();
-		}
-		_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
+		//_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
+		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
 		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때

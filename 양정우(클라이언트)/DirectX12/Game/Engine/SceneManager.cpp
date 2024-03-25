@@ -19,9 +19,8 @@
 #include "MeshData.h"
 #include "TestDragon.h"
 
-#include "session.h"
+shared_ptr<Scene> scene = std::make_shared<Scene>();
 
-shared_ptr<Scene> scene = make_shared<Scene>();
 
 void SceneManager::Update()
 {
@@ -523,7 +522,7 @@ void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y
 	}
 }
 
-void SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
+shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
 {
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
 	cube->AddComponent(make_shared<Transform>());
@@ -548,7 +547,9 @@ void SceneManager::CreateObject(int object_type, int object_id, float x, float y
 		meshRenderer->SetMaterial(material);
 	}
 	cube->AddComponent(meshRenderer);
-	scene->AddGameObject(cube);
+
+	return cube;
+	//scene->AddGameObject(cube);
 	//_otherPlayer.push_back(cube);
 
 }
