@@ -19,8 +19,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_LOGIN_INFO:
 	{
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
-		
-
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
 		//_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
 		break;

@@ -15,7 +15,7 @@ enum class GAMEOBJECT_TYPE
 
 struct MyGameObject
 {
-	int m_ObjectType;
+	GAMEOBJECT_TYPE m_ObjectType;
 	int m_ObjectID;
 	Vec3 m_ObjectLocation;
 	int m_animationID;
@@ -26,14 +26,14 @@ class ObjectManager : Component
 {
 private:
 	MyGameObject m_Obj;
-
 	//연걸리스트 혹은 B+트리 형식으로 오브젝트의 배열을 새로 만들 공간
+	std::vector<shared_ptr<MyGameObject>> vp_objectManager;
 
 public:
 	MyGameObject GetObjectData() { return m_Obj; }
 
 	void SetGameObjectData(MyGameObject obj);
 
-	void AddGameObjectData();
+	void AddGameObjectData(shared_ptr<MyGameObject> obj);
 };
 
