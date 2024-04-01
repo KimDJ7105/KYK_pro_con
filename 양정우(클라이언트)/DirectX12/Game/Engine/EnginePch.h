@@ -199,3 +199,27 @@ extern std::unique_ptr<class Engine> GEngine;		// 앞으로 이런 애가 나올것이라고 
 // Utils
 std::wstring s2ws(const std::string& s);
 std::string ws2s(const std::wstring& s);
+
+
+// GameObject Framework
+enum class GAMEOBJECT_TYPE
+{
+	//1 = player, 2 = other player, 3 = static object, 4 = moveable object
+	DEFAULT,
+	PLAYER,
+	OTHER_PLAYER,
+	STATIC_OBJECT,
+	MOVEABLE_OBJECT,
+
+	TYPE_END
+};
+
+struct MyGameObject
+{
+	int m_ObjectType;
+	int m_ObjectID;
+	Vec3 m_ObjectLocation;
+	int m_animationID;
+	float m_Direction;
+};
+

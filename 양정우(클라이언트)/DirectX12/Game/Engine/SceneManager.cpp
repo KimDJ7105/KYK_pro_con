@@ -19,7 +19,11 @@
 #include "MeshData.h"
 #include "TestDragon.h"
 
+#include "ObjectManager.h"
+
 shared_ptr<Scene> scene = std::make_shared<Scene>();
+
+std::vector<MyGameObject> vp_ObjectManager;
 
 
 void SceneManager::Update()
@@ -547,6 +551,15 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 		meshRenderer->SetMaterial(material);
 	}
 	cube->AddComponent(meshRenderer);
+
+	MyGameObject obj;
+	obj.m_ObjectType = object_id;
+	obj.m_ObjectID = object_id;
+	obj.m_ObjectLocation = Vec3(x, y, z);
+	obj.m_animationID = animation_id;
+	obj.m_Direction = direction;
+
+	vp_ObjectManager.push_back(obj);
 
 	return cube;
 	//scene->AddGameObject(cube);

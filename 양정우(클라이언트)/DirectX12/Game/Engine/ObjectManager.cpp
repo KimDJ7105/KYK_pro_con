@@ -2,13 +2,14 @@
 #include "Engine.h"
 #include "ObjectManager.h"
 
-void ObjectManager::SetGameObjectData(MyGameObject obj)
+
+
+void ObjectManager::SetGameObjectData(std::shared_ptr<MyGameObject> obj)
 {
-	m_Obj.m_ObjectType = obj.m_ObjectType;
+	m_Obj = obj;
 }
 
-void ObjectManager::AddGameObjectData(shared_ptr<MyGameObject> obj)
+void ObjectManager::AddGameObjectData(MyGameObject obj)
 {
-	// 위에서 Set해준 ObjectData를 오브젝트의 리스트에 집어넣을 함수
-	vp_objectManager.push_back(obj);
+	//vp_ObjectManager.push_back(obj);
 }

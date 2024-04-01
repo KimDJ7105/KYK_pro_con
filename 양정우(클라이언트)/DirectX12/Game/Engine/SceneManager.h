@@ -5,6 +5,7 @@ using std::wstring;
 
 class Scene;
 class GameObject;
+class ObjectManager;
 
 enum
 {
@@ -57,6 +58,5 @@ public:
 
 	shared_ptr<GameObject> GetPlayer() { return _player; }
 
-	
 };
 
