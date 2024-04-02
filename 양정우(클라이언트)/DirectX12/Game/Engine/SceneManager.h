@@ -5,6 +5,7 @@ using std::wstring;
 
 class Scene;
 class GameObject;
+class ObjectManager;
 
 enum
 {
@@ -28,6 +29,7 @@ public:
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
+	void SetActiveScene(shared_ptr<Scene> activeScene) { activeScene = _activeScene; }
 
 private:
 	shared_ptr<Scene> LoadTestScene();
@@ -45,7 +47,7 @@ private:
 
 public:
 	void CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float direction);
-	void CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction);
+	shared_ptr<GameObject> CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction);
 	void ChangeObjectLocation(int object_id, float x, float y, float z, float direction);
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ);
@@ -56,10 +58,5 @@ public:
 
 	shared_ptr<GameObject> GetPlayer() { return _player; }
 
-	/*
-	2. id를 통해 플레이어를 지정 가능하도록 구현
-
-	3. posObj(이동) API 구현
-	*/
 };
 

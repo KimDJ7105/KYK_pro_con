@@ -19,31 +19,27 @@
 #include "MeshData.h"
 #include "TestDragon.h"
 
-shared_ptr<Scene> scene = make_shared<Scene>();
+#include "ObjectManager.h"
+
+shared_ptr<Scene> scene = std::make_shared<Scene>();
+
+std::vector<MyGameObject> vp_ObjectManager;
+
 
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
 		return;
 
-	// TODO: 플레이어가 입장했을때 오브젝트를 추가함
-	/*if (판단변수 == true)
-	{
-		add object;
-		add object to object manager;
-		set object OTHER_PLAYER
-		판단변수 false
-	}*/
-
 	// 플레이어의 좌표 확인
-	Vec3 temp = _player->GetTransform()->GetLocalPosition();
-	Vec3 temp2 = _player->GetTransform()->GetLook();
+	//Vec3 temp = _player->GetTransform()->GetLocalPosition();
+	//Vec3 temp2 = _player->GetTransform()->GetLook();
 	
 	// other player의 좌표 확인
-	for (auto& otherPlayer : _otherPlayer)
+	/*for (auto& otherPlayer : _otherPlayer)
 	{
 		Vec3 temp2 = otherPlayer->GetTransform()->GetLocalPosition();
-	}
+	}*/
 
 	_activeScene->Update();
 	_activeScene->LateUpdate();
@@ -530,7 +526,7 @@ void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y
 	}
 }
 
-void SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
+shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
 {
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
 	cube->AddComponent(make_shared<Transform>());
@@ -555,8 +551,20 @@ void SceneManager::CreateObject(int object_type, int object_id, float x, float y
 		meshRenderer->SetMaterial(material);
 	}
 	cube->AddComponent(meshRenderer);
-	scene->AddGameObject(cube);
+
+	MyGameObject obj;
+	obj.m_ObjectType = object_id;
+	obj.m_ObjectID = object_id;
+	obj.m_ObjectLocation = Vec3(x, y, z);
+	obj.m_animationID = animation_id;
+	obj.m_Direction = direction;
+
+	vp_ObjectManager.push_back(obj);
+
+	return cube;
+	//scene->AddGameObject(cube);
 	//_otherPlayer.push_back(cube);
+
 }
 
 void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float direction)
