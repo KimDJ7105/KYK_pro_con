@@ -16,28 +16,19 @@ void SESSION::Process_Packet(unsigned char* packet)
 {
 	int test = 0;
 	switch (packet[1]) {
-	case SC_LOGIN_INFO:
+	case SC_LOGIN_INFO: //서버에서 시작 정보를 받아서 자신의 캐릭터를 생성
 	{
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
-		//_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
 		break;
 	}
-	case SC_PUT_PLAYER:
+	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
 	{
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
-		int object_type = 0;
-		int object_id = p->id;
-		float x = p->x;
-		float y = p->y;
-		float z = p->z;
-		int animation_id = 0;
-		float direction = 0;
-		//scene->AddGameObject();
-		//_activeScene->CreateObject(object_type, object_id, x, y, z, animation_id, direction);
+		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
 		break;
 	}
-	case SC_POS:
+	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
 		//int object_id = p->id;
@@ -48,11 +39,10 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//_activeScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 		break;
 	}
-	case SC_CREATE_BOX :
+	case SC_CREATE_BOX : //테스트용 박스 생성
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
 
-		//_activeScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f);
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
 		break;
 	}
