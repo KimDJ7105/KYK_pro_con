@@ -37,6 +37,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//float z = p->z;		// sock log info에 z에 해당하는 것이 없어 0으로 하였음
 		//float direction = 0;
 		//_activeScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
+		_activeSessionScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
+
 		break;
 	}
 	case SC_CREATE_BOX : //테스트용 박스 생성
