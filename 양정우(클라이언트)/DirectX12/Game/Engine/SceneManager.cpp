@@ -560,10 +560,11 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 	obj.m_Direction = direction;
 
 	vp_ObjectManager.push_back(obj);
+	_otherPlayer.push_back(cube);
 
 	return cube;
 	//scene->AddGameObject(cube);
-	_otherPlayer.push_back(cube);
+
 
 }
 

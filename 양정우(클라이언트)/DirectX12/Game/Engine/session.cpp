@@ -10,6 +10,7 @@ SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
 	curr_packet_size_ = 0;
 	prev_data_size_ = 0;
+	_activeSessionScene = GET_SINGLE(SceneManager);
 }
 
 void SESSION::Process_Packet(unsigned char* packet)

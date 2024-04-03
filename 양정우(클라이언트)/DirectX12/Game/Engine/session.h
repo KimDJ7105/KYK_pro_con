@@ -13,7 +13,7 @@ private:
 	unsigned char data_[1024];
 	unsigned char packet_[1024];
 
-	std::shared_ptr<SceneManager> _activeSessionScene;
+	SceneManager* _activeSessionScene{ nullptr };
 
 public:
 
