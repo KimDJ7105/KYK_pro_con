@@ -553,7 +553,7 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 	cube->AddComponent(meshRenderer);
 
 	MyGameObject obj;
-	obj.m_ObjectType = object_id;
+	obj.m_ObjectType = object_type;
 	obj.m_ObjectID = object_id;
 	obj.m_ObjectLocation = Vec3(x, y, z);
 	obj.m_animationID = animation_id;
@@ -563,18 +563,25 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 
 	return cube;
 	//scene->AddGameObject(cube);
-	//_otherPlayer.push_back(cube);
+	_otherPlayer.push_back(cube);
 
 }
 
 void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float direction)
 {
+	for (auto& otherPlayer : vp_ObjectManager)
+	{
+		if (otherPlayer.m_ObjectID == object_id)
+		{
+			otherPlayer.m_ObjectLocation = Vec3(x, y, z);
+		}
+	}
+
 	for (auto& otherPlayer : _otherPlayer)
 	{
 		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
 			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-			otherPlayer->GetTransform()->LookAt(Vec3(&direction));
 		}
 	}
 }

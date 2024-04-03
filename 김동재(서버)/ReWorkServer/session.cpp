@@ -1,7 +1,7 @@
 #pragma once
 #include "session.h"
 
-int id = 15;
+int box_id = MAX_USER;
 
 void SESSION::Send_Packet(void* packet, unsigned id)
 {
@@ -49,7 +49,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		cb.x = p->x;
 		cb.y = p->y;
 		cb.z = p->z;
-		cb.id = ++id;
+		cb.id = ++box_id;
 
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
@@ -60,7 +60,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			player->Send_Packet(&cb);
 		}
 
-		std::cout << "Box Is Created! orderID : " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
+		std::cout << "Box Is Created! orderID : " << cb.id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
