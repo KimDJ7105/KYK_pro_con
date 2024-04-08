@@ -9,6 +9,10 @@ public:
 
 	virtual void LateUpdate() override;
 
+	void KeyboardUpdate();
+
+	void MouseUpdate();
+
 private:
 	float		_speed = 300.f;
 
@@ -16,5 +20,6 @@ private:
 	int type = 0;
 	int id = 0;
 
+	//POINT _tempPos = { 0, 0 };
 };
 

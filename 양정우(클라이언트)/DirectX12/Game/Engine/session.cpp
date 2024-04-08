@@ -21,12 +21,20 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
+
+		//TODO : Direction을 적용하기 위한 추가 인자 요청
+		// CreateObject함수의 인자도 이에 맞게 변경 필요
+		//scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, directionX, directionY, directionZ));
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
 	{
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
+
+		//TODO : Direction을 적용하기 위한 추가 인자 요청
+		// CreateObject함수의 인자도 이에 맞게 변경 필요
+		//scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, directionX, directionY, directionZ));
 		break;
 	}
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동
@@ -40,12 +48,18 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//_activeScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 		_activeSessionScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 
+		//TODO : Direction을 적용하기 위한 추가 인자 요청
+		// ChangeObjectLocation함수의 인자도 이에 맞게 변경 필요
+		//_activeSessionScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, directionX, directionY, directionZ);
+
 		break;
 	}
 	case SC_CREATE_BOX : //테스트용 박스 생성
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
 
+		//TODO : Direction을 적용하기 위한 추가 인자 요청
+		// CreateObject함수의 인자도 이에 맞게 변경 필요
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f));
 		break;
 	}
