@@ -25,7 +25,23 @@ void TestCameraScript::LateUpdate()
 
 	MoveUpdate();
 
-	RotationUpdate();
+	if (isMouseMod)
+	{
+		RotationUpdate();
+	}
+	else if (!isMouseMod)
+	{
+
+	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::P))
+	{
+		if (isMouseMod == false)
+			isMouseMod = true;
+		else if (isMouseMod == true)
+			isMouseMod = false;
+	}
+
 
 	//Picking 입력을 확인
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
@@ -42,25 +58,25 @@ void TestCameraScript::MoveUpdate()
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-		std::cout << "W 입력 처리중" << std::endl;
+		//std::cout << "W 입력 처리중" << std::endl;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		std::cout << "S 입력 처리중" << std::endl;
+		//std::cout << "S 입력 처리중" << std::endl;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		std::cout << "A 입력 처리중" << std::endl;
+		//std::cout << "A 입력 처리중" << std::endl;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		std::cout << "D 입력 처리중" << std::endl;
+		//std::cout << "D 입력 처리중" << std::endl;
 	}
 
 	// J가 눌렸다가 떼어지면
