@@ -3,6 +3,7 @@
 #include <thread>
 #include <atomic>
 #include <concurrent_unordered_map.h>
+#include <array>
 
 #include <boost/asio.hpp>
 

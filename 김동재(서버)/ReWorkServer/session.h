@@ -13,9 +13,8 @@ private:
 	int curr_packet_size_;
 	int prev_data_size_;
 
-	float pos_x;
-	float pos_y;
-	float pos_z;
+	array<float, 3> pos;
+	array<float, 3> view_dir;
 
 private:
 	void Send_Packet(void* packet, unsigned id);

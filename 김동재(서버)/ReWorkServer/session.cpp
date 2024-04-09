@@ -14,8 +14,8 @@ void SESSION::Send_Packet(void* packet, unsigned id)
 void SESSION::Process_Packet(unsigned char* packet, int id)
 {
 	auto P = players[id];
-	int y = P->pos_y;
-	int x = P->pos_x;
+	int y = P->pos[1];
+	int x = P->pos[0];
 	switch (packet[1]) {
 	case CS_POS_INFO: {
 		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
@@ -144,9 +144,9 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 {
 	curr_packet_size_ = 0;
 	prev_data_size_ = 0;
-	pos_x = 0.f;
-	pos_y = 40.f;
-	pos_z = 0.f;
+	pos[0] = 0.f;
+	pos[1] = 40.f;
+	pos[2] = 0.f;
 }
 
 void SESSION::start()
@@ -157,18 +157,18 @@ void SESSION::start()
 	pl.id = my_id_;
 	pl.size = sizeof(sc_packet_login_info);
 	pl.type = SC_LOGIN_INFO;
-	pl.x = pos_x;
-	pl.y = pos_y;
-	pl.z = pos_z;
+	pl.x = pos[0];
+	pl.y = pos[1];
+	pl.z = pos[2];
 	Send_Packet(&pl);
 
 	sc_packet_put p;
 	p.id = my_id_;
 	p.size = sizeof(sc_packet_put);
 	p.type = SC_PUT_PLAYER;
-	p.x = pos_x;
-	p.y = pos_y;
-	p.z = pos_z;
+	p.x = pos[0];
+	p.y = pos[1];
+	p.z = pos[2];
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
 	for (auto& pl : players) {
@@ -180,8 +180,8 @@ void SESSION::start()
 	for (auto& pl : players) {
 		if (pl.second->my_id_ != my_id_) {
 			p.id = pl.second->my_id_;
-			p.x = pl.second->pos_x;
-			p.y = pl.second->pos_y;
+			p.x = pl.second->pos[0];
+			p.y = pl.second->pos[1];
 			Send_Packet(&p);
 		}
 	}
