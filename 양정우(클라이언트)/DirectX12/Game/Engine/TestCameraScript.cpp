@@ -34,6 +34,8 @@ void TestCameraScript::KeyboardUpdate()
 	if (INPUT->GetButton(KEY_TYPE::P))
 		PostQuitMessage(0);
 
+	//이곳에 버튼이 눌러졌을때와 떼어졌을때를 구분해야 더 정확한 움직임이 가능하다.
+
 	if (INPUT->GetButton(KEY_TYPE::W))
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
@@ -46,37 +48,6 @@ void TestCameraScript::KeyboardUpdate()
 	if (INPUT->GetButton(KEY_TYPE::D))
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 
-	// 아래
-	if (INPUT->GetButton(KEY_TYPE::Q))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.x += DELTA_TIME * 3.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
-
-	//위
-	if (INPUT->GetButton(KEY_TYPE::E))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.x -= DELTA_TIME * 3.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
-
-	//오른쪽
-	if (INPUT->GetButton(KEY_TYPE::C))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.y += DELTA_TIME * 3.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
-
-	// 왼쪽
-	if (INPUT->GetButton(KEY_TYPE::Z))
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
-		rotation.y -= DELTA_TIME * 3.5f;
-		GetTransform()->SetLocalRotation(rotation);
-	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
 	{
@@ -114,9 +85,6 @@ void TestCameraScript::KeyboardUpdate()
 void TestCameraScript::MouseUpdate()
 {
 
-	// 현재 바라보고있는 방향.
-	Vec3 dir = GetTransform()->GetLocalRotation();
-
 	//마우스 입력에 따른 회전
 	//현재 구조는 매 프레임마다 마우스의 위치를 기억한다.
 	//그러므로 중앙으로부터 마우스가 얼마나 움직였는지를 알아내서
@@ -128,19 +96,50 @@ void TestCameraScript::MouseUpdate()
 	::GetCursorPos(&nowMousePos);
 
 	// DEBUG
-	std::cout << "X : " << nowMousePos.x << "|| Y : " << nowMousePos.y << std::endl;
+	//std::cout << "현재 마우스 위치 : {" << nowMousePos.x << ", " << nowMousePos.y << "}" << std::endl;
 
 	//만약 마우스가 움직임이 발생했다면
-	//if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
-	//{
-	//	//움직인 값을 저장한다.
-	//	int x = nowMousePos.x - WINDOW_MIDDLE_X;
-	//	int y = nowMousePos.y - WINDOW_MIDDLE_Y;
-	//}
-	//이전 마우스 위치와 현재 마우스 위치의 차이값을 계산한다.
+	if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
+	{
+		//움직인 값을 저장한다.
+		int moveX = nowMousePos.x - WINDOW_MIDDLE_X;
+		int moveY = nowMousePos.y - WINDOW_MIDDLE_Y;
 
-	// 모든것을 계산하고 난 이후 바라보고있는 방향 갱신.
-	GetTransform()->SetLocalRotation(dir);
+		// DEBUG
+		//std::cout << "마우스 변화량 : {" << moveX << ", " << moveY << "}" << std::endl;
+
+		//오른쪽
+		if (moveX > 0)
+		{
+			Vec3 rotation = GetTransform()->GetLocalRotation();
+			rotation.y += DELTA_TIME * moveX;
+			GetTransform()->SetLocalRotation(rotation);
+		}
+
+		// 왼쪽
+		if (moveX < 0)
+		{
+			Vec3 rotation = GetTransform()->GetLocalRotation();
+			rotation.y += DELTA_TIME * moveX;
+			GetTransform()->SetLocalRotation(rotation);
+		}
+
+		// 아래
+		if (moveY > 0)
+		{
+			Vec3 rotation = GetTransform()->GetLocalRotation();
+			rotation.x += DELTA_TIME * moveY;
+			GetTransform()->SetLocalRotation(rotation);
+		}
+
+		//위
+		if (moveY < 0)
+		{
+			Vec3 rotation = GetTransform()->GetLocalRotation();
+			rotation.x += DELTA_TIME * moveY;
+			GetTransform()->SetLocalRotation(rotation);
+		}
+	}
 
 	//마우스의 위치를 중앙으로 초기화 해준다.
 	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
