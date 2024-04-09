@@ -223,3 +223,19 @@ struct MyGameObject
 	float m_Direction;
 };
 
+// 윈도우 실행시 어떤식으로 동작할지
+enum
+{
+	//윈도우 크기
+	WINDOW_WIDTH = 800,
+	WINDOW_HEIGHT = 600,
+	//창모드 여부
+	IS_WINDOW_MODE = true,
+	//윈도우 위치
+	WINDOW_POSX = 100,
+	WINDOW_POSY = 100,
+	//윈도우의 중심
+	WINDOW_MIDDLE_X = WINDOW_WIDTH / 2 + WINDOW_POSX,
+	WINDOW_MIDDLE_Y = WINDOW_HEIGHT / 2 + WINDOW_POSY,
+
+};

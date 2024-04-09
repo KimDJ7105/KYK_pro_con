@@ -492,7 +492,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<TestDragon>());
+			//gameObject->AddComponent(make_shared<TestDragon>());
 		}*/
 	}
 #pragma endregion

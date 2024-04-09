@@ -19,7 +19,5 @@ private:
 	std::shared_ptr<GameObject> _player;
 	int type = 0;
 	int id = 0;
-
-	//POINT _tempPos = { 0, 0 };
 };
 

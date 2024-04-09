@@ -10,13 +10,8 @@
 class Game;     //전방선언
 Game* _game;    //Game 내에 존재하는 함수들을 사용하기 위한 null객체
 
-// 윈도우 실행시 어떤식으로 동작할지
-enum
-{
-    WINDOW_WIDTH = 800,
-    WINDOW_HEIGHT = 600,
-    IS_WINDOW_MODE = true
-};
+
+
 
 // 전역 변수:
 WindowInfo GWindowInfo;

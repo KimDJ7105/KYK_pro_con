@@ -76,7 +76,7 @@ void Engine::ResizeWindow(int32 width, int32 height)
 
 	RECT rect		= { 0, 0, width, height };
 	::AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
-	::SetWindowPos( _window.hwnd, 0, 100, 100, width, height, 0 );
+	::SetWindowPos( _window.hwnd, 0, WINDOW_POSX, WINDOW_POSY, width, height, 0 );
 }
 
 

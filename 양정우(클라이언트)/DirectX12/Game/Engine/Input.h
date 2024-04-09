@@ -18,6 +18,7 @@ enum class KEY_TYPE
 	C = 'C',
 
 	J = 'J',
+	P = 'P',
 
 	KEY_1 = '1',
 	KEY_2 = '2',
