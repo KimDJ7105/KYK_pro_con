@@ -39,8 +39,6 @@ void TestCameraScript::MoveUpdate()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
-	//std::cout << "입력이 들어왔습니다." << std::endl;
-
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;

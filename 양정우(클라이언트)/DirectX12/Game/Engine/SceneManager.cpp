@@ -320,26 +320,26 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region UI(Sample)
 	{
-		//shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		//sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		//sphere->AddComponent(make_shared<Transform>());
-		//sphere->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		//sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
-		//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		//{
-		//	shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-		//	meshRenderer->SetMesh(mesh);
-		//}
-		//{
-		//	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-		//	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Monkey", L"..\\Resources\\Texture\\CodingMonkey.jpg");
-		//	shared_ptr<Material> material = make_shared<Material>();
-		//	material->SetShader(shader);
-		//	material->SetTexture(0, texture);
-		//	meshRenderer->SetMaterial(material);
-		//}
-		//sphere->AddComponent(meshRenderer);
-		//scene->AddGameObject(sphere);
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Monkey", L"..\\Resources\\Texture\\Aim.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		scene->AddGameObject(sphere);
 	}
 #pragma endregion
 
@@ -498,7 +498,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region AllMap
-	for (int j = 0; j < 5; j++)
+	/*for (int j = 0; j < 5; j++)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -509,9 +509,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			CreateMap(j * 400.f, 0.f, i * 400.f);
 		}
-	}
+	}*/
 #pragma endregion
-
+	CreateMap(0.f, 0.f, 0.f);
 	
 
 	return scene;
