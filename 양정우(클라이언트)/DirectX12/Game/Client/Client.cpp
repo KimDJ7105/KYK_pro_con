@@ -77,6 +77,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::thread serverthread(workerthread, &io_con);
     //-----------------------------------------------------------------
 
+    {
+        // 디버깅용 콘솔창 생성
+        AllocConsole();
+
+        FILE* pConsoleStream;
+        freopen_s(&pConsoleStream, "CONOUT$", "w", stdout);
+
+    }
+
     // 기본 메시지 루프입니다:
     while (true)
     {
@@ -91,7 +100,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             } 
         }
-
         // TODO(게임로직 추가라인)
         game->Update();
     }

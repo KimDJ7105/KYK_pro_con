@@ -1,5 +1,8 @@
 #pragma once
 
+//디버깅용
+#include <iostream>
+
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0
 

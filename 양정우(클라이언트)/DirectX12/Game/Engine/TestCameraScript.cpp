@@ -22,6 +22,8 @@ void TestCameraScript::LateUpdate()
 	KeyboardUpdate();
 
 	MouseUpdate();
+
+	
 }
 
 void TestCameraScript::KeyboardUpdate()
@@ -108,7 +110,7 @@ void TestCameraScript::KeyboardUpdate()
 	GetTransform()->SetLocalPosition(pos);
 }
 
-//#include <iostream>
+
 void TestCameraScript::MouseUpdate()
 {
 
@@ -122,9 +124,11 @@ void TestCameraScript::MouseUpdate()
 
 	
 	//먼저 현재 마우스의 포지션값을 읽어와서 저장한다.
-	POINT nowMousePos = INPUT->GetMousePos();
+	POINT nowMousePos;
+	::GetCursorPos(&nowMousePos);
 
-	//std::cout << nowMousePos.x << nowMousePos.y << std::endl;
+	// DEBUG
+	std::cout << "X : " << nowMousePos.x << "|| Y : " << nowMousePos.y << std::endl;
 
 	//만약 마우스가 움직임이 발생했다면
 	//if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
@@ -139,5 +143,5 @@ void TestCameraScript::MouseUpdate()
 	GetTransform()->SetLocalRotation(dir);
 
 	//마우스의 위치를 중앙으로 초기화 해준다.
-	//::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
 }
