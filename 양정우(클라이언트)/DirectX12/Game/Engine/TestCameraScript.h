@@ -9,9 +9,9 @@ public:
 
 	virtual void LateUpdate() override;
 
-	void KeyboardUpdate();
+	void MoveUpdate();
 
-	void MouseUpdate();
+	void RotationUpdate();
 
 private:
 	float		_speed = 300.f;
