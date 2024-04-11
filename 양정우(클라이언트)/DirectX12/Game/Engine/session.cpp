@@ -54,6 +54,11 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 		break;
 	}
+	case SC_ROTATE_VIEW : //id로 지정된 플레이어를 회전시킴. (시야에 맞춰서)
+	{
+		sc_packet_rotate_player* p = reinterpret_cast<sc_packet_rotate_player*>(packet);
+		break;
+	}
 	case SC_CREATE_BOX : //테스트용 박스 생성
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
