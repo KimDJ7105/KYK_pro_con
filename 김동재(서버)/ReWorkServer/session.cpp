@@ -63,6 +63,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		std::cout << "Box Is Created! orderID : " << cb.id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 		break;
 	}
+	case CS_MOUSE_INFO: {
+		//cs_packet_mouse_info* p = (cs_packet_mouse_info*)packet;
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 
@@ -147,6 +151,10 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	pos[0] = 0.f;
 	pos[1] = 40.f;
 	pos[2] = 0.f;
+
+	view_dir[0] = 0.0f;
+	view_dir[1] = 0.0f;
+	view_dir[2] = 0.0f;
 }
 
 void SESSION::start()
