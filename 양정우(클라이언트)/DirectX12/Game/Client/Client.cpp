@@ -80,15 +80,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::thread serverthread(workerthread, &io_con);
     //-----------------------------------------------------------------
 
-    //{
-    //    // 디버깅용 콘솔창 생성
-    //    AllocConsole();
+#ifdef DEBUG_ON
+    // 디버깅용 콘솔창 생성
+    AllocConsole();
 
-    //    FILE* pConsoleStream;
-    //    freopen_s(&pConsoleStream, "CONOUT$", "w", stdout);
-
-    //}
-
+    FILE* pConsoleStream;
+    freopen_s(&pConsoleStream, "CONOUT$", "w", stdout);
+#endif
     // 기본 메시지 루프입니다:
     while (true)
     {

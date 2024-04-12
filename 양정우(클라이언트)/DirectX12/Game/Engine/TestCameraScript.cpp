@@ -112,6 +112,7 @@ void TestCameraScript::RotationUpdate()
 	POINT nowMousePos;
 	::GetCursorPos(&nowMousePos);
 
+	Vec3 rotation = GetTransform()->GetLocalRotation();
 	//만약 마우스가 움직임이 발생했다면
 	if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
 	{
@@ -122,7 +123,6 @@ void TestCameraScript::RotationUpdate()
 		//오른쪽
 		if (moveX > 0)
 		{
-			Vec3 rotation = GetTransform()->GetLocalRotation();
 			rotation.y += DELTA_TIME * moveX;
 			GetTransform()->SetLocalRotation(rotation);
 		}
@@ -130,7 +130,6 @@ void TestCameraScript::RotationUpdate()
 		// 왼쪽
 		if (moveX < 0)
 		{
-			Vec3 rotation = GetTransform()->GetLocalRotation();
 			rotation.y += DELTA_TIME * moveX;
 			GetTransform()->SetLocalRotation(rotation);
 		}
@@ -138,7 +137,6 @@ void TestCameraScript::RotationUpdate()
 		// 아래
 		if (moveY > 0)
 		{
-			Vec3 rotation = GetTransform()->GetLocalRotation();
 			rotation.x += DELTA_TIME * moveY;
 			GetTransform()->SetLocalRotation(rotation);
 		}
@@ -146,11 +144,20 @@ void TestCameraScript::RotationUpdate()
 		//위
 		if (moveY < 0)
 		{
-			Vec3 rotation = GetTransform()->GetLocalRotation();
 			rotation.x += DELTA_TIME * moveY;
 			GetTransform()->SetLocalRotation(rotation);
 		}
 	}
+
+
+	//---------------------------------
+	// 당근칼
+	// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+
+
+
+	//---------------------------------
+
 
 	//마우스의 위치를 중앙으로 초기화 해준다.
 	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);

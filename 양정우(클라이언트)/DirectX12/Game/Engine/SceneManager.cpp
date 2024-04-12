@@ -31,16 +31,6 @@ void SceneManager::Update()
 	if (_activeScene == nullptr)
 		return;
 
-	// 플레이어의 좌표 확인
-	//Vec3 temp = _player->GetTransform()->GetLocalPosition();
-	//Vec3 temp2 = _player->GetTransform()->GetLook();
-	
-	// other player의 좌표 확인
-	/*for (auto& otherPlayer : _otherPlayer)
-	{
-		Vec3 temp2 = otherPlayer->GetTransform()->GetLocalPosition();
-	}*/
-
 	_activeScene->Update();
 	_activeScene->LateUpdate();
 	_activeScene->FinalUpdate();
@@ -166,6 +156,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 
 		scene->AddGameObject(camera);
+
+		
 
 		_player = camera;//카메라를 플레이어로 설정
 	}
@@ -517,21 +509,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	return scene;
 }
 
-void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
+void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
 {
 	{
 		scene->GetMainCamera()->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 		scene->GetMainCamera()->GetTransform()->SetObjectType(object_type);
 		scene->GetMainCamera()->GetTransform()->SetObjectID(object_id);
+		scene->GetMainCamera()->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 	}
 }
 
-shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float direction)
+shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
 {
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
 	cube->AddComponent(make_shared<Transform>());
 	cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 	cube->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+	cube->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 	cube->GetTransform()->SetObjectType(object_type);
 	cube->GetTransform()->SetObjectID(object_id);
 	cube->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
@@ -557,7 +551,7 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 	obj.m_ObjectID = object_id;
 	obj.m_ObjectLocation = Vec3(x, y, z);
 	obj.m_animationID = animation_id;
-	obj.m_Direction = direction;
+	obj.m_Direction = Vec3(dirX, dirY, dirZ);
 
 	vp_ObjectManager.push_back(obj);
 	_otherPlayer.push_back(cube);
@@ -568,7 +562,7 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 
 }
 
-void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float direction)
+void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
 {
 	for (auto& otherPlayer : vp_ObjectManager)
 	{
@@ -587,7 +581,24 @@ void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z
 	}
 }
 
+void SceneManager::ChangeObjectRotation(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
+{
+	for (auto& otherPlayer : vp_ObjectManager)
+	{
+		if (otherPlayer.m_ObjectID == object_id)
+		{
+			otherPlayer.m_Direction = Vec3(x, y, z);
+		}
+	}
 
+	for (auto& otherPlayer : _otherPlayer)
+	{
+		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
+		{
+			otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+		}
+	}
+}
 
 void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ)
 {

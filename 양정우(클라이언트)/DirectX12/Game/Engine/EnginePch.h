@@ -1,7 +1,12 @@
 #pragma once
 
+//#define DEBUG_ON
+// 
 //디버깅용
-//#include <iostream>
+#ifdef DEBUG_ON
+#include <iostream>
+#endif
+
 
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0
@@ -223,7 +228,7 @@ struct MyGameObject
 	int m_ObjectID;
 	Vec3 m_ObjectLocation;
 	int m_animationID;
-	float m_Direction;
+	Vec3 m_Direction;
 };
 
 // 윈도우 실행시 어떤식으로 동작할지
