@@ -54,12 +54,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
-		//int object_id = p->id;
-		//float x = p->x;
-		//float y = p->y;
-		//float z = p->z;		// sock log info에 z에 해당하는 것이 없어 0으로 하였음
-		//float direction = 0;
-		//_activeScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 		//_activeSessionScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, p->dirX, p->dirY, p->dirZ);
 
 		break;
@@ -67,7 +61,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_CREATE_BOX : //테스트용 박스 생성
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
-
 
 		scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, 0.0f, 0.0f, 0.0f));
 		break;
