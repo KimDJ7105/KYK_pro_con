@@ -27,6 +27,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.x = p->x;
 		pos_pack.y = p->y;
 		pos_pack.z = p->z;
+		pos_pack.dirx = P->view_dir[0];
+		pos_pack.diry = P->view_dir[1];
+		pos_pack.dirz = P->view_dir[2];
 
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
@@ -64,7 +67,28 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_MOUSE_INFO: {
-		//cs_packet_mouse_info* p = (cs_packet_mouse_info*)packet;
+		cs_packet_mouse_info* p = (cs_packet_mouse_info*)packet;
+
+		sc_packet_pos pos_pack;
+		pos_pack.type = SC_POS;
+		pos_pack.size = sizeof(sc_packet_pos);
+		pos_pack.id = id;
+		pos_pack.x = pos[0];
+		pos_pack.y = pos[1];
+		pos_pack.z = pos[2];
+		pos_pack.dirx = p->x;
+		pos_pack.diry = p->y;
+		pos_pack.dirz = p->z;
+
+
+		for (auto& pl : players) {
+			shared_ptr<SESSION> player = pl.second;
+			if (player == nullptr) continue;
+			if (player->my_id_ == my_id_) continue;
+
+			player->Send_Packet(&pos_pack);
+		}
+
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
@@ -168,6 +192,9 @@ void SESSION::start()
 	pl.x = pos[0];
 	pl.y = pos[1];
 	pl.z = pos[2];
+	pl.dirx = view_dir[0];
+	pl.diry = view_dir[1];
+	pl.dirz = view_dir[2];
 	Send_Packet(&pl);
 
 	sc_packet_put p;
@@ -177,6 +204,9 @@ void SESSION::start()
 	p.x = pos[0];
 	p.y = pos[1];
 	p.z = pos[2];
+	p.dirx = view_dir[0];
+	p.diry = view_dir[1];
+	p.dirz = view_dir[2];
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
 	for (auto& pl : players) {
