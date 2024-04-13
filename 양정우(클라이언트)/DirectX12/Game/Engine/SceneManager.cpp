@@ -481,9 +481,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 45.f, 100.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 			//gameObject->AddComponent(make_shared<TestDragon>());
 		}
@@ -520,7 +520,7 @@ void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y
 	}
 }
 
-shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+shared_ptr<GameObject> SceneManager::CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
 {
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
 	cube->AddComponent(make_shared<Transform>());
@@ -560,6 +560,35 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 
 	return cube;
 	//scene->AddGameObject(cube);
+}
+
+void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+{
+	MyGameObject obj;
+	obj.m_ObjectType = object_type;
+	obj.m_ObjectID = object_id;
+	obj.m_ObjectLocation = Vec3(x, y, z);
+	obj.m_animationID = animation_id;
+	obj.m_Direction = Vec3(dirX, dirY, dirZ);
+
+	vp_ObjectManager.push_back(obj);
+
+	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
+
+	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	for (auto& gameObject : gameObjects)
+	{
+		gameObject->SetName(L"Player");
+		gameObject->SetCheckFrustum(false);
+		gameObject->GetTransform()->SetObjectType(object_type);
+		gameObject->GetTransform()->SetObjectID(object_id);
+		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
+		gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));		//(0.15f, 0.15f, 0.15f)
+		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, -dirZ));
+		_otherPlayer.push_back(gameObject);
+		scene->AddGameObject(gameObject);
+	}
 
 
 }

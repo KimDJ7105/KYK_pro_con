@@ -61,6 +61,9 @@ void TestCameraScript::MoveUpdate()
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 		//std::cout << "W 입력 처리중" << std::endl;
+
+		//이거말고 y좌표로는 움직이지 않게하는 코드가 추가되어야 한다.
+		//pos += Vec3(0.f, 0.f, 1.f) * _speed * DELTA_TIME;	//이거면 되지 않을까?...
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
