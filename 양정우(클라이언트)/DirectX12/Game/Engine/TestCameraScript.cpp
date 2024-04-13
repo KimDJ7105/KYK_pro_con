@@ -55,6 +55,8 @@ void TestCameraScript::MoveUpdate()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
+	Vec3 tempPos = pos;
+
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
@@ -93,14 +95,20 @@ void TestCameraScript::MoveUpdate()
 		session->Send_Packet(&bc);
 	}
 
-	cs_packet_pos_info packet;
-	packet.size = sizeof(cs_packet_pos_info);
-	packet.type = CS_POS_INFO;
-	packet.x = pos.x;
-	packet.y = pos.y;
-	packet.z = pos.z;
+	//위치가 변경되었을때만 서버에 전송하도록 수정
+	if (pos != tempPos)
+	{
+		//------------------------------------
+		cs_packet_pos_info packet;
+		packet.size = sizeof(cs_packet_pos_info);
+		packet.type = CS_POS_INFO;
+		packet.x = pos.x;
+		packet.y = pos.y;
+		packet.z = pos.z;
 
-	session->Send_Packet(&packet);
+		session->Send_Packet(&packet);
+		//-------------------------------------
+	}
 
 	GetTransform()->SetLocalPosition(pos);
 }
@@ -147,16 +155,20 @@ void TestCameraScript::RotationUpdate()
 			rotation.x += DELTA_TIME * moveY;
 			GetTransform()->SetLocalRotation(rotation);
 		}
+
+		//---------------------------------
+		// 당근칼
+		// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+		cs_packet_mouse_info mi;
+		mi.size = sizeof(cs_packet_mouse_info);
+		mi.type = CS_MOUSE_INFO;
+		mi.x = rotation.x;
+		mi.y = rotation.y;
+		mi.z = 0.0f;
+
+		session->Send_Packet(&mi);
+		//---------------------------------
 	}
-
-
-	//---------------------------------
-	// 당근칼
-	// 이곳에서 rotation정보를 server에 넘겨주면 된다.
-
-
-
-	//---------------------------------
 
 
 	//마우스의 위치를 중앙으로 초기화 해준다.

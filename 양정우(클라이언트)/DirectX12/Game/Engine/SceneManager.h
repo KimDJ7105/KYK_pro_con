@@ -48,8 +48,7 @@ private:
 public:
 	void CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	shared_ptr<GameObject> CreateObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
-	void ChangeObjectLocation(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
-	void ChangeObjectRotation(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
+	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ);
 	void CreateAisle2(float aisleX, float aisleY, float aisleZ);

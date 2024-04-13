@@ -315,7 +315,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -473,7 +473,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
-		/*shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Animation\\Player.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -483,9 +483,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 			//gameObject->AddComponent(make_shared<TestDragon>());
-		}*/
+		}
 	}
 #pragma endregion
 
@@ -529,6 +530,7 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 	cube->GetTransform()->SetObjectType(object_type);
 	cube->GetTransform()->SetObjectID(object_id);
 	cube->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	cube->SetCheckFrustum(false);
 	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 	{
 		shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
@@ -562,13 +564,14 @@ shared_ptr<GameObject> SceneManager::CreateObject(int object_type, int object_id
 
 }
 
-void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
+void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
 {
 	for (auto& otherPlayer : vp_ObjectManager)
 	{
 		if (otherPlayer.m_ObjectID == object_id)
 		{
 			otherPlayer.m_ObjectLocation = Vec3(x, y, z);
+			otherPlayer.m_Direction = Vec3(dirX, dirY, dirZ);
 		}
 	}
 
@@ -577,24 +580,6 @@ void SceneManager::ChangeObjectLocation(int object_id, float x, float y, float z
 		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
 			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-		}
-	}
-}
-
-void SceneManager::ChangeObjectRotation(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
-{
-	for (auto& otherPlayer : vp_ObjectManager)
-	{
-		if (otherPlayer.m_ObjectID == object_id)
-		{
-			otherPlayer.m_Direction = Vec3(x, y, z);
-		}
-	}
-
-	for (auto& otherPlayer : _otherPlayer)
-	{
-		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
-		{
 			otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 		}
 	}
