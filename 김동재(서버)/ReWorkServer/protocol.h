@@ -97,15 +97,6 @@ struct sc_packet_remove_player {
 	WORD id;
 };
 
-struct sc_packet_rotate_player {
-	BYTE size;
-	BYTE type;
-	WORD id;
-	float x;
-	float y;
-	float z;
-};
-
 struct sc_packet_create_box {
 	BYTE size;
 	BYTE type;
