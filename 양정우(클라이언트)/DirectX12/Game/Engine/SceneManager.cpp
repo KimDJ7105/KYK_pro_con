@@ -585,7 +585,7 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		gameObject->GetTransform()->SetObjectID(object_id);
 		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
 		gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));		//(0.15f, 0.15f, 0.15f)
-		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, -dirZ));
+		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
 	}
