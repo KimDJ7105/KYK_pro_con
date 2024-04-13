@@ -20,6 +20,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case CS_POS_INFO: {
 		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
 
+		pos[0] = p->x;
+		pos[1] = p->y;
+		pos[2] = p->z;
+
 		sc_packet_pos pos_pack;
 		pos_pack.id = id;
 		pos_pack.size = sizeof(sc_packet_pos);
@@ -68,6 +72,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case CS_MOUSE_INFO: {
 		cs_packet_mouse_info* p = (cs_packet_mouse_info*)packet;
+
+		view_dir[0] = p->x;
+		view_dir[1] = p->y;
+		view_dir[2] = p->z;
 
 		sc_packet_pos pos_pack;
 		pos_pack.type = SC_POS;
