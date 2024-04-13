@@ -483,6 +483,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 45.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
 			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 			//gameObject->AddComponent(make_shared<TestDragon>());
