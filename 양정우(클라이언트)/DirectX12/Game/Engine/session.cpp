@@ -51,7 +51,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//scene->AddGameObject(_activeSessionScene->CreateObject(type, p->id, p->x, p->y, p->z, 0, p->dirX, p->dirY, p->dirZ));
 		break;
 	}
-	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동
+	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
 		//int object_id = p->id;
@@ -62,12 +62,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//_activeScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, 0);
 		//_activeSessionScene->ChangeObjectLocation(p->id, p->x, p->y, p->z, p->dirX, p->dirY, p->dirZ);
 
-		break;
-	}
-	case SC_ROTATE_VIEW : //id로 지정된 플레이어를 회전시킴. (시야에 맞춰서)
-	{
-		sc_packet_rotate_player* p = reinterpret_cast<sc_packet_rotate_player*>(packet);
-		//_activeSessionScene->ChangeObjectRotation(p->id, p->x, p->y, p->z, p->dirX, p->dirY, p->dirZ);
 		break;
 	}
 	case SC_CREATE_BOX : //테스트용 박스 생성
