@@ -153,9 +153,14 @@ void TestCameraScript::RotationUpdate()
 	//---------------------------------
 	// 당근칼
 	// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+	cs_packet_mouse_info mi;
+	mi.size = sizeof(cs_packet_mouse_info);
+	mi.type = CS_MOUSE_INFO;
+	mi.x = rotation.x;
+	mi.y = rotation.y;
+	mi.z = 0.0f;
 
-
-
+	session->Send_Packet(&mi);
 	//---------------------------------
 
 
