@@ -526,10 +526,10 @@ shared_ptr<GameObject> SceneManager::CreateBoxObject(int object_type, int object
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
 	cube->AddComponent(make_shared<Transform>());
 	cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	cube->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-	cube->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 	cube->GetTransform()->SetObjectType(object_type);
 	cube->GetTransform()->SetObjectID(object_id);
+	cube->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+	cube->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 	cube->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 	cube->SetCheckFrustum(false);
 	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();

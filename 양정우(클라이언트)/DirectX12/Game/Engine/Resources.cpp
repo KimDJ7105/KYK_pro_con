@@ -336,7 +336,17 @@ shared_ptr<MeshData> Resources::LoadFBX(const wstring& path)
 
 shared_ptr<MeshData> Resources::LoadBinaryModel(const wstring& path)
 {
-	return 0;
+	wstring key = path;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadFromBinary(path);
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
 }
 
 void Resources::CreateDefaultShader()
