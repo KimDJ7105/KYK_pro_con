@@ -481,8 +481,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 45.f, 100.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 100.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.10f, 0.10f, 0.10f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
 			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
@@ -601,7 +601,7 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 		if (otherPlayer.m_ObjectID == object_id)
 		{
 			otherPlayer.m_ObjectLocation = Vec3(x, y, z);
-			otherPlayer.m_Direction = Vec3(dirX, dirY, dirZ);
+			otherPlayer.m_Direction = Vec3(0.f, dirY, dirZ);
 		}
 	}
 
@@ -610,7 +610,7 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
 			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-			otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+			otherPlayer->GetTransform()->SetLocalRotation(Vec3(0.f, dirY, dirZ));
 		}
 	}
 }

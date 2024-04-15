@@ -59,30 +59,40 @@ void TestCameraScript::MoveUpdate()
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		//pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+
 		//std::cout << "W 입력 처리중" << std::endl;
 
-		//이거말고 y좌표로는 움직이지 않게하는 코드가 추가되어야 한다.
-		//pos += Vec3(0.f, 0.f, 1.f) * _speed * DELTA_TIME;	//이거면 되지 않을까?...
+		// Right벡터와 수직벡터의 외적값 -> 정면
+		pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		//pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 		//std::cout << "S 입력 처리중" << std::endl;
+
+		pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
 		//std::cout << "A 입력 처리중" << std::endl;
+
+		// Look벡터와 수직벡터의 외적값 -> 오른쪽
+		//pos -= XMVector3Cross(GetTransform()->GetLook(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 		//std::cout << "D 입력 처리중" << std::endl;
+
+		//pos += XMVector3Cross(GetTransform()->GetLook(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
+
+	pos.y = tempPos.y;
 
 	// J가 눌렸다가 떼어지면
 	if (INPUT->GetButtonUp(KEY_TYPE::J))
