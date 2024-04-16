@@ -319,20 +319,6 @@ shared_ptr<Texture> Resources::CreateTextureFromResource(const wstring& name, Co
 	return texture;
 }
 
-shared_ptr<MeshData> Resources::LoadFBX(const wstring& path)
-{
-	wstring key = path;
-
-	shared_ptr<MeshData> meshData = Get<MeshData>(key);
-	if (meshData)
-		return meshData;
-
-	meshData = MeshData::LoadFromFBX(path);
-	meshData->SetName(key);
-	Add(key, meshData);
-
-	return meshData;
-}
 
 shared_ptr<MeshData> Resources::LoadBinaryModel(const wstring& path)
 {
