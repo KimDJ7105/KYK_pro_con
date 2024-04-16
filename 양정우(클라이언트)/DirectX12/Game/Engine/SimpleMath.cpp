@@ -245,3 +245,5 @@ RECT Viewport::ComputeTitleSafeArea(UINT backBufferWidth, UINT backBufferHeight)
 
     return rct;
 }
+
+
