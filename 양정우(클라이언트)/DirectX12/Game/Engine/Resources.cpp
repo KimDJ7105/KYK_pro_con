@@ -699,3 +699,5 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"ComputeAnimation", material);
 	}
 }
+
+
