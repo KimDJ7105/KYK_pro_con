@@ -39,6 +39,8 @@ public:
 		D3D12_RESOURCE_FLAGS resFlags = D3D12_RESOURCE_FLAG_NONE, Vec4 clearColor = Vec4());
 
 	shared_ptr<Texture> CreateTextureFromResource(const wstring& name, ComPtr<ID3D12Resource> tex2D);
+
+	shared_ptr<class MeshData> LoadFBX(const wstring& path);
 	shared_ptr<class MeshData> LoadBinaryModel(const wstring& path);
 
 private:

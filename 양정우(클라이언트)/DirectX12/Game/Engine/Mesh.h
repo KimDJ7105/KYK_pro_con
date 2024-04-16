@@ -50,9 +50,13 @@ public:
 	void Render(uint32 instanceCount = 1, uint32 idx = 0);
 	void Render(std::shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
 
+	static shared_ptr<Mesh> CreateFromFBX(const struct FbxMeshInfo* meshInfo, class FBXLoader& loader);
+
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
+	void CreateBonesAndAnimations(class FBXLoader& loader);
+	Matrix GetMatrix(FbxAMatrix& matrix);
 
 public:
 	uint32 GetSubsetCount() { return static_cast<uint32>(_vecIndexInfo.size()); }
@@ -77,6 +81,5 @@ private:
 
 	shared_ptr<StructuredBuffer>	_offsetBuffer; // 각 뼈의 offset 행렬
 	vector<shared_ptr<StructuredBuffer>> _frameBuffer; // 전체 본 프레임 정보
-
 };
 

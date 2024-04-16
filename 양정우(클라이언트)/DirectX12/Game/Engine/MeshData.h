@@ -22,6 +22,7 @@ public:
 	virtual ~MeshData();
 
 public:
+	static shared_ptr<MeshData> LoadFromFBX(const wstring& path);
 	static shared_ptr<MeshData> LoadFromBinary(const wstring& path);
 
 	virtual void Load(const wstring& path);

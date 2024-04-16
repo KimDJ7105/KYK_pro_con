@@ -271,7 +271,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region FBX Player
-	/*{
+	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
@@ -304,7 +304,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<TestDragon>());
 		}
-	}*/
+	}
 #pragma endregion
 	
 
