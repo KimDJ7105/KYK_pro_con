@@ -328,7 +328,13 @@ shared_ptr<MeshData> Resources::LoadBinaryModel(const wstring& path)
 	if (meshData)
 		return meshData;
 
+
+
+	//바이너리로 읽어오는 부분
 	meshData = MeshData::LoadFromBinary(path);
+
+
+
 	meshData->SetName(key);
 	Add(key, meshData);
 
