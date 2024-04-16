@@ -134,6 +134,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	//...
 #pragma endregion
 
+#pragma region ComputeShader
+	//AddComputeShader(1, 1024, 1);
+#pragma endregion
+
+	//shared_ptr<Scene> scene = make_shared<Scene>(); 전역으로 올림 왜? 변수 쓸라고
+
+	// 메인카메라를 가장 먼저 추가(안그럼 버그남)
 #pragma region Camera
 	{
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
@@ -149,6 +156,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 
 		scene->AddGameObject(camera);
+
+		
+
 		_player = camera;//카메라를 플레이어로 설정
 	}
 #pragma endregion
@@ -190,6 +200,113 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		skybox->AddComponent(meshRenderer);
 		scene->AddGameObject(skybox);
+	}
+#pragma endregion
+
+#pragma region Sphere(Object)
+	//{
+	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
+	//	obj->SetName(L"OBJ");
+	//	obj->AddComponent(make_shared<Transform>());
+	//	obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
+	//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+	//	obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 500.f));
+	//	obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+	//		meshRenderer->SetMesh(sphereMesh);
+	//	}
+	//	{
+	//		/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+	//		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		material->SetTexture(1, texture2);
+	//		meshRenderer->SetMaterial(material);*/
+	//		// Resource.cpp GameObject부분으로 이동
+
+	//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+	//		//material->SetInt(0, 1);
+	//		meshRenderer->SetMaterial(material->Clone());
+	//		/*material->SetInt(0, 0);
+	//		meshRenderer->SetMaterial(material->Clone());*/
+	//	}
+
+	//	std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
+	//	std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+
+	//	obj->AddComponent(meshRenderer);
+	//	scene->AddGameObject(obj);
+	//}
+#pragma endregion
+
+#pragma region Terrain
+	{
+		/*shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->AddComponent(make_shared<Transform>());
+		obj->AddComponent(make_shared<Terrain>());
+		obj->AddComponent(make_shared<MeshRenderer>());
+
+		obj->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-100.f, -200.f, 300.f));
+		obj->SetStatic(true);
+		obj->GetTerrain()->Init(64, 64);
+		obj->SetCheckFrustum(false);
+
+		scene->AddGameObject(obj);*/
+	}
+#pragma endregion
+
+#pragma region Plane
+	{
+		/*shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(1000.f, 1.f, 1000.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f, -100.f, 500.f));
+		obj->SetStatic(true);
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadCubeMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject")->Clone();
+			material->SetInt(0, 0);
+			meshRenderer->SetMaterial(material);
+		}
+		obj->AddComponent(meshRenderer);
+		scene->AddGameObject(obj);*/
+	}
+#pragma endregion
+
+#pragma region Cube
+	{
+		/*shared_ptr<GameObject> cube = make_shared<GameObject>();
+		cube->AddComponent(make_shared<Transform>());
+		cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 30.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+			meshRenderer->SetMesh(cubeMesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			material->SetTexture(1, texture2);
+			meshRenderer->SetMaterial(material);
+		}
+		cube->AddComponent(meshRenderer);
+		scene->AddGameObject(cube);
+
+		_otherPlayer.push_back(cube);*/
 	}
 #pragma endregion
 
@@ -270,6 +387,90 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+#pragma region Point Light
+	{
+		//shared_ptr<GameObject> light = make_shared<GameObject>();
+		//light->AddComponent(make_shared<Transform>());
+		//light->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 150.f));
+		//light->AddComponent(make_shared<Light>());
+		////light->GetLight()->SetLightDirection(Vec3(-1.f, -1.f, 0.f));
+		//light->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
+		//light->GetLight()->SetDiffuse(Vec3(0.f, 0.5f, 0.f));		// GREEN
+		//light->GetLight()->SetAmbient(Vec3(0.f, 0.3f, 0.f));
+		//light->GetLight()->SetSpecular(Vec3(0.0f, 0.3f, 0.f));
+		//light->GetLight()->SetLightRange(200.f);
+		////light->GetLight()->SetLightAngle(XM_PI / 4);
+		//scene->AddGameObject(light);
+	}
+#pragma endregion
+
+#pragma region Spot Light
+	{
+		//shared_ptr<GameObject> light = make_shared<GameObject>();
+		//light->AddComponent(make_shared<Transform>());
+		//light->GetTransform()->SetLocalPosition(Vec3(75.f, 0.f, 150.f));
+		//light->AddComponent(make_shared<Light>());
+		//light->GetLight()->SetLightDirection(Vec3(-1.f, 0.f, 0.f));
+		//light->GetLight()->SetLightType(LIGHT_TYPE::SPOT_LIGHT);
+		//light->GetLight()->SetDiffuse(Vec3(0.0f, 0.f, 0.5f));		// Blue
+		//light->GetLight()->SetAmbient(Vec3(0.f, 0.f, 0.1f));
+		//light->GetLight()->SetSpecular(Vec3(0.f, 0.f, 0.1f));
+		//light->GetLight()->SetLightRange(200.f);
+		//light->GetLight()->SetLightAngle(XM_PI / 4);
+		//scene->AddGameObject(light);
+	}
+#pragma endregion
+
+#pragma region ParticleSystem
+	/*{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		particle->AddComponent(make_shared<Transform>());
+		particle->AddComponent(make_shared<ParticleSystem>());
+		particle->SetCheckFrustum(false);
+		particle->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
+		scene->AddGameObject(particle);
+	}*/
+#pragma endregion
+
+#pragma region Tessellation Test
+	{
+		/*shared_ptr<GameObject> gameObject = make_shared<GameObject>();
+		gameObject->AddComponent(make_shared<Transform>());
+		gameObject->GetTransform()->SetLocalPosition(Vec3(0, 0, 300));
+		gameObject->GetTransform()->SetLocalScale(Vec3(100, 100, 100));
+		gameObject->GetTransform()->SetLocalRotation(Vec3(0, 0, 0));
+
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+			meshRenderer->SetMaterial(GET_SINGLE(Resources)->Get<Material>(L"Tessellation"));
+		}
+		gameObject->AddComponent(meshRenderer);
+
+		scene->AddGameObject(gameObject);*/
+	}
+#pragma endregion
+
+#pragma region FBX Dragon
+	//{
+	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
+
+	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetName(L"Dragon");
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+	//		scene->AddGameObject(gameObject);
+	//		//gameObject->AddComponent(make_shared<TestDragon>());
+	//	}
+	//}
+#pragma endregion
+
 #pragma region FBX Player
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
@@ -280,33 +481,524 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(-50.f, 40.f, 100.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.10f, 0.10f, 0.10f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<TestDragon>());
+			//gameObject->AddComponent(make_shared<TestDragon>());
 		}
 	}
+#pragma endregion
+
+#pragma region AllMap
+	/*for (int j = 0; j < 5; j++)
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player_Walk.fbx");
+		for (int i = 0; i < 4; i++)
+		{
+			CreateAisle(j * 400.f, 0.f, 200.f + i * 400.f);
+			CreateAisle2(200.f + i * 400.f, 0.f, j * 400.f);
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			CreateMap(j * 400.f, 0.f, i * 400.f);
+		}
+	}*/
+#pragma endregion
+	CreateMap(0.f, 0.f, 0.f);
+	
+
+	return scene;
+}
+
+void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+{
+	{
+		scene->GetMainCamera()->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+		scene->GetMainCamera()->GetTransform()->SetObjectType(object_type);
+		scene->GetMainCamera()->GetTransform()->SetObjectID(object_id);
+		scene->GetMainCamera()->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+	}
+}
+
+shared_ptr<GameObject> SceneManager::CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+{
+	shared_ptr<GameObject> cube = make_shared<GameObject>();
+	cube->AddComponent(make_shared<Transform>());
+	cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	cube->GetTransform()->SetObjectType(object_type);
+	cube->GetTransform()->SetObjectID(object_id);
+	cube->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+	cube->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+	cube->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	cube->SetCheckFrustum(false);
+	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	{
+		shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+		meshRenderer->SetMesh(cubeMesh);
+	}
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		material->SetTexture(1, texture2);
+		meshRenderer->SetMaterial(material);
+	}
+	cube->AddComponent(meshRenderer);
+
+	MyGameObject obj;
+	obj.m_ObjectType = object_type;
+	obj.m_ObjectID = object_id;
+	obj.m_ObjectLocation = Vec3(x, y, z);
+	obj.m_animationID = animation_id;
+	obj.m_Direction = Vec3(dirX, dirY, dirZ);
+
+	vp_ObjectManager.push_back(obj);
+	_otherPlayer.push_back(cube);
+
+	return cube;
+	//scene->AddGameObject(cube);
+}
+
+void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+{
+	MyGameObject obj;
+	obj.m_ObjectType = object_type;
+	obj.m_ObjectID = object_id;
+	obj.m_ObjectLocation = Vec3(x, y, z);
+	obj.m_animationID = animation_id;
+	obj.m_Direction = Vec3(dirX, dirY, dirZ);
+
+	vp_ObjectManager.push_back(obj);
+
+	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
+
+	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	for (auto& gameObject : gameObjects)
+	{
+		gameObject->SetName(L"Player");
+		gameObject->SetCheckFrustum(false);
+		gameObject->GetTransform()->SetObjectType(object_type);
+		gameObject->GetTransform()->SetObjectID(object_id);
+		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
+		gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));		//(0.15f, 0.15f, 0.15f)
+		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+		_otherPlayer.push_back(gameObject);
+		scene->AddGameObject(gameObject);
+	}
+
+
+}
+
+void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
+{
+	for (auto& otherPlayer : vp_ObjectManager)
+	{
+		if (otherPlayer.m_ObjectID == object_id)
+		{
+			otherPlayer.m_ObjectLocation = Vec3(x, y, z);
+			otherPlayer.m_Direction = Vec3(0.f, dirY, dirZ);
+		}
+	}
+
+	for (auto& otherPlayer : _otherPlayer)
+	{
+		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
+		{
+			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+			otherPlayer->GetTransform()->SetLocalRotation(Vec3(0.f, dirY, dirZ));
+		}
+	}
+}
+
+void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ)
+{
+	
+#pragma region Aisle
+	Vec3 aislePosition = Vec3(aisleX, aisleY, aisleZ);	// 0, 0, 210
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeiling.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Player");
+			gameObject->SetName(L"AisleCeiling");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(50.f, 40.f, 100.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(0.10f, 0.10f, 0.10f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<TestDragon>());
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeilingPipe.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleCeilingPipe");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleFloor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleFloor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AislePipe.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AislePipe");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(aislePosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 3.14f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+	
+	for (int i = 0; i < 2; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleWall.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AisleWall");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(aislePosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 3.14f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+	
+	
+#pragma endregion
+
+
+}
+
+void SceneManager::CreateAisle2(float aisleX, float aisleY, float aisleZ)
+{
+
+#pragma region Aisle
+	Vec3 aislePosition = Vec3(aisleX, aisleY, aisleZ);	// 0, 0, 210
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeiling.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleCeiling");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleCeilingPipe.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleCeilingPipe");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleFloor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"AisleFloor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(aislePosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AislePipe.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AislePipe");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(aislePosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 3.14f + 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Aisle\\AisleWall.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AisleWall");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(aislePosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 3.14f + 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+
+
+#pragma endregion
+
+
+}
+
+void SceneManager::CreateMap(float mapX, float mapY, float mapZ)
+{
+
+#pragma region Map
+	Vec3 mapPosition = Vec3(mapX, mapY, mapZ); //0, 0, 0
+
+	//FLOOR------------------------------------
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(mapPosition);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+			//material = gameObject->GetMeshRenderer()->GetMaterial();
+			//material->SetInt(0, 1);
+			//gameObject->GetMeshRenderer()->SetMaterial(material);
+		}
+	}
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		shared_ptr<Material> material;
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Floor");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(mapPosition.x, mapPosition.y + 250.f, mapPosition.z));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(3.14f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+			//material = gameObject->GetMeshRenderer()->GetMaterial();
+			//material->SetInt(0, 1);
+			//gameObject->GetMeshRenderer()->SetMaterial(material);
+		}
+	}
+	
+	//GATE------------------------------------
+	
+	for (int i = 0; i < 4; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate001.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Gate001");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate001-2.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Gate001-2");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\GCeiling001.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"GCeiling001");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+
+	
+
+
+	//ROOMPIPE----------------------------------------------------------
+	for (int i = 0; i < 4; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\RoomPipe\\RoomPipe.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"RoomPipe");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+	}
+	
+	
+
+	//WALL----------------------------------------------------------
+	for (int i = 0; i < 4; i++)
+	{
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Wall\\Wall001.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Wall001");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Wall\\Wall002.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Wall002");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+		}
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Wall\\Wall003.fbx");
+
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Wall003");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(mapPosition);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, i * 1.57f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
 		}
 	}
 #pragma endregion
-	
 
-	return scene;
+}
+
+void SceneManager::AddComputeShader(int threadX, int threadY, int threadZ)
+{
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
+
+		// UAV 용 Texture 생성
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->CreateTexture(L"UAVTexture",
+			DXGI_FORMAT_R8G8B8A8_UNORM, 1024, 1024,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE,
+			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+
+		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"ComputeShader");
+		material->SetShader(shader);
+		material->SetInt(0, 1);
+		GEngine->GetComputeDescHeap()->SetUAV(texture->GetUAVHandle(), UAV_REGISTER::u0);
+
+		// 쓰레드 그룹 (1 * 1024 * 1)
+		material->Dispatch(threadX, threadY, threadZ);
+	}
 }
