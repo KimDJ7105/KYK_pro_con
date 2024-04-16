@@ -100,28 +100,28 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 			continue;
 
 		// ViewSpace에서의 Ray 정의
-		Vec4 rayOrigin = Vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		Vec4 rayDir = Vec4(viewX, viewY, 1.0f, 0.0f);
+		Vec4 rayOrigin = Vec4(0.0f, 0.0f, 0.0f, 1.0f);		//중심에서
+		Vec4 rayDir = Vec4(viewX, viewY, 1.0f, 0.0f);		//여기로 쐈다.
 
 		// WorldSpace에서의 Ray 정의
-		rayOrigin = XMVector3TransformCoord(rayOrigin, viewMatrixInv);
-		rayDir = XMVector3TransformNormal(rayDir, viewMatrixInv);
-		rayDir.Normalize();
+		rayOrigin = XMVector3TransformCoord(rayOrigin, viewMatrixInv);	//그걸 3D로 표현
+		rayDir = XMVector3TransformNormal(rayDir, viewMatrixInv);		//그걸 3D로 표현
+		rayDir.Normalize();	//방향을 노멀라이징한다.
 
 		// WorldSpace에서 연산
 		float distance = 0.f;
 		if (gameObject->GetCollider()->Intersects(rayOrigin, rayDir, OUT distance) == false)
 			continue;
 
-		//우클릭시 HIT출력
+		//만약 최소거리가 distance보다 클때, 즉 광선이 오브젝트한테 맞았을때
 		if (distance < minDistance)
 		{
-			minDistance = distance;
-			picked = gameObject;
+			minDistance = distance;	//최소거리를 갱신해주고
+			picked = gameObject;	//맞은 오브젝트를 기록
 		}
 	}
 
-	return picked;
+	return picked;	//맞은 오브젝트를 리턴한다.
 }
 
 shared_ptr<Scene> SceneManager::LoadTestScene()

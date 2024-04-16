@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"
+#include "SceneManager.cpp"
 
 #include "session.h"
 
@@ -47,7 +48,14 @@ void TestCameraScript::LateUpdate()
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
 	{
 		const POINT& pos = INPUT->GetMousePos();
+		
 		GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
+
+		/*shared_ptr<GameObject> pickedObject;
+		
+		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
+
+		scene->RemoveGameObject(pickedObject);*/
 	}
 }
 
