@@ -20,8 +20,6 @@ MeshData::~MeshData()
 shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 {
 	// 바이너리작업
-
-
 	return 0;
 }
 

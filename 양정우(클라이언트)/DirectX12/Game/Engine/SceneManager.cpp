@@ -273,26 +273,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 
 
-#pragma region FBX Player
-	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
 
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetName(L"Player");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 100.f));
-			gameObject->GetTransform()->SetLocalPosition(Vec3(-50.f, 40.f, 100.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(0.10f, 0.10f, 0.10f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-			scene->AddGameObject(gameObject);
-			//gameObject->AddComponent(make_shared<TestDragon>());
-		}
-	}
-#pragma endregion
 
 
 
