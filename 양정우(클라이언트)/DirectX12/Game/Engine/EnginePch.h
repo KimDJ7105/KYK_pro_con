@@ -142,8 +142,8 @@ struct Vertex
 	Vec2 uv;
 	Vec3 normal;
 	Vec3 tangent;
-	Vec4 weights;		//애니메이션 가중치
-	Vec4 indices;		//Bone들의 영향력
+	Vec4 weights;
+	Vec4 indices;
 };
 
 #define DECLARE_SINGLE(type)		\
