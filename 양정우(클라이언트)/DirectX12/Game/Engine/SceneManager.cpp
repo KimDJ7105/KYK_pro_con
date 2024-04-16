@@ -490,21 +490,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 #pragma endregion
-
-#pragma region AllMap
-	/*for (int j = 0; j < 5; j++)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			CreateAisle(j * 400.f, 0.f, 200.f + i * 400.f);
-			CreateAisle2(200.f + i * 400.f, 0.f, j * 400.f);
-		}
-		for (int i = 0; i < 5; i++)
-		{
-			CreateMap(j * 400.f, 0.f, i * 400.f);
-		}
-	}*/
-#pragma endregion
 	CreateMap(0.f, 0.f, 0.f);
 	
 
