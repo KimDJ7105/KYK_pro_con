@@ -1,6 +1,6 @@
 #pragma once
 
-#define DEBUG_ON
+//#define DEBUG_ON
 // 
 //µð¹ö±ë¿ë
 #ifdef DEBUG_ON

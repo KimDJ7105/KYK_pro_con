@@ -6,7 +6,6 @@
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"
-#include "SceneManager.cpp"
 
 #include "session.h"
 
