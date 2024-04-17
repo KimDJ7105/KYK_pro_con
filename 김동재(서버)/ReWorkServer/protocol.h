@@ -18,6 +18,7 @@
 #define CS_POS_INFO 1
 #define CS_BOX_CREATE 2
 #define CS_MOUSE_INFO 3
+#define CS_PICKING_INFO 4
 
 #define SC_POS           1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER    2 //오브젝트 생성
@@ -59,6 +60,12 @@ struct cs_packet_mouse_info {
 	float x;
 	float y;
 	float z;
+};
+
+struct cs_packet_picking_info {
+	BYTE size;
+	BYTE type;
+	int target_id;
 };
 
 //---------Server To Client-----------------
