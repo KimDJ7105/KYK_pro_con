@@ -13,6 +13,10 @@ private:
 	int curr_packet_size_;
 	int prev_data_size_;
 
+	int hp;
+	int remain_bullet;
+	int team;
+
 	array<float, 3> pos;
 	array<float, 3> view_dir;
 

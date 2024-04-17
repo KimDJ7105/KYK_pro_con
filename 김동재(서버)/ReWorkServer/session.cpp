@@ -187,6 +187,10 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	view_dir[0] = 0.0f;
 	view_dir[1] = 0.0f;
 	view_dir[2] = 0.0f;
+
+	hp = 0;
+	remain_bullet = 0;
+	team = 0;
 }
 
 void SESSION::start()
