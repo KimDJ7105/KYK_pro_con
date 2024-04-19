@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="session.cpp" />
@@ -135,6 +136,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="game.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="session.h" />
