@@ -50,6 +50,14 @@ void TestCameraScript::LateUpdate()
 		
 		GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 
+		cs_packet_picking_info ppi;
+		ppi.size = sizeof(cs_packet_picking_info);
+		ppi.type = CS_PICKING_INFO;
+		ppi.shooter_id; //피킹을 한 플레이어(본인)의 id
+		ppi.target_id;  //피킹을 해서 걸린 플레이어의 id
+
+		session->Send_Packet(&ppi);
+
 		/*shared_ptr<GameObject> pickedObject;
 		
 		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);

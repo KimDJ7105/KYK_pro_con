@@ -66,6 +66,7 @@ struct cs_packet_mouse_info {
 struct cs_packet_picking_info {
 	BYTE size;
 	BYTE type;
+	int shooter_id;
 	int target_id;
 };
 
