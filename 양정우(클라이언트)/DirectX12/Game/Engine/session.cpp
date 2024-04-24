@@ -5,6 +5,8 @@
 
 int type = 5;
 
+
+
 SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
 	curr_packet_size_ = 0;
@@ -22,7 +24,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
 		_activeSessionScene->CreatePlayerObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
-
+		playerID = p->id;
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성

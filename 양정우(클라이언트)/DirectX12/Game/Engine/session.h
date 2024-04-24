@@ -3,6 +3,8 @@
 class Scene;
 class SceneManager;
 
+int playerID = -1;
+
 //================================================================================
 //서버 통신을 위한 SESSION Class
 class SESSION {
