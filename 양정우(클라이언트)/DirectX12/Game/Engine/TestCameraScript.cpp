@@ -9,6 +9,8 @@
 
 #include "session.h"
 
+extern int playerID;
+
 TestCameraScript::TestCameraScript()
 {
 }

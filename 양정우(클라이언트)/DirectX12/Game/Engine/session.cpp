@@ -5,7 +5,7 @@
 
 int type = 5;
 
-
+int playerID = -1;
 
 SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
