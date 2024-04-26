@@ -99,6 +99,14 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
+	case CS_PICKING_INFO :
+	{
+		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
+
+		std::cout << "플레이어 " << p->shooter_id << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
+
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 
