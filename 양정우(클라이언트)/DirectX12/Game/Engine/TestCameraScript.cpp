@@ -59,8 +59,8 @@ void TestCameraScript::LateUpdate()
 		cs_packet_picking_info ppi;
 		ppi.size = sizeof(cs_packet_picking_info);
 		ppi.type = CS_PICKING_INFO;
-		ppi.shooter_id = playerID; //피킹을 한 플레이어(본인)의 id
-		ppi.target_id = pickedObject->GetTransform()->GetObjectID();  //피킹을 해서 걸린 플레이어의 id
+		ppi.shooter_id = playerID;
+		ppi.target_id = pickedObject->GetTransform()->GetObjectID();  //여기서 뻑이남. 해결 부탁
 
 		session->Send_Packet(&ppi);
 
