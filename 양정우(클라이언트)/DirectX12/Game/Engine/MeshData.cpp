@@ -18,6 +18,7 @@ MeshData::~MeshData()
 
 shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 {
+	//당근칼_2
 	FBXLoader loader;
 	loader.LoadFbx(path);
 
@@ -25,6 +26,7 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
+		//여기서 메시데이터를 읽어와서 저장하는 형식
 		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
@@ -49,7 +51,34 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 {
 	// 바이너리작업
-	return 0;
+	//당근칼_2
+	FBXLoader loader;
+	loader.LoadFbx(path);
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		//여기서 메시데이터를 읽어와서 저장하는 형식
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
 }
 
 

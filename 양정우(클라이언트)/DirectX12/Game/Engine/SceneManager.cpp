@@ -283,8 +283,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Cube
-	{
-		/*shared_ptr<GameObject> cube = make_shared<GameObject>();
+	/*{
+		shared_ptr<GameObject> cube = make_shared<GameObject>();
 		cube->AddComponent(make_shared<Transform>());
 		cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 30.f));
@@ -306,8 +306,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		cube->AddComponent(meshRenderer);
 		scene->AddGameObject(cube);
 
-		_otherPlayer.push_back(cube);*/
-	}
+		_otherPlayer.push_back(cube);
+	}*/
 #pragma endregion
 
 #pragma region UI(Sample)
@@ -473,6 +473,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
+		//´ç±ÙÄ®_¸ÞÀÎ
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
