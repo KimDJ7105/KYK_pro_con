@@ -54,13 +54,17 @@ void TestCameraScript::LateUpdate()
 
 		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 
+		//여기서 타입이 플레이어일때만으로 해주어야 한다.
+		if (? ? ? )
+		{
 
+		}
 
 		cs_packet_picking_info ppi;
 		ppi.size = sizeof(cs_packet_picking_info);
 		ppi.type = CS_PICKING_INFO;
 		ppi.shooter_id = playerID;
-		ppi.target_id = pickedObject->GetTransform()->GetObjectID();  //여기서 뻑이남. 해결 부탁
+		ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
 		session->Send_Packet(&ppi);
 

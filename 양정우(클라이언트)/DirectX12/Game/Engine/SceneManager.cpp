@@ -204,43 +204,43 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Sphere(Object)
-	//{
-	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-	//	obj->SetName(L"OBJ");
-	//	obj->AddComponent(make_shared<Transform>());
-	//	obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
-	//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-	//	obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 500.f));
-	//	obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
-	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//	{
-	//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-	//		meshRenderer->SetMesh(sphereMesh);
-	//	}
-	//	{
-	//		/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
-	//		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
-	//		shared_ptr<Material> material = make_shared<Material>();
-	//		material->SetShader(shader);
-	//		material->SetTexture(0, texture);
-	//		material->SetTexture(1, texture2);
-	//		meshRenderer->SetMaterial(material);*/
-	//		// Resource.cpp GameObject부분으로 이동
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"OBJ");
+		obj->AddComponent(make_shared<Transform>());
+		obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
+		obj->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+		obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+			meshRenderer->SetMesh(sphereMesh);
+		}
+		{
+			/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			material->SetTexture(1, texture2);
+			meshRenderer->SetMaterial(material);*/
+			// Resource.cpp GameObject부분으로 이동
 
-	//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-	//		//material->SetInt(0, 1);
-	//		meshRenderer->SetMaterial(material->Clone());
-	//		/*material->SetInt(0, 0);
-	//		meshRenderer->SetMaterial(material->Clone());*/
-	//	}
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+			//material->SetInt(0, 1);
+			meshRenderer->SetMaterial(material->Clone());
+			/*material->SetInt(0, 0);
+			meshRenderer->SetMaterial(material->Clone());*/
+		}
 
-	//	std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
-	//	std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+		std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
+		std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 
-	//	obj->AddComponent(meshRenderer);
-	//	scene->AddGameObject(obj);
-	//}
+		obj->AddComponent(meshRenderer);
+		scene->AddGameObject(obj);
+	}
 #pragma endregion
 
 #pragma region Terrain
@@ -587,6 +587,7 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
 		gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));		//(0.15f, 0.15f, 0.15f)
 		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+		gameObject->AddComponent(make_shared<SphereCollider>());
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
 	}
