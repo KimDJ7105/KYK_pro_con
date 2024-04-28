@@ -46,6 +46,7 @@ void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
 
 shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loader)
 {
+	//흐름 6)여기서 FbxMeshInfo는 말만 FBX가 붙어있지 구조체 자체는 FBX내부함수와는 상관이 없다. 그러니 이름을 바꾸어서 바이너리로 써도 된다.
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 
@@ -63,6 +64,7 @@ shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loa
 		}
 	}
 
+	//흐름 7)만약 여기서 애니메이션 정보가 있다면 추가하는것이다.
 	if (meshInfo->hasAnimation)
 		mesh->CreateBonesAndAnimations(loader);
 
@@ -142,6 +144,7 @@ void Mesh::CreateBonesAndAnimations(class FBXLoader& loader)
 {
 #pragma region AnimClip
 	uint32 frameCount = 0;
+	//흐름 8)FbxAnimClipInfo에는 FbxTime이 존재한다. 이 부분은 FBX내부함수이므로 변경할때 고려해야한다.
 	vector<shared_ptr<FbxAnimClipInfo>>& animClips = loader.GetAnimClip();
 	for (shared_ptr<FbxAnimClipInfo>& ac : animClips)
 	{

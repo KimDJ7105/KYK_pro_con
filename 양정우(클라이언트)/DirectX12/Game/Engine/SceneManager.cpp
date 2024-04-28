@@ -21,6 +21,8 @@
 
 #include "ObjectManager.h"
 
+#include "BinaryLoader.h"
+
 shared_ptr<Scene> scene = std::make_shared<Scene>();
 
 std::vector<MyGameObject> vp_ObjectManager;
@@ -473,9 +475,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
-		//당근칼_메인
+		//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
+		//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\FBX\\Player\\Player(No animation).bin");
 
+		//흐름 1)여기에서 gameObjects에 들거아야하는 meshData에는 mesh(메시정보와 애니메이션 정보), material이 있다.
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
@@ -485,9 +489,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.10f, 0.10f, 0.10f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
-			//gameObject->AddComponent(make_shared<TestDragon>());
+			gameObject->AddComponent(make_shared<TestDragon>());
 		}
 	}
 #pragma endregion

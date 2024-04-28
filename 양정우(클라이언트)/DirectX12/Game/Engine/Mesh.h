@@ -51,6 +51,7 @@ public:
 	void Render(std::shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
 
 	static shared_ptr<Mesh> CreateFromFBX(const struct FbxMeshInfo* meshInfo, class FBXLoader& loader);
+	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class FBXLoader& loader);
 
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);

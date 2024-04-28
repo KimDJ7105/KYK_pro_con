@@ -31,6 +31,9 @@
     <Filter Include="Server">
       <UniqueIdentifier>{eae6495e-aede-42ca-b312-2328ebfbd7ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\SampleShader">
+      <UniqueIdentifier>{58de1ada-940c-4ed9-ade8-772730324119}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -164,6 +167,12 @@
     </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader12.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +311,12 @@
     <ClInclude Include="ObjectManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
+    <ClInclude Include="DDSTextureLoader12.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader12.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -350,6 +365,12 @@
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\math.hlsl">
       <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\Shaders.hlsl">
+      <Filter>Shader\SampleShader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\Light.hlsl">
+      <Filter>Shader\SampleShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
