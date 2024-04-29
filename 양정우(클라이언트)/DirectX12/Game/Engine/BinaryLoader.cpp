@@ -15,16 +15,9 @@ BinaryLoader::~BinaryLoader()
 
 void BinaryLoader::LoadBinary(const wstring& path)
 {
+	_resourceDirectory = path;
 	//_meshes
-
-
-	//_bones
-
 	
-	//_animClips
-
-
-	//_animNames
 
 }
 
