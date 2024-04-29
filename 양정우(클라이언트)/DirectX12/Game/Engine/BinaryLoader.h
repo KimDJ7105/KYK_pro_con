@@ -103,35 +103,35 @@ public:
 	vector<shared_ptr<BinaryAnimClipInfo>>& GetAnimClip() { return _animClips; }
 
 private:
-	//void Import(const wstring& path);
+	/*void Import(const wstring& path);
 
-	//void ParseNode(FbxNode* root);
-	//void LoadMesh(FbxMesh* mesh);
-	//void LoadMaterial(FbxSurfaceMaterial* surfaceMaterial);
+	void ParseNode(FbxNode* root);
+	void LoadMesh(FbxMesh* mesh);
+	void LoadMaterial(FbxSurfaceMaterial* surfaceMaterial);
 
-	//void		GetNormal(FbxMesh* mesh, FbxMeshInfo* container, int32 idx, int32 vertexCounter);
-	//void		GetTangent(FbxMesh* mesh, FbxMeshInfo* container, int32 idx, int32 vertexCounter);
-	//void		GetUV(FbxMesh* mesh, FbxMeshInfo* container, int32 idx, int32 vertexCounter);
-	//Vec4		GetMaterialData(FbxSurfaceMaterial* surface, const char* materialName, const char* factorName);
-	//wstring		GetTextureRelativeName(FbxSurfaceMaterial* surface, const char* materialProperty);
+	void		GetNormal(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
+	void		GetTangent(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
+	void		GetUV(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
+	Vec4		GetMaterialData(FbxSurfaceMaterial* surface, const char* materialName, const char* factorName);
+	wstring		GetTextureRelativeName(FbxSurfaceMaterial* surface, const char* materialProperty);*/
 
 	void CreateTextures();
 	void CreateMaterials();
 
-	//// Animation
-	//void LoadBones(FbxNode* node) { LoadBones(node, 0, -1); }
-	//void LoadBones(FbxNode* node, int32 idx, int32 parentIdx);
-	//void LoadAnimationInfo();
+	// Animation
+	/*void LoadBones(FbxNode* node) { LoadBones(node, 0, -1); }
+	void LoadBones(FbxNode* node, int32 idx, int32 parentIdx);
+	void LoadAnimationInfo();
 
-	//void LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo);
-	//void LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* meshInfo);
-	//void LoadOffsetMatrix(FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, FbxMeshInfo* meshInfo);
-	//void LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, FbxMeshInfo* container);
+	void LoadAnimationData(FbxMesh* mesh, BinaryMeshInfo* meshInfo);
+	void LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, BinaryMeshInfo* meshInfo);
+	void LoadOffsetMatrix(FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, BinaryMeshInfo* meshInfo);
+	void LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, BinaryMeshInfo* container);
 
-	//int32 FindBoneIndex(string name);
-	//FbxAMatrix GetTransform(FbxNode* node);
+	int32 FindBoneIndex(string name);
+	FbxAMatrix GetTransform(FbxNode* node);
 
-	//void FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo);
+	void FillBoneWeight(FbxMesh* mesh, BinaryMeshInfo* meshInfo);*/
 
 private:
 	wstring									_resourceDirectory;
@@ -140,5 +140,9 @@ private:
 	vector<shared_ptr<BinaryBoneInfo>>		_bones;
 	vector<shared_ptr<BinaryAnimClipInfo>>	_animClips;
 	vector<string>							_animNames;
+
+public:
+
+
 };
 

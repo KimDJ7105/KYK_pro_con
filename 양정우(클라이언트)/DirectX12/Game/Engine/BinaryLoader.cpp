@@ -17,8 +17,10 @@ void BinaryLoader::LoadBinary(const wstring& path)
 {
 	_resourceDirectory = path;
 	//_meshes
+
 	
 
+	
 }
 
 void BinaryLoader::CreateTextures()
