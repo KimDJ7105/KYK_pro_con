@@ -66,9 +66,9 @@ struct FbxKeyFrameInfo
 
 struct FbxBoneInfo
 {
-	wstring					boneName;
-	int32					parentIndex;
-	FbxAMatrix				matOffset;
+	wstring					boneName;//뼈의 이름
+	int32					parentIndex;//부모노드
+	FbxAMatrix				matOffset;//4x4행렬
 };
 
 struct FbxAnimClipInfo
