@@ -51,13 +51,15 @@ public:
 	void Render(std::shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
 
 	static shared_ptr<Mesh> CreateFromFBX(const struct FbxMeshInfo* meshInfo, class FBXLoader& loader);
-	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class FBXLoader& loader);
+	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader);
 
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
 	void CreateBonesAndAnimations(class FBXLoader& loader);
+	void CreateBinaryBonesAndAnimations(class BinaryLoader& loader);
 	Matrix GetMatrix(FbxAMatrix& matrix);
+	Matrix GetBinaryMatrix(Matrix& matrix);
 
 public:
 	uint32 GetSubsetCount() { return static_cast<uint32>(_vecIndexInfo.size()); }

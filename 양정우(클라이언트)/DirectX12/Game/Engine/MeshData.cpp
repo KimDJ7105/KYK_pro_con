@@ -8,6 +8,8 @@
 #include "MeshRenderer.h"
 #include "Animator.h"
 
+#include "BinaryLoader.h"
+
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)
 {
 }
@@ -49,8 +51,11 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 
 shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 {
-	FBXLoader loader;
-	loader.LoadFbx(path);
+	/*FBXLoader loader;
+	loader.LoadFbx(path);*/
+
+	BinaryLoader loader;
+	loader.LoadBinary(path);
 
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
 
@@ -58,7 +63,7 @@ shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
 		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
-		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader);
+		shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
 
