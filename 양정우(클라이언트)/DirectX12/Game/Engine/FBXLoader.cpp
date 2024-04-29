@@ -464,7 +464,6 @@ void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 	FillBoneWeight(mesh, meshInfo);
 }
 
-
 void FBXLoader::FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 {
 	const int32 size = static_cast<int32>(meshInfo->boneWeights.size());

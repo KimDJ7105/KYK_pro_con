@@ -115,8 +115,8 @@ private:
 	//Vec4		GetMaterialData(FbxSurfaceMaterial* surface, const char* materialName, const char* factorName);
 	//wstring		GetTextureRelativeName(FbxSurfaceMaterial* surface, const char* materialProperty);
 
-	//void CreateTextures();
-	//void CreateMaterials();
+	void CreateTextures();
+	void CreateMaterials();
 
 	//// Animation
 	//void LoadBones(FbxNode* node) { LoadBones(node, 0, -1); }
