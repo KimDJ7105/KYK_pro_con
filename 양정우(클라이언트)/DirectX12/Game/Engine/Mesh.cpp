@@ -48,6 +48,15 @@ shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loa
 {
 	//흐름 6)여기서 FbxMeshInfo는 말만 FBX가 붙어있지 구조체 자체는 FBX내부함수와는 상관이 없다. 그러니 이름을 바꾸어서 바이너리로 써도 된다.
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
+
+	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
+	meshInfo->name;
+	meshInfo->vertices;
+	meshInfo->materials;
+	meshInfo->indices;
+	meshInfo->hasAnimation;
+	meshInfo->boneWeights;
+
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 
 	for (const vector<uint32>& buffer : meshInfo->indices)
