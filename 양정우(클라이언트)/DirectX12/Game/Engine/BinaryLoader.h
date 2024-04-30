@@ -61,7 +61,7 @@ struct BinaryMeshInfo
 
 struct BinaryKeyFrameInfo
 {
-	Matrix		matTransform;
+	Matrix		matTransform;	//Ω√¿€≤®¡¶ø‹
 	double		time;
 };
 
@@ -107,12 +107,12 @@ private:
 
 	void ParseNode(FbxNode* root);
 	void LoadMesh(FbxMesh* mesh);
-	void LoadMaterial(FbxSurfaceMaterial* surfaceMaterial);
+	void LoadMaterial(FbxSurfaceMaterial* surfaceMaterial);*/
 
-	void		GetNormal(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
+	/*void		GetNormal(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
 	void		GetTangent(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
-	void		GetUV(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);
-	Vec4		GetMaterialData(FbxSurfaceMaterial* surface, const char* materialName, const char* factorName);
+	void		GetUV(FbxMesh* mesh, BinaryMeshInfo* container, int32 idx, int32 vertexCounter);*/
+	/*Vec4		GetMaterialData(FbxSurfaceMaterial* surface, const char* materialName, const char* factorName);
 	wstring		GetTextureRelativeName(FbxSurfaceMaterial* surface, const char* materialProperty);*/
 
 	void CreateTextures();
@@ -129,9 +129,9 @@ private:
 	void LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, BinaryMeshInfo* container);
 
 	int32 FindBoneIndex(string name);
-	FbxAMatrix GetTransform(FbxNode* node);
+	FbxAMatrix GetTransform(FbxNode* node);*/
 
-	void FillBoneWeight(FbxMesh* mesh, BinaryMeshInfo* meshInfo);*/
+	void FillBoneWeight(BinaryMeshInfo* meshInfo);
 
 private:
 	wstring									_resourceDirectory;

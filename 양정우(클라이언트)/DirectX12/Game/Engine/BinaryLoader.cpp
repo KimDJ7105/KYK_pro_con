@@ -125,66 +125,85 @@ void BinaryLoader::CreateMaterials()
 	}
 }
 
+void BinaryLoader::FillBoneWeight(BinaryMeshInfo* meshInfo)
+{
+	const int32 size = static_cast<int32>(meshInfo->boneWeights.size());
+	for (int32 v = 0; v < size; v++)
+	{
+		BinaryBoneWeight& boneWeight = meshInfo->boneWeights[v];
+		boneWeight.Normalize();
+
+		float animBoneIndex[4] = {};
+		float animBoneWeight[4] = {};
+
+		const int32 weightCount = static_cast<int32>(boneWeight.boneWeights.size());
+		for (int32 w = 0; w < weightCount; w++)
+		{
+			animBoneIndex[w] = static_cast<float>(boneWeight.boneWeights[w].first);
+			animBoneWeight[w] = static_cast<float>(boneWeight.boneWeights[w].second);
+		}
+
+		memcpy(&meshInfo->vertices[v].indices, animBoneIndex, sizeof(Vec4));
+		memcpy(&meshInfo->vertices[v].weights, animBoneWeight, sizeof(Vec4));
+	}
+}
+
 void BinaryLoader::AddMeshData()
 {
 	_meshes.push_back(BinaryMeshInfo());
 	BinaryMeshInfo& meshInfo = _meshes.back();
-	meshInfo.name;
+	meshInfo.name;		//<Mesh>:
 	for (auto& a : meshInfo.vertices)
 	{
-		a.pos;
-		a.uv;
-		a.normal;
-		a.tangent;
-		a.weights;
-		a.normal;
+		a.pos;			//<Positions>:
+		a.uv;			//<TextureCoords0>:
+		a.normal;		//<Normals>:
+		a.tangent;		//<Tangents>:
+		a.weights;		//<BoneWeights>:
+		a.indices;		//<BoneIndices>:
 	}
-	meshInfo.indices;
+	meshInfo.indices;	//<SubMesh>:
 	for (auto& a : meshInfo.materials)
 	{
-		a.diffuse;
-		a.ambient;
-		a.specular;
-		a.name;
-		a.diffuseTexName;
-		a.normalTexName;
-		a.specularTexName;
+		a.diffuse;		//<AlbedoColor>:
+		a.ambient;		//<EmissiveColor>:
+		a.specular;		//<SpecularColor>:
+		a.name;			//<MaterialName>:
+		a.diffuseTexName;	//<AlbedoMap>:
+		a.normalTexName;	//<NormalMap>:
+		a.specularTexName;	//<SpecularMap>:
 	}
-	meshInfo.boneWeights;
-	meshInfo.hasAnimation;
+	meshInfo.boneWeights;	//??? 1혹은 2로 사이즈가 고정된다.
+	meshInfo.hasAnimation;	//내가 직접 해줘야하나....
 }
 
 void BinaryLoader::AddBonesData()
 {
 	_bones.push_back(shared_ptr<BinaryBoneInfo>());
 	shared_ptr<BinaryBoneInfo>& boneInfo = _bones.back();
-	boneInfo->boneName;
-	boneInfo->parentIndex;
-	boneInfo->matOffset;
+	boneInfo->boneName;		//<BoneNames>:
+	boneInfo->parentIndex;	//<ParentIndex>:
+	boneInfo->matOffset;	//<BoneOffsets>:
 }
 
 void BinaryLoader::AddAnimClipsData()
 {
 	_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
 	shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
-	animInfo->name;
-	animInfo->startTime;
-	animInfo->endTime;
-	animInfo->mode;
+	animInfo->name;			//<AnimationClipName>:
+	animInfo->startTime = 0.0f;	//0.0f고정
+	animInfo->endTime;		//<AnimationSet>:
+	animInfo->mode = eFrames30;			//eFrame30고정
 	for (auto& a : animInfo->keyFrames)
 	{
-		a.push_back(BinaryKeyFrameInfo(Matrix(), 5));
+		a.push_back(BinaryKeyFrameInfo(Matrix(), 5));	//<TransformMatrix>: , <Frame>:
 	}
-	
 }
 
 void BinaryLoader::AddAnimNames()
 {
 	_animNames.push_back(string());
 	string& animNameInfo = _animNames.back();
-	animNameInfo;
+	animNameInfo;			//<AnimationClipName>:
 }
-
-
-
 
