@@ -141,11 +141,18 @@ private:
 	vector<shared_ptr<BinaryAnimClipInfo>>	_animClips;
 	vector<string>							_animNames;
 
+	vector<shared_ptr<float>> _boundsValues;
+
 public:
 
 	void AddMeshData();
 	void AddBonesData();
 	void AddAnimClipsData();
 	void AddAnimNames();
+
+
+public:
+	void LoadModel(const char* pstrFileName);
+	void LoadMeshFromFile(FILE* pInFile);
 };
 

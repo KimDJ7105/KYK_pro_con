@@ -16,6 +16,20 @@ BYTE ReadStringFromFile(FILE* pInFile, char* pstrToken)
 	return(nStrLength);
 }
 
+int ReadIntegerFromFile(FILE* pInFile)
+{
+	int nValue = 0;
+	UINT nReads = (UINT)::fread(&nValue, sizeof(int), 1, pInFile);
+	return(nValue);
+}
+
+float ReadFloatFromFile(FILE* pInFile)
+{
+	float fValue = 0;
+	UINT nReads = (UINT)::fread(&fValue, sizeof(float), 1, pInFile);
+	return(fValue);
+}
+
 
 BinaryLoader::BinaryLoader()
 {
@@ -29,10 +43,15 @@ void BinaryLoader::LoadBinary(const wstring& path)
 {
 	_resourceDirectory = path;
 	
-	AddMeshData();
+	const char* a = "..\\Resources\\FBX\\Map\\Gate\\Gate001.fbx";
+
+	LoadModel(a);
+
+
+	/*AddMeshData();
 	AddBonesData();
 	AddAnimClipsData();
-	AddAnimNames();
+	AddAnimNames();*/
 
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
@@ -206,4 +225,122 @@ void BinaryLoader::AddAnimNames()
 	string& animNameInfo = _animNames.back();
 	animNameInfo;			//<AnimationClipName>:
 }
+
+void BinaryLoader::LoadModel(const char* pstrFileName)
+{
+	FILE* pInFile = NULL;
+	::fopen_s(&pInFile, pstrFileName, "rb");
+	::rewind(pInFile);
+
+	LoadMeshFromFile(pInFile);
+}
+
+void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	int nPositions = 0, nColors = 0, nNormals = 0, nTangents = 0, nBiTangents = 0, nTextureCoords = 0, nIndices = 0, nSubMeshes = 0, nSubIndices = 0;
+
+	int	m_nVertices = 0;
+	UINT nReads = (UINT)::fread(&m_nVertices, sizeof(int), 1, pInFile);
+	for (; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+		if (!strcmp(pstrToken, "<Bounds>:"))
+		{
+			UINT nReads = (UINT)::fread(&_boundsValues, sizeof(float), 1, pInFile);
+			if (nReads == 1) { // 실제로 1개의 float 값을 읽었는지 확인
+				// <Bounds> 뒤의 값을 처리하는 코드
+			}
+			else {
+				// 파일에서 더 이상 데이터를 읽을 수 없는 경우, 또는 오류가 발생한 경우
+				break; // 읽기를 멈춥니다.
+			}
+		}
+		else if (!strcmp(pstrToken, "<Positions>:"))
+		{
+			nReads = (UINT)::fread(&nPositions, sizeof(int), 1, pInFile);
+			if (nPositions > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<Colors>:"))
+		{
+			nReads = (UINT)::fread(&nColors, sizeof(int), 1, pInFile);
+			if (nColors > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<TextureCoords0>:"))
+		{
+			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
+			if (nTextureCoords > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<TextureCoords1>:"))
+		{
+			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
+			if (nTextureCoords > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<Normals>:"))
+		{
+			nReads = (UINT)::fread(&nNormals, sizeof(int), 1, pInFile);
+			if (nNormals > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<Tangents>:"))
+		{
+			nReads = (UINT)::fread(&nTangents, sizeof(int), 1, pInFile);
+			if (nTangents > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<BiTangents>:"))
+		{
+			nReads = (UINT)::fread(&nBiTangents, sizeof(int), 1, pInFile);
+			if (nBiTangents > 0)
+			{
+				
+			}
+		}
+		else if (!strcmp(pstrToken, "<SubMeshes>:"))
+		{
+			int								m_nSubMeshes = 0;
+			nReads = (UINT)::fread(&(m_nSubMeshes), sizeof(int), 1, pInFile);
+			if (m_nSubMeshes > 0)
+			{
+				for (int i = 0; i < m_nSubMeshes; i++)
+				{
+					::ReadStringFromFile(pInFile, pstrToken);
+					if (!strcmp(pstrToken, "<SubMesh>:"))
+					{
+						int* m_pnSubSetIndices = NULL;
+						int nIndex = 0;
+						nReads = (UINT)::fread(&nIndex, sizeof(int), 1, pInFile); //i
+						nReads = (UINT)::fread(&(m_pnSubSetIndices[i]), sizeof(int), 1, pInFile);
+						if (m_pnSubSetIndices[i] > 0)
+						{
+							
+						}
+					}
+				}
+			}
+		}
+		else if (!strcmp(pstrToken, "</Mesh>"))
+		{
+			break;
+		}
+	}
+}
+
+
 
