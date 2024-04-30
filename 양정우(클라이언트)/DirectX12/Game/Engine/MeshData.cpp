@@ -54,8 +54,6 @@ shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 	BinaryLoader loader;
 	loader.LoadBinary(path);
 
-	loader.GetMesh(0).vertices;
-
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
 
 	//메시덩어리 수

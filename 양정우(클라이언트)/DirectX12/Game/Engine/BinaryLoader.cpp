@@ -27,6 +27,10 @@ BinaryLoader::~BinaryLoader()
 
 void BinaryLoader::LoadBinary(const wstring& path)
 {
+	_meshes.push_back(BinaryMeshInfo());
+	BinaryMeshInfo& meshInfo = _meshes.back();
+	meshInfo.name = path;
+
 	_resourceDirectory = path;
 	//_meshes
 
