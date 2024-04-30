@@ -484,9 +484,11 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
         {
             WriteInteger("<Material>:", i);
 
+            //당근칼
             // Extract Material Name
             string materialName = materials[i].name;
             WriteString("<MaterialName>:", materialName);
+            //당근칼종료
 
             if (materials[i].HasProperty("_Color"))
             {
@@ -587,6 +589,7 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
         WriteTransform("<Transform>:", current);
         WriteLocalMatrix("<TransformMatrix>:", current);
 
+        //당근칼
         // Calculate parent index
         int parentIndex = -1; // Default to -1 if there is no parent
         Transform parentTransform = current.parent;
@@ -595,6 +598,7 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
             parentIndex = parentTransform.GetSiblingIndex();
         }
         WriteInteger("<ParentIndex>:", parentIndex);
+        //당근칼종료
 
         MeshFilter meshFilter = current.gameObject.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = current.gameObject.GetComponent<MeshRenderer>();
@@ -746,8 +750,10 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
             int nFramesPerSec = (int)m_AnimationClips[j].frameRate;
             int nKeyFrames = Mathf.CeilToInt(m_AnimationClips[j].length * nFramesPerSec);
 
+            //당근칼
             WriteString("<AnimationClipName>:", m_AnimationClips[j].name);
-
+            //당근칼종료
+            
             WriteObjectName("<AnimationSet>:", j, m_AnimationClips[j], m_AnimationClips[j].length, nFramesPerSec, nKeyFrames);
 
             float fFrameRate = (1.0f / nFramesPerSec), fKeyFrameTime = 0.0f;

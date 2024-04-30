@@ -152,7 +152,52 @@ public:
 
 
 public:
-	void LoadModel(const char* pstrFileName);
+	
+	void LoadGeometryAndAnimationFromFile(char* pstrFileName);
+	void LoadFrameHierarchyFromFile(FILE* pInFile);
+	char							m_pstrFrameName[64];
+	XMFLOAT4X4						m_xmf4x4ToParent;
+
 	void LoadMeshFromFile(FILE* pInFile);
+	int								m_nVertices = 0;
+	char							m_pstrMeshName[64] = { 0 };
+	XMFLOAT3						m_xmf3AABBCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT3						m_xmf3AABBExtents = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT3* m_pxmf3Positions = NULL;
+	XMFLOAT4* m_pxmf4Colors = NULL;
+	XMFLOAT2* m_pxmf2TextureCoords0 = NULL;
+	XMFLOAT2* m_pxmf2TextureCoords1 = NULL;
+	XMFLOAT3* m_pxmf3Normals = NULL;
+	XMFLOAT3* m_pxmf3Tangents = NULL;
+	XMFLOAT3* m_pxmf3BiTangents = NULL;
+	int								m_nSubMeshes = 0;
+	int* m_pnSubSetIndices = NULL;
+	UINT** m_ppnSubSetIndices = NULL;
+
+	void LoadSkinInfoFromFile(FILE* pInFile);
+	int								m_nBonesPerVertex = 4;
+	int								m_nSkinningBones = 0;
+	char(*m_ppstrSkinningBoneNames)[64];
+	XMFLOAT4X4* m_pxmf4x4BindPoseBoneOffsets = NULL;
+	XMINT4* m_pxmn4BoneIndices = NULL;
+	XMFLOAT4* m_pxmf4BoneWeights = NULL;
+
+	void LoadMaterialsFromFile(FILE* pInFile);
+	int								m_nMaterials = 0;
+	XMFLOAT4						m_xmf4AlbedoColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	XMFLOAT4						m_xmf4EmissiveColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	XMFLOAT4						m_xmf4SpecularColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	XMFLOAT4						m_xmf4AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	float							m_fGlossiness = 0.0f;
+	float							m_fSmoothness = 0.0f;
+	float							m_fSpecularHighlight = 0.0f;
+	float							m_fMetallic = 0.0f;
+	float							m_fGlossyReflection = 0.0f;
+
+	void LoadTextureFromFile(FILE* pInFile);
+
+	void LoadAnimationFromFile(FILE* pInFile);
+	int								m_nBoneFrames = 0;
+	XMFLOAT4X4** m_ppxmf4x4KeyFrameTransforms = NULL;
 };
 

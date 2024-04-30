@@ -42,10 +42,6 @@ BinaryLoader::~BinaryLoader()
 void BinaryLoader::LoadBinary(const wstring& path)
 {
 	_resourceDirectory = path;
-	
-	const char* a = "..\\Resources\\FBX\\Map\\Gate\\Gate001.fbx";
-
-	LoadModel(a);
 
 
 	/*AddMeshData();
@@ -226,13 +222,111 @@ void BinaryLoader::AddAnimNames()
 	animNameInfo;			//<AnimationClipName>:
 }
 
-void BinaryLoader::LoadModel(const char* pstrFileName)
+void BinaryLoader::LoadGeometryAndAnimationFromFile(char* pstrFileName)
 {
 	FILE* pInFile = NULL;
 	::fopen_s(&pInFile, pstrFileName, "rb");
 	::rewind(pInFile);
 
-	LoadMeshFromFile(pInFile);
+	char pstrToken[64] = { '\0' };
+
+	for (; ; )
+	{
+		if (::ReadStringFromFile(pInFile, pstrToken))
+		{
+			if (!strcmp(pstrToken, "<Hierarchy>:"))
+			{
+				LoadFrameHierarchyFromFile(pInFile);
+				::ReadStringFromFile(pInFile, pstrToken); //"</Hierarchy>"
+			}
+			else if (!strcmp(pstrToken, "<Animation>:"))
+			{
+				LoadAnimationFromFile(pInFile);
+			}
+			else if (!strcmp(pstrToken, "</Animation>:"))
+			{
+				break;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	UINT nReads = 0;
+
+	int nFrame = 0, nTextures = 0;
+
+
+	for (; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+		if (!strcmp(pstrToken, "<Frame>:"))
+		{
+			nFrame = ::ReadIntegerFromFile(pInFile);
+			nTextures = ::ReadIntegerFromFile(pInFile);
+
+			::ReadStringFromFile(pInFile, m_pstrFrameName);
+		}
+		else if (!strcmp(pstrToken, "<Transform>:"))
+		{
+			XMFLOAT3 xmf3Position, xmf3Rotation, xmf3Scale;
+			XMFLOAT4 xmf4Rotation;
+			nReads = (UINT)::fread(&xmf3Position, sizeof(float), 3, pInFile);
+			nReads = (UINT)::fread(&xmf3Rotation, sizeof(float), 3, pInFile); //Euler Angle
+			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
+			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
+		}
+		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
+		{
+			nReads = (UINT)::fread(&m_xmf4x4ToParent, sizeof(float), 16, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<ParentIndex>:"))
+		{
+			//당근칼-요주의
+			::ReadIntegerFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Mesh>:"))
+		{
+			LoadMeshFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<SkinningInfo>:"))
+		{
+			LoadSkinInfoFromFile(pInFile);
+
+			::ReadStringFromFile(pInFile, pstrToken); //<Mesh>:
+			if (!strcmp(pstrToken, "<Mesh>:")) LoadMeshFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Materials>:"))
+		{
+			LoadMaterialsFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Children>:"))
+		{
+			int nChilds = ::ReadIntegerFromFile(pInFile);
+			if (nChilds > 0)
+			{
+				for (int i = 0; i < nChilds; i++)
+				{
+					LoadFrameHierarchyFromFile(pInFile);
+#ifdef _WITH_DEBUG_FRAME_HIERARCHY
+					TCHAR pstrDebug[256] = { 0 };
+					_stprintf_s(pstrDebug, 256, "(Frame: %p) (Parent: %p)\n"), pChild, pGameObject);
+					OutputDebugString(pstrDebug);
+#endif
+				}
+			}
+		}
+		else if (!strcmp(pstrToken, "</Frame>"))
+		{
+			break;
+		}
+	}
 }
 
 void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
@@ -240,28 +334,24 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 	char pstrToken[64] = { '\0' };
 	int nPositions = 0, nColors = 0, nNormals = 0, nTangents = 0, nBiTangents = 0, nTextureCoords = 0, nIndices = 0, nSubMeshes = 0, nSubIndices = 0;
 
-	int	m_nVertices = 0;
 	UINT nReads = (UINT)::fread(&m_nVertices, sizeof(int), 1, pInFile);
+
+	::ReadStringFromFile(pInFile, m_pstrMeshName);
+
 	for (; ; )
 	{
 		::ReadStringFromFile(pInFile, pstrToken);
 		if (!strcmp(pstrToken, "<Bounds>:"))
 		{
-			UINT nReads = (UINT)::fread(&_boundsValues, sizeof(float), 1, pInFile);
-			if (nReads == 1) { // 실제로 1개의 float 값을 읽었는지 확인
-				// <Bounds> 뒤의 값을 처리하는 코드
-			}
-			else {
-				// 파일에서 더 이상 데이터를 읽을 수 없는 경우, 또는 오류가 발생한 경우
-				break; // 읽기를 멈춥니다.
-			}
+			nReads = (UINT)::fread(&m_xmf3AABBCenter, sizeof(XMFLOAT3), 1, pInFile);
+			nReads = (UINT)::fread(&m_xmf3AABBExtents, sizeof(XMFLOAT3), 1, pInFile);
 		}
 		else if (!strcmp(pstrToken, "<Positions>:"))
 		{
 			nReads = (UINT)::fread(&nPositions, sizeof(int), 1, pInFile);
 			if (nPositions > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf3Positions, sizeof(XMFLOAT3), nPositions, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<Colors>:"))
@@ -269,7 +359,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nColors, sizeof(int), 1, pInFile);
 			if (nColors > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf4Colors, sizeof(XMFLOAT4), nColors, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<TextureCoords0>:"))
@@ -277,7 +367,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
 			if (nTextureCoords > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf2TextureCoords0, sizeof(XMFLOAT2), nTextureCoords, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<TextureCoords1>:"))
@@ -285,7 +375,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
 			if (nTextureCoords > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf2TextureCoords1, sizeof(XMFLOAT2), nTextureCoords, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<Normals>:"))
@@ -293,7 +383,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nNormals, sizeof(int), 1, pInFile);
 			if (nNormals > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf3Normals, sizeof(XMFLOAT3), nNormals, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<Tangents>:"))
@@ -301,7 +391,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nTangents, sizeof(int), 1, pInFile);
 			if (nTangents > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf3Tangents, sizeof(XMFLOAT3), nTangents, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<BiTangents>:"))
@@ -309,12 +399,11 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nBiTangents, sizeof(int), 1, pInFile);
 			if (nBiTangents > 0)
 			{
-				
+				nReads = (UINT)::fread(m_pxmf3BiTangents, sizeof(XMFLOAT3), nBiTangents, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<SubMeshes>:"))
 		{
-			int								m_nSubMeshes = 0;
 			nReads = (UINT)::fread(&(m_nSubMeshes), sizeof(int), 1, pInFile);
 			if (m_nSubMeshes > 0)
 			{
@@ -323,13 +412,12 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 					::ReadStringFromFile(pInFile, pstrToken);
 					if (!strcmp(pstrToken, "<SubMesh>:"))
 					{
-						int* m_pnSubSetIndices = NULL;
 						int nIndex = 0;
 						nReads = (UINT)::fread(&nIndex, sizeof(int), 1, pInFile); //i
 						nReads = (UINT)::fread(&(m_pnSubSetIndices[i]), sizeof(int), 1, pInFile);
 						if (m_pnSubSetIndices[i] > 0)
 						{
-							
+							nReads = (UINT)::fread(m_ppnSubSetIndices[i], sizeof(UINT), m_pnSubSetIndices[i], pInFile);
 						}
 					}
 				}
@@ -342,5 +430,247 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 	}
 }
 
+void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	UINT nReads = 0;
 
+	::ReadStringFromFile(pInFile, m_pstrMeshName);
+
+	for (; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+		if (!strcmp(pstrToken, "<BonesPerVertex>:"))
+		{
+			m_nBonesPerVertex = ::ReadIntegerFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Bounds>:"))
+		{
+			nReads = (UINT)::fread(&m_xmf3AABBCenter, sizeof(XMFLOAT3), 1, pInFile);
+			nReads = (UINT)::fread(&m_xmf3AABBExtents, sizeof(XMFLOAT3), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<BoneNames>:"))
+		{
+			m_nSkinningBones = ::ReadIntegerFromFile(pInFile);
+			if (m_nSkinningBones > 0)
+			{
+				for (int i = 0; i < m_nSkinningBones; i++)
+				{
+					::ReadStringFromFile(pInFile, m_ppstrSkinningBoneNames[i]);
+				}
+			}
+		}
+		else if (!strcmp(pstrToken, "<BoneOffsets>:"))
+		{
+			m_nSkinningBones = ::ReadIntegerFromFile(pInFile);
+			if (m_nSkinningBones > 0)
+			{
+				nReads = (UINT)::fread(m_pxmf4x4BindPoseBoneOffsets, sizeof(XMFLOAT4X4), m_nSkinningBones, pInFile);
+
+				for (int i = 0; i < m_nSkinningBones; i++)
+				{
+				}
+			}
+		}
+		else if (!strcmp(pstrToken, "<BoneIndices>:"))
+		{
+
+			m_nVertices = ::ReadIntegerFromFile(pInFile);
+			if (m_nVertices > 0)
+			{
+				nReads = (UINT)::fread(m_pxmn4BoneIndices, sizeof(XMINT4), m_nVertices, pInFile);
+			}
+		}
+		else if (!strcmp(pstrToken, "<BoneWeights>:"))
+		{
+
+			m_nVertices = ::ReadIntegerFromFile(pInFile);
+			if (m_nVertices > 0)
+			{
+
+				nReads = (UINT)::fread(m_pxmf4BoneWeights, sizeof(XMFLOAT4), m_nVertices, pInFile);
+			}
+		}
+		else if (!strcmp(pstrToken, "</SkinningInfo>"))
+		{
+			break;
+		}
+	}
+}
+
+void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	int nMaterial = 0;
+	UINT nReads = 0;
+
+	m_nMaterials = ReadIntegerFromFile(pInFile);
+
+	for (; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+
+		if (!strcmp(pstrToken, "<Material>:"))
+		{
+			nMaterial = ReadIntegerFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<MaterialName>:"))
+		{
+			//당근칼-요주의
+			::ReadStringFromFile(pInFile, pstrToken);
+		}
+		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
+		{
+			nReads = (UINT)::fread(&m_xmf4AlbedoColor, sizeof(float), 4, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<EmissiveColor>:"))
+		{
+			nReads = (UINT)::fread(&m_xmf4EmissiveColor, sizeof(float), 4, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<SpecularColor>:"))
+		{
+			nReads = (UINT)::fread(&m_xmf4SpecularColor, sizeof(float), 4, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Glossiness>:"))
+		{
+			nReads = (UINT)::fread(&m_fGlossiness, sizeof(float), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Smoothness>:"))
+		{
+			nReads = (UINT)::fread(&m_fSmoothness, sizeof(float), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<Metallic>:"))
+		{
+			nReads = (UINT)::fread(&m_fSpecularHighlight, sizeof(float), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<SpecularHighlight>:"))
+		{
+			nReads = (UINT)::fread(&m_fMetallic, sizeof(float), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<GlossyReflection>:"))
+		{
+			nReads = (UINT)::fread(&m_fGlossyReflection, sizeof(float), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<AlbedoMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<SpecularMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<NormalMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<MetallicMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<EmissionMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<DetailAlbedoMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<DetailNormalMap>:"))
+		{
+			LoadTextureFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "</Materials>"))
+		{
+			break;
+		}
+	}
+}
+
+void BinaryLoader::LoadTextureFromFile(FILE* pInFile)
+{
+	char pstrTextureName[64] = { '\0' };
+
+	BYTE nStrLength = 64;
+	UINT nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pInFile);
+	nReads = (UINT)::fread(pstrTextureName, sizeof(char), nStrLength, pInFile);
+	pstrTextureName[nStrLength] = '\0';
+
+	bool bDuplicated = false;
+	
+}
+
+void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	UINT nReads = 0;
+
+	int nAnimationSets = 0;
+
+	for ( ; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+		if (!strcmp(pstrToken, "<AnimationSets>:"))
+		{
+			nAnimationSets = ::ReadIntegerFromFile(pInFile);
+		}
+		else if (!strcmp(pstrToken, "<FrameNames>:"))
+		{
+			m_nBoneFrames = ::ReadIntegerFromFile(pInFile); 
+			for (int j = 0; j < m_nBoneFrames; j++)
+			{
+				::ReadStringFromFile(pInFile, pstrToken);
+
+#ifdef _WITH_DEBUG_SKINNING_BONE
+				TCHAR pstrDebug[256] = { 0 };
+				TCHAR pwstrAnimationBoneName[64] = { 0 };
+				TCHAR pwstrBoneCacheName[64] = { 0 };
+				size_t nConverted = 0;
+				mbstowcs_s(&nConverted, pwstrAnimationBoneName, 64, pstrToken, _TRUNCATE);
+				mbstowcs_s(&nConverted, pwstrBoneCacheName, 64, pLoadedModel->m_ppBoneFrameCaches[j]->m_pstrFrameName, _TRUNCATE);
+				_stprintf_s(pstrDebug, 256, _T("AnimationBoneFrame:: Cache(%s) AnimationBone(%s)\n"), pwstrBoneCacheName, pwstrAnimationBoneName);
+				OutputDebugString(pstrDebug);
+#endif
+			}
+		}
+		else if (!strcmp(pstrToken, "<AnimationClipName>:"))
+		{
+			::ReadStringFromFile(pInFile, pstrToken);
+		}
+		else if (!strcmp(pstrToken, "<AnimationSet>:"))
+		{
+			int nAnimationSet = ::ReadIntegerFromFile(pInFile);
+
+			::ReadStringFromFile(pInFile, pstrToken); //Animation Set Name
+
+			float fLength = ::ReadFloatFromFile(pInFile);
+			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);
+			int nKeyFrames = ::ReadIntegerFromFile(pInFile);
+			for (int i = 0; i < nKeyFrames; i++)
+			{
+				::ReadStringFromFile(pInFile, pstrToken);
+				if (!strcmp(pstrToken, "<Transforms>:"))
+				{
+
+					int nKey = ::ReadIntegerFromFile(pInFile); //i
+					float fKeyTime = ::ReadFloatFromFile(pInFile);
+
+#ifdef _WITH_ANIMATION_SRT
+					m_pfKeyFrameScaleTimes[i] = fKeyTime;
+					m_pfKeyFrameRotationTimes[i] = fKeyTime;
+					m_pfKeyFrameTranslationTimes[i] = fKeyTime;
+					nReads = (UINT)::fread(pAnimationSet->m_ppxmf3KeyFrameScales[i], sizeof(XMFLOAT3), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
+					nReads = (UINT)::fread(pAnimationSet->m_ppxmf4KeyFrameRotations[i], sizeof(XMFLOAT4), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
+					nReads = (UINT)::fread(pAnimationSet->m_ppxmf3KeyFrameTranslations[i], sizeof(XMFLOAT3), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
+#else
+					nReads = (UINT)::fread(m_ppxmf4x4KeyFrameTransforms[i], sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
+#endif
+				}
+			}
+		}
+		else if (!strcmp(pstrToken, "</AnimationSets>"))
+		{
+			break;
+		}
+	}
+}
 
