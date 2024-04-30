@@ -27,16 +27,17 @@ BinaryLoader::~BinaryLoader()
 
 void BinaryLoader::LoadBinary(const wstring& path)
 {
-	_meshes.push_back(BinaryMeshInfo());
-	BinaryMeshInfo& meshInfo = _meshes.back();
-	meshInfo.name = path;
-
 	_resourceDirectory = path;
-	//_meshes
+	
+	AddMeshData();
+	AddBonesData();
+	AddAnimClipsData();
+	AddAnimNames();
 
 	
-
-	
+	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
+	CreateTextures();
+	CreateMaterials();
 }
 
 void BinaryLoader::CreateTextures()
@@ -122,6 +123,66 @@ void BinaryLoader::CreateMaterials()
 			GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
 		}
 	}
+}
+
+void BinaryLoader::AddMeshData()
+{
+	_meshes.push_back(BinaryMeshInfo());
+	BinaryMeshInfo& meshInfo = _meshes.back();
+	meshInfo.name;
+	for (auto& a : meshInfo.vertices)
+	{
+		a.pos;
+		a.uv;
+		a.normal;
+		a.tangent;
+		a.weights;
+		a.normal;
+	}
+	meshInfo.indices;
+	for (auto& a : meshInfo.materials)
+	{
+		a.diffuse;
+		a.ambient;
+		a.specular;
+		a.name;
+		a.diffuseTexName;
+		a.normalTexName;
+		a.specularTexName;
+	}
+	meshInfo.boneWeights;
+	meshInfo.hasAnimation;
+}
+
+void BinaryLoader::AddBonesData()
+{
+	_bones.push_back(shared_ptr<BinaryBoneInfo>());
+	shared_ptr<BinaryBoneInfo>& boneInfo = _bones.back();
+	boneInfo->boneName;
+	boneInfo->parentIndex;
+	boneInfo->matOffset;
+}
+
+void BinaryLoader::AddAnimClipsData()
+{
+	_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
+	shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
+	animInfo->name;
+	animInfo->startTime;
+	animInfo->endTime;
+	animInfo->mode;
+	for (auto& a : animInfo->keyFrames)
+	{
+		a.push_back(BinaryKeyFrameInfo(Matrix(), 5));
+	}
+	
+}
+
+void BinaryLoader::AddAnimNames()
+{
+	_animNames.push_back(string());
+	string& animNameInfo = _animNames.back();
+	animNameInfo;
 }
 
 

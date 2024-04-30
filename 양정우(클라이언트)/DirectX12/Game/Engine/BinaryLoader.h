@@ -143,14 +143,9 @@ private:
 
 public:
 
-	void LoadGeometryAndAnimationFromFile();
-
-	void LoadFrameHierarchyFromFile();
-	void LoadMeshFromFile();
-	void LoadSkinInfoFromFile();
-	void LoadMaterialsFromFile();
-	void LoadTextureFromFile();
-
-	void LoadAnimationFromFile();
+	void AddMeshData();
+	void AddBonesData();
+	void AddAnimClipsData();
+	void AddAnimNames();
 };
 
