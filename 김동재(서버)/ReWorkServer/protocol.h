@@ -15,6 +15,9 @@
 #define MY_SERVER_PORT  "4000"
 #define MY_PORT 4000
 
+#define OT_PLAYER 0
+#define OT_OBJECT 1
+
 #define CS_POS_INFO 1
 #define CS_BOX_CREATE 2
 #define CS_MOUSE_INFO 3
