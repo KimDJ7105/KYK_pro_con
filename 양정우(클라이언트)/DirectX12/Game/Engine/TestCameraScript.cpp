@@ -54,21 +54,19 @@ void TestCameraScript::LateUpdate()
 
 		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 
-		//여기서 타입이 플레이어일때만으로 해주어야 한다.
-		if (? ? ? )
+		//여기서 타입이 플레이어일때만
+		//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
+		if (pickedObject->GetTransform()->GetObjectType() == 0)
 		{
+			cs_packet_picking_info ppi;
+			ppi.size = sizeof(cs_packet_picking_info);
+			ppi.type = CS_PICKING_INFO;
+			ppi.shooter_id = playerID;
+			ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
+			session->Send_Packet(&ppi);
 		}
-
-		cs_packet_picking_info ppi;
-		ppi.size = sizeof(cs_packet_picking_info);
-		ppi.type = CS_PICKING_INFO;
-		ppi.shooter_id = playerID;
-		ppi.target_id = pickedObject->GetTransform()->GetObjectID();
-
-		session->Send_Packet(&ppi);
-
-
+		
 
 		/*scene->RemoveGameObject(pickedObject); */
 	}
