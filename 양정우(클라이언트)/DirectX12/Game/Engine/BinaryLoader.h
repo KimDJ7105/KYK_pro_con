@@ -153,7 +153,7 @@ public:
 
 public:
 	
-	void LoadGeometryAndAnimationFromFile(char* pstrFileName);
+	void LoadGeometryAndAnimationFromFile(const char* pstrFileName);
 	void LoadFrameHierarchyFromFile(FILE* pInFile);
 	char							m_pstrFrameName[64];
 	XMFLOAT4X4						m_xmf4x4ToParent;

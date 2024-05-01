@@ -5,6 +5,10 @@
 #include "Shader.h"
 #include "Material.h"
 
+#include <locale>
+#include <codecvt>
+#include <string>
+
 BYTE ReadStringFromFile(FILE* pInFile, char* pstrToken)
 {
 	BYTE nStrLength = 0;
@@ -41,8 +45,16 @@ BinaryLoader::~BinaryLoader()
 
 void BinaryLoader::LoadBinary(const wstring& path)
 {
+	int utf8Length = WideCharToMultiByte(CP_UTF8, 0, path.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string utf8Path(utf8Length, 0);
+	WideCharToMultiByte(CP_UTF8, 0, path.c_str(), -1, &utf8Path[0], utf8Length, nullptr, nullptr);
+
+	// 2. UTF-8 문자열을 char*로 변환
+	const char* charPath = utf8Path.c_str();
+
 	_resourceDirectory = path;
 
+	LoadGeometryAndAnimationFromFile(charPath);
 
 	/*AddMeshData();
 	AddBonesData();
@@ -222,7 +234,7 @@ void BinaryLoader::AddAnimNames()
 	animNameInfo;			//<AnimationClipName>:
 }
 
-void BinaryLoader::LoadGeometryAndAnimationFromFile(char* pstrFileName)
+void BinaryLoader::LoadGeometryAndAnimationFromFile(const char* pstrFileName)
 {
 	FILE* pInFile = NULL;
 	::fopen_s(&pInFile, pstrFileName, "rb");
@@ -289,7 +301,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<ParentIndex>:"))
 		{
 			//당근칼-요주의
-			::ReadIntegerFromFile(pInFile);
+			int a = ::ReadIntegerFromFile(pInFile);
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -351,6 +363,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nPositions, sizeof(int), 1, pInFile);
 			if (nPositions > 0)
 			{
+				m_pxmf3Positions = new XMFLOAT3[nPositions];
 				nReads = (UINT)::fread(m_pxmf3Positions, sizeof(XMFLOAT3), nPositions, pInFile);
 			}
 		}
@@ -359,6 +372,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nColors, sizeof(int), 1, pInFile);
 			if (nColors > 0)
 			{
+				m_pxmf4Colors = new XMFLOAT4[nColors];
 				nReads = (UINT)::fread(m_pxmf4Colors, sizeof(XMFLOAT4), nColors, pInFile);
 			}
 		}
@@ -367,6 +381,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
 			if (nTextureCoords > 0)
 			{
+				m_pxmf2TextureCoords0 = new XMFLOAT2[nTextureCoords];
 				nReads = (UINT)::fread(m_pxmf2TextureCoords0, sizeof(XMFLOAT2), nTextureCoords, pInFile);
 			}
 		}
@@ -375,6 +390,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
 			if (nTextureCoords > 0)
 			{
+				m_pxmf2TextureCoords1 = new XMFLOAT2[nTextureCoords];
 				nReads = (UINT)::fread(m_pxmf2TextureCoords1, sizeof(XMFLOAT2), nTextureCoords, pInFile);
 			}
 		}
@@ -383,6 +399,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nNormals, sizeof(int), 1, pInFile);
 			if (nNormals > 0)
 			{
+				m_pxmf3Normals = new XMFLOAT3[nNormals];
 				nReads = (UINT)::fread(m_pxmf3Normals, sizeof(XMFLOAT3), nNormals, pInFile);
 			}
 		}
@@ -391,6 +408,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nTangents, sizeof(int), 1, pInFile);
 			if (nTangents > 0)
 			{
+				m_pxmf3Tangents = new XMFLOAT3[nTangents];
 				nReads = (UINT)::fread(m_pxmf3Tangents, sizeof(XMFLOAT3), nTangents, pInFile);
 			}
 		}
@@ -399,6 +417,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&nBiTangents, sizeof(int), 1, pInFile);
 			if (nBiTangents > 0)
 			{
+				m_pxmf3BiTangents = new XMFLOAT3[nBiTangents];
 				nReads = (UINT)::fread(m_pxmf3BiTangents, sizeof(XMFLOAT3), nBiTangents, pInFile);
 			}
 		}
@@ -407,16 +426,20 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&(m_nSubMeshes), sizeof(int), 1, pInFile);
 			if (m_nSubMeshes > 0)
 			{
+				m_pnSubSetIndices = new int[m_nSubMeshes];
+				m_ppnSubSetIndices = new UINT * [m_nSubMeshes];
 				for (int i = 0; i < m_nSubMeshes; i++)
 				{
 					::ReadStringFromFile(pInFile, pstrToken);
 					if (!strcmp(pstrToken, "<SubMesh>:"))
 					{
 						int nIndex = 0;
+						
 						nReads = (UINT)::fread(&nIndex, sizeof(int), 1, pInFile); //i
 						nReads = (UINT)::fread(&(m_pnSubSetIndices[i]), sizeof(int), 1, pInFile);
 						if (m_pnSubSetIndices[i] > 0)
 						{
+							m_ppnSubSetIndices[i] = new UINT[m_pnSubSetIndices[i]];
 							nReads = (UINT)::fread(m_ppnSubSetIndices[i], sizeof(UINT), m_pnSubSetIndices[i], pInFile);
 						}
 					}
@@ -454,6 +477,7 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nSkinningBones = ::ReadIntegerFromFile(pInFile);
 			if (m_nSkinningBones > 0)
 			{
+				m_ppstrSkinningBoneNames = new char[m_nSkinningBones][64];
 				for (int i = 0; i < m_nSkinningBones; i++)
 				{
 					::ReadStringFromFile(pInFile, m_ppstrSkinningBoneNames[i]);
@@ -465,6 +489,7 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nSkinningBones = ::ReadIntegerFromFile(pInFile);
 			if (m_nSkinningBones > 0)
 			{
+				m_pxmf4x4BindPoseBoneOffsets = new XMFLOAT4X4[m_nSkinningBones];
 				nReads = (UINT)::fread(m_pxmf4x4BindPoseBoneOffsets, sizeof(XMFLOAT4X4), m_nSkinningBones, pInFile);
 
 				for (int i = 0; i < m_nSkinningBones; i++)
@@ -478,6 +503,7 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nVertices = ::ReadIntegerFromFile(pInFile);
 			if (m_nVertices > 0)
 			{
+				m_pxmn4BoneIndices = new XMINT4[m_nVertices];
 				nReads = (UINT)::fread(m_pxmn4BoneIndices, sizeof(XMINT4), m_nVertices, pInFile);
 			}
 		}
@@ -487,7 +513,7 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nVertices = ::ReadIntegerFromFile(pInFile);
 			if (m_nVertices > 0)
 			{
-
+				m_pxmf4BoneWeights = new XMFLOAT4[m_nVertices];
 				nReads = (UINT)::fread(m_pxmf4BoneWeights, sizeof(XMFLOAT4), m_nVertices, pInFile);
 			}
 		}
@@ -517,7 +543,7 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<MaterialName>:"))
 		{
 			//당근칼-요주의
-			::ReadStringFromFile(pInFile, pstrToken);
+			BYTE a = ::ReadStringFromFile(pInFile, pstrToken);
 		}
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
@@ -634,7 +660,8 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<AnimationClipName>:"))
 		{
-			::ReadStringFromFile(pInFile, pstrToken);
+			//당근칼-요주의
+			BYTE a = ::ReadStringFromFile(pInFile, pstrToken);
 		}
 		else if (!strcmp(pstrToken, "<AnimationSet>:"))
 		{

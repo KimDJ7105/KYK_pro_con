@@ -475,7 +475,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player_Walk.fbx");
-		//shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player.bin");
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
 		//흐름 1)여기에서 gameObjects에 들거아야하는 meshData에는 mesh(메시정보와 애니메이션 정보), material이 있다.
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
@@ -497,7 +497,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate001.fbx");
-		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Gate001.bin");
+		//shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Gate001.bin");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
