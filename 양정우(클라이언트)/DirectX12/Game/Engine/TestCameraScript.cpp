@@ -54,9 +54,11 @@ void TestCameraScript::LateUpdate()
 
 		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 
+		int a = pickedObject->GetTransform()->GetObjectType();
+
 		//여기서 타입이 플레이어일때만
 		//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
-		if (pickedObject->GetTransform()->GetObjectType() == 0)
+		if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
 		{
 			cs_packet_picking_info ppi;
 			ppi.size = sizeof(cs_packet_picking_info);
