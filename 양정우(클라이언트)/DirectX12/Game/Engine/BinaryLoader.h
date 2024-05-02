@@ -157,7 +157,7 @@ public:
 	void LoadFrameHierarchyFromFile(FILE* pInFile);
 
 private:
-	UINT* asd = NULL;
+	vector<UINT> m_nParentIndex;
 
 private:
 	char							m_pstrFrameName[64];
@@ -207,6 +207,7 @@ private:
 	int								m_nSkinningBones = 0;
 	char(*m_ppstrSkinningBoneNames)[64];
 	XMFLOAT4X4* m_pxmf4x4BindPoseBoneOffsets = NULL;
+	Matrix* m_pvec4x4BindPoseBoneOffsets = NULL;
 
 	XMINT4* m_pxmn4BoneIndices = NULL;
 	MyInt4* m_pvec4BoneIndices = NULL;	//당근칼 - 원래는 int의 4개씩 배열인데 일단 이렇게 했다.
@@ -242,6 +243,7 @@ public:
 	wstring							m_strSpecularTexName;
 
 	void LoadAnimationFromFile(FILE* pInFile);
+	bool isAnimation = false;
 	char							m_pstrAnimationClipName[64] = { 0 };
 
 private:

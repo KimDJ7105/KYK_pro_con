@@ -493,6 +493,16 @@ public class TextHierarchicalModelExtract : MonoBehaviour
         WriteBoneNames(nLevel + 1, "<BoneNames>:", skinMeshRenderer.bones);
         WriteMatrixes(nLevel + 1, "<BoneOffsets>:", skinMeshRenderer.sharedMesh.bindposes);
         WriteBoneIndices(nLevel + 1, "<BoneIndices>:", skinMeshRenderer.sharedMesh.boneWeights);
+
+        Transform[] bones = skinMeshRenderer.bones;
+        for (int i = 0; i < bones.Length; i++)
+        {
+            Transform parentBone = bones[i].parent;
+            int parentIndex = (parentBone != null) ? parentBone.GetSiblingIndex() : -1;
+            WriteLineString(nLevel + 1, "<BoneParentIndex>:" + parentIndex);
+        }
+
+
         WriteBoneWeights(nLevel + 1, "<BoneWeights>:", skinMeshRenderer.sharedMesh.boneWeights);
         WriteLineString(nLevel, "</SkinningInfo>");
 
@@ -508,17 +518,6 @@ public class TextHierarchicalModelExtract : MonoBehaviour
 
         WriteTransform(nLevel + 1, "<Transform>:", current);
         WriteLocalMatrix(nLevel + 1, "<TransformMatrix>:", current);
-
-        //당근칼
-        // Calculate parent index
-        int parentIndex = -1; // Default to -1 if there is no parent
-        Transform parentTransform = current.parent;
-        if (parentTransform != null)
-        {
-            parentIndex = parentTransform.GetSiblingIndex();
-        }
-        WriteLineString(nLevel + 1, "<ParentIndex>:" + parentIndex);
-        //당근칼종료
 
         MeshFilter meshFilter = current.gameObject.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = current.gameObject.GetComponent<MeshRenderer>();

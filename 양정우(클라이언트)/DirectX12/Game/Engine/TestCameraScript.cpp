@@ -59,20 +59,20 @@ void TestCameraScript::MoveUpdate()
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
-		//pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 		//std::cout << "W 입력 처리중" << std::endl;
 
 		// Right벡터와 수직벡터의 외적값 -> 정면
-		pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
+		//pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
-		//pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 		//std::cout << "S 입력 처리중" << std::endl;
 
-		pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
+		//pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
@@ -92,7 +92,7 @@ void TestCameraScript::MoveUpdate()
 		//pos += XMVector3Cross(GetTransform()->GetLook(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
-	pos.y = tempPos.y;
+	//pos.y = tempPos.y;
 
 	// J가 눌렸다가 떼어지면
 	if (INPUT->GetButtonUp(KEY_TYPE::J))

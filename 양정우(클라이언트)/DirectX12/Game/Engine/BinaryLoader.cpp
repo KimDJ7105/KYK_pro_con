@@ -78,6 +78,7 @@ BinaryLoader::~BinaryLoader()
 
 	if (m_ppstrSkinningBoneNames) delete[] m_ppstrSkinningBoneNames;
 	if (m_pxmf4x4BindPoseBoneOffsets) delete[] m_pxmf4x4BindPoseBoneOffsets;
+	if (m_pvec4x4BindPoseBoneOffsets) delete[] m_pvec4x4BindPoseBoneOffsets;
 
 	if (m_pxmn4BoneIndices) delete[] m_pxmn4BoneIndices;
 	if (m_pvec4BoneIndices) delete[] m_pvec4BoneIndices;
@@ -96,12 +97,14 @@ void BinaryLoader::LoadBinary(const wstring& path)
 	// 2. UTF-8 문자열을 char*로 변환
 	const char* charPath = utf8Path.c_str();
 
-	_resourceDirectory = path;
+	//_resourceDirectory = path;
+	std::wstring directory = L"..\\Resources\\Binary";
+	_resourceDirectory = directory;
 
 	LoadGeometryAndAnimationFromFile(charPath);
 
 	AddMeshData();
-	//AddBonesData();
+	AddBonesData();
 	//AddAnimClipsData();
 	//AddAnimNames();
 
@@ -121,8 +124,8 @@ void BinaryLoader::CreateTextures()
 			{
 				wstring relativePath = _meshes[i].materials[j].diffuseTexName.c_str();
 				wstring filename = fs::path(relativePath).filename();
-				wstring fullPath = _resourceDirectory + L"\\" + filename;
-				if (filename.empty() == false)
+				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".png";
+				if (filename.empty() == false && relativePath != L"null")
 					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
 			}
 
@@ -130,8 +133,8 @@ void BinaryLoader::CreateTextures()
 			{
 				wstring relativePath = _meshes[i].materials[j].normalTexName.c_str();
 				wstring filename = fs::path(relativePath).filename();
-				wstring fullPath = _resourceDirectory + L"\\" + filename;
-				if (filename.empty() == false)
+				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".png";
+				if (filename.empty() == false && relativePath != L"null")
 					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
 			}
 
@@ -139,8 +142,8 @@ void BinaryLoader::CreateTextures()
 			{
 				wstring relativePath = _meshes[i].materials[j].specularTexName.c_str();
 				wstring filename = fs::path(relativePath).filename();
-				wstring fullPath = _resourceDirectory + L"\\" + filename;
-				if (filename.empty() == false)
+				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".png";
+				if (filename.empty() == false && relativePath != L"null")
 					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
 			}
 		}
@@ -225,10 +228,11 @@ void BinaryLoader::AddMeshData()
 	BinaryMeshInfo& meshInfo = _meshes.back();
 	meshInfo.name = m_strMeshName; // <Mesh>:
 
+	meshInfo.vertices.resize(m_iPositionNum);
 	// 정점 추가
 	for (int i = 0; i < m_iPositionNum; i++) {
-		meshInfo.vertices.push_back(Vertex());
-		meshInfo.vertices.back().pos = m_pvec3Positions[i]; // <Positions>:
+		meshInfo.vertices[i] = Vertex();
+		meshInfo.vertices[i].pos = m_pvec3Positions[i]; // <Positions>:
 	}
 
 	// 텍스처 좌표 추가
@@ -246,15 +250,22 @@ void BinaryLoader::AddMeshData()
 		meshInfo.vertices[i].tangent = m_pvec3Tangents[i]; // <Tangents>:
 	}
 
-	// 뼈 가중치 추가
-	for (int i = 0; i < m_nVertices; i++) {
-		meshInfo.vertices[i].weights = m_pvec4BoneWeights[i]; // <BoneWeights>:
+	if (m_pvec4BoneWeights)
+	{
+		// 뼈 가중치 추가
+		for (int i = 0; i < m_nVertices; i++) {
+			meshInfo.vertices[i].weights = m_pvec4BoneWeights[i]; // <BoneWeights>:
+		}
 	}
-
-	// 뼈 인덱스 추가
-	for (int i = 0; i < m_nVertices; i++) {
-		meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
+	
+	if (m_pvec4BoneIndices)
+	{
+		// 뼈 인덱스 추가
+		for (int i = 0; i < m_nVertices; i++) {
+			meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
+		}
 	}
+	
 
 	for (int i = 0; i < m_nSubMeshes; i++) {
 		// 서브메시의 인덱스 배열을 가져옴
@@ -270,21 +281,22 @@ void BinaryLoader::AddMeshData()
 		meshInfo.indices.push_back(subMeshVector);	//<SubMesh>:
 	}
 
-
-	for (auto& a : meshInfo.materials)
-	{
-		a.diffuse = m_xmf4AlbedoColor;		//<AlbedoColor>:
-		a.ambient = m_xmf4EmissiveColor;		//<EmissiveColor>:
-		a.specular = m_xmf4SpecularColor;		//<SpecularColor>:
-		a.name = m_strMaterialName;			//<MaterialName>:
-		a.diffuseTexName = m_strDiffuseTexName;	//<AlbedoMap>:
-		a.normalTexName = m_strNormalTexName;	//<NormalMap>:
-		a.specularTexName = m_strSpecularTexName;	//<SpecularMap>:
+	// 재질 추가
+	meshInfo.materials.resize(m_nMaterials);
+	for (int i = 0; i < m_nSubMeshes; i++) {
+		BinaryMaterialInfo& material = meshInfo.materials[i];
+		material.diffuse = m_xmf4AlbedoColor;           //<AlbedoColor>:
+		material.ambient = m_xmf4EmissiveColor;          //<EmissiveColor>:
+		material.specular = m_xmf4SpecularColor;         //<SpecularColor>:
+		material.name = m_strMaterialName;               //<MaterialName>:
+		material.diffuseTexName = m_strDiffuseTexName;   //<AlbedoMap>:
+		material.normalTexName = m_strNormalTexName;     //<NormalMap>:
+		material.specularTexName = m_strSpecularTexName; //<SpecularMap>:
 	}
 
 
 	meshInfo.boneWeights;	//??? 1혹은 2로 사이즈가 고정된다.
-	meshInfo.hasAnimation;	//내가 직접 해줘야하나....
+	meshInfo.hasAnimation = isAnimation;	//내가 직접 해줘야하나....그래서 애니메이션정보를 뽑으면 하는거로 했다.
 }
 
 void BinaryLoader::AddBonesData()
@@ -296,8 +308,8 @@ void BinaryLoader::AddBonesData()
 		// 이름 설정
 		boneInfo->boneName = ConvertCharToWString(m_ppstrSkinningBoneNames[i]);		//<BoneNames>:
 
-		boneInfo->parentIndex;	//<ParentIndex>:
-		boneInfo->matOffset;	//<BoneOffsets>:
+		boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
+		boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:
 
 		// _bones에 추가
 		_bones.push_back(boneInfo);
@@ -389,19 +401,6 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4x4ToParent, sizeof(float), 16, pInFile);
-		}
-		else if (!strcmp(pstrToken, "<ParentIndex>:"))
-		{
-			//당근칼-요주의
-			int a = ::ReadIntegerFromFile(pInFile);
-			/*if (a > 0)
-			{
-				for (int i = 0; i < a; i++)
-				{
-					nReads = (UINT)::fread(asd, sizeof(UINT), a, pInFile);
-				}
-			}*/
-			
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -604,12 +603,13 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nSkinningBones = ::ReadIntegerFromFile(pInFile);
 			if (m_nSkinningBones > 0)
 			{
-				m_pxmf4x4BindPoseBoneOffsets = new XMFLOAT4X4[m_nSkinningBones];
-				nReads = (UINT)::fread(m_pxmf4x4BindPoseBoneOffsets, sizeof(XMFLOAT4X4), m_nSkinningBones, pInFile);
-
-				for (int i = 0; i < m_nSkinningBones; i++)
+				/*m_pxmf4x4BindPoseBoneOffsets = new XMFLOAT4X4[m_nSkinningBones];
+				nReads = (UINT)::fread(m_pxmf4x4BindPoseBoneOffsets, sizeof(XMFLOAT4X4), m_nSkinningBones, pInFile);*/
+				m_pvec4x4BindPoseBoneOffsets = new Matrix[m_nSkinningBones];
+				nReads = (UINT)::fread(m_pvec4x4BindPoseBoneOffsets, sizeof(Matrix), m_nSkinningBones, pInFile);
+				/*for (int i = 0; i < m_nSkinningBones; i++)
 				{
-				}
+				}*/
 			}
 		}
 		else if (!strcmp(pstrToken, "<BoneIndices>:"))
@@ -623,6 +623,12 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 				m_pvec4BoneIndices = new MyInt4[m_nVertices];
 				nReads = (UINT)::fread(m_pvec4BoneIndices, sizeof(MyInt4), m_nVertices, pInFile);
 			}
+		}
+		else if (!strcmp(pstrToken, "<BoneParentIndex>:"))
+		{
+			//당근칼-요주의
+			int a = ::ReadIntegerFromFile(pInFile);
+			m_nParentIndex.push_back(a);
 		}
 		else if (!strcmp(pstrToken, "<BoneWeights>:"))
 		{
@@ -754,6 +760,7 @@ char* BinaryLoader::LoadTextureFromFile(FILE* pInFile)
 
 void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 {
+	isAnimation = true;
 	char pstrToken[64] = { '\0' };
 	UINT nReads = 0;
 

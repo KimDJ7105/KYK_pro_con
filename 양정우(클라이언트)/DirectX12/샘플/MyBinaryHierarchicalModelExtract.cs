@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEditor;
 using System.Text;
+using UnityEngine.XR;
 
 public class BinaryHierarchicalModelExtract : MonoBehaviour
 {
@@ -575,6 +576,16 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
         WriteBoneNames("<BoneNames>:", skinMeshRenderer.bones);
         WriteMatrixes("<BoneOffsets>:", skinMeshRenderer.sharedMesh.bindposes);
         WriteBoneIndices("<BoneIndices>:", skinMeshRenderer.sharedMesh.boneWeights);
+
+        // Write Bone Parent Indices
+        Transform[] bones = skinMeshRenderer.bones;
+        for (int i = 0; i < bones.Length; i++)
+        {
+            Transform parentBone = bones[i].parent;
+            int parentIndex = (parentBone != null) ? parentBone.GetSiblingIndex() : -1;
+            WriteInteger("<BoneParentIndex>:", parentIndex);
+        }
+
         WriteBoneWeights("<BoneWeights>:", skinMeshRenderer.sharedMesh.boneWeights);
         WriteString("</SkinningInfo>");
 
@@ -588,17 +599,6 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
 
         WriteTransform("<Transform>:", current);
         WriteLocalMatrix("<TransformMatrix>:", current);
-
-        //당근칼
-        // Calculate parent index
-        int parentIndex = -1; // Default to 0 if there is no parent
-        Transform parentTransform = current.parent;
-        if (parentTransform != null)
-        {
-            parentIndex = parentTransform.GetSiblingIndex();
-        }
-        WriteInteger("<ParentIndex>:", parentIndex);
-        //당근칼종료
 
         MeshFilter meshFilter = current.gameObject.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = current.gameObject.GetComponent<MeshRenderer>();
