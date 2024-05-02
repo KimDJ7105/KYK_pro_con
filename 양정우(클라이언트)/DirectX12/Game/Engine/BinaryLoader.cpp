@@ -34,6 +34,17 @@ float ReadFloatFromFile(FILE* pInFile)
 	return(fValue);
 }
 
+std::wstring ConvertCharToWString(const char* source) {
+	int requiredSize = MultiByteToWideChar(CP_UTF8, 0, source, -1, nullptr, 0);
+	if (requiredSize == 0) {
+		// 변환 실패
+		return L"";
+	}
+
+	std::wstring result(requiredSize, 0);
+	MultiByteToWideChar(CP_UTF8, 0, source, -1, &result[0], requiredSize);
+	return result;
+}
 
 BinaryLoader::BinaryLoader()
 {
@@ -41,6 +52,39 @@ BinaryLoader::BinaryLoader()
 
 BinaryLoader::~BinaryLoader()
 {
+	//데이터 집어넣을때 썻던 애들
+	if (m_pxmf3Positions) delete[] m_pxmf3Positions;
+	if (m_pvec3Positions) delete[] m_pvec3Positions;
+
+	if (m_pxmf4Colors) delete[] m_pxmf4Colors;
+
+	if (m_pxmf3Normals) delete[] m_pxmf3Normals;
+	if (m_pvec33Normals) delete[] m_pvec33Normals;
+
+	if (m_pxmf3Tangents) delete[] m_pxmf3Tangents;
+	if (m_pvec3Tangents) delete[] m_pvec3Tangents;
+
+
+	if (m_pxmf3BiTangents) delete[] m_pxmf3BiTangents;
+	if (m_pxmf2TextureCoords0) delete[] m_pxmf2TextureCoords0;
+	if (m_pvec2TextureCoords0) delete[] m_pvec2TextureCoords0;
+	if (m_pxmf2TextureCoords1) delete[] m_pxmf2TextureCoords1;
+
+	if (m_nSubMeshes > 0)
+	{
+		if (m_pnSubSetIndices) delete[] m_pnSubSetIndices;
+		if (m_ppnSubSetIndices) delete[] m_ppnSubSetIndices;
+	}
+
+	if (m_ppstrSkinningBoneNames) delete[] m_ppstrSkinningBoneNames;
+	if (m_pxmf4x4BindPoseBoneOffsets) delete[] m_pxmf4x4BindPoseBoneOffsets;
+
+	if (m_pxmn4BoneIndices) delete[] m_pxmn4BoneIndices;
+	if (m_pvec4BoneIndices) delete[] m_pvec4BoneIndices;
+
+	if (m_pxmf4BoneWeights) delete[] m_pxmf4BoneWeights;
+	if (m_pvec4BoneWeights) delete[] m_pvec4BoneWeights;
+
 }
 
 void BinaryLoader::LoadBinary(const wstring& path)
@@ -56,10 +100,10 @@ void BinaryLoader::LoadBinary(const wstring& path)
 
 	LoadGeometryAndAnimationFromFile(charPath);
 
-	/*AddMeshData();
-	AddBonesData();
-	AddAnimClipsData();
-	AddAnimNames();*/
+	AddMeshData();
+	//AddBonesData();
+	//AddAnimClipsData();
+	//AddAnimNames();
 
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
@@ -179,17 +223,40 @@ void BinaryLoader::AddMeshData()
 {
 	_meshes.push_back(BinaryMeshInfo());
 	BinaryMeshInfo& meshInfo = _meshes.back();
-	meshInfo.name;		//<Mesh>:
-	for (auto& a : meshInfo.vertices)
-	{
-		a.pos;			//<Positions>:
-		a.uv;			//<TextureCoords0>:
-		a.normal;		//<Normals>:
-		a.tangent;		//<Tangents>:
-		a.weights;		//<BoneWeights>:
-		a.indices;		//<BoneIndices>:
+	meshInfo.name = m_strMeshName; // <Mesh>:
+
+	// 정점 추가
+	for (int i = 0; i < m_iPositionNum; i++) {
+		meshInfo.vertices.push_back(Vertex());
+		meshInfo.vertices.back().pos = m_pvec3Positions[i]; // <Positions>:
 	}
-	meshInfo.indices;	//<SubMesh>:
+
+	// 텍스처 좌표 추가
+	for (int i = 0; i < m_iTextureCoords0Num; i++) {
+		meshInfo.vertices[i].uv = m_pvec2TextureCoords0[i]; // <TextureCoords0>:
+	}
+
+	// 법선 추가
+	for (int i = 0; i < m_iNormalsNum; i++) {
+		meshInfo.vertices[i].normal = m_pvec33Normals[i]; // <Normals>:
+	}
+
+	// 탄젠트 추가
+	for (int i = 0; i < m_iTangentsNum; i++) {
+		meshInfo.vertices[i].tangent = m_pvec3Tangents[i]; // <Tangents>:
+	}
+
+	// 뼈 가중치 추가
+	for (int i = 0; i < m_nVertices; i++) {
+		meshInfo.vertices[i].weights = m_pvec4BoneWeights[i]; // <BoneWeights>:
+	}
+
+	// 뼈 인덱스 추가
+	for (int i = 0; i < m_nVertices; i++) {
+		meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
+	}
+
+	meshInfo.indices;	//<SubMesh>:.....이거 내가 직접 넣어줘야 하는건가?
 	for (auto& a : meshInfo.materials)
 	{
 		a.diffuse;		//<AlbedoColor>:
@@ -218,9 +285,9 @@ void BinaryLoader::AddAnimClipsData()
 	_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
 	shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
 	animInfo->name;			//<AnimationClipName>:
-	animInfo->startTime = 0.0f;	//0.0f고정
+	animInfo->startTime;	//0.0f고정
 	animInfo->endTime;		//<AnimationSet>:
-	animInfo->mode = eFrames30;			//eFrame30고정
+	animInfo->mode;			//eFrame30고정
 	for (auto& a : animInfo->keyFrames)
 	{
 		a.push_back(BinaryKeyFrameInfo(Matrix(), 5));	//<TransformMatrix>: , <Frame>:
@@ -350,6 +417,8 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 
 	::ReadStringFromFile(pInFile, m_pstrMeshName);
 
+	m_strMeshName = ConvertCharToWString(m_pstrMeshName);
+
 	for (; ; )
 	{
 		::ReadStringFromFile(pInFile, pstrToken);
@@ -361,10 +430,13 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<Positions>:"))
 		{
 			nReads = (UINT)::fread(&nPositions, sizeof(int), 1, pInFile);
+			m_iPositionNum = nPositions;
 			if (nPositions > 0)
 			{
-				m_pxmf3Positions = new XMFLOAT3[nPositions];
-				nReads = (UINT)::fread(m_pxmf3Positions, sizeof(XMFLOAT3), nPositions, pInFile);
+				//m_pxmf3Positions = new XMFLOAT3[nPositions];
+				m_pvec3Positions = new Vec3[nPositions];
+				//nReads = (UINT)::fread(m_pxmf3Positions, sizeof(XMFLOAT3), nPositions, pInFile);
+				nReads = (UINT)::fread(m_pvec3Positions, sizeof(Vec3), nPositions, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<Colors>:"))
@@ -379,10 +451,13 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<TextureCoords0>:"))
 		{
 			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
+			m_iTextureCoords0Num = nTextureCoords;
 			if (nTextureCoords > 0)
 			{
-				m_pxmf2TextureCoords0 = new XMFLOAT2[nTextureCoords];
-				nReads = (UINT)::fread(m_pxmf2TextureCoords0, sizeof(XMFLOAT2), nTextureCoords, pInFile);
+				//m_pxmf2TextureCoords0 = new XMFLOAT2[nTextureCoords];
+				//nReads = (UINT)::fread(m_pxmf2TextureCoords0, sizeof(XMFLOAT2), nTextureCoords, pInFile);
+				m_pvec2TextureCoords0 = new Vec2[nTextureCoords];
+				nReads = (UINT)::fread(m_pvec2TextureCoords0, sizeof(Vec2), nTextureCoords, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<TextureCoords1>:"))
@@ -397,19 +472,25 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<Normals>:"))
 		{
 			nReads = (UINT)::fread(&nNormals, sizeof(int), 1, pInFile);
+			m_iNormalsNum = nNormals;
 			if (nNormals > 0)
 			{
-				m_pxmf3Normals = new XMFLOAT3[nNormals];
-				nReads = (UINT)::fread(m_pxmf3Normals, sizeof(XMFLOAT3), nNormals, pInFile);
+				//m_pxmf3Normals = new XMFLOAT3[nNormals];
+				//nReads = (UINT)::fread(m_pxmf3Normals, sizeof(XMFLOAT3), nNormals, pInFile);
+				m_pvec33Normals = new Vec3[nNormals];
+				nReads = (UINT)::fread(m_pvec33Normals, sizeof(Vec3), nNormals, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<Tangents>:"))
 		{
 			nReads = (UINT)::fread(&nTangents, sizeof(int), 1, pInFile);
+			m_iTangentsNum = nTangents;
 			if (nTangents > 0)
 			{
-				m_pxmf3Tangents = new XMFLOAT3[nTangents];
-				nReads = (UINT)::fread(m_pxmf3Tangents, sizeof(XMFLOAT3), nTangents, pInFile);
+				//m_pxmf3Tangents = new XMFLOAT3[nTangents];
+				//nReads = (UINT)::fread(m_pxmf3Tangents, sizeof(XMFLOAT3), nTangents, pInFile);
+				m_pvec3Tangents = new Vec3[nTangents];
+				nReads = (UINT)::fread(m_pvec3Tangents, sizeof(Vec3), nTangents, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<BiTangents>:"))
@@ -441,6 +522,7 @@ void BinaryLoader::LoadMeshFromFile(FILE* pInFile)
 						{
 							m_ppnSubSetIndices[i] = new UINT[m_pnSubSetIndices[i]];
 							nReads = (UINT)::fread(m_ppnSubSetIndices[i], sizeof(UINT), m_pnSubSetIndices[i], pInFile);
+
 						}
 					}
 				}
@@ -503,8 +585,10 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nVertices = ::ReadIntegerFromFile(pInFile);
 			if (m_nVertices > 0)
 			{
-				m_pxmn4BoneIndices = new XMINT4[m_nVertices];
-				nReads = (UINT)::fread(m_pxmn4BoneIndices, sizeof(XMINT4), m_nVertices, pInFile);
+				/*m_pxmn4BoneIndices = new XMINT4[m_nVertices];
+				nReads = (UINT)::fread(m_pxmn4BoneIndices, sizeof(XMINT4), m_nVertices, pInFile);*/
+				m_pvec4BoneIndices = new MyInt4[m_nVertices];
+				nReads = (UINT)::fread(m_pvec4BoneIndices, sizeof(MyInt4), m_nVertices, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<BoneWeights>:"))
@@ -513,8 +597,10 @@ void BinaryLoader::LoadSkinInfoFromFile(FILE* pInFile)
 			m_nVertices = ::ReadIntegerFromFile(pInFile);
 			if (m_nVertices > 0)
 			{
-				m_pxmf4BoneWeights = new XMFLOAT4[m_nVertices];
-				nReads = (UINT)::fread(m_pxmf4BoneWeights, sizeof(XMFLOAT4), m_nVertices, pInFile);
+				/*m_pxmf4BoneWeights = new XMFLOAT4[m_nVertices];
+				nReads = (UINT)::fread(m_pxmf4BoneWeights, sizeof(XMFLOAT4), m_nVertices, pInFile);*/
+				m_pvec4BoneWeights = new Vec4[m_nVertices];
+				nReads = (UINT)::fread(m_pvec4BoneWeights, sizeof(Vec4), m_nVertices, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "</SkinningInfo>"))
@@ -543,7 +629,7 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<MaterialName>:"))
 		{
 			//당근칼-요주의
-			BYTE a = ::ReadStringFromFile(pInFile, pstrToken);
+			::ReadStringFromFile(pInFile, m_pstrMaterialName);
 		}
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
@@ -661,7 +747,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<AnimationClipName>:"))
 		{
 			//당근칼-요주의
-			BYTE a = ::ReadStringFromFile(pInFile, pstrToken);
+			::ReadStringFromFile(pInFile, m_pstrAnimationClipName);
 		}
 		else if (!strcmp(pstrToken, "<AnimationSet>:"))
 		{

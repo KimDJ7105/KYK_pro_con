@@ -138,6 +138,50 @@ struct WindowInfo
 
 };
 
+struct MyInt4 {
+	int x, y, z, w;
+
+	// 기본 생성자
+	MyInt4() : x(0), y(0), z(0), w(0) {}
+
+	// 모든 요소를 지정하는 생성자
+	MyInt4(int x, int y, int z, int w) : x(x), y(y), z(z), w(w) {}
+
+	// 다른 MyInt4로부터의 복사 생성자
+	MyInt4(const MyInt4& other) : x(other.x), y(other.y), z(other.z), w(other.w) {}
+
+	// 할당 연산자 오버로딩
+	MyInt4& operator=(const MyInt4& other) {
+		if (this != &other) {
+			x = other.x;
+			y = other.y;
+			z = other.z;
+			w = other.w;
+		}
+		return *this;
+	}
+
+	// 비교 연산자 오버로딩
+	bool operator==(const MyInt4& other) const {
+		return x == other.x && y == other.y && z == other.z && w == other.w;
+	}
+
+	bool operator!=(const MyInt4& other) const {
+		return !(*this == other);
+	}
+
+	// 다른 벡터와의 연산을 위한 연산자 오버로딩
+	MyInt4 operator+(const MyInt4& other) const {
+		return MyInt4(x + other.x, y + other.y, z + other.z, w + other.w);
+	}
+
+	MyInt4 operator-(const MyInt4& other) const {
+		return MyInt4(x - other.x, y - other.y, z - other.z, w - other.w);
+	}
+
+	// 기타 연산자 오버로딩 및 유틸리티 함수 추가 가능
+};
+
 // 정점 정보
 struct Vertex
 {
@@ -154,7 +198,7 @@ struct Vertex
 	Vec3 normal;
 	Vec3 tangent;
 	Vec4 weights;
-	Vec4 indices;
+	MyInt4 indices;
 };
 
 #define DECLARE_SINGLE(type)		\
