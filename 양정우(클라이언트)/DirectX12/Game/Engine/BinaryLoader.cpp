@@ -256,28 +256,53 @@ void BinaryLoader::AddMeshData()
 		meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
 	}
 
-	meshInfo.indices;	//<SubMesh>:.....이거 내가 직접 넣어줘야 하는건가?
+	for (int i = 0; i < m_nSubMeshes; i++) {
+		// 서브메시의 인덱스 배열을 가져옴
+		uint32* subMeshIndices = m_ppnSubSetIndices[i];
+		// 해당 배열의 크기를 가져옴
+		int subMeshIndexCount = m_pnSubSetIndices[i];
+
+		// 새로운 서브메시 인덱스 벡터를 생성하여 meshInfo.indices에 추가
+		std::vector<uint32> subMeshVector;
+		for (int j = 0; j < subMeshIndexCount; j++) {
+			subMeshVector.push_back(subMeshIndices[j]);
+		}
+		meshInfo.indices.push_back(subMeshVector);	//<SubMesh>:
+	}
+
+
 	for (auto& a : meshInfo.materials)
 	{
-		a.diffuse;		//<AlbedoColor>:
-		a.ambient;		//<EmissiveColor>:
-		a.specular;		//<SpecularColor>:
-		a.name;			//<MaterialName>:
-		a.diffuseTexName;	//<AlbedoMap>:
-		a.normalTexName;	//<NormalMap>:
-		a.specularTexName;	//<SpecularMap>:
+		a.diffuse = m_xmf4AlbedoColor;		//<AlbedoColor>:
+		a.ambient = m_xmf4EmissiveColor;		//<EmissiveColor>:
+		a.specular = m_xmf4SpecularColor;		//<SpecularColor>:
+		a.name = m_strMaterialName;			//<MaterialName>:
+		a.diffuseTexName = m_strDiffuseTexName;	//<AlbedoMap>:
+		a.normalTexName = m_strNormalTexName;	//<NormalMap>:
+		a.specularTexName = m_strSpecularTexName;	//<SpecularMap>:
 	}
+
+
 	meshInfo.boneWeights;	//??? 1혹은 2로 사이즈가 고정된다.
 	meshInfo.hasAnimation;	//내가 직접 해줘야하나....
 }
 
 void BinaryLoader::AddBonesData()
 {
-	_bones.push_back(shared_ptr<BinaryBoneInfo>());
-	shared_ptr<BinaryBoneInfo>& boneInfo = _bones.back();
-	boneInfo->boneName;		//<BoneNames>:
-	boneInfo->parentIndex;	//<ParentIndex>:
-	boneInfo->matOffset;	//<BoneOffsets>:
+	for (int i = 0; i < m_nSkinningBones; i++)
+	{
+		shared_ptr<BinaryBoneInfo> boneInfo = make_shared<BinaryBoneInfo>();
+
+		// 이름 설정
+		boneInfo->boneName = ConvertCharToWString(m_ppstrSkinningBoneNames[i]);		//<BoneNames>:
+
+		boneInfo->parentIndex;	//<ParentIndex>:
+		boneInfo->matOffset;	//<BoneOffsets>:
+
+		// _bones에 추가
+		_bones.push_back(boneInfo);
+	}
+	
 }
 
 void BinaryLoader::AddAnimClipsData()
@@ -369,6 +394,14 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 		{
 			//당근칼-요주의
 			int a = ::ReadIntegerFromFile(pInFile);
+			/*if (a > 0)
+			{
+				for (int i = 0; i < a; i++)
+				{
+					nReads = (UINT)::fread(asd, sizeof(UINT), a, pInFile);
+				}
+			}*/
+			
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -630,6 +663,7 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		{
 			//당근칼-요주의
 			::ReadStringFromFile(pInFile, m_pstrMaterialName);
+			m_strMaterialName = ConvertCharToWString(m_pstrMaterialName);
 		}
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
@@ -665,15 +699,21 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<AlbedoMap>:"))
 		{
-			LoadTextureFromFile(pInFile);
+			//m_pstrDiffuseTexName = LoadTextureFromFile(pInFile);
+			::ReadStringFromFile(pInFile, m_pstrDiffuseTexName);
+			m_strDiffuseTexName = ConvertCharToWString(m_pstrDiffuseTexName);
 		}
 		else if (!strcmp(pstrToken, "<SpecularMap>:"))
 		{
-			LoadTextureFromFile(pInFile);
+			//m_pstrSpecularTexName = LoadTextureFromFile(pInFile);
+			::ReadStringFromFile(pInFile, m_pstrSpecularTexName);
+			m_strSpecularTexName = ConvertCharToWString(m_pstrSpecularTexName);
 		}
 		else if (!strcmp(pstrToken, "<NormalMap>:"))
 		{
-			LoadTextureFromFile(pInFile);
+			//m_pstrNormalTexName = LoadTextureFromFile(pInFile);
+			::ReadStringFromFile(pInFile, m_pstrNormalTexName);
+			m_strNormalTexName = ConvertCharToWString(m_pstrNormalTexName);
 		}
 		else if (!strcmp(pstrToken, "<MetallicMap>:"))
 		{
@@ -698,10 +738,10 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 	}
 }
 
-void BinaryLoader::LoadTextureFromFile(FILE* pInFile)
+char* BinaryLoader::LoadTextureFromFile(FILE* pInFile)
 {
-	char pstrTextureName[64] = { '\0' };
-
+	//char pstrTextureName[64] = { '\0' };
+	char* pstrTextureName = new char[64];
 	BYTE nStrLength = 64;
 	UINT nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pInFile);
 	nReads = (UINT)::fread(pstrTextureName, sizeof(char), nStrLength, pInFile);
@@ -709,6 +749,7 @@ void BinaryLoader::LoadTextureFromFile(FILE* pInFile)
 
 	bool bDuplicated = false;
 	
+	return pstrTextureName;
 }
 
 void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)

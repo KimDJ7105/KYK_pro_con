@@ -155,6 +155,10 @@ public:
 	
 	void LoadGeometryAndAnimationFromFile(const char* pstrFileName);
 	void LoadFrameHierarchyFromFile(FILE* pInFile);
+
+private:
+	UINT* asd = NULL;
+
 private:
 	char							m_pstrFrameName[64];
 	XMFLOAT4X4						m_xmf4x4ToParent;
@@ -225,9 +229,17 @@ private:
 	float							m_fMetallic = 0.0f;
 	float							m_fGlossyReflection = 0.0f;
 	char							m_pstrMaterialName[64] = { 0 };
+	wstring							m_strMaterialName;
 
 public:
-	void LoadTextureFromFile(FILE* pInFile);
+	//void LoadTextureFromFile(FILE* pInFile);
+	char* LoadTextureFromFile(FILE* pInFile);
+	char							m_pstrDiffuseTexName[64] = {0};
+	char							m_pstrNormalTexName[64] = {0};
+	char							m_pstrSpecularTexName[64] = {0};
+	wstring							m_strDiffuseTexName;
+	wstring							m_strNormalTexName;
+	wstring							m_strSpecularTexName;
 
 	void LoadAnimationFromFile(FILE* pInFile);
 	char							m_pstrAnimationClipName[64] = { 0 };

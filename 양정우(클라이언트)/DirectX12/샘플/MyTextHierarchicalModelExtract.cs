@@ -402,6 +402,12 @@ public class TextHierarchicalModelExtract : MonoBehaviour
             {
                 WriteLineString(nLevel + 1, "<Material>: " + i);
 
+                //당근칼
+                // Extract Material Name
+                string materialName = materials[i].name;
+                WriteLineString(nLevel + 1, "<MaterialName>:"+ materialName);
+                //당근칼종료
+
                 if (materials[i].HasProperty("_Color"))
                 {
                     Color albedo = materials[i].GetColor("_Color");
@@ -502,6 +508,17 @@ public class TextHierarchicalModelExtract : MonoBehaviour
 
         WriteTransform(nLevel + 1, "<Transform>:", current);
         WriteLocalMatrix(nLevel + 1, "<TransformMatrix>:", current);
+
+        //당근칼
+        // Calculate parent index
+        int parentIndex = -1; // Default to -1 if there is no parent
+        Transform parentTransform = current.parent;
+        if (parentTransform != null)
+        {
+            parentIndex = parentTransform.GetSiblingIndex();
+        }
+        WriteLineString(nLevel + 1, "<ParentIndex>:" + parentIndex);
+        //당근칼종료
 
         MeshFilter meshFilter = current.gameObject.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = current.gameObject.GetComponent<MeshRenderer>();
@@ -625,6 +642,10 @@ public class TextHierarchicalModelExtract : MonoBehaviour
             int nFramesPerSec = (int)m_raAnimationClips[j].frameRate;
             int nKeyFrames = Mathf.CeilToInt(m_raAnimationClips[j].length * nFramesPerSec);
             //여길 조정하면 초당 프레임수 조절가능(현재는 60개로 30프레임이다)
+
+            //당근칼
+            WriteLineString(nLevel + 1, "<AnimationClipName>:" + m_raAnimationClips[j].name);
+            //당근칼종료
 
             WriteLineString(nLevel + 1, "<AnimationSet>: " + j + " " + string.Copy(m_raAnimationClips[j].name).Replace(" ", "_") + " " + m_raAnimationClips[j].length + " " + nFramesPerSec + " " + nKeyFrames);
 

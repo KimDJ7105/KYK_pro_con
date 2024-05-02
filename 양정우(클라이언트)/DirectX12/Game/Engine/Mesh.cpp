@@ -53,12 +53,6 @@ shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loa
 
 	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
 	//흐름 8)혹은 여기서 바꿔버리면 되지 않을까?
-	meshInfo->name;
-	meshInfo->vertices;
-	meshInfo->indices;
-	meshInfo->materials;
-	meshInfo->boneWeights;
-	meshInfo->hasAnimation;
 
 
 	mesh->CreateVertexBuffer(meshInfo->vertices);
@@ -91,13 +85,6 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 
 	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
 	//흐름 8)혹은 여기서 바꿔버리면 되지 않을까?
-	meshInfo->name;
-	meshInfo->vertices;
-	meshInfo->indices;
-	meshInfo->materials;
-	meshInfo->boneWeights;
-	meshInfo->hasAnimation;
-
 
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 

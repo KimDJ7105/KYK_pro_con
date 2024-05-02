@@ -591,7 +591,7 @@ public class BinaryHierarchicalModelExtract : MonoBehaviour
 
         //당근칼
         // Calculate parent index
-        int parentIndex = -1; // Default to -1 if there is no parent
+        int parentIndex = -1; // Default to 0 if there is no parent
         Transform parentTransform = current.parent;
         if (parentTransform != null)
         {
