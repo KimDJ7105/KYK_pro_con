@@ -17,6 +17,8 @@ private:
 	int remain_bullet;
 	int team;
 
+	int equip_weapon;
+
 	array<float, 3> pos;
 	array<float, 3> view_dir;
 

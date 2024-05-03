@@ -214,6 +214,8 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	hp = 100;
 	remain_bullet = 0;
 	team = 0;
+
+	equip_weapon = WP_SMG;
 }
 
 void SESSION::start()
