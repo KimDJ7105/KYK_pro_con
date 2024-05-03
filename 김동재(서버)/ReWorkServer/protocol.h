@@ -42,8 +42,6 @@
 #define WP_SHOTGUN 2
 #define WP_HANDGUN 3
 #define WP_HAMMER 4
-
-int WP_DMG[5]{ 6,0,0,0,0 };
 //---------------------------------------
 
 #pragma pack (push, 1)

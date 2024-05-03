@@ -2,6 +2,7 @@
 #include "session.h"
 
 int box_id = MAX_USER;
+int WP_DMG[5]{ 6,0,0,0,0 };
 
 void SESSION::Send_Packet(void* packet, unsigned id)
 {
