@@ -48,7 +48,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_APPLY_DAMAGE :
 	{		
-		sc_packet_aplly_damage* p = reinterpret_cast<sc_apply_damage*>(packet);
+		sc_packet_apply_damage* p = reinterpret_cast<sc_packet_apply_damage*>(packet);
 		
 		break;
 	}
