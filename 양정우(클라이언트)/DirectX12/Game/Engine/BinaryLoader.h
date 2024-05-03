@@ -61,8 +61,8 @@ struct BinaryMeshInfo
 
 struct BinaryKeyFrameInfo
 {
-	Matrix		matTransform;	//시작꺼제외
-	double		time;
+	Matrix		matTransform;	//m_ppxmf4x4KeyFrameTransforms[i]
+	double		time;			//fKeyTime
 };
 
 struct BinaryBoneInfo
@@ -72,19 +72,14 @@ struct BinaryBoneInfo
 	Matrix					matOffset;//4x4행렬
 };
 
-enum EMode {
-	eDefaultMode = 0,	//디폴트 프레임
-	eFrames24 = 24,		//24프레임
-	eFrames30 = 30		//30프레임
-};
 
 struct BinaryAnimClipInfo
 {
-	wstring			name;//애니메이션 이름
-	uint32			startTime;	//시작시간
-	uint32			endTime;	//마지막 frame의 숫자(걷기는 72가 나왔다)
-	EMode			mode = EMode::eFrames30;		//eFrames30으로 고정
-	vector<vector<BinaryKeyFrameInfo>>	keyFrames;//본 갯수 * 프레임 갯수
+	wstring			name;//애니메이션 이름 = pstrToken
+	uint32			startTime;	//시작시간 = 0
+	uint32			endTime;	//nFramesPerSecond(원래는 좀 큰숫자인데 난 그냥 프레임 갯수로 설정했다.
+	uint32			mode;		//nFramesPerSecond
+	vector<vector<BinaryKeyFrameInfo>>	keyFrames;//본 갯수 * 프레임 갯수->여기서 또 180개정도의 벡터가 또 만들어진다
 };
 
 class BinaryLoader
@@ -139,7 +134,7 @@ private:
 	vector<BinaryMeshInfo>					_meshes;
 	vector<shared_ptr<BinaryBoneInfo>>		_bones;
 	vector<shared_ptr<BinaryAnimClipInfo>>	_animClips;
-	vector<string>							_animNames;
+	vector<wstring>							_animNames;
 
 	vector<shared_ptr<float>> _boundsValues;
 
@@ -224,13 +219,17 @@ private:
 	XMFLOAT4						m_xmf4EmissiveColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4						m_xmf4SpecularColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4						m_xmf4AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	vector<XMFLOAT4>						m_vAlbedoColor;
+	vector<XMFLOAT4>						m_vEmissiveColor;
+	vector<XMFLOAT4>						m_vSpecularColor;
+
 	float							m_fGlossiness = 0.0f;
 	float							m_fSmoothness = 0.0f;
 	float							m_fSpecularHighlight = 0.0f;
 	float							m_fMetallic = 0.0f;
 	float							m_fGlossyReflection = 0.0f;
 	char							m_pstrMaterialName[64] = { 0 };
-	wstring							m_strMaterialName;
+	vector<wstring>							m_strMaterialName;
 
 public:
 	//void LoadTextureFromFile(FILE* pInFile);
@@ -238,11 +237,13 @@ public:
 	char							m_pstrDiffuseTexName[64] = {0};
 	char							m_pstrNormalTexName[64] = {0};
 	char							m_pstrSpecularTexName[64] = {0};
-	wstring							m_strDiffuseTexName;
-	wstring							m_strNormalTexName;
-	wstring							m_strSpecularTexName;
+	vector<wstring>						m_strDiffuseTexName;
+	vector<wstring>						m_strNormalTexName;
+	vector<wstring>						m_strSpecularTexName;
 
 	void LoadAnimationFromFile(FILE* pInFile);
+	vector<wstring>			m_vstrAnimClipNames;
+	int m_nAnimClipConut = 0;
 	bool isAnimation = false;
 	char							m_pstrAnimationClipName[64] = { 0 };
 

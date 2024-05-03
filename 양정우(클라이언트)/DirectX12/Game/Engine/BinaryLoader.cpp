@@ -86,6 +86,17 @@ BinaryLoader::~BinaryLoader()
 	if (m_pxmf4BoneWeights) delete[] m_pxmf4BoneWeights;
 	if (m_pvec4BoneWeights) delete[] m_pvec4BoneWeights;
 
+	/*if (m_ppxmf4x4KeyFrameTransforms != nullptr)
+	{
+		for (int i = 0; i < nKeyFrames; i++)
+		{
+			delete[] m_ppxmf4x4KeyFrameTransforms[i];
+			m_ppxmf4x4KeyFrameTransforms[i] = nullptr;
+		}
+		delete[] m_ppxmf4x4KeyFrameTransforms;
+		m_ppxmf4x4KeyFrameTransforms = nullptr;
+	}*/
+
 }
 
 void BinaryLoader::LoadBinary(const wstring& path)
@@ -105,8 +116,8 @@ void BinaryLoader::LoadBinary(const wstring& path)
 
 	AddMeshData();
 	AddBonesData();
-	//AddAnimClipsData();
-	//AddAnimNames();
+	//AddAnimClipsData();->LoadAnimationFromFile의 903줄에서 실시간으로 읽으면서 추가중이다.
+	AddAnimNames();
 
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
@@ -283,20 +294,60 @@ void BinaryLoader::AddMeshData()
 
 	// 재질 추가
 	meshInfo.materials.resize(m_nMaterials);
-	for (int i = 0; i < m_nSubMeshes; i++) {
+	for (int i = 0; i < m_nMaterials; i++) {
 		BinaryMaterialInfo& material = meshInfo.materials[i];
-		material.diffuse = m_xmf4AlbedoColor;           //<AlbedoColor>:
-		material.ambient = m_xmf4EmissiveColor;          //<EmissiveColor>:
-		material.specular = m_xmf4SpecularColor;         //<SpecularColor>:
-		material.name = m_strMaterialName;               //<MaterialName>:
-		material.diffuseTexName = m_strDiffuseTexName;   //<AlbedoMap>:
-		material.normalTexName = m_strNormalTexName;     //<NormalMap>:
-		material.specularTexName = m_strSpecularTexName; //<SpecularMap>:
+
+		if (i < m_vAlbedoColor.size()) {
+			material.diffuse = m_vAlbedoColor[i];           //<AlbedoColor>:
+		}
+		else {
+			material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+		if (i < m_vEmissiveColor.size()) {
+			material.ambient = m_vEmissiveColor[i];          //<EmissiveColor>:
+		}
+		else {
+			material.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		}
+		if (i < m_vSpecularColor.size()) {
+			material.specular = m_vSpecularColor[i];         //<SpecularColor>:
+		}
+		else {
+			material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		}
+		if (i < m_strMaterialName.size()) {
+			material.name = m_strMaterialName[i];               //<MaterialName>:
+		}
+		else {
+			wstring a =  L"null";
+			material.name = a;
+		}
+		if (i < m_strDiffuseTexName.size()) {
+			material.diffuseTexName = m_strDiffuseTexName[i];   //<AlbedoMap>:
+		}
+		else {
+			wstring a = L"null";
+			material.diffuseTexName = a;
+		}
+		if (i < m_strNormalTexName.size()) {
+			material.normalTexName = m_strNormalTexName[i];     //<NormalMap>:
+		}
+		else {
+			wstring a = L"null";
+			material.normalTexName = a;
+		}
+		if (i < m_strSpecularTexName.size()) {
+			material.specularTexName = m_strSpecularTexName[i]; //<SpecularMap>:
+		}
+		else {
+			wstring a = L"null";
+			material.specularTexName = a;
+		}
 	}
 
 
 	meshInfo.boneWeights;	//??? 1혹은 2로 사이즈가 고정된다.
-	meshInfo.hasAnimation = isAnimation;	//내가 직접 해줘야하나....그래서 애니메이션정보를 뽑으면 하는거로 했다.
+	meshInfo.hasAnimation = isAnimation;
 }
 
 void BinaryLoader::AddBonesData()
@@ -319,23 +370,38 @@ void BinaryLoader::AddBonesData()
 
 void BinaryLoader::AddAnimClipsData()
 {
-	_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
-	shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
-	animInfo->name;			//<AnimationClipName>:
-	animInfo->startTime;	//0.0f고정
-	animInfo->endTime;		//<AnimationSet>:
-	animInfo->mode;			//eFrame30고정
-	for (auto& a : animInfo->keyFrames)
+	//_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
+	//shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
+	//animInfo->name;			//<AnimationClipName>:
+	//animInfo->startTime;	//0.0f고정
+	//animInfo->endTime;		//<AnimationSet>:
+	//animInfo->mode;			//eFrame30고정
+	//for (auto& a : animInfo->keyFrames)
+	//{
+	//	a.push_back(BinaryKeyFrameInfo(Matrix(), 5));	//<TransformMatrix>: , <Frame>:
+	//}
+
+	_animClips.resize(m_nAnimClipConut);
+	for (int i = 0; i < m_nAnimClipConut; i++)
 	{
-		a.push_back(BinaryKeyFrameInfo(Matrix(), 5));	//<TransformMatrix>: , <Frame>:
+		shared_ptr<BinaryAnimClipInfo> animInfo = make_shared<BinaryAnimClipInfo>();
+		animInfo->name = m_vstrAnimClipNames[i];
+		animInfo->startTime = 0;
+		animInfo->endTime;
+		animInfo->mode;
+		animInfo->keyFrames;
 	}
+
+
 }
 
 void BinaryLoader::AddAnimNames()
 {
-	_animNames.push_back(string());
-	string& animNameInfo = _animNames.back();
-	animNameInfo;			//<AnimationClipName>:
+	_animNames.resize(m_nAnimClipConut);
+	for (int i = 0; i < m_nAnimClipConut; i++)
+	{
+		_animNames[i] = m_vstrAnimClipNames[i];			//<AnimationClipName>:
+	}		
 }
 
 void BinaryLoader::LoadGeometryAndAnimationFromFile(const char* pstrFileName)
@@ -669,19 +735,23 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		{
 			//당근칼-요주의
 			::ReadStringFromFile(pInFile, m_pstrMaterialName);
-			m_strMaterialName = ConvertCharToWString(m_pstrMaterialName);
+			m_strMaterialName.push_back(ConvertCharToWString(m_pstrMaterialName));
 		}
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4AlbedoColor, sizeof(float), 4, pInFile);
+			m_vAlbedoColor.push_back(m_xmf4AlbedoColor);
+
 		}
 		else if (!strcmp(pstrToken, "<EmissiveColor>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4EmissiveColor, sizeof(float), 4, pInFile);
+			m_vEmissiveColor.push_back(m_xmf4EmissiveColor);
 		}
 		else if (!strcmp(pstrToken, "<SpecularColor>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4SpecularColor, sizeof(float), 4, pInFile);
+			m_vSpecularColor.push_back(m_xmf4SpecularColor);
 		}
 		else if (!strcmp(pstrToken, "<Glossiness>:"))
 		{
@@ -707,19 +777,19 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		{
 			//m_pstrDiffuseTexName = LoadTextureFromFile(pInFile);
 			::ReadStringFromFile(pInFile, m_pstrDiffuseTexName);
-			m_strDiffuseTexName = ConvertCharToWString(m_pstrDiffuseTexName);
+			m_strDiffuseTexName.push_back(ConvertCharToWString(m_pstrDiffuseTexName));
 		}
 		else if (!strcmp(pstrToken, "<SpecularMap>:"))
 		{
 			//m_pstrSpecularTexName = LoadTextureFromFile(pInFile);
 			::ReadStringFromFile(pInFile, m_pstrSpecularTexName);
-			m_strSpecularTexName = ConvertCharToWString(m_pstrSpecularTexName);
+			m_strSpecularTexName.push_back(ConvertCharToWString(m_pstrSpecularTexName));
 		}
 		else if (!strcmp(pstrToken, "<NormalMap>:"))
 		{
 			//m_pstrNormalTexName = LoadTextureFromFile(pInFile);
 			::ReadStringFromFile(pInFile, m_pstrNormalTexName);
-			m_strNormalTexName = ConvertCharToWString(m_pstrNormalTexName);
+			m_strNormalTexName.push_back(ConvertCharToWString(m_pstrNormalTexName));
 		}
 		else if (!strcmp(pstrToken, "<MetallicMap>:"))
 		{
@@ -780,22 +850,15 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
 
-#ifdef _WITH_DEBUG_SKINNING_BONE
-				TCHAR pstrDebug[256] = { 0 };
-				TCHAR pwstrAnimationBoneName[64] = { 0 };
-				TCHAR pwstrBoneCacheName[64] = { 0 };
-				size_t nConverted = 0;
-				mbstowcs_s(&nConverted, pwstrAnimationBoneName, 64, pstrToken, _TRUNCATE);
-				mbstowcs_s(&nConverted, pwstrBoneCacheName, 64, pLoadedModel->m_ppBoneFrameCaches[j]->m_pstrFrameName, _TRUNCATE);
-				_stprintf_s(pstrDebug, 256, _T("AnimationBoneFrame:: Cache(%s) AnimationBone(%s)\n"), pwstrBoneCacheName, pwstrAnimationBoneName);
-				OutputDebugString(pstrDebug);
-#endif
 			}
 		}
 		else if (!strcmp(pstrToken, "<AnimationClipName>:"))
 		{
 			//당근칼-요주의
 			::ReadStringFromFile(pInFile, m_pstrAnimationClipName);
+			m_vstrAnimClipNames.push_back(ConvertCharToWString(m_pstrAnimationClipName));
+			m_nAnimClipConut++;
+			
 		}
 		else if (!strcmp(pstrToken, "<AnimationSet>:"))
 		{
@@ -803,30 +866,42 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 
 			::ReadStringFromFile(pInFile, pstrToken); //Animation Set Name
 
-			float fLength = ::ReadFloatFromFile(pInFile);
-			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);
-			int nKeyFrames = ::ReadIntegerFromFile(pInFile);
+			float fLength = ::ReadFloatFromFile(pInFile);//총 애니메이션 실행길이
+			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);//->프레임 수
+			int nKeyFrames = ::ReadIntegerFromFile(pInFile);//->총 변환행렬 갯수
+
+
+			auto clipInfo = std::make_shared<BinaryAnimClipInfo>();
+			clipInfo->name = ConvertCharToWString(pstrToken);
+			clipInfo->startTime = 0;
+			clipInfo->endTime = nKeyFrames;
+			clipInfo->mode = nFramesPerSecond;
+
+
+			//m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
 			for (int i = 0; i < nKeyFrames; i++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
 				if (!strcmp(pstrToken, "<Transforms>:"))
 				{
+					//m_ppxmf4x4KeyFrameTransforms[i] = new XMFLOAT4X4[m_nBoneFrames];
+					int nKey = ::ReadIntegerFromFile(pInFile); //i 용가리 기준 1~180까지의 변환행렬 번호
+					float fKeyTime = ::ReadFloatFromFile(pInFile);	//BinaryKeyFrameInfo에서 time을 맞고 있지
 
-					int nKey = ::ReadIntegerFromFile(pInFile); //i
-					float fKeyTime = ::ReadFloatFromFile(pInFile);
+					std::vector<BinaryKeyFrameInfo> frameInfos;
+					for (int j = 0; j < m_nBoneFrames; j++)
+					{
+						BinaryKeyFrameInfo keyFrame;
+						keyFrame.time = fKeyTime;
 
-#ifdef _WITH_ANIMATION_SRT
-					m_pfKeyFrameScaleTimes[i] = fKeyTime;
-					m_pfKeyFrameRotationTimes[i] = fKeyTime;
-					m_pfKeyFrameTranslationTimes[i] = fKeyTime;
-					nReads = (UINT)::fread(pAnimationSet->m_ppxmf3KeyFrameScales[i], sizeof(XMFLOAT3), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
-					nReads = (UINT)::fread(pAnimationSet->m_ppxmf4KeyFrameRotations[i], sizeof(XMFLOAT4), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
-					nReads = (UINT)::fread(pAnimationSet->m_ppxmf3KeyFrameTranslations[i], sizeof(XMFLOAT3), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
-#else
-					nReads = (UINT)::fread(m_ppxmf4x4KeyFrameTransforms[i], sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
-#endif
+						//이 아이는BinaryKeyFrameInfo에서 matTransform을 맞고있지
+						nReads = (UINT)::fread(&keyFrame.matTransform, sizeof(Matrix), 1, pInFile);
+						frameInfos.push_back(keyFrame);
+					}
+					clipInfo->keyFrames.push_back(frameInfos);
 				}
 			}
+			_animClips.push_back(clipInfo);
 		}
 		else if (!strcmp(pstrToken, "</AnimationSets>"))
 		{

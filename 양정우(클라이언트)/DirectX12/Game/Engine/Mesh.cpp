@@ -189,10 +189,10 @@ void Mesh::CreateBonesAndAnimations(class FBXLoader& loader)
 		AnimClipInfo info = {};
 
 		info.animName = ac->name;
-		info.duration = ac->endTime.GetSecondDouble() - ac->startTime.GetSecondDouble();
+		info.duration = ac->endTime.GetSecondDouble() - ac->startTime.GetSecondDouble();//플레이시간(애니메이션 플레이시간
 
 		int32 startFrame = static_cast<int32>(ac->startTime.GetFrameCount(ac->mode));
-		int32 endFrame = static_cast<int32>(ac->endTime.GetFrameCount(ac->mode));
+		int32 endFrame = static_cast<int32>(ac->endTime.GetFrameCount(ac->mode));//결국 프레임총갰수 ㅅㅂ
 		info.frameCount = endFrame - startFrame;
 
 		info.keyFrames.resize(ac->keyFrames.size());
