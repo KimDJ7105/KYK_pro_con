@@ -52,6 +52,11 @@ void SESSION::Process_Packet(unsigned char* packet)
 		
 		break;
 	}
+	case SC_PLAYER_DEAD :
+	{
+		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
+		break;
+	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
 		break;
