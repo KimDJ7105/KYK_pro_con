@@ -16,6 +16,14 @@ FBXLoader::~FBXLoader()
 		_scene->Destroy();
 	if (_manager)
 		_manager->Destroy();
+
+	int32 count = _animNames.GetCount();
+	for (int32 i = 0; i < count; i++)
+	{
+		_animNames[i]->Clear();
+		delete  _animNames[i];
+	}
+	_animNames.Clear();
 }
 
 void FBXLoader::LoadFbx(const wstring& path)
@@ -455,7 +463,6 @@ void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 	// EnginePch에 있는 Vertex구조체에서 weights와 indices를 4개씩 담는 과정 
 	FillBoneWeight(mesh, meshInfo);
 }
-
 
 void FBXLoader::FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 {

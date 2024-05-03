@@ -283,8 +283,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Cube
-	{
-		/*shared_ptr<GameObject> cube = make_shared<GameObject>();
+	/*{
+		shared_ptr<GameObject> cube = make_shared<GameObject>();
 		cube->AddComponent(make_shared<Transform>());
 		cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 30.f));
@@ -306,8 +306,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		cube->AddComponent(meshRenderer);
 		scene->AddGameObject(cube);
 
-		_otherPlayer.push_back(cube);*/
-	}
+		_otherPlayer.push_back(cube);
+	}*/
 #pragma endregion
 
 #pragma region UI(Sample)
@@ -473,8 +473,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
+		//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player_Walk.fbx");
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
+		//흐름 1)여기에서 gameObjects에 들거아야하는 meshData에는 mesh(메시정보와 애니메이션 정보), material이 있다.
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
@@ -484,29 +487,32 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.10f, 0.10f, 0.10f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
-			//gameObject->AddComponent(make_shared<TestDragon>());
+			gameObject->AddComponent(make_shared<TestDragon>());
 		}
 	}
 #pragma endregion
-
-#pragma region AllMap
-	/*for (int j = 0; j < 5; j++)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			CreateAisle(j * 400.f, 0.f, 200.f + i * 400.f);
-			CreateAisle2(200.f + i * 400.f, 0.f, j * 400.f);
-		}
-		for (int i = 0; i < 5; i++)
-		{
-			CreateMap(j * 400.f, 0.f, i * 400.f);
-		}
-	}*/
-#pragma endregion
-	CreateMap(0.f, 0.f, 0.f);
+	//CreateMap(0.f, 0.f, 0.f);
 	
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Gate\\Gate001.fbx");
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Floor.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Gate001");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 50.f, 10.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+		}
+	}
+
 
 	return scene;
 }
