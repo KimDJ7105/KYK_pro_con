@@ -104,21 +104,30 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
 		shared_ptr<SESSION> target = players[p->target_id];
+		shared_ptr<SESSION> shooter = players[p->shooter_id];
+
 
 		std::cout << "플레이어 " << p->shooter_id << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
 
-		if (target != nullptr) {
-			target->hp -= 10;
-
-			sc_packet_apply_damage pad;
-			pad.type = SC_APPLY_DAMAGE;
-			pad.size = sizeof(sc_packet_apply_damage);
-			pad.id = p->target_id;
-			pad.hp = target->hp;
-
-			target->Send_Packet(&pad);
+		if (target != nullptr && shooter != nullptr) {
+			target->hp -= WP_DMG[shooter->equip_weapon];
 
 			std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp;
+
+			if (target->hp > 0) {
+				sc_packet_apply_damage pad;
+				pad.type = SC_APPLY_DAMAGE;
+				pad.size = sizeof(sc_packet_apply_damage);
+				pad.id = p->target_id;
+				pad.hp = target->hp;
+
+				target->Send_Packet(&pad);
+			}
+
+			else {
+
+			}
+			
 		}
 		break;
 	}
