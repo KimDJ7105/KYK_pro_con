@@ -27,7 +27,8 @@
 #define SC_PUT_PLAYER    2 //오브젝트 생성
 #define SC_REMOVE_PLAYER 3 //오브젝트 제거
 #define SC_LOGIN_INFO	 4 //로그인 정보
-#define SC_APPLY_DAMAGE        5 //플레이어의 HP를 설정
+#define SC_APPLY_DAMAGE  5 //플레이어의 HP를 감소시킴
+#define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 
 #define SC_CREATE_BOX 10 //test용
 
