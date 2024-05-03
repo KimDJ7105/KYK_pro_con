@@ -27,7 +27,7 @@
 #define SC_PUT_PLAYER    2 //오브젝트 생성
 #define SC_REMOVE_PLAYER 3 //오브젝트 제거
 #define SC_LOGIN_INFO	 4 //로그인 정보
-#define SC_SET_HP        5 //플레이어의 HP를 설정
+#define SC_APPLY_DAMAGE        5 //플레이어의 HP를 설정
 
 #define SC_CREATE_BOX 10 //test용
 
@@ -126,7 +126,7 @@ struct sc_packet_create_box {
 	float z;
 };
 
-struct sc_packet_set_hp {
+struct sc_packet_apply_damage {
 	BYTE size;
 	BYTE type;
 	WORD id;
