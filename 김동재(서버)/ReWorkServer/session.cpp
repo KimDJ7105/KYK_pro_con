@@ -106,29 +106,28 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		shared_ptr<SESSION> target = players[p->target_id];
 		shared_ptr<SESSION> shooter = players[p->shooter_id];
 
+		if (target == nullptr || shooter == nullptr) break;
 
 		std::cout << "플레이어 " << p->shooter_id << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
+		
+		target->hp -= WP_DMG[shooter->equip_weapon];
 
-		if (target != nullptr && shooter != nullptr) {
-			target->hp -= WP_DMG[shooter->equip_weapon];
+		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp;
 
-			std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp;
+		if (target->hp > 0) {
+			sc_packet_apply_damage pad;
+			pad.type = SC_APPLY_DAMAGE;
+			pad.size = sizeof(sc_packet_apply_damage);
+			pad.id = p->target_id;
+			pad.hp = target->hp;
 
-			if (target->hp > 0) {
-				sc_packet_apply_damage pad;
-				pad.type = SC_APPLY_DAMAGE;
-				pad.size = sizeof(sc_packet_apply_damage);
-				pad.id = p->target_id;
-				pad.hp = target->hp;
-
-				target->Send_Packet(&pad);
-			}
-
-			else {
-
-			}
-			
+			target->Send_Packet(&pad);
 		}
+
+		else {
+
+		}
+			
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
