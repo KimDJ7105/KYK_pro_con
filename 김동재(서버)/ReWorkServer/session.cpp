@@ -103,8 +103,23 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
+		shared_ptr<SESSION> target = players[p->target_id];
+
 		std::cout << "플레이어 " << p->shooter_id << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
 
+		if (target != nullptr) {
+			target->hp -= 10;
+
+			sc_packet_apply_damage pad;
+			pad.type = SC_APPLY_DAMAGE;
+			pad.size = sizeof(sc_packet_apply_damage);
+			pad.id = p->target_id;
+			pad.hp = target->hp;
+
+			target->Send_Packet(&pad);
+
+			std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp;
+		}
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
@@ -196,7 +211,7 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	view_dir[1] = 0.0f;
 	view_dir[2] = 0.0f;
 
-	hp = 0;
+	hp = 100;
 	remain_bullet = 0;
 	team = 0;
 }
