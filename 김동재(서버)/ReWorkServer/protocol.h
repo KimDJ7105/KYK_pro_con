@@ -15,9 +15,12 @@
 #define MY_SERVER_PORT  "4000"
 #define MY_PORT 4000
 
+//Object Type----------------------------
 #define OT_PLAYER 0
 #define OT_OBJECT 1
+//---------------------------------------
 
+//Packet type----------------------------
 #define CS_POS_INFO 1
 #define CS_BOX_CREATE 2
 #define CS_MOUSE_INFO 3
@@ -31,7 +34,9 @@
 #define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 
 #define SC_CREATE_BOX 10 //test용
+//---------------------------------------
 
+//Weapon Info----------------------------
 #define WP_SMG 0
 #define WP_RIFLE 1
 #define WP_SHOTGUN 2
@@ -39,6 +44,7 @@
 #define WP_HAMMER 4
 
 int WP_DMG[5]{ 6,0,0,0,0 };
+//---------------------------------------
 
 #pragma pack (push, 1)
 
@@ -139,6 +145,12 @@ struct sc_packet_apply_damage {
 	BYTE type;
 	WORD id;
 	int hp;
+};
+
+struct sc_packet_player_dead {
+	BYTE size;
+	BYTE type;
+	WORD id;
 };
 
 #pragma pack (pop)
