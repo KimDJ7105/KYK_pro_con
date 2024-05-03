@@ -46,6 +46,12 @@ void SESSION::Process_Packet(unsigned char* packet)
 		scene->AddGameObject(_activeSessionScene->CreateBoxObject(OT_OBJECT, p->id, p->x, p->y, p->z, 0, 0.0f, 0.0f, 0.0f));
 		break;
 	}
+	case SC_APPLY_DAMAGE :
+	{		
+		sc_packet_aplly_damage* p = reinterpret_cast<sc_apply_damage*>(packet);
+		
+		break;
+	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
 		break;
