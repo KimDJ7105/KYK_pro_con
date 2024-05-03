@@ -1,0 +1,15 @@
+문제점->데이터적으로
+_meshes의 boneWeights값이 없다.
+
+_bones에 parentIndex값이 정확하지 않다.
+	의 갯수가 185개가 아니라 135개이다->중간에 잘 읽다가 멈쳐졌다.
+
+_animeClip의 matTransform의 값이 전부 똑같다.다른 애니메이션 값도 똑같다.
+
+----------
+문제점->코드적으로
+FBXLoader에서 계산하거나 추가하는 함수들을 BinaryLoader로 끌고와야할지도 모른다.
+
+CreateBonesAndAnimations
+CreateBinaryBonesAndAnimations
+두 함수의 데이터를 다루는 차이를 잘 확인하고 디버깅을 해야 한다.

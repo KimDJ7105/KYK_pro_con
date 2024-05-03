@@ -299,7 +299,7 @@ void Mesh::CreateBinaryBonesAndAnimations(class BinaryLoader& loader)
 		AnimClipInfo info = {};
 
 		info.animName = ac->name;
-		info.duration = ac->endTime - ac->startTime;
+		info.duration = ac->endTime - ac->startTime;		//일단 여기서 프레임수가 아닌 애니메이션의 지속시간을 줘야 한다.
 
 		int32 startFrame = static_cast<int32>(ac->startTime * ac->mode);
 		int32 endFrame = static_cast<int32>(ac->endTime * ac->mode);

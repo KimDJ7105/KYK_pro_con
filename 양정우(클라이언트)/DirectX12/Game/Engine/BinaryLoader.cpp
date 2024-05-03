@@ -836,7 +836,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 
 	int nAnimationSets = 0;
 
-	for ( ; ; )
+	for (; ; )
 	{
 		::ReadStringFromFile(pInFile, pstrToken);
 		if (!strcmp(pstrToken, "<AnimationSets>:"))
@@ -845,7 +845,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<FrameNames>:"))
 		{
-			m_nBoneFrames = ::ReadIntegerFromFile(pInFile); 
+			m_nBoneFrames = ::ReadIntegerFromFile(pInFile);
 			for (int j = 0; j < m_nBoneFrames; j++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
@@ -858,7 +858,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			::ReadStringFromFile(pInFile, m_pstrAnimationClipName);
 			m_vstrAnimClipNames.push_back(ConvertCharToWString(m_pstrAnimationClipName));
 			m_nAnimClipConut++;
-			
+
 		}
 		else if (!strcmp(pstrToken, "<AnimationSet>:"))
 		{
@@ -869,38 +869,38 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			float fLength = ::ReadFloatFromFile(pInFile);//총 애니메이션 실행길이
 			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);//->프레임 수
 			int nKeyFrames = ::ReadIntegerFromFile(pInFile);//->총 변환행렬 갯수
+			m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
 
-
-			auto clipInfo = std::make_shared<BinaryAnimClipInfo>();
+			std::shared_ptr<BinaryAnimClipInfo> clipInfo = std::make_shared<BinaryAnimClipInfo>();
 			clipInfo->name = ConvertCharToWString(pstrToken);
 			clipInfo->startTime = 0;
 			clipInfo->endTime = nKeyFrames;
 			clipInfo->mode = nFramesPerSecond;
 
-
-			//m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
 			for (int i = 0; i < nKeyFrames; i++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
 				if (!strcmp(pstrToken, "<Transforms>:"))
 				{
-					//m_ppxmf4x4KeyFrameTransforms[i] = new XMFLOAT4X4[m_nBoneFrames];
+					m_ppxmf4x4KeyFrameTransforms[i] = new XMFLOAT4X4[m_nBoneFrames];
 					int nKey = ::ReadIntegerFromFile(pInFile); //i 용가리 기준 1~180까지의 변환행렬 번호
 					float fKeyTime = ::ReadFloatFromFile(pInFile);	//BinaryKeyFrameInfo에서 time을 맞고 있지
 
-					std::vector<BinaryKeyFrameInfo> frameInfos;
-					for (int j = 0; j < m_nBoneFrames; j++)
-					{
-						BinaryKeyFrameInfo keyFrame;
-						keyFrame.time = fKeyTime;
+					//이 아이는BinaryKeyFrameInfo에서 matTransform을 맞고있지
+					nReads = (UINT)::fread(m_ppxmf4x4KeyFrameTransforms[i], sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
 
-						//이 아이는BinaryKeyFrameInfo에서 matTransform을 맞고있지
-						nReads = (UINT)::fread(&keyFrame.matTransform, sizeof(Matrix), 1, pInFile);
-						frameInfos.push_back(keyFrame);
+					clipInfo->keyFrames.resize(m_nBoneFrames);
+					for (int j = 0; j < m_nBoneFrames; ++j)
+					{
+						BinaryKeyFrameInfo keyFrameInfo;
+						keyFrameInfo.matTransform = m_ppxmf4x4KeyFrameTransforms[i][j];
+						keyFrameInfo.time = fKeyTime;
+
+						clipInfo->keyFrames[j].push_back(keyFrameInfo);
 					}
-					clipInfo->keyFrames.push_back(frameInfos);
 				}
 			}
+
 			_animClips.push_back(clipInfo);
 		}
 		else if (!strcmp(pstrToken, "</AnimationSets>"))
@@ -909,4 +909,3 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		}
 	}
 }
-

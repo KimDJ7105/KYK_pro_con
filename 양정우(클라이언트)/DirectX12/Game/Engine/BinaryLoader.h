@@ -78,7 +78,7 @@ struct BinaryAnimClipInfo
 	wstring			name;//애니메이션 이름 = pstrToken
 	uint32			startTime;	//시작시간 = 0
 	uint32			endTime;	//nFramesPerSecond(원래는 좀 큰숫자인데 난 그냥 프레임 갯수로 설정했다.
-	uint32			mode;		//nFramesPerSecond
+	uint32			mode;		//nKeyFrames
 	vector<vector<BinaryKeyFrameInfo>>	keyFrames;//본 갯수 * 프레임 갯수->여기서 또 180개정도의 벡터가 또 만들어진다
 };
 
