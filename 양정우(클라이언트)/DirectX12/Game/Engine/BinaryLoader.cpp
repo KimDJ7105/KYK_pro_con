@@ -352,15 +352,15 @@ void BinaryLoader::AddMeshData()
 
 void BinaryLoader::AddBonesData()
 {
-	for (int i = 0; i < m_nSkinningBones; i++)
+	for (int i = 0; i < m_nBoneFrames; i++)
 	{
 		shared_ptr<BinaryBoneInfo> boneInfo = make_shared<BinaryBoneInfo>();
 
 		// 이름 설정
-		boneInfo->boneName = ConvertCharToWString(m_ppstrSkinningBoneNames[i]);		//<BoneNames>:
+		boneInfo->boneName = m_vstrFrameNames[i];		//<FrameNames>:
 
-		boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
-		boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:
+		//boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
+		//boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:
 
 		// _bones에 추가
 		_bones.push_back(boneInfo);
@@ -849,7 +849,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			for (int j = 0; j < m_nBoneFrames; j++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
-
+				m_vstrFrameNames.push_back(ConvertCharToWString(pstrToken));
 			}
 		}
 		else if (!strcmp(pstrToken, "<AnimationClipName>:"))

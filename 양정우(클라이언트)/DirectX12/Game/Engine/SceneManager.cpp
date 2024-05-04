@@ -454,10 +454,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Dragon
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
+		//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon\\Dragon.fbx");
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Dragon.bin");
 
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = meshData2->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{

@@ -246,6 +246,7 @@ public:
 	int m_nAnimClipConut = 0;
 	bool isAnimation = false;
 	char							m_pstrAnimationClipName[64] = { 0 };
+	vector<wstring> m_vstrFrameNames;
 
 private:
 	int								m_nBoneFrames = 0;
