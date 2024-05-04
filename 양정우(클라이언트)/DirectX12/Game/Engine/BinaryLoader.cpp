@@ -387,6 +387,9 @@ void BinaryLoader::AddBonesData()
 
 		boneInfo->parentIndex = parentContainer[i];	//<ParentIndex>:
 		boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
+		//boneInfo->matOffset = m_vmatToParent[i];	//<Transform>:을 활용한 새로운 데이터 형식
+
+		//어떤 버전이 맞는지는 잘 모르겟음
 
 		// _bones에 추가
 		_bones.push_back(boneInfo);
@@ -394,7 +397,7 @@ void BinaryLoader::AddBonesData()
 	
 }
 
-void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName, uint32 sTime, uint32 eTime, uint32 md, vector<float> time, Matrix* asd)
+void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName, uint32 sTime, uint32 eTime, uint32 md, vector<float> time, Matrix* asd, double endAnimeTime)
 {
 
 	shared_ptr<BinaryAnimClipInfo> animInfo = make_shared<BinaryAnimClipInfo>();
@@ -402,6 +405,7 @@ void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName
 	animInfo->startTime = sTime;
 	animInfo->endTime = eTime;
 	animInfo->mode = md;
+	animInfo->animeEndTime = endAnimeTime;
 
 	//키 프레임에 대한 데이터를 넣을 곳
 	for (int i = 0; i < boneNum; ++i) {
@@ -409,7 +413,7 @@ void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName
 		for (int j = 0; j < keyFrames; ++j) {
 			BinaryKeyFrameInfo keyFrame;
 			// asd와 time 배열의 내용을 순차적으로 할당
-			keyFrame.matTransform = asd[j];
+			keyFrame.matTransform = asd[j];		//가끔이상하게 여기서 버그가 난다.
 			keyFrame.time = time[j];
 			boneKeyFrames.push_back(keyFrame);
 		}
@@ -494,11 +498,55 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&xmf3Rotation, sizeof(float), 3, pInFile); //Euler Angle
 			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
 			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
+
+			//XMMATRIX matTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&xmf3Position));
+			//XMMATRIX matRotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&xmf3Rotation));
+			//XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&xmf3Scale));
+			//XMMATRIX matTransform = matTranslation * matRotation * matScale;
+			//XMFLOAT4X4 offsetMatrix;
+			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
+			//m_vmatToParent.push_back(offsetMatrix);
+
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4x4ToParent, sizeof(float), 16, pInFile);
+			
+			//XMFLOAT3 translation;
+			//translation.x = m_xmf4x4ToParent._41;
+			//translation.y = m_xmf4x4ToParent._42;
+			//translation.z = m_xmf4x4ToParent._43;
+
+			//// Rotation 추출
+			//XMFLOAT3 rotation;
+			//rotation.x = atan2f(m_xmf4x4ToParent._32, m_xmf4x4ToParent._33); // Pitch
+			//rotation.y = atan2f(-m_xmf4x4ToParent._31, sqrtf(m_xmf4x4ToParent._32 * m_xmf4x4ToParent._32 + m_xmf4x4ToParent._33 * m_xmf4x4ToParent._33)); // Yaw
+			//rotation.z = atan2f(m_xmf4x4ToParent._21, m_xmf4x4ToParent._11); // Roll
+
+			//// Scale 추출
+			//XMFLOAT3 scale;
+			//scale.x = sqrtf(m_xmf4x4ToParent._11 * m_xmf4x4ToParent._11 + m_xmf4x4ToParent._12 * m_xmf4x4ToParent._12 + m_xmf4x4ToParent._13 * m_xmf4x4ToParent._13);
+			//scale.y = sqrtf(m_xmf4x4ToParent._21 * m_xmf4x4ToParent._21 + m_xmf4x4ToParent._22 * m_xmf4x4ToParent._22 + m_xmf4x4ToParent._23 * m_xmf4x4ToParent._23);
+			//scale.z = sqrtf(m_xmf4x4ToParent._31 * m_xmf4x4ToParent._31 + m_xmf4x4ToParent._32 * m_xmf4x4ToParent._32 + m_xmf4x4ToParent._33 * m_xmf4x4ToParent._33);
+
+			//// Translation을 이용한 행렬 생성
+			//XMMATRIX matTranslation = XMMatrixTranslation(translation.x, translation.y, translation.z);
+
+			//// Rotation을 이용한 행렬 생성
+			//XMMATRIX matRotation = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+			//// Scale을 이용한 행렬 생성
+			//XMMATRIX matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+			//// 각 행렬을 조합하여 최종 변환 행렬 생성
+			//XMMATRIX matTransform = matTranslation * matRotation * matScale;
+
+			//// XMMatrixTranspose 함수를 사용하여 행렬을 전치하여 XMFLOAT4X4 형식으로 변환
+			//XMFLOAT4X4 offsetMatrix;
+			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
+
 			m_vmatToParent.push_back(m_xmf4x4ToParent);
+
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -907,6 +955,8 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			wstring animName = ConvertCharToWString(pstrToken);
 			vector<float> timeContainer;
 
+			asd = new Matrix[m_nBoneFrames];
+
 			for (int i = 0; i < nKeyFrames; i++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
@@ -920,17 +970,18 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 
 					//이 아이는BinaryKeyFrameInfo에서 matTransform을 맞고있지
 
-					asd = new Matrix[m_nBoneFrames];
+					
 
 					nReads = (UINT)::fread(/*m_ppxmf4x4KeyFrameTransforms[i]*/asd, sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
 
 
 				}
 			}
+			float maxTime = *std::max_element(timeContainer.begin(), timeContainer.end());
 
 			//_animClips.push_back(clipInfo);
 
-			AddAnimClipsData(m_nBoneFrames, nKeyFrames, animName, 0, nKeyFrames, nFramesPerSecond, timeContainer, asd);
+			AddAnimClipsData(m_nBoneFrames, nKeyFrames, animName, 0, nKeyFrames, nFramesPerSecond, timeContainer, asd, maxTime);
 			delete[] asd;
 		}
 		else if (!strcmp(pstrToken, "</AnimationSets>"))

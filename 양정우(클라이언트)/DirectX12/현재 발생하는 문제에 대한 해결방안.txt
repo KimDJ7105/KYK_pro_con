@@ -1,7 +1,18 @@
+Matrix		matTransform;
 
+Matrix					matOffset;--->>기존에 TransformMatrix의 값을 고대로 가져왔었음
+								-->>이번엔 Transform의 정보들을 이용한 새로운 데이터를 집어넣게 하였음
+두가지 데이터 내용은 약가 불안하다. 둘중에 뭔지는 확신이 서지 않는다.
+
+----------------
 문제점->코드적으로
 FBXLoader에서 계산하거나 추가하는 함수들을 BinaryLoader로 끌고와야할지도 모른다.
 
 CreateBonesAndAnimations
 CreateBinaryBonesAndAnimations
 두 함수의 데이터를 다루는 차이를 잘 확인하고 디버깅을 해야 한다.
+
+
+---
+BinaryAnimClipInfo에다가 애니메이션의 종료 시간도 건네주면 CreateBinaryBonesAndAnimations에서 써먹을 수 있을거같다.->해결
+
