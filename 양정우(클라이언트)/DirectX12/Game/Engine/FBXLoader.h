@@ -78,6 +78,7 @@ struct FbxAnimClipInfo
 	FbxTime			endTime;
 	FbxTime::EMode	mode;
 	vector<vector<FbxKeyFrameInfo>>	keyFrames;//본 갯수 * 프레임 갯수
+											// 를 본 갯수만큼...	// 본 하나의 움직임을 표현한 프레임벡터
 };
 
 class FBXLoader

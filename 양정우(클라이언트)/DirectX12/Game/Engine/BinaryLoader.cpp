@@ -277,6 +277,33 @@ void BinaryLoader::AddMeshData()
 			meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
 		}
 	}
+
+	if (m_pvec4BoneWeights && m_pvec4BoneIndices)
+	{
+		//boneWeights 계산하는곳
+		// boneWeights 계산
+		for (int i = 0; i < m_nVertices; i++) {
+			// 각 정점의 뼈 가중치와 인덱스 가져오기
+			Vec4 weights = m_pvec4BoneWeights[i];
+			MyInt4 indices = m_pvec4BoneIndices[i];
+
+			double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
+
+			// BinaryBoneWeight 구조체 생성
+			BinaryBoneWeight binaryBoneWeight;
+
+			// 뼈 가중치와 인덱스 추가
+			for (int j = 0; j < 4; j++) {
+				binaryBoneWeight.AddWeights(indices[j], weightValues[j]);
+			}
+
+			// 합을 1로 보정
+			binaryBoneWeight.Normalize();
+
+			// BinaryMeshInfo의 boneWeights에 추가
+			meshInfo.boneWeights.push_back(binaryBoneWeight);
+		}
+	}
 	
 
 	for (int i = 0; i < m_nSubMeshes; i++) {
@@ -346,35 +373,6 @@ void BinaryLoader::AddMeshData()
 		}
 	}
 
-	
-
-	if (m_pvec4BoneWeights && m_pvec4BoneIndices)
-	{
-		//boneWeights 계산하는곳
-		// boneWeights 계산
-		for (int i = 0; i < m_nVertices; i++) {
-			// 각 정점의 뼈 가중치와 인덱스 가져오기
-			Vec4 weights = m_pvec4BoneWeights[i];
-			MyInt4 indices = m_pvec4BoneIndices[i];
-
-			double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
-
-			// BinaryBoneWeight 구조체 생성
-			BinaryBoneWeight binaryBoneWeight;
-
-			// 뼈 가중치와 인덱스 추가
-			for (int j = 0; j < 4; j++) {
-				binaryBoneWeight.AddWeights(indices[j], weightValues[j]);
-			}
-
-			// 합을 1로 보정
-			binaryBoneWeight.Normalize();
-
-			// BinaryMeshInfo의 boneWeights에 추가
-			meshInfo.boneWeights.push_back(binaryBoneWeight);
-		}
-	}
-
 	meshInfo.hasAnimation = isAnimation;
 }
 
@@ -388,8 +386,8 @@ void BinaryLoader::AddBonesData()
 		boneInfo->boneName = m_vstrFrameNames[i];		//<Frame>:
 
 		boneInfo->parentIndex = parentContainer[i];	//<ParentIndex>:
-		boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
-		//boneInfo->matOffset = m_vmatToParent[i];	//<Transform>:을 활용한 새로운 데이터 형식
+		//boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
+		boneInfo->matOffset = m_vmatToParent[i];	//<Transform>:을 활용한 새로운 데이터 형식
 
 		//어떤 버전이 맞는지는 잘 모르겟음
 
@@ -500,13 +498,13 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
 			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
 
-			//XMMATRIX matTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&xmf3Position));
-			//XMMATRIX matRotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&xmf3Rotation));
-			//XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&xmf3Scale));
-			//XMMATRIX matTransform = matTranslation * matRotation * matScale;
-			//XMFLOAT4X4 offsetMatrix;
-			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
-			//m_vmatToParent.push_back(offsetMatrix);
+			XMMATRIX matTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&xmf3Position));
+			XMMATRIX matRotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&xmf3Rotation));
+			XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&xmf3Scale));
+			XMMATRIX matTransform = matTranslation * matRotation * matScale;
+			XMFLOAT4X4 offsetMatrix;
+			XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
+			m_vmatToParent.push_back(offsetMatrix);
 
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
@@ -546,7 +544,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			//XMFLOAT4X4 offsetMatrix;
 			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
 
-			m_vmatToParent.push_back(m_xmf4x4ToParent);
+			//m_vmatToParent.push_back(m_xmf4x4ToParent);
 
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))

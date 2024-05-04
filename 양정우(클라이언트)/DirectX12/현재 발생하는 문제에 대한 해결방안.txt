@@ -2,7 +2,9 @@ Matrix		matTransform;
 
 Matrix					matOffset;--->>기존에 TransformMatrix의 값을 고대로 가져왔었음
 								-->>이번엔 Transform의 정보들을 이용한 새로운 데이터를 집어넣게 하였음
-두가지 데이터 내용은 약가 불안하다. 둘중에 뭔지는 확신이 서지 않는다.
+
+값을 TransformMatrix로 했을때는 중앙에서 겟단을 찍으면서 지랄했고
+값을 Transform으로 했을때는 메시의 모양은 그대로인데 막 움직였다.
 
 ----------------
 문제점->코드적으로
@@ -16,3 +18,24 @@ CreateBinaryBonesAndAnimations
 ---
 BinaryAnimClipInfo에다가 애니메이션의 종료 시간도 건네주면 CreateBinaryBonesAndAnimations에서 써먹을 수 있을거같다.->해결
 
+다행이도 본이 들어갔지만 랜더링이 안된다.
+
+그래서스킨메시부분이 문제라고 판단.
+
+
+쓰읍......
+
+최종 결과 애니메이션이 만들어지는 방법은
+오프셋 매트릭스 * 투루트를 곱해야 한다.
+
+LoadOffsetMatrix가 오프셋 매트릭스를 구하는 값
+struct FbxBoneInfo
+{
+	wstring				boneName;//뼈의 이름
+	int32					parentIndex;//부모노드
+	FbxAMatrix				matOffset;//4x4행렬
+};
+
+투루트는 keyFrame이다.
+
+파이널 매트릭스

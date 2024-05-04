@@ -34,6 +34,7 @@ void FBXLoader::LoadFbx(const wstring& path)
 	// Animation	
 	LoadBones(_scene->GetRootNode());
 	LoadAnimationInfo();
+	// Animation/
 
 	// 로드된 데이터 파싱 (Mesh/Material/Skin)
 	ParseNode(_scene->GetRootNode());
@@ -382,6 +383,8 @@ void FBXLoader::CreateMaterials()
 
 void FBXLoader::LoadBones(FbxNode* node, int32 idx, int32 parentIdx)
 {
+	//재귀적으로 bone을 채운다.
+	//root 노드부터 차례대로
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
 
 	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
@@ -399,6 +402,9 @@ void FBXLoader::LoadBones(FbxNode* node, int32 idx, int32 parentIdx)
 
 void FBXLoader::LoadAnimationInfo()
 {
+	// 애니메이션의 "기본"정보
+
+	// 애니메이션 이름은 무엇인지
 	_scene->FillAnimStackNameArray(OUT _animNames);
 
 	const int32 animCount = _animNames.GetCount();
@@ -412,6 +418,8 @@ void FBXLoader::LoadAnimationInfo()
 		animClip->name = s2ws(animStack->GetName());
 		animClip->keyFrames.resize(_bones.size()); // 키프레임은 본의 개수만큼
 
+
+		//각각의 스타트 타임과 엔드타임은 언제인지
 		FbxTakeInfo* takeInfo = _scene->GetTakeInfo(animStack->GetName());
 		animClip->startTime = takeInfo->mLocalTimeSpan.GetStart();
 		animClip->endTime = takeInfo->mLocalTimeSpan.GetStop();
@@ -423,6 +431,7 @@ void FBXLoader::LoadAnimationInfo()
 
 void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 {
+	// 여기서 애니메이션에 대한 정보를 추출한다.
 	const int32 skinCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
 	if (skinCount <= 0 || _animClips.empty())
 		return;
@@ -449,12 +458,14 @@ void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 					assert(boneIdx >= 0);
 
 					FbxAMatrix matNodeTransform = GetTransform(mesh->GetNode());
+					//여기부터
 					LoadBoneWeight(cluster, boneIdx, meshInfo);
 					LoadOffsetMatrix(cluster, matNodeTransform, boneIdx, meshInfo);
 
 					const int32 animCount = _animNames.Size();
-					for (int32 k = 0; k < animCount; k++)
+					for (int32 k = 0; k < animCount; k++)// 애니메이션의 갯수만큼 키프레임을 만든다.
 						LoadKeyframe(k, mesh->GetNode(), cluster, matNodeTransform, boneIdx, meshInfo);
+					//여기까지 LoadBoneWeight, LoadOffsetMatrix, LoadKeyframe 이 3가지가 애니메이션의 핵심이다.
 				}
 			}
 		}
@@ -489,6 +500,7 @@ void FBXLoader::FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 
 void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* meshInfo)
 {
+	//어느정도의 영향을 받는지
 	const int32 indicesCount = cluster->GetControlPointIndicesCount();
 	for (int32 i = 0; i < indicesCount; i++)
 	{
@@ -501,6 +513,8 @@ void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* 
 
 void FBXLoader::LoadOffsetMatrix(FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, FbxMeshInfo* meshInfo)
 {
+	// 바인드 포지션에서 있는 좌표를 로컬포지션으로 옮겨주는 오프셋 매트릭스
+
 	FbxAMatrix matClusterTrans;
 	FbxAMatrix matClusterLinkTrans;
 	// The transformation of the mesh at binding time 
@@ -543,7 +557,7 @@ void FBXLoader::LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster
 
 	FbxTime::EMode timeMode = _scene->GetGlobalSettings().GetTimeMode();
 
-	// 애니메이션 골라줌
+	// 애니메이션 골라줌, 어떤 애니메이션을 세팅하는지
 	FbxAnimStack* animStack = _scene->FindMember<FbxAnimStack>(_animNames[animIndex]->Buffer());
 	_scene->SetCurrentAnimationStack(OUT animStack);
 
@@ -551,6 +565,7 @@ void FBXLoader::LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster
 	FbxLongLong endFrame = _animClips[animIndex]->endTime.GetFrameCount(timeMode);
 
 	//toRoot를 긁어오는 과정(최적화 과정을 할때 개선이 필요할지도...)
+	//각 프레임 마다의 애니메이션에 대한 키프레임을 읽어온다
 	for (FbxLongLong frame = startFrame; frame < endFrame; frame++)
 	{
 		FbxKeyFrameInfo keyFrameInfo = {};
