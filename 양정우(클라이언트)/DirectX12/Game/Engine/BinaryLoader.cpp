@@ -118,7 +118,6 @@ void BinaryLoader::LoadBinary(const wstring& path)
 	AddBonesData();
 	//AddAnimClipsData();->LoadAnimationFromFile의 903줄에서 실시간으로 읽으면서 추가중이다.
 	AddAnimNames();
-
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
 	CreateTextures();
@@ -357,10 +356,10 @@ void BinaryLoader::AddBonesData()
 		shared_ptr<BinaryBoneInfo> boneInfo = make_shared<BinaryBoneInfo>();
 
 		// 이름 설정
-		boneInfo->boneName = m_vstrFrameNames[i];		//<FrameNames>:
+		boneInfo->boneName = m_vstrFrameNames[i];		//<Frame>:
 
 		//boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
-		//boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:
+		boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
 
 		// _bones에 추가
 		_bones.push_back(boneInfo);
@@ -368,30 +367,29 @@ void BinaryLoader::AddBonesData()
 	
 }
 
-void BinaryLoader::AddAnimClipsData()
+void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName, uint32 sTime, uint32 eTime, uint32 md, vector<float> time, Matrix* asd)
 {
-	//_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
-	//shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
-	//animInfo->name;			//<AnimationClipName>:
-	//animInfo->startTime;	//0.0f고정
-	//animInfo->endTime;		//<AnimationSet>:
-	//animInfo->mode;			//eFrame30고정
-	//for (auto& a : animInfo->keyFrames)
-	//{
-	//	a.push_back(BinaryKeyFrameInfo(Matrix(), 5));	//<TransformMatrix>: , <Frame>:
-	//}
 
-	_animClips.resize(m_nAnimClipConut);
-	for (int i = 0; i < m_nAnimClipConut; i++)
-	{
-		shared_ptr<BinaryAnimClipInfo> animInfo = make_shared<BinaryAnimClipInfo>();
-		animInfo->name = m_vstrAnimClipNames[i];
-		animInfo->startTime = 0;
-		animInfo->endTime;
-		animInfo->mode;
-		animInfo->keyFrames;
+	shared_ptr<BinaryAnimClipInfo> animInfo = make_shared<BinaryAnimClipInfo>();
+	animInfo->name = animName;
+	animInfo->startTime = sTime;
+	animInfo->endTime = eTime;
+	animInfo->mode = md;
+
+	//키 프레임에 대한 데이터를 넣을 곳
+	for (int i = 0; i < boneNum; ++i) {
+		vector<BinaryKeyFrameInfo> boneKeyFrames;
+		for (int j = 0; j < keyFrames; ++j) {
+			BinaryKeyFrameInfo keyFrame;
+			// asd와 time 배열의 내용을 순차적으로 할당
+			keyFrame.matTransform = asd[j];
+			keyFrame.time = time[j];
+			boneKeyFrames.push_back(keyFrame);
+		}
+		animInfo->keyFrames.push_back(boneKeyFrames);
 	}
 
+	_animClips.push_back(animInfo);
 
 }
 
@@ -467,6 +465,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4x4ToParent, sizeof(float), 16, pInFile);
+			m_vmatToParent.push_back(m_xmf4x4ToParent);
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -871,11 +870,9 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			int nKeyFrames = ::ReadIntegerFromFile(pInFile);//->총 변환행렬 갯수
 			m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
 
-			std::shared_ptr<BinaryAnimClipInfo> clipInfo = std::make_shared<BinaryAnimClipInfo>();
-			clipInfo->name = ConvertCharToWString(pstrToken);
-			clipInfo->startTime = 0;
-			clipInfo->endTime = nKeyFrames;
-			clipInfo->mode = nFramesPerSecond;
+
+			wstring animName = ConvertCharToWString(pstrToken);
+			vector<float> timeContainer;
 
 			for (int i = 0; i < nKeyFrames; i++)
 			{
@@ -886,22 +883,21 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 					int nKey = ::ReadIntegerFromFile(pInFile); //i 용가리 기준 1~180까지의 변환행렬 번호
 					float fKeyTime = ::ReadFloatFromFile(pInFile);	//BinaryKeyFrameInfo에서 time을 맞고 있지
 
+					timeContainer.push_back(fKeyTime);
+
 					//이 아이는BinaryKeyFrameInfo에서 matTransform을 맞고있지
-					nReads = (UINT)::fread(m_ppxmf4x4KeyFrameTransforms[i], sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
 
-					clipInfo->keyFrames.resize(m_nBoneFrames);
-					for (int j = 0; j < m_nBoneFrames; ++j)
-					{
-						BinaryKeyFrameInfo keyFrameInfo;
-						keyFrameInfo.matTransform = m_ppxmf4x4KeyFrameTransforms[i][j];
-						keyFrameInfo.time = fKeyTime;
+					asd = new Matrix[m_nBoneFrames];
 
-						clipInfo->keyFrames[j].push_back(keyFrameInfo);
-					}
+					nReads = (UINT)::fread(/*m_ppxmf4x4KeyFrameTransforms[i]*/asd, sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
+
+
 				}
 			}
 
-			_animClips.push_back(clipInfo);
+			//_animClips.push_back(clipInfo);
+
+			AddAnimClipsData(m_nBoneFrames, nKeyFrames, animName, 0, nKeyFrames, nFramesPerSecond, timeContainer, asd);
 		}
 		else if (!strcmp(pstrToken, "</AnimationSets>"))
 		{

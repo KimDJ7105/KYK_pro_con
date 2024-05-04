@@ -61,15 +61,15 @@ struct BinaryMeshInfo
 
 struct BinaryKeyFrameInfo
 {
-	Matrix		matTransform;	//m_ppxmf4x4KeyFrameTransforms[i]
+	Matrix		matTransform;	//-->이거 이상하다.
 	double		time;			//fKeyTime
 };
 
 struct BinaryBoneInfo
 {
-	wstring					boneName;//뼈의 이름
-	int32					parentIndex;//부모노드
-	Matrix					matOffset;//4x4행렬
+	wstring					boneName;//뼈의 이름	//<Frame>:
+	int32					parentIndex;//부모노드	
+	Matrix					matOffset;//4x4행렬		//<TransformMatrix>:
 };
 
 
@@ -142,7 +142,7 @@ public:
 
 	void AddMeshData();
 	void AddBonesData();
-	void AddAnimClipsData();
+	void AddAnimClipsData(int boneNum, int keyFrames, wstring animName, uint32 sTime, uint32 eTime, uint32 md, vector<float> time, Matrix* asd);
 	void AddAnimNames();
 
 
@@ -157,6 +157,7 @@ private:
 private:
 	char							m_pstrFrameName[64];
 	XMFLOAT4X4						m_xmf4x4ToParent;
+	vector<Matrix>					m_vmatToParent;
 
 public:
 	void LoadMeshFromFile(FILE* pInFile);
@@ -203,6 +204,7 @@ private:
 	char(*m_ppstrSkinningBoneNames)[64];
 	XMFLOAT4X4* m_pxmf4x4BindPoseBoneOffsets = NULL;
 	Matrix* m_pvec4x4BindPoseBoneOffsets = NULL;
+	
 
 	XMINT4* m_pxmn4BoneIndices = NULL;
 	MyInt4* m_pvec4BoneIndices = NULL;	//당근칼 - 원래는 int의 4개씩 배열인데 일단 이렇게 했다.
@@ -251,5 +253,7 @@ public:
 private:
 	int								m_nBoneFrames = 0;
 	XMFLOAT4X4** m_ppxmf4x4KeyFrameTransforms = NULL;
+
+	Matrix* asd = NULL;
 };
 
