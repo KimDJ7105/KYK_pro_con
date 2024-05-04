@@ -358,7 +358,7 @@ void BinaryLoader::AddBonesData()
 		// 이름 설정
 		boneInfo->boneName = m_vstrFrameNames[i];		//<Frame>:
 
-		//boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
+		boneInfo->parentIndex = parentContainer[i];	//<ParentIndex>:
 		boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
 
 		// _bones에 추가
@@ -452,6 +452,12 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nTextures = ::ReadIntegerFromFile(pInFile);
 
 			::ReadStringFromFile(pInFile, m_pstrFrameName);
+		}
+		//"<ParentIndex>:"입주 자리
+		else if (!strcmp(pstrToken, "<ParentIndex>:"))
+		{
+			int a = ::ReadIntegerFromFile(pInFile);
+			parentContainer.push_back(a);
 		}
 		else if (!strcmp(pstrToken, "<Transform>:"))
 		{

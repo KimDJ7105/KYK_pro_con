@@ -152,6 +152,9 @@ public:
 	void LoadFrameHierarchyFromFile(FILE* pInFile);
 
 private:
+	vector<int>parentContainer;
+
+private:
 	vector<UINT> m_nParentIndex;
 
 private:

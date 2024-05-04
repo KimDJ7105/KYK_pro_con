@@ -10,11 +10,17 @@ _bones에 parentIndex값이 정확하지 않다.
 														원래는 1234 0 5678 0 10 11 12 13이런식으로 점점 증가한다.
 														만약 문제가 발생했을시 여기도 확인해볼것
 
-	//boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:->//<TransformMatrix>:로 대체
-	둘의 내용은 새로 교체해주어야 한다.
+	//boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:->//<TransformMatrix>:로 대체.->해결했음
+=
 
 
-_animeClip의 matTransform의 값이 전부 똑같다.다른 애니메이션 값도 똑같다.->>>
+
+_animeClip의 matTransform의 값이 전부 똑같다.다른 애니메이션 값도 똑같다.->>>해결
+keyFrameInof 첫번째에 들어가야 하는거
+asd 0번과 fKeyTime
+asd 1번과 다음 fkeyTime
+
+matTransform의 값이이상하다->문제를 확인-->>확인결과 정보의 문제는 괜찮다고 본다.
 
 ----------
 문제점->코드적으로
