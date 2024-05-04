@@ -161,6 +161,7 @@ struct MyInt4 {
 		return *this;
 	}
 
+
 	// 비교 연산자 오버로딩
 	bool operator==(const MyInt4& other) const {
 		return x == other.x && y == other.y && z == other.z && w == other.w;
@@ -180,6 +181,18 @@ struct MyInt4 {
 	}
 
 	// 기타 연산자 오버로딩 및 유틸리티 함수 추가 가능
+
+	// 배열 연산자 오버로딩
+	int& operator[](int index) {
+		switch (index) {
+		case 0: return x;
+		case 1: return y;
+		case 2: return z;
+		case 3: return w;
+		default:
+			throw std::out_of_range("Index out of range for MyInt4");
+		}
+	}
 };
 
 // 정점 정보

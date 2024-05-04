@@ -1,28 +1,4 @@
-문제점->데이터적으로
-_meshes의 boneWeights값이 없다.
 
-_bones에 parentIndex값이 정확하지 않다.
-	의 갯수가 185개가 아니라 135개이다->중간에 잘 읽다가 멈쳐졌다.->해결했음
-	
-	//boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:->>>>>>>일단은 <ParentIndex>:를 추출하도록 만들어두긴 했다.
-														하지만 정확하다고 볼수는 없다.
-														현재 내가 추출하는 값은 1234 1234이런식으로 하지만
-														원래는 1234 0 5678 0 10 11 12 13이런식으로 점점 증가한다.
-														만약 문제가 발생했을시 여기도 확인해볼것
-
-	//boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:->//<TransformMatrix>:로 대체.->해결했음
-=
-
-
-
-_animeClip의 matTransform의 값이 전부 똑같다.다른 애니메이션 값도 똑같다.->>>해결
-keyFrameInof 첫번째에 들어가야 하는거
-asd 0번과 fKeyTime
-asd 1번과 다음 fkeyTime
-
-matTransform의 값이이상하다->문제를 확인-->>확인결과 정보의 문제는 괜찮다고 본다.
-
-----------
 문제점->코드적으로
 FBXLoader에서 계산하거나 추가하는 함수들을 BinaryLoader로 끌고와야할지도 모른다.
 

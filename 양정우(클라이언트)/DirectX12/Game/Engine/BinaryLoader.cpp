@@ -344,8 +344,35 @@ void BinaryLoader::AddMeshData()
 		}
 	}
 
+	
 
-	meshInfo.boneWeights;	//??? 1혹은 2로 사이즈가 고정된다.
+	if (m_pvec4BoneWeights && m_pvec4BoneIndices)
+	{
+		//boneWeights 계산하는곳
+		// boneWeights 계산
+		for (int i = 0; i < m_nVertices; i++) {
+			// 각 정점의 뼈 가중치와 인덱스 가져오기
+			Vec4 weights = m_pvec4BoneWeights[i];
+			MyInt4 indices = m_pvec4BoneIndices[i];
+
+			double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
+
+			// BinaryBoneWeight 구조체 생성
+			BinaryBoneWeight binaryBoneWeight;
+
+			// 뼈 가중치와 인덱스 추가
+			for (int j = 0; j < 4; j++) {
+				binaryBoneWeight.AddWeights(indices[j], weightValues[j]);
+			}
+
+			// 합을 1로 보정
+			binaryBoneWeight.Normalize();
+
+			// BinaryMeshInfo의 boneWeights에 추가
+			meshInfo.boneWeights.push_back(binaryBoneWeight);
+		}
+	}
+
 	meshInfo.hasAnimation = isAnimation;
 }
 
@@ -904,6 +931,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			//_animClips.push_back(clipInfo);
 
 			AddAnimClipsData(m_nBoneFrames, nKeyFrames, animName, 0, nKeyFrames, nFramesPerSecond, timeContainer, asd);
+			delete[] asd;
 		}
 		else if (!strcmp(pstrToken, "</AnimationSets>"))
 		{
