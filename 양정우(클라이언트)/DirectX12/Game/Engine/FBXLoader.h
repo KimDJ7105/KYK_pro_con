@@ -136,4 +136,6 @@ private:
 	vector<shared_ptr<FbxBoneInfo>>		_bones;
 	vector<shared_ptr<FbxAnimClipInfo>>	_animClips;
 	FbxArray<FbxString*>				_animNames;
+
+	wstring fortheBIN;
 };

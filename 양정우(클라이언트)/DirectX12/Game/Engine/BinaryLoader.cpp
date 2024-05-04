@@ -236,10 +236,13 @@ void BinaryLoader::FillBoneWeight(BinaryMeshInfo* meshInfo)
 
 void BinaryLoader::AddMeshData()
 {
+	
 	_meshes.push_back(BinaryMeshInfo());
 	BinaryMeshInfo& meshInfo = _meshes.back();
 	meshInfo.name = m_strMeshName; // <Mesh>:
 
+
+	//여기부터--------------------------------------------------------------------
 	meshInfo.vertices.resize(m_iPositionNum);
 	// 정점 추가
 	for (int i = 0; i < m_iPositionNum; i++) {
@@ -319,6 +322,10 @@ void BinaryLoader::AddMeshData()
 		}
 		meshInfo.indices.push_back(subMeshVector);	//<SubMesh>:
 	}
+	//여기까지--------------------------------------------------------------------
+
+
+
 
 	// 재질 추가
 	meshInfo.materials.resize(m_nMaterials);

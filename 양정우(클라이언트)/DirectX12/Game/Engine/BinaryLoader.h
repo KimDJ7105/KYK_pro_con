@@ -259,5 +259,17 @@ private:
 	XMFLOAT4X4** m_ppxmf4x4KeyFrameTransforms = NULL;
 
 	Matrix* asd = NULL;
+
+public:
+	// _meshes 멤버에 접근하는 GetMeshes() 메서드 추가
+	vector<BinaryMeshInfo>& GetMeshes() {
+		return _meshes;
+	}
+
+	// const 버전의 GetMeshes() 메서드 추가
+	const vector<BinaryMeshInfo>& GetMeshes() const {
+		return _meshes;
+	}
+
 };
 

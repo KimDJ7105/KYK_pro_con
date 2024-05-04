@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "Material.h"
 
+#include "BinaryLoader.h"
+
 FBXLoader::FBXLoader()
 {
 
@@ -31,6 +33,8 @@ void FBXLoader::LoadFbx(const wstring& path)
 	// 파일 데이터 로드
 	Import(path);
 
+	fortheBIN = fs::path(path).parent_path().wstring() + L"\\" + fs::path(path).filename().stem().wstring() + L".bin";//바이너리 읽어낼경로;
+
 	// Animation	
 	LoadBones(_scene->GetRootNode());
 	LoadAnimationInfo();
@@ -38,6 +42,7 @@ void FBXLoader::LoadFbx(const wstring& path)
 
 	// 로드된 데이터 파싱 (Mesh/Material/Skin)
 	ParseNode(_scene->GetRootNode());
+
 
 	// 우리 구조에 맞게 Texture / Material 생성
 	CreateTextures();
@@ -109,12 +114,66 @@ void FBXLoader::ParseNode(FbxNode* node)
 
 void FBXLoader::LoadMesh(FbxMesh* mesh)
 {
+
 	_meshes.push_back(FbxMeshInfo());
 	FbxMeshInfo& meshInfo = _meshes.back();
 
+	////오히려 여기의 _meshes의 값을 Binary에서 읽어온다면?
+	//_meshes.clear(); // 기존 내용을 모두 지웁니다.
+
+	//// 새로운 내용을 추가합니다.
+	//_meshes.push_back(FbxMeshInfo());
+	//FbxMeshInfo& meshInfo = _meshes.back();
+	//BinaryLoader loaders;
+	//loaders.LoadBinary(fortheBIN);
+	//vector<BinaryMeshInfo>& meshes = loaders.GetMeshes();
+	//
+	//for (size_t i = 0; i < meshes.size(); ++i) {
+	//	// 각 요소에 대해 vertices, boneWeights, indices 값을 추가
+	//	_meshes[i].name = meshes[i].name;
+	//	_meshes[i].vertices = meshes[i].vertices;
+	//	_meshes[i].indices = meshes[i].indices;
+
+	//	for (int m = 0; m < _meshes[i].materials.size(); m++)
+	//	{
+	//		_meshes[i].materials[m].diffuse = meshes[i].materials[m].diffuse;
+	//		_meshes[i].materials[m].ambient = meshes[i].materials[m].ambient;
+	//		_meshes[i].materials[m].specular = meshes[i].materials[m].specular;
+	//		_meshes[i].materials[m].name = meshes[i].materials[m].name;
+	//		_meshes[i].materials[m].diffuseTexName = meshes[i].materials[m].diffuseTexName;
+	//		_meshes[i].materials[m].normalTexName = meshes[i].materials[m].normalTexName;
+	//		_meshes[i].materials[m].specularTexName = meshes[i].materials[m].specularTexName;
+	//	}
+
+	//	for (int b = 0; b < _meshes[i].boneWeights.size(); b++)
+	//	{
+	//		//_meshes[i].boneWeights[b] = meshes[i].boneWeights[b];
+
+	//		// 각 정점의 뼈 가중치와 인덱스 가져오기
+	//		Vec4 weights = _meshes[i].vertices[b].weights;
+	//		MyInt4 indices = _meshes[i].vertices[b].indices;
+
+	//		double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
+
+	//		// BinaryBoneWeight 구조체 생성
+	//		BoneWeight BoneWeight;
+
+	//		// 뼈 가중치와 인덱스 추가
+	//		for (int j = 0; j < 4; j++) {
+	//			BoneWeight.AddWeights(indices[j], weightValues[j]);
+	//		}
+
+	//		// 합을 1로 보정
+	//		BoneWeight.Normalize();
+
+	//		// BinaryMeshInfo의 boneWeights에 추가
+	//		_meshes[i].boneWeights.push_back(BoneWeight);
+	//	}
+	//}
+
 	meshInfo.name = s2ws(mesh->GetName());
 
-	const int32 vertexCount = mesh->GetControlPointsCount();
+	const int32 vertexCount = mesh->GetControlPointsCount();	
 	meshInfo.vertices.resize(vertexCount);
 	meshInfo.boneWeights.resize(vertexCount);
 
