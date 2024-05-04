@@ -99,6 +99,7 @@ BinaryLoader::~BinaryLoader()
 
 }
 
+
 void BinaryLoader::LoadBinary(const wstring& path)
 {
 	int utf8Length = WideCharToMultiByte(CP_UTF8, 0, path.c_str(), -1, nullptr, 0, nullptr, nullptr);
@@ -118,6 +119,7 @@ void BinaryLoader::LoadBinary(const wstring& path)
 	AddBonesData();
 	//AddAnimClipsData();->LoadAnimationFromFile의 903줄에서 실시간으로 읽으면서 추가중이다.
 	AddAnimNames();
+
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
 	CreateTextures();
@@ -419,7 +421,6 @@ void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName
 		}
 		animInfo->keyFrames.push_back(boneKeyFrames);
 	}
-
 	_animClips.push_back(animInfo);
 
 }
