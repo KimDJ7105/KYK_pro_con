@@ -7,6 +7,7 @@
 #include "StructuredBuffer.h"
 
 #include "BinaryLoader.h"
+#include "BinaryMeshData.h";
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
 {
@@ -46,14 +47,13 @@ void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
 }
 
-shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loader)
+shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loader, wstring path)
 {
 	//흐름 6)여기서 FbxMeshInfo는 말만 FBX가 붙어있지 구조체 자체는 FBX내부함수와는 상관이 없다. 그러니 이름을 바꾸어서 바이너리로 써도 된다.
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 
 	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
 	//흐름 8)혹은 여기서 바꿔버리면 되지 않을까?
-
 
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 
@@ -85,6 +85,7 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 
 	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
 	//흐름 8)혹은 여기서 바꿔버리면 되지 않을까?
+
 
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 

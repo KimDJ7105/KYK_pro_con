@@ -28,7 +28,7 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
 		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
-		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader);
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, path);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
 
