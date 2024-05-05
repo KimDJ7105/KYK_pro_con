@@ -94,7 +94,7 @@ void FBXLoader::ParseNode(FbxNode* node)
 		{
 		case FbxNodeAttribute::eMesh:
 			LoadMesh(node->GetMesh());
-			LoadMeshBin(node->GetMesh());
+			//LoadMeshBin(node->GetMesh());
 			break;
 		}
 	}
@@ -329,9 +329,9 @@ void FBXLoader::LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 
 void FBXLoader::LoadMesh(FbxMesh* mesh)
 {
-	BinaryMeshData a;
+	/*BinaryMeshData a;
 	a.LoadMeshData(fortheBIN);
-	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();
+	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();*/
 
 	//_meshes = loadedMeshData;
 
