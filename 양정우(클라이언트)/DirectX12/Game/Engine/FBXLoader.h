@@ -1,4 +1,5 @@
 #pragma once
+
 using namespace std;
 
 // 머터리얼에 관련한 정보들
@@ -137,6 +138,4 @@ private:
 	FbxArray<FbxString*>				_animNames;
 
 	wstring fortheBIN;
-
-	
 };

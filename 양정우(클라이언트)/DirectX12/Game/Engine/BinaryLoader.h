@@ -3,12 +3,6 @@
 
 using namespace std;
 
-
-extern BYTE ReadStringFromFile(FILE* pInFile, char* pstrToken);
-extern int ReadIntegerFromFile(FILE* pInFile);
-extern float ReadFloatFromFile(FILE* pInFile);
-extern wstring ConvertCharToWString(const char* source);
-
 //머터리얼 관련 정보
 struct BinaryMaterialInfo
 {

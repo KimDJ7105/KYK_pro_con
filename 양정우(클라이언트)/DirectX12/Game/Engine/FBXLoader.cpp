@@ -4,7 +4,8 @@
 #include "Resources.h"
 #include "Shader.h"
 #include "Material.h"
-#include "BinaryMeshData.h"
+
+#include "BinaryLoader.h"
 
 FBXLoader::FBXLoader()
 {
@@ -33,7 +34,6 @@ void FBXLoader::LoadFbx(const wstring& path)
 	Import(path);
 
 	fortheBIN = fs::path(path).parent_path().wstring() + L"\\" + fs::path(path).filename().stem().wstring() + L".bin";//바이너리 읽어낼경로;
-
 
 	// Animation	
 	LoadBones(_scene->GetRootNode());
@@ -114,34 +114,81 @@ void FBXLoader::ParseNode(FbxNode* node)
 
 void FBXLoader::LoadMesh(FbxMesh* mesh)
 {
-	BinaryMeshData a;
-	a.LoadMeshData(fortheBIN);
-	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();
 
-	_meshes = loadedMeshData;
-
-	//_meshes.push_back(FbxMeshInfo());
+	_meshes.push_back(FbxMeshInfo());
 	FbxMeshInfo& meshInfo = _meshes.back();
+
+	////오히려 여기의 _meshes의 값을 Binary에서 읽어온다면?
+	//_meshes.clear(); // 기존 내용을 모두 지웁니다.
+
+	//// 새로운 내용을 추가합니다.
+	//_meshes.push_back(FbxMeshInfo());
+	//FbxMeshInfo& meshInfo = _meshes.back();
+	//BinaryLoader loaders;
+	//loaders.LoadBinary(fortheBIN);
+	//vector<BinaryMeshInfo>& meshes = loaders.GetMeshes();
+	//
+	//for (size_t i = 0; i < meshes.size(); ++i) {
+	//	// 각 요소에 대해 vertices, boneWeights, indices 값을 추가
+	//	_meshes[i].name = meshes[i].name;
+	//	_meshes[i].vertices = meshes[i].vertices;
+	//	_meshes[i].indices = meshes[i].indices;
+
+	//	for (int m = 0; m < _meshes[i].materials.size(); m++)
+	//	{
+	//		_meshes[i].materials[m].diffuse = meshes[i].materials[m].diffuse;
+	//		_meshes[i].materials[m].ambient = meshes[i].materials[m].ambient;
+	//		_meshes[i].materials[m].specular = meshes[i].materials[m].specular;
+	//		_meshes[i].materials[m].name = meshes[i].materials[m].name;
+	//		_meshes[i].materials[m].diffuseTexName = meshes[i].materials[m].diffuseTexName;
+	//		_meshes[i].materials[m].normalTexName = meshes[i].materials[m].normalTexName;
+	//		_meshes[i].materials[m].specularTexName = meshes[i].materials[m].specularTexName;
+	//	}
+
+	//	for (int b = 0; b < _meshes[i].boneWeights.size(); b++)
+	//	{
+	//		//_meshes[i].boneWeights[b] = meshes[i].boneWeights[b];
+
+	//		// 각 정점의 뼈 가중치와 인덱스 가져오기
+	//		Vec4 weights = _meshes[i].vertices[b].weights;
+	//		MyInt4 indices = _meshes[i].vertices[b].indices;
+
+	//		double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
+
+	//		// BinaryBoneWeight 구조체 생성
+	//		BoneWeight BoneWeight;
+
+	//		// 뼈 가중치와 인덱스 추가
+	//		for (int j = 0; j < 4; j++) {
+	//			BoneWeight.AddWeights(indices[j], weightValues[j]);
+	//		}
+
+	//		// 합을 1로 보정
+	//		BoneWeight.Normalize();
+
+	//		// BinaryMeshInfo의 boneWeights에 추가
+	//		_meshes[i].boneWeights.push_back(BoneWeight);
+	//	}
+	//}
 
 	meshInfo.name = s2ws(mesh->GetName());
 
-	const int32 vertexCount = mesh->GetControlPointsCount();
-
-	//meshInfo.vertices.resize(vertexCount);
-	//meshInfo.boneWeights.resize(vertexCount);
+	const int32 vertexCount = mesh->GetControlPointsCount();	
+	meshInfo.vertices.resize(vertexCount);
+	meshInfo.boneWeights.resize(vertexCount);
 
 	// Position
 	FbxVector4* controlPoints = mesh->GetControlPoints();
-	//for (int32 i = 0; i < vertexCount; ++i)
-	//{
-	//	//012순서가 아닌 021인 이유 - fbx가 만들어질때 축이 DirectX의 축과 달라서 이렇게 하였다.
-	//	meshInfo.vertices[i].pos.x = static_cast<float>(controlPoints[i].mData[0]);
-	//	meshInfo.vertices[i].pos.y = static_cast<float>(controlPoints[i].mData[2]);
-	//	meshInfo.vertices[i].pos.z = static_cast<float>(controlPoints[i].mData[1]);
-	//}
+	for (int32 i = 0; i < vertexCount; ++i)
+	{
+		//012순서가 아닌 021인 이유 - fbx가 만들어질때 축이 DirectX의 축과 달라서 이렇게 하였다.
+		meshInfo.vertices[i].pos.x = static_cast<float>(controlPoints[i].mData[0]);
+		meshInfo.vertices[i].pos.y = static_cast<float>(controlPoints[i].mData[2]);
+		meshInfo.vertices[i].pos.z = static_cast<float>(controlPoints[i].mData[1]);
+	}
 
 	const int32 materialCount = mesh->GetNode()->GetMaterialCount();
-	//meshInfo.indices.resize(materialCount);
+	meshInfo.indices.resize(materialCount);
 
 	FbxGeometryElementMaterial* geometryElementMaterial = mesh->GetElementMaterial();
 
@@ -153,25 +200,25 @@ void FBXLoader::LoadMesh(FbxMesh* mesh)
 	uint32 vertexCounter = 0; // 정점의 개수
 
 	const int32 triCount = mesh->GetPolygonCount(); // 메쉬의 삼각형 개수를 가져온다
-	//for (int32 i = 0; i < triCount; i++) // 삼각형의 개수
-	//{
-	//	for (int32 j = 0; j < 3; j++) // 삼각형은 세 개의 정점으로 구성
-	//	{
-	//		int32 controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
-	//		arrIdx[j] = controlPointIndex;
+	for (int32 i = 0; i < triCount; i++) // 삼각형의 개수
+	{
+		for (int32 j = 0; j < 3; j++) // 삼각형은 세 개의 정점으로 구성
+		{
+			int32 controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
+			arrIdx[j] = controlPointIndex;
 
-	//		GetNormal(mesh, &meshInfo, controlPointIndex, vertexCounter);
-	//		GetTangent(mesh, &meshInfo, controlPointIndex, vertexCounter);
-	//		GetUV(mesh, &meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
+			GetNormal(mesh, &meshInfo, controlPointIndex, vertexCounter);
+			GetTangent(mesh, &meshInfo, controlPointIndex, vertexCounter);
+			GetUV(mesh, &meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
 
-	//		vertexCounter++;
-	//	}
+			vertexCounter++;
+		}
 
-	//	const uint32 subsetIdx = geometryElementMaterial->GetIndexArray().GetAt(i);
-	//	meshInfo.indices[subsetIdx].push_back(arrIdx[0]);
-	//	meshInfo.indices[subsetIdx].push_back(arrIdx[2]);
-	//	meshInfo.indices[subsetIdx].push_back(arrIdx[1]);
-	//}
+		const uint32 subsetIdx = geometryElementMaterial->GetIndexArray().GetAt(i);
+		meshInfo.indices[subsetIdx].push_back(arrIdx[0]);
+		meshInfo.indices[subsetIdx].push_back(arrIdx[2]);
+		meshInfo.indices[subsetIdx].push_back(arrIdx[1]);
+	}
 
 	// Animation
 	LoadAnimationData(mesh, &meshInfo);
@@ -489,7 +536,7 @@ void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 
 void FBXLoader::FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 {
-	/*const int32 size = static_cast<int32>(meshInfo->boneWeights.size());
+	const int32 size = static_cast<int32>(meshInfo->boneWeights.size());
 	for (int32 v = 0; v < size; v++)
 	{
 		BoneWeight& boneWeight = meshInfo->boneWeights[v];
@@ -507,7 +554,7 @@ void FBXLoader::FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 
 		memcpy(&meshInfo->vertices[v].indices, animBoneIndex, sizeof(Vec4));
 		memcpy(&meshInfo->vertices[v].weights, animBoneWeight, sizeof(Vec4));
-	}*/
+	}
 }
 
 void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* meshInfo)
@@ -519,7 +566,7 @@ void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* 
 		// 하나의 정점의 가중치(영향주는거)
 		double weight = cluster->GetControlPointWeights()[i];
 		int32 vtxIdx = cluster->GetControlPointIndices()[i];
-		//meshInfo->boneWeights[vtxIdx].AddWeights(boneIdx, weight);
+		meshInfo->boneWeights[vtxIdx].AddWeights(boneIdx, weight);
 	}
 }
 

@@ -17,11 +17,6 @@ void Texture::Load(const wstring& path)
 
 	// 파일 확장자 얻기
 	wstring ext = fs::path(path).extension();
-
-	if (ext == L"")
-	{
-		ext = L".png";
-	}
 	
 
 	if (ext == L".dds" || ext == L".DDS")

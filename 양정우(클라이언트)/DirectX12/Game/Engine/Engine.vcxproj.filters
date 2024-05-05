@@ -163,7 +163,6 @@
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="BinaryLoader.cpp" />
-    <ClCompile Include="BinaryMeshData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -299,7 +298,6 @@
       <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="BinaryLoader.h" />
-    <ClInclude Include="BinaryMeshData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
