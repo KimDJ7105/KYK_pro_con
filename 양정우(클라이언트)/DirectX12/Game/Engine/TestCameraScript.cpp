@@ -54,21 +54,21 @@ void TestCameraScript::LateUpdate()
 
 		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 
-		//여기서 타입이 플레이어일때만으로 해주어야 한다.
-		if (? ? ? )
+		int a = pickedObject->GetTransform()->GetObjectType();
+
+		//여기서 타입이 플레이어일때만
+		//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
+		if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
 		{
+			cs_packet_picking_info ppi;
+			ppi.size = sizeof(cs_packet_picking_info);
+			ppi.type = CS_PICKING_INFO;
+			ppi.shooter_id = playerID;
+			ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
+			session->Send_Packet(&ppi);
 		}
-
-		cs_packet_picking_info ppi;
-		ppi.size = sizeof(cs_packet_picking_info);
-		ppi.type = CS_PICKING_INFO;
-		ppi.shooter_id = playerID;
-		ppi.target_id = pickedObject->GetTransform()->GetObjectID();
-
-		session->Send_Packet(&ppi);
-
-
+		
 
 		/*scene->RemoveGameObject(pickedObject); */
 	}
@@ -82,20 +82,20 @@ void TestCameraScript::MoveUpdate()
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
-		//pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 		//std::cout << "W 입력 처리중" << std::endl;
 
 		// Right벡터와 수직벡터의 외적값 -> 정면
-		pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
+		//pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
-		//pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 		//std::cout << "S 입력 처리중" << std::endl;
 
-		pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
+		//pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
@@ -115,7 +115,7 @@ void TestCameraScript::MoveUpdate()
 		//pos += XMVector3Cross(GetTransform()->GetLook(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
-	pos.y = tempPos.y;
+	//pos.y = tempPos.y;
 
 	// J가 눌렸다가 떼어지면
 	if (INPUT->GetButtonUp(KEY_TYPE::J))
@@ -193,7 +193,6 @@ void TestCameraScript::RotationUpdate()
 		}
 
 		//---------------------------------
-		// 당근칼
 		// 이곳에서 rotation정보를 server에 넘겨주면 된다.
 		cs_packet_mouse_info mi;
 		mi.size = sizeof(cs_packet_mouse_info);

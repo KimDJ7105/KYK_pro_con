@@ -63,7 +63,7 @@ public:
 	int GetObjectType() { return _objectType; }
 
 private:
-	int _objectID;
-	int _objectType;	//0 = player, 1 = otherplayer, 2 = mapObject
+	int _objectID = -1;
+	int _objectType = -1;
 };
 

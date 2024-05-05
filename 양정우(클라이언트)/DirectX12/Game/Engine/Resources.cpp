@@ -321,13 +321,17 @@ shared_ptr<Texture> Resources::CreateTextureFromResource(const wstring& name, Co
 
 shared_ptr<MeshData> Resources::LoadFBX(const wstring& path)
 {
+	//흐름 3)그리고 그 함수가 바로 LoadFBX이고
 	wstring key = path;
 
 	shared_ptr<MeshData> meshData = Get<MeshData>(key);
 	if (meshData)
 		return meshData;
 
+	//흐름 4)즉 여기서 바이너리로 읽어들여서 내용을 채워넣는다면? 그렇다면 가능하지 않을까?
 	meshData = MeshData::LoadFromFBX(path);
+
+
 	meshData->SetName(key);
 	Add(key, meshData);
 

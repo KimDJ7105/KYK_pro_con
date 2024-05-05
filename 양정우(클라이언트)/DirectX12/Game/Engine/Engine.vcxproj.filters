@@ -150,9 +150,6 @@
     <ClCompile Include="MeshData.cpp">
       <Filter>Object\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryLoader.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="TestDragon.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
@@ -165,6 +162,7 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="BinaryLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -287,9 +285,6 @@
     <ClInclude Include="MeshData.h">
       <Filter>Object\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="BinaryLoader.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="TestDragon.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
@@ -302,14 +297,13 @@
     <ClInclude Include="ObjectManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
+    <ClInclude Include="BinaryLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
       <Filter>Utils</Filter>
     </None>
-    <None Include="packages.config">
-      <Filter>Server</Filter>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\forward.hlsl">

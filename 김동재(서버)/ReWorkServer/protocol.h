@@ -15,6 +15,12 @@
 #define MY_SERVER_PORT  "4000"
 #define MY_PORT 4000
 
+//Object Type----------------------------
+#define OT_PLAYER 0
+#define OT_OBJECT 1
+//---------------------------------------
+
+//Packet type----------------------------
 #define CS_POS_INFO 1
 #define CS_BOX_CREATE 2
 #define CS_MOUSE_INFO 3
@@ -24,10 +30,19 @@
 #define SC_PUT_PLAYER    2 //오브젝트 생성
 #define SC_REMOVE_PLAYER 3 //오브젝트 제거
 #define SC_LOGIN_INFO	 4 //로그인 정보
-#define SC_SET_HP        5 //플레이어의 HP를 설정
+#define SC_APPLY_DAMAGE  5 //플레이어의 HP를 감소시킴
+#define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 
 #define SC_CREATE_BOX 10 //test용
+//---------------------------------------
 
+//Weapon Info----------------------------
+#define WP_SMG 0
+#define WP_RIFLE 1
+#define WP_SHOTGUN 2
+#define WP_HANDGUN 3
+#define WP_HAMMER 4
+//---------------------------------------
 
 #pragma pack (push, 1)
 
@@ -123,11 +138,17 @@ struct sc_packet_create_box {
 	float z;
 };
 
-struct sc_packet_set_hp {
+struct sc_packet_apply_damage {
 	BYTE size;
 	BYTE type;
 	WORD id;
 	int hp;
+};
+
+struct sc_packet_player_dead {
+	BYTE size;
+	BYTE type;
+	WORD id;
 };
 
 #pragma pack (pop)
