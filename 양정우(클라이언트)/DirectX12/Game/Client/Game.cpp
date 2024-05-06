@@ -16,12 +16,12 @@ void Game::Update()
 	GEngine->Update();
 }
 
-//void Game::MoveThisSession(tcp::socket& sock)
-//{
-//	MoveSession(sock);
-//}
-//
-//SESSION* Game::GetGameSession()
-//{
-//	return GetSession();
-//}
+void Game::MoveThisSession(tcp::socket& sock)
+{
+	MoveSession(sock);
+}
+
+SESSION* Game::GetGameSession()
+{
+	return GetSession();
+}

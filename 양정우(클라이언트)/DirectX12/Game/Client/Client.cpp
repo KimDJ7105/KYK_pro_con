@@ -26,10 +26,10 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-//void workerthread(boost::asio::io_context* io_con)
-//{
-//    io_con->run();
-//}
+void workerthread(boost::asio::io_context* io_con)
+{
+    io_con->run();
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -66,19 +66,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::unique_ptr<Game> game = std::make_unique<Game>();
     game->Init(GWindowInfo);
 
-    ////----------------------------------------------------------------
-    //io_context io_con;
-    //tcp::resolver resolver(io_con);
-    //auto endpoint = resolver.resolve(MY_SERVER_IP, MY_SERVER_PORT);
+    //----------------------------------------------------------------
+    io_context io_con;
+    tcp::resolver resolver(io_con);
+    auto endpoint = resolver.resolve(MY_SERVER_IP, MY_SERVER_PORT);
 
-    //tcp::socket sock(io_con);
+    tcp::socket sock(io_con);
 
-    //_game->MoveThisSession(sock);
+    _game->MoveThisSession(sock);
 
-    //_game->GetGameSession()->do_connect(endpoint);
+    _game->GetGameSession()->do_connect(endpoint);
 
-    //std::thread serverthread(workerthread, &io_con);
-    ////-----------------------------------------------------------------
+    std::thread serverthread(workerthread, &io_con);
+    //-----------------------------------------------------------------
 
 #ifdef DEBUG_ON
     // 디버깅용 콘솔창 생성
@@ -106,7 +106,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
-    //serverthread.join();
+    serverthread.join();
     return (int) msg.wParam;
 }
 

@@ -9,8 +9,8 @@ public:
 	void Init(const WindowInfo& info);
 	void Update();
 
-	/*void MoveThisSession(tcp::socket& sock);
+	void MoveThisSession(tcp::socket& sock);
 
-	SESSION* GetGameSession();*/
+	SESSION* GetGameSession();
 };
 

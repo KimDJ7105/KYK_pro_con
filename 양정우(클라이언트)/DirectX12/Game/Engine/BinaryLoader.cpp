@@ -53,20 +53,20 @@ BinaryLoader::BinaryLoader()
 BinaryLoader::~BinaryLoader()
 {
 	//데이터 집어넣을때 썻던 애들
-	if (m_pxmf3Positions) delete[] m_pxmf3Positions;
+	//if (m_pxmf3Positions) delete[] m_pxmf3Positions;
 	if (m_pvec3Positions) delete[] m_pvec3Positions;
 
 	if (m_pxmf4Colors) delete[] m_pxmf4Colors;
 
-	if (m_pxmf3Normals) delete[] m_pxmf3Normals;
+	//if (m_pxmf3Normals) delete[] m_pxmf3Normals;
 	if (m_pvec33Normals) delete[] m_pvec33Normals;
 
-	if (m_pxmf3Tangents) delete[] m_pxmf3Tangents;
+	//if (m_pxmf3Tangents) delete[] m_pxmf3Tangents;
 	if (m_pvec3Tangents) delete[] m_pvec3Tangents;
 
 
 	if (m_pxmf3BiTangents) delete[] m_pxmf3BiTangents;
-	if (m_pxmf2TextureCoords0) delete[] m_pxmf2TextureCoords0;
+	//if (m_pxmf2TextureCoords0) delete[] m_pxmf2TextureCoords0;
 	if (m_pvec2TextureCoords0) delete[] m_pvec2TextureCoords0;
 	if (m_pxmf2TextureCoords1) delete[] m_pxmf2TextureCoords1;
 
@@ -77,15 +77,16 @@ BinaryLoader::~BinaryLoader()
 	}
 
 	if (m_ppstrSkinningBoneNames) delete[] m_ppstrSkinningBoneNames;
-	if (m_pxmf4x4BindPoseBoneOffsets) delete[] m_pxmf4x4BindPoseBoneOffsets;
+	//if (m_pxmf4x4BindPoseBoneOffsets) delete[] m_pxmf4x4BindPoseBoneOffsets;
 	if (m_pvec4x4BindPoseBoneOffsets) delete[] m_pvec4x4BindPoseBoneOffsets;
 
-	if (m_pxmn4BoneIndices) delete[] m_pxmn4BoneIndices;
+	//if (m_pxmn4BoneIndices) delete[] m_pxmn4BoneIndices;
 	if (m_pvec4BoneIndices) delete[] m_pvec4BoneIndices;
 
-	if (m_pxmf4BoneWeights) delete[] m_pxmf4BoneWeights;
+	//if (m_pxmf4BoneWeights) delete[] m_pxmf4BoneWeights;
 	if (m_pvec4BoneWeights) delete[] m_pvec4BoneWeights;
 
+	
 	/*if (m_ppxmf4x4KeyFrameTransforms != nullptr)
 	{
 		for (int i = 0; i < nKeyFrames; i++)
@@ -96,7 +97,6 @@ BinaryLoader::~BinaryLoader()
 		delete[] m_ppxmf4x4KeyFrameTransforms;
 		m_ppxmf4x4KeyFrameTransforms = nullptr;
 	}*/
-
 }
 
 
@@ -971,7 +971,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			float fLength = ::ReadFloatFromFile(pInFile);//총 애니메이션 실행길이
 			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);//->프레임 수
 			int nKeyFrames = ::ReadIntegerFromFile(pInFile);//->총 변환행렬 갯수
-			m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
+			//m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
 
 
 			wstring animName = ConvertCharToWString(pstrToken);
@@ -984,7 +984,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 				::ReadStringFromFile(pInFile, pstrToken);
 				if (!strcmp(pstrToken, "<Transforms>:"))
 				{
-					m_ppxmf4x4KeyFrameTransforms[i] = new XMFLOAT4X4[m_nBoneFrames];
+					//m_ppxmf4x4KeyFrameTransforms[i] = new XMFLOAT4X4[m_nBoneFrames];
 					int nKey = ::ReadIntegerFromFile(pInFile); //i 용가리 기준 1~180까지의 변환행렬 번호
 					float fKeyTime = ::ReadFloatFromFile(pInFile);	//BinaryKeyFrameInfo에서 time을 맞고 있지
 
