@@ -535,8 +535,8 @@ void BinaryMeshData::LoadSkinInfoFromFile(FILE* pInFile)
 			{
 				/*m_pxmn4BoneIndices = new XMINT4[m_nVertices];
 				nReads = (UINT)::fread(m_pxmn4BoneIndices, sizeof(XMINT4), m_nVertices, pInFile);*/
-				m_pvec4BoneIndices = new MyInt4[m_nVertices];
-				nReads = (UINT)::fread(m_pvec4BoneIndices, sizeof(MyInt4), m_nVertices, pInFile);
+				m_pvec4BoneIndices = new Vec4[m_nVertices];
+				nReads = (UINT)::fread(m_pvec4BoneIndices, sizeof(Vec4), m_nVertices, pInFile);
 			}
 		}
 		else if (!strcmp(pstrToken, "<BoneParentIndex>:"))
