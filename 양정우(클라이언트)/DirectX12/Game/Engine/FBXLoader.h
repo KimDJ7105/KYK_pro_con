@@ -138,7 +138,7 @@ private:
 
 	wstring fortheBIN;
 
-public:
-	void LoadMeshBin(FbxMesh* mesh);
-	void LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo);
+//public:
+//	void LoadMeshBin(FbxMesh* mesh);
+//	void LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo);
 };

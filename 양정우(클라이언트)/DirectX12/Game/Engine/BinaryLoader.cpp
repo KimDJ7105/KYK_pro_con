@@ -386,16 +386,31 @@ void BinaryLoader::AddMeshData()
 
 void BinaryLoader::AddBonesData()
 {
-	for (int i = 0; i < m_nBoneFrames; i++)
+	for (int i = 0; i < m_nSkinningBones; i++)
 	{
 		shared_ptr<BinaryBoneInfo> boneInfo = make_shared<BinaryBoneInfo>();
 
 		// 이름 설정
-		boneInfo->boneName = m_vstrFrameNames[i];		//<Frame>:
+		//boneInfo->boneName = m_vstrFrameNames[i];		//<Frame>:->><BoneNames>:으로 교체
 
-		boneInfo->parentIndex = parentContainer[i];	//<ParentIndex>:
+		
+		boneInfo->boneName = ConvertCharToWString(m_ppstrSkinningBoneNames[i]);
+
+		boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
+		// 
+		// 
+		// 
 		//boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
-		boneInfo->matOffset = m_vmatToParent[i];	//<Transform>:을 활용한 새로운 데이터 형식
+		// 
+		// 
+		// 
+		// 
+		//boneInfo->matOffset = m_vmatToParent[i];	//<Transform>:을 활용한 새로운 데이터 형식
+													//이게 설마 <BoneOffsets> : 인가?
+													//<BoneOffsets>:으로 교체
+
+
+		boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];
 
 		//어떤 버전이 맞는지는 잘 모르겟음
 
@@ -506,13 +521,13 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
 			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
 
-			XMMATRIX matTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&xmf3Position));
-			XMMATRIX matRotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&xmf3Rotation));
-			XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&xmf3Scale));
-			XMMATRIX matTransform = matTranslation * matRotation * matScale;
-			XMFLOAT4X4 offsetMatrix;
-			XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
-			m_vmatToParent.push_back(offsetMatrix);
+			//XMMATRIX matTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&xmf3Position));
+			//XMMATRIX matRotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&xmf3Rotation));
+			//XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&xmf3Scale));
+			//XMMATRIX matTransform = matTranslation * matRotation * matScale;
+			//XMFLOAT4X4 offsetMatrix;
+			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
+			//m_vmatToParent.push_back(offsetMatrix);
 
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
