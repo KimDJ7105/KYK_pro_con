@@ -166,7 +166,7 @@ private:
 
 private:
 	char							m_pstrFrameName[64];
-	XMFLOAT4X4						m_xmf4x4ToParent;
+	XMFLOAT4X4						m_xmf4x4ToParent;// 부모노드로 가기위한 변환행렬
 	vector<Matrix>					m_vmatToParent;
 
 public:

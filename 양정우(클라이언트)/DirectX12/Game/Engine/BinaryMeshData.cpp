@@ -94,27 +94,21 @@ void BinaryMeshData::AddMeshData()
 	if (m_pvec4BoneWeights && m_pvec4BoneIndices)
 	{
 		//boneWeights 계산하는곳
-		// boneWeights 계산
 		for (int i = 0; i < m_nVertices; i++) {
-			// 각 정점의 뼈 가중치와 인덱스 가져오기
-			Vec4 weights = m_pvec4BoneWeights[i];
-			MyInt4 indices = m_pvec4BoneIndices[i];
+			// BoneWeight 객체 생성
+			BoneWeight bone_weight;
 
-			double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
+			// 가중치 추가
+			bone_weight.AddWeights(meshInfo.vertices[i].indices.x, meshInfo.vertices[i].weights.x);
+			bone_weight.AddWeights(meshInfo.vertices[i].indices.y, meshInfo.vertices[i].weights.y);
+			bone_weight.AddWeights(meshInfo.vertices[i].indices.z, meshInfo.vertices[i].weights.z);
+			bone_weight.AddWeights(meshInfo.vertices[i].indices.w, meshInfo.vertices[i].weights.w);
 
-			// BinaryBoneWeight 구조체 생성
-			BoneWeight boneWeight;
+			// 가중치 보정
+			bone_weight.Normalize();
 
-			// 뼈 가중치와 인덱스 추가
-			for (int j = 0; j < 4; j++) {
-				boneWeight.AddWeights(indices[j], weightValues[j]);
-			}
-
-			// 합을 1로 보정
-			boneWeight.Normalize();
-
-			// BinaryMeshInfo의 boneWeights에 추가
-			meshInfo.boneWeights.push_back(boneWeight);
+			// FbxMeshInfo에 BoneWeight 추가
+			meshInfo.boneWeights.push_back(bone_weight);
 		}
 	}
 
