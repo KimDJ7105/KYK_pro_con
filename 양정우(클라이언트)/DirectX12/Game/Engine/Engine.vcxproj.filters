@@ -31,6 +31,12 @@
     <Filter Include="Server">
       <UniqueIdentifier>{eae6495e-aede-42ca-b312-2328ebfbd7ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Binary">
+      <UniqueIdentifier>{5245d268-a62d-4f46-b692-2a6336f32ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ZZZ">
+      <UniqueIdentifier>{fdeff5fb-a029-44d1-a893-4191760af24f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -162,8 +168,21 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryLoader.cpp" />
-    <ClCompile Include="BinaryMeshData.cpp" />
+    <ClCompile Include="BinaryLoader.cpp">
+      <Filter>Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryMeshData.cpp">
+      <Filter>Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader12.cpp">
+      <Filter>ZZZ</Filter>
+    </ClCompile>
+    <ClCompile Include="XBinaryLoader.cpp">
+      <Filter>ZZZ</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <Filter>ZZZ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -298,8 +317,21 @@
     <ClInclude Include="ObjectManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="BinaryLoader.h" />
-    <ClInclude Include="BinaryMeshData.h" />
+    <ClInclude Include="BinaryLoader.h">
+      <Filter>Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryMeshData.h">
+      <Filter>Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader12.h">
+      <Filter>ZZZ</Filter>
+    </ClInclude>
+    <ClInclude Include="XBinaryLoader.h">
+      <Filter>ZZZ</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader12.h">
+      <Filter>ZZZ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -348,6 +380,12 @@
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\math.hlsl">
       <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\샘플\Shaders.hlsl">
+      <Filter>ZZZ</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\샘플\Light.hlsl">
+      <Filter>ZZZ</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

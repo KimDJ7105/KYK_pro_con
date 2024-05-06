@@ -99,7 +99,6 @@ BinaryLoader::~BinaryLoader()
 
 }
 
-
 void BinaryLoader::LoadBinary(const wstring& path)
 {
 	int utf8Length = WideCharToMultiByte(CP_UTF8, 0, path.c_str(), -1, nullptr, 0, nullptr, nullptr);
@@ -323,8 +322,6 @@ void BinaryLoader::AddMeshData()
 		meshInfo.indices.push_back(subMeshVector);	//<SubMesh>:
 	}
 	//여기까지--------------------------------------------------------------------
-
-
 
 
 	// 재질 추가

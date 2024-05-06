@@ -21,6 +21,8 @@
 
 #include "ObjectManager.h"
 
+#include "XBinaryLoader.h"
+
 shared_ptr<Scene> scene = std::make_shared<Scene>();
 
 std::vector<MyGameObject> vp_ObjectManager;
@@ -489,7 +491,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma region FBX Player
 	{
 		//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player3\\Player-SMG01-Run.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
@@ -506,7 +508,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 
 
-		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player-SMG01-Run.bin");
 
 		//흐름 1)여기에서 gameObjects에 들거아야하는 meshData에는 mesh(메시정보와 애니메이션 정보), material이 있다.
 		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
@@ -543,6 +545,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(gameObject);
 		}
 	}
+
 
 
 	return scene;
@@ -627,8 +630,6 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
 	}
-
-
 }
 
 void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
