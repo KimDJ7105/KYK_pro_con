@@ -4,6 +4,7 @@
 #include "Resources.h"
 #include "Shader.h"
 #include "Material.h"
+//#include "BinaryMeshData.h"
 
 FBXLoader::FBXLoader()
 {
@@ -31,12 +32,17 @@ void FBXLoader::LoadFbx(const wstring& path)
 	// 파일 데이터 로드
 	Import(path);
 
+	fortheBIN = fs::path(path).parent_path().wstring() + L"\\" + fs::path(path).filename().stem().wstring() + L".bin";//바이너리 읽어낼경로;
+
+
 	// Animation	
 	LoadBones(_scene->GetRootNode());
 	LoadAnimationInfo();
+	// Animation/
 
 	// 로드된 데이터 파싱 (Mesh/Material/Skin)
 	ParseNode(_scene->GetRootNode());
+
 
 	// 우리 구조에 맞게 Texture / Material 생성
 	CreateTextures();
@@ -88,6 +94,7 @@ void FBXLoader::ParseNode(FbxNode* node)
 		{
 		case FbxNodeAttribute::eMesh:
 			LoadMesh(node->GetMesh());
+			//LoadMeshBin(node->GetMesh());
 			break;
 		}
 	}
@@ -105,9 +112,229 @@ void FBXLoader::ParseNode(FbxNode* node)
 	for (int32 i = 0; i < childCount; ++i)
 		ParseNode(node->GetChild(i));
 }
+//
+//void FBXLoader::LoadMeshBin(FbxMesh* mesh)
+//{
+//	//BinaryMeshData a;
+//	//a.LoadMeshData(fortheBIN);
+//	//vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();
+//
+//	//FbxVector4* controlPoints = mesh->GetControlPoints();
+//
+//	//for (auto&& meshInfo : _meshes) {
+//	//	// vertices 정보 초기화
+//	//	for (int i = 0; i < meshInfo.vertices.size(); i++)
+//	//	{
+//	//		meshInfo.vertices[i].pos = { 0.0f, 0.0f, 0.0f };
+//	//		meshInfo.vertices[i].uv = { 0.0f, 0.0f };
+//	//		meshInfo.vertices[i].normal = { 0.0f, 0.0f, 0.0f };
+//	//		meshInfo.vertices[i].tangent = { 0.0f, 0.0f, 0.0f };
+//	//		//meshInfo.vertices[i].weights = { 0.f, 0.f, 0.f, 0.f };
+//	//		//meshInfo.vertices[i].indices = { 1086324786, 0, 0, 0 };
+//	//	}
+//	//	//
+//
+//	//	//meshInfo.vertices.clear(); // 이전의 정점 정보를 모두 제거
+//	//	//meshInfo.vertices = {};
+//
+//	//	meshInfo.indices.clear();
+//	//	meshInfo.indices = {};
+//
+//	//	/*meshInfo.boneWeights.clear();
+//	//	meshInfo.boneWeights = {};*/
+//	//}
+//
+//	//
+//	//for (const auto& meshInfo : loadedMeshData) {
+//	//	// 새로운 FbxMeshInfo를 생성하여 정보를 복사
+//	//	FbxMeshInfo newMeshInfo;
+//
+//	//	// 메쉬 이름 복사
+//	//	//newMeshInfo.name = meshInfo.name;
+//
+//	//	// 정점 정보 복사
+//	//	newMeshInfo.vertices = meshInfo.vertices;
+//
+//	//	// 인덱스 정보 복사
+//	//	newMeshInfo.indices = meshInfo.indices;
+//
+//	//	// 재질 정보 복사
+//	//	//newMeshInfo.materials = meshInfo.materials;
+//
+//	//	// 뼈 가중치 정보 복사
+//	//	//newMeshInfo.boneWeights = meshInfo.boneWeights;
+//
+//	//	// 애니메이션 여부 복사
+//	//	//newMeshInfo.hasAnimation = meshInfo.hasAnimation;
+//
+//	//	uint32 x = 0;;
+//	//	_meshes[0].vertices.resize(loadedMeshData[0].vertices.size());
+//	//	for (int i = 0; i < loadedMeshData[0].vertices.size(); i++)
+//	//	{
+//	//		_meshes[0].vertices[i].pos.x = meshInfo.vertices[i].pos.x * -99.999999608917662;
+//	//		_meshes[0].vertices[i].pos.y = meshInfo.vertices[i].pos.z * 100.00000354158320;
+//	//		_meshes[0].vertices[i].pos.z = meshInfo.vertices[i].pos.y * 100.00000143874041;
+//
+//	//		_meshes[0].vertices[i].uv = meshInfo.vertices[i].uv;
+//	//		_meshes[0].vertices[i].tangent = meshInfo.vertices[i].tangent;
+//	//		_meshes[0].vertices[i].normal = meshInfo.vertices[i].normal;
+//	//		//_meshes[0].vertices[i].weights = meshInfo.vertices[i].weights;
+//	//		//_meshes[0].vertices[i].indices = meshInfo.vertices[i].indices;
+//
+//	//	}
+//
+//	//	_meshes[0].indices = meshInfo.indices;
+//	//	//_meshes[0].boneWeights = meshInfo.boneWeights;
+//	//}/*
+//
+//	//_meshes.push_back(FbxMeshInfo());
+//	//FbxMeshInfo& meshInfo = _meshes.back();
+//
+//	//meshInfo.name = s2ws(mesh->GetName());
+//	//const int32 vertexCount = loadedMeshData[0].vertices.size();
+//
+//	//meshInfo.vertices.resize(vertexCount);
+//	//meshInfo.boneWeights.resize(vertexCount);
+//
+//	//for (int32 i = 0; i < vertexCount; ++i)
+//	//{
+//	//	double loadX = loadedMeshData[0].vertices[i].pos.x;
+//	//	double loadY = loadedMeshData[0].vertices[i].pos.y;
+//	//	double loadZ = loadedMeshData[0].vertices[i].pos.z;
+//
+//	//	double myX = static_cast<float>(mesh->GetControlPoints()[i].mData[0]);
+//	//	double myY = static_cast<float>(mesh->GetControlPoints()[i].mData[2]);
+//	//	double myZ = static_cast<float>(mesh->GetControlPoints()[i].mData[1]);
+//
+//	//	double X_Interpol = myX / loadX;
+//	//	double Y_Interpol = myY / loadZ;
+//	//	double Z_Interpol = myZ / loadY;
+//
+//	//	meshInfo.vertices[i].pos.x = loadX * X_Interpol;
+//	//	meshInfo.vertices[i].pos.y = loadZ * Y_Interpol;
+//	//	meshInfo.vertices[i].pos.z = loadY * Z_Interpol;
+//	//}*/
+//
+//	////const int32 materialCount = loadedMeshData[0].materials.size();
+//
+//	////meshInfo.indices.resize(materialCount);
+//
+//	////FbxGeometryElementMaterial* geometryElementMaterial = mesh->GetElementMaterial();
+//
+//	////// 읽어올때 무조건 삼각형으로 고정했으니...
+//	////const int32 polygonSize = mesh->GetPolygonSize(0);
+//	////assert(polygonSize == 3);
+//
+//	////uint32 arrIdx[3];
+//	////uint32 vertexCounter = 0; // 정점의 개수
+//
+//	////const int32 triCount = mesh->GetPolygonCount(); // 메쉬의 삼각형 개수를 가져온다
+//	////for (int32 i = 0; i < triCount; i++) // 삼각형의 개수
+//	////{
+//	////	for (int32 j = 0; j < 3; j++) // 삼각형은 세 개의 정점으로 구성
+//	////	{
+//	////		int32 controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
+//	////		arrIdx[j] = controlPointIndex;
+//
+//	////		GetNormal(mesh, &meshInfo, controlPointIndex, vertexCounter);
+//	////		GetTangent(mesh, &meshInfo, controlPointIndex, vertexCounter);
+//	////		vertexCounter++;
+//	////	}
+//	////}
+//
+//	////int matchedPoint = 0;
+//
+//	////for (int k = 0; k < vertexCount; k++)
+//	////{
+//	////	double uv_X = loadedMeshData[0].vertices[k].uv.x;
+//	////	double uv_Y = loadedMeshData[0].vertices[k].uv.y;
+//
+//	////	double M_uv_X = meshInfo.vertices[k].uv.x;
+//	////	double M_uv_Y = meshInfo.vertices[k].uv.y;
+//
+//	////	if (uv_X == M_uv_X)
+//	////	{
+//	////		if (uv_Y == M_uv_Y)
+//	////		{
+//	////			//Match!
+//	////			matchedPoint++;
+//
+//	////		}
+//	////	}
+//	////	meshInfo.vertices[k].uv.x = uv_X;
+//	////	meshInfo.vertices[k].uv.y = uv_Y;
+//	////}
+//	////for (int k = 0; k < loadedMeshData[0].indices.size(); k++)
+//	////{
+//	////	for (int i = 0; i < loadedMeshData[0].indices[k].size(); i++)
+//	////	{
+//	////		uint32 indices1 = loadedMeshData[0].indices[k][i];
+//	////		/*uint32 indices2 = loadedMeshData[0].indices[k][i * 3 + 1];
+//	////		uint32 indices3 = loadedMeshData[0].indices[k][i * 3 + 2];*/
+//	////		meshInfo.indices[k].push_back(indices1);
+//	////		/*meshInfo.indices[k].push_back(indices2);
+//	////		meshInfo.indices[k].push_back(indices3);*/
+//	////	}
+//	////	
+//	////	
+//	////}
+//
+//	////LoadAnimationDataBin(mesh, &meshInfo);
+//}
+//void FBXLoader::LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo)
+//{
+//	// 여기서 애니메이션에 대한 정보를 추출한다.
+//	const int32 skinCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
+//	if (skinCount <= 0 || _animClips.empty())
+//		return;
+//
+//	meshInfo->hasAnimation = true;
+//
+//	for (int32 i = 0; i < skinCount; i++)
+//	{
+//		FbxSkin* fbxSkin = static_cast<FbxSkin*>(mesh->GetDeformer(i, FbxDeformer::eSkin));
+//
+//		if (fbxSkin)
+//		{
+//			FbxSkin::EType type = fbxSkin->GetSkinningType();
+//			if (FbxSkin::eRigid == type || FbxSkin::eLinear)
+//			{
+//				const int32 clusterCount = fbxSkin->GetClusterCount();
+//				for (int32 j = 0; j < clusterCount; j++)
+//				{
+//					FbxCluster* cluster = fbxSkin->GetCluster(j);
+//					if (cluster->GetLink() == nullptr)
+//						continue;
+//
+//					int32 boneIdx = FindBoneIndex(cluster->GetLink()->GetName());
+//					assert(boneIdx >= 0);
+//
+//					FbxAMatrix matNodeTransform = GetTransform(mesh->GetNode());
+//					//여기부터
+//					LoadBoneWeight(cluster, boneIdx, meshInfo);
+//					LoadOffsetMatrix(cluster, matNodeTransform, boneIdx, meshInfo);
+//
+//					const int32 animCount = _animNames.Size();
+//					for (int32 k = 0; k < animCount; k++)// 애니메이션의 갯수만큼 키프레임을 만든다.
+//						LoadKeyframe(k, mesh->GetNode(), cluster, matNodeTransform, boneIdx, meshInfo);
+//					//여기까지 LoadBoneWeight, LoadOffsetMatrix, LoadKeyframe 이 3가지가 애니메이션의 핵심이다.
+//				}
+//			}
+//		}
+//	}
+//
+//	// EnginePch에 있는 Vertex구조체에서 weights와 indices를 4개씩 담는 과정 
+//	FillBoneWeight(mesh, meshInfo);
+//}
 
 void FBXLoader::LoadMesh(FbxMesh* mesh)
 {
+	/*BinaryMeshData a;
+	a.LoadMeshData(fortheBIN);
+	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();*/
+
+	//_meshes = loadedMeshData;
+
 	_meshes.push_back(FbxMeshInfo());
 	FbxMeshInfo& meshInfo = _meshes.back();
 
@@ -150,7 +377,6 @@ void FBXLoader::LoadMesh(FbxMesh* mesh)
 			GetNormal(mesh, &meshInfo, controlPointIndex, vertexCounter);
 			GetTangent(mesh, &meshInfo, controlPointIndex, vertexCounter);
 			GetUV(mesh, &meshInfo, controlPointIndex, mesh->GetTextureUVIndex(i, j));
-
 			vertexCounter++;
 		}
 
@@ -382,6 +608,8 @@ void FBXLoader::CreateMaterials()
 
 void FBXLoader::LoadBones(FbxNode* node, int32 idx, int32 parentIdx)
 {
+	//재귀적으로 bone을 채운다.
+	//root 노드부터 차례대로
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
 
 	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
@@ -399,6 +627,9 @@ void FBXLoader::LoadBones(FbxNode* node, int32 idx, int32 parentIdx)
 
 void FBXLoader::LoadAnimationInfo()
 {
+	// 애니메이션의 "기본"정보
+
+	// 애니메이션 이름은 무엇인지
 	_scene->FillAnimStackNameArray(OUT _animNames);
 
 	const int32 animCount = _animNames.GetCount();
@@ -412,6 +643,8 @@ void FBXLoader::LoadAnimationInfo()
 		animClip->name = s2ws(animStack->GetName());
 		animClip->keyFrames.resize(_bones.size()); // 키프레임은 본의 개수만큼
 
+
+		//각각의 스타트 타임과 엔드타임은 언제인지
 		FbxTakeInfo* takeInfo = _scene->GetTakeInfo(animStack->GetName());
 		animClip->startTime = takeInfo->mLocalTimeSpan.GetStart();
 		animClip->endTime = takeInfo->mLocalTimeSpan.GetStop();
@@ -423,6 +656,7 @@ void FBXLoader::LoadAnimationInfo()
 
 void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 {
+	// 여기서 애니메이션에 대한 정보를 추출한다.
 	const int32 skinCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
 	if (skinCount <= 0 || _animClips.empty())
 		return;
@@ -449,12 +683,14 @@ void FBXLoader::LoadAnimationData(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 					assert(boneIdx >= 0);
 
 					FbxAMatrix matNodeTransform = GetTransform(mesh->GetNode());
+					//여기부터
 					LoadBoneWeight(cluster, boneIdx, meshInfo);
 					LoadOffsetMatrix(cluster, matNodeTransform, boneIdx, meshInfo);
 
 					const int32 animCount = _animNames.Size();
-					for (int32 k = 0; k < animCount; k++)
+					for (int32 k = 0; k < animCount; k++)// 애니메이션의 갯수만큼 키프레임을 만든다.
 						LoadKeyframe(k, mesh->GetNode(), cluster, matNodeTransform, boneIdx, meshInfo);
+					//여기까지 LoadBoneWeight, LoadOffsetMatrix, LoadKeyframe 이 3가지가 애니메이션의 핵심이다.
 				}
 			}
 		}
@@ -489,6 +725,7 @@ void FBXLoader::FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 
 void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* meshInfo)
 {
+	//어느정도의 영향을 받는지
 	const int32 indicesCount = cluster->GetControlPointIndicesCount();
 	for (int32 i = 0; i < indicesCount; i++)
 	{
@@ -501,6 +738,8 @@ void FBXLoader::LoadBoneWeight(FbxCluster* cluster, int32 boneIdx, FbxMeshInfo* 
 
 void FBXLoader::LoadOffsetMatrix(FbxCluster* cluster, const FbxAMatrix& matNodeTransform, int32 boneIdx, FbxMeshInfo* meshInfo)
 {
+	// 바인드 포지션에서 있는 좌표를 로컬포지션으로 옮겨주는 오프셋 매트릭스
+
 	FbxAMatrix matClusterTrans;
 	FbxAMatrix matClusterLinkTrans;
 	// The transformation of the mesh at binding time 
@@ -543,7 +782,7 @@ void FBXLoader::LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster
 
 	FbxTime::EMode timeMode = _scene->GetGlobalSettings().GetTimeMode();
 
-	// 애니메이션 골라줌
+	// 애니메이션 골라줌, 어떤 애니메이션을 세팅하는지
 	FbxAnimStack* animStack = _scene->FindMember<FbxAnimStack>(_animNames[animIndex]->Buffer());
 	_scene->SetCurrentAnimationStack(OUT animStack);
 
@@ -551,6 +790,7 @@ void FBXLoader::LoadKeyframe(int32 animIndex, FbxNode* node, FbxCluster* cluster
 	FbxLongLong endFrame = _animClips[animIndex]->endTime.GetFrameCount(timeMode);
 
 	//toRoot를 긁어오는 과정(최적화 과정을 할때 개선이 필요할지도...)
+	//각 프레임 마다의 애니메이션에 대한 키프레임을 읽어온다
 	for (FbxLongLong frame = startFrame; frame < endFrame; frame++)
 	{
 		FbxKeyFrameInfo keyFrameInfo = {};

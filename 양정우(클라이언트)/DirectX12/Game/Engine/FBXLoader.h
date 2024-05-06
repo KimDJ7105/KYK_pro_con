@@ -1,5 +1,4 @@
 #pragma once
-
 using namespace std;
 
 // 머터리얼에 관련한 정보들
@@ -78,6 +77,7 @@ struct FbxAnimClipInfo
 	FbxTime			endTime;
 	FbxTime::EMode	mode;
 	vector<vector<FbxKeyFrameInfo>>	keyFrames;//본 갯수 * 프레임 갯수
+											// 를 본 갯수만큼...	// 본 하나의 움직임을 표현한 프레임벡터
 };
 
 class FBXLoader
@@ -135,4 +135,10 @@ private:
 	vector<shared_ptr<FbxBoneInfo>>		_bones;
 	vector<shared_ptr<FbxAnimClipInfo>>	_animClips;
 	FbxArray<FbxString*>				_animNames;
+
+	wstring fortheBIN;
+
+//public:
+//	void LoadMeshBin(FbxMesh* mesh);
+//	void LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo);
 };

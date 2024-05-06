@@ -17,14 +17,22 @@ void Texture::Load(const wstring& path)
 
 	// 파일 확장자 얻기
 	wstring ext = fs::path(path).extension();
+
+	wstring newPath;
+	if (ext == L"")
+	{
+		ext = L".png";
+		newPath = path + ext;
+	}
+	else newPath = path;
 	
 
 	if (ext == L".dds" || ext == L".DDS")
-		::LoadFromDDSFile(path.c_str(), DDS_FLAGS_NONE, nullptr, _image);
+		::LoadFromDDSFile(newPath.c_str(), DDS_FLAGS_NONE, nullptr, _image);
 	else if (ext == L".tga" || ext == L".TGA")
-		::LoadFromTGAFile(path.c_str(), nullptr, _image);
+		::LoadFromTGAFile(newPath.c_str(), nullptr, _image);
 	else // png, jpg, jpeg, bmp
-		::LoadFromWICFile(path.c_str(), WIC_FLAGS_NONE, nullptr, _image);
+		::LoadFromWICFile(newPath.c_str(), WIC_FLAGS_NONE, nullptr, _image);
 
 	HRESULT hr = ::CreateTexture(DEVICE.Get(), _image.GetMetadata(), &_tex2D);
 	if (FAILED(hr))

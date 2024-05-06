@@ -53,20 +53,20 @@ BinaryLoader::BinaryLoader()
 BinaryLoader::~BinaryLoader()
 {
 	//데이터 집어넣을때 썻던 애들
-	if (m_pxmf3Positions) delete[] m_pxmf3Positions;
+	//if (m_pxmf3Positions) delete[] m_pxmf3Positions;
 	if (m_pvec3Positions) delete[] m_pvec3Positions;
 
 	if (m_pxmf4Colors) delete[] m_pxmf4Colors;
 
-	if (m_pxmf3Normals) delete[] m_pxmf3Normals;
+	//if (m_pxmf3Normals) delete[] m_pxmf3Normals;
 	if (m_pvec33Normals) delete[] m_pvec33Normals;
 
-	if (m_pxmf3Tangents) delete[] m_pxmf3Tangents;
+	//if (m_pxmf3Tangents) delete[] m_pxmf3Tangents;
 	if (m_pvec3Tangents) delete[] m_pvec3Tangents;
 
 
 	if (m_pxmf3BiTangents) delete[] m_pxmf3BiTangents;
-	if (m_pxmf2TextureCoords0) delete[] m_pxmf2TextureCoords0;
+	//if (m_pxmf2TextureCoords0) delete[] m_pxmf2TextureCoords0;
 	if (m_pvec2TextureCoords0) delete[] m_pvec2TextureCoords0;
 	if (m_pxmf2TextureCoords1) delete[] m_pxmf2TextureCoords1;
 
@@ -77,16 +77,28 @@ BinaryLoader::~BinaryLoader()
 	}
 
 	if (m_ppstrSkinningBoneNames) delete[] m_ppstrSkinningBoneNames;
-	if (m_pxmf4x4BindPoseBoneOffsets) delete[] m_pxmf4x4BindPoseBoneOffsets;
+	//if (m_pxmf4x4BindPoseBoneOffsets) delete[] m_pxmf4x4BindPoseBoneOffsets;
 	if (m_pvec4x4BindPoseBoneOffsets) delete[] m_pvec4x4BindPoseBoneOffsets;
 
-	if (m_pxmn4BoneIndices) delete[] m_pxmn4BoneIndices;
+	//if (m_pxmn4BoneIndices) delete[] m_pxmn4BoneIndices;
 	if (m_pvec4BoneIndices) delete[] m_pvec4BoneIndices;
 
-	if (m_pxmf4BoneWeights) delete[] m_pxmf4BoneWeights;
+	//if (m_pxmf4BoneWeights) delete[] m_pxmf4BoneWeights;
 	if (m_pvec4BoneWeights) delete[] m_pvec4BoneWeights;
 
+	
+	/*if (m_ppxmf4x4KeyFrameTransforms != nullptr)
+	{
+		for (int i = 0; i < nKeyFrames; i++)
+		{
+			delete[] m_ppxmf4x4KeyFrameTransforms[i];
+			m_ppxmf4x4KeyFrameTransforms[i] = nullptr;
+		}
+		delete[] m_ppxmf4x4KeyFrameTransforms;
+		m_ppxmf4x4KeyFrameTransforms = nullptr;
+	}*/
 }
+
 
 void BinaryLoader::LoadBinary(const wstring& path)
 {
@@ -99,14 +111,15 @@ void BinaryLoader::LoadBinary(const wstring& path)
 
 	//_resourceDirectory = path;
 	std::wstring directory = L"..\\Resources\\Binary";
+
 	_resourceDirectory = directory;
 
 	LoadGeometryAndAnimationFromFile(charPath);
 
 	AddMeshData();
 	AddBonesData();
-	//AddAnimClipsData();
-	//AddAnimNames();
+	//AddAnimClipsData();->LoadAnimationFromFile의 903줄에서 실시간으로 읽으면서 추가중이다.
+	AddAnimNames();
 
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
@@ -224,10 +237,13 @@ void BinaryLoader::FillBoneWeight(BinaryMeshInfo* meshInfo)
 
 void BinaryLoader::AddMeshData()
 {
+	
 	_meshes.push_back(BinaryMeshInfo());
 	BinaryMeshInfo& meshInfo = _meshes.back();
 	meshInfo.name = m_strMeshName; // <Mesh>:
 
+
+	//여기부터--------------------------------------------------------------------
 	meshInfo.vertices.resize(m_iPositionNum);
 	// 정점 추가
 	for (int i = 0; i < m_iPositionNum; i++) {
@@ -265,6 +281,33 @@ void BinaryLoader::AddMeshData()
 			meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
 		}
 	}
+
+	if (m_pvec4BoneWeights && m_pvec4BoneIndices)
+	{
+		//boneWeights 계산하는곳
+		// boneWeights 계산
+		for (int i = 0; i < m_nVertices; i++) {
+			// 각 정점의 뼈 가중치와 인덱스 가져오기
+			Vec4 weights = m_pvec4BoneWeights[i];
+			MyInt4 indices = m_pvec4BoneIndices[i];
+
+			double weightValues[4] = { weights.x, weights.y, weights.z, weights.w };
+
+			// BinaryBoneWeight 구조체 생성
+			BinaryBoneWeight binaryBoneWeight;
+
+			// 뼈 가중치와 인덱스 추가
+			for (int j = 0; j < 4; j++) {
+				binaryBoneWeight.AddWeights(indices[j], weightValues[j]);
+			}
+
+			// 합을 1로 보정
+			binaryBoneWeight.Normalize();
+
+			// BinaryMeshInfo의 boneWeights에 추가
+			meshInfo.boneWeights.push_back(binaryBoneWeight);
+		}
+	}
 	
 
 	for (int i = 0; i < m_nSubMeshes; i++) {
@@ -280,23 +323,65 @@ void BinaryLoader::AddMeshData()
 		}
 		meshInfo.indices.push_back(subMeshVector);	//<SubMesh>:
 	}
+	//여기까지--------------------------------------------------------------------
+
+
+
 
 	// 재질 추가
 	meshInfo.materials.resize(m_nMaterials);
-	for (int i = 0; i < m_nSubMeshes; i++) {
+	for (int i = 0; i < m_nMaterials; i++) {
 		BinaryMaterialInfo& material = meshInfo.materials[i];
-		material.diffuse = m_xmf4AlbedoColor;           //<AlbedoColor>:
-		material.ambient = m_xmf4EmissiveColor;          //<EmissiveColor>:
-		material.specular = m_xmf4SpecularColor;         //<SpecularColor>:
-		material.name = m_strMaterialName;               //<MaterialName>:
-		material.diffuseTexName = m_strDiffuseTexName;   //<AlbedoMap>:
-		material.normalTexName = m_strNormalTexName;     //<NormalMap>:
-		material.specularTexName = m_strSpecularTexName; //<SpecularMap>:
+
+		if (i < m_vAlbedoColor.size()) {
+			material.diffuse = m_vAlbedoColor[i];           //<AlbedoColor>:
+		}
+		else {
+			material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+		if (i < m_vEmissiveColor.size()) {
+			material.ambient = m_vEmissiveColor[i];          //<EmissiveColor>:
+		}
+		else {
+			material.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		}
+		if (i < m_vSpecularColor.size()) {
+			material.specular = m_vSpecularColor[i];         //<SpecularColor>:
+		}
+		else {
+			material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		}
+		if (i < m_strMaterialName.size()) {
+			material.name = m_strMaterialName[i];               //<MaterialName>:
+		}
+		else {
+			wstring a =  L"null";
+			material.name = a;
+		}
+		if (i < m_strDiffuseTexName.size()) {
+			material.diffuseTexName = m_strDiffuseTexName[i];   //<AlbedoMap>:
+		}
+		else {
+			wstring a = L"null";
+			material.diffuseTexName = a;
+		}
+		if (i < m_strNormalTexName.size()) {
+			material.normalTexName = m_strNormalTexName[i];     //<NormalMap>:
+		}
+		else {
+			wstring a = L"null";
+			material.normalTexName = a;
+		}
+		if (i < m_strSpecularTexName.size()) {
+			material.specularTexName = m_strSpecularTexName[i]; //<SpecularMap>:
+		}
+		else {
+			wstring a = L"null";
+			material.specularTexName = a;
+		}
 	}
 
-
-	meshInfo.boneWeights;	//??? 1혹은 2로 사이즈가 고정된다.
-	meshInfo.hasAnimation = isAnimation;	//내가 직접 해줘야하나....그래서 애니메이션정보를 뽑으면 하는거로 했다.
+	meshInfo.hasAnimation = isAnimation;
 }
 
 void BinaryLoader::AddBonesData()
@@ -306,10 +391,28 @@ void BinaryLoader::AddBonesData()
 		shared_ptr<BinaryBoneInfo> boneInfo = make_shared<BinaryBoneInfo>();
 
 		// 이름 설정
-		boneInfo->boneName = ConvertCharToWString(m_ppstrSkinningBoneNames[i]);		//<BoneNames>:
+		//boneInfo->boneName = m_vstrFrameNames[i];		//<Frame>:->><BoneNames>:으로 교체
+
+		
+		boneInfo->boneName = ConvertCharToWString(m_ppstrSkinningBoneNames[i]);
 
 		boneInfo->parentIndex = m_nParentIndex[i];	//<ParentIndex>:
-		boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];	//<BoneOffsets>:
+		// 
+		// 
+		// 
+		//boneInfo->matOffset = m_vmatToParent[i];	//<TransformMatrix>:
+		// 
+		// 
+		// 
+		// 
+		//boneInfo->matOffset = m_vmatToParent[i];	//<Transform>:을 활용한 새로운 데이터 형식
+													//이게 설마 <BoneOffsets> : 인가?
+													//<BoneOffsets>:으로 교체
+
+
+		boneInfo->matOffset = m_pvec4x4BindPoseBoneOffsets[i];
+
+		//어떤 버전이 맞는지는 잘 모르겟음
 
 		// _bones에 추가
 		_bones.push_back(boneInfo);
@@ -317,25 +420,39 @@ void BinaryLoader::AddBonesData()
 	
 }
 
-void BinaryLoader::AddAnimClipsData()
+void BinaryLoader::AddAnimClipsData(int boneNum, int keyFrames, wstring animName, uint32 sTime, uint32 eTime, uint32 md, vector<float> time, Matrix* asd, double endAnimeTime)
 {
-	_animClips.push_back(shared_ptr<BinaryAnimClipInfo>());
-	shared_ptr<BinaryAnimClipInfo>& animInfo = _animClips.back();
-	animInfo->name;			//<AnimationClipName>:
-	animInfo->startTime;	//0.0f고정
-	animInfo->endTime;		//<AnimationSet>:
-	animInfo->mode;			//eFrame30고정
-	for (auto& a : animInfo->keyFrames)
-	{
-		a.push_back(BinaryKeyFrameInfo(Matrix(), 5));	//<TransformMatrix>: , <Frame>:
+
+	shared_ptr<BinaryAnimClipInfo> animInfo = make_shared<BinaryAnimClipInfo>();
+	animInfo->name = animName;
+	animInfo->startTime = sTime;
+	animInfo->endTime = eTime;
+	animInfo->mode = md;
+	animInfo->animeEndTime = endAnimeTime;
+
+	//키 프레임에 대한 데이터를 넣을 곳
+	for (int i = 0; i < boneNum; ++i) {
+		vector<BinaryKeyFrameInfo> boneKeyFrames;
+		for (int j = 0; j < keyFrames; ++j) {
+			BinaryKeyFrameInfo keyFrame;
+			// asd와 time 배열의 내용을 순차적으로 할당
+			keyFrame.matTransform = asd[j];		//가끔이상하게 여기서 버그가 난다.
+			keyFrame.time = time[j];
+			boneKeyFrames.push_back(keyFrame);
+		}
+		animInfo->keyFrames.push_back(boneKeyFrames);
 	}
+	_animClips.push_back(animInfo);
+
 }
 
 void BinaryLoader::AddAnimNames()
 {
-	_animNames.push_back(string());
-	string& animNameInfo = _animNames.back();
-	animNameInfo;			//<AnimationClipName>:
+	_animNames.resize(m_nAnimClipConut);
+	for (int i = 0; i < m_nAnimClipConut; i++)
+	{
+		_animNames[i] = m_vstrAnimClipNames[i];			//<AnimationClipName>:
+	}		
 }
 
 void BinaryLoader::LoadGeometryAndAnimationFromFile(const char* pstrFileName)
@@ -389,6 +506,12 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 
 			::ReadStringFromFile(pInFile, m_pstrFrameName);
 		}
+		//"<ParentIndex>:"입주 자리
+		else if (!strcmp(pstrToken, "<ParentIndex>:"))
+		{
+			int a = ::ReadIntegerFromFile(pInFile);
+			parentContainer.push_back(a);
+		}
 		else if (!strcmp(pstrToken, "<Transform>:"))
 		{
 			XMFLOAT3 xmf3Position, xmf3Rotation, xmf3Scale;
@@ -397,10 +520,55 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&xmf3Rotation, sizeof(float), 3, pInFile); //Euler Angle
 			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
 			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
+
+			//XMMATRIX matTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&xmf3Position));
+			//XMMATRIX matRotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&xmf3Rotation));
+			//XMMATRIX matScale = XMMatrixScalingFromVector(XMLoadFloat3(&xmf3Scale));
+			//XMMATRIX matTransform = matTranslation * matRotation * matScale;
+			//XMFLOAT4X4 offsetMatrix;
+			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
+			//m_vmatToParent.push_back(offsetMatrix);
+
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4x4ToParent, sizeof(float), 16, pInFile);
+			
+			//XMFLOAT3 translation;
+			//translation.x = m_xmf4x4ToParent._41;
+			//translation.y = m_xmf4x4ToParent._42;
+			//translation.z = m_xmf4x4ToParent._43;
+
+			//// Rotation 추출
+			//XMFLOAT3 rotation;
+			//rotation.x = atan2f(m_xmf4x4ToParent._32, m_xmf4x4ToParent._33); // Pitch
+			//rotation.y = atan2f(-m_xmf4x4ToParent._31, sqrtf(m_xmf4x4ToParent._32 * m_xmf4x4ToParent._32 + m_xmf4x4ToParent._33 * m_xmf4x4ToParent._33)); // Yaw
+			//rotation.z = atan2f(m_xmf4x4ToParent._21, m_xmf4x4ToParent._11); // Roll
+
+			//// Scale 추출
+			//XMFLOAT3 scale;
+			//scale.x = sqrtf(m_xmf4x4ToParent._11 * m_xmf4x4ToParent._11 + m_xmf4x4ToParent._12 * m_xmf4x4ToParent._12 + m_xmf4x4ToParent._13 * m_xmf4x4ToParent._13);
+			//scale.y = sqrtf(m_xmf4x4ToParent._21 * m_xmf4x4ToParent._21 + m_xmf4x4ToParent._22 * m_xmf4x4ToParent._22 + m_xmf4x4ToParent._23 * m_xmf4x4ToParent._23);
+			//scale.z = sqrtf(m_xmf4x4ToParent._31 * m_xmf4x4ToParent._31 + m_xmf4x4ToParent._32 * m_xmf4x4ToParent._32 + m_xmf4x4ToParent._33 * m_xmf4x4ToParent._33);
+
+			//// Translation을 이용한 행렬 생성
+			//XMMATRIX matTranslation = XMMatrixTranslation(translation.x, translation.y, translation.z);
+
+			//// Rotation을 이용한 행렬 생성
+			//XMMATRIX matRotation = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+			//// Scale을 이용한 행렬 생성
+			//XMMATRIX matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+			//// 각 행렬을 조합하여 최종 변환 행렬 생성
+			//XMMATRIX matTransform = matTranslation * matRotation * matScale;
+
+			//// XMMatrixTranspose 함수를 사용하여 행렬을 전치하여 XMFLOAT4X4 형식으로 변환
+			//XMFLOAT4X4 offsetMatrix;
+			//XMStoreFloat4x4(&offsetMatrix, XMMatrixTranspose(matTransform));
+
+			//m_vmatToParent.push_back(m_xmf4x4ToParent);
+
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -669,19 +837,23 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		{
 			//당근칼-요주의
 			::ReadStringFromFile(pInFile, m_pstrMaterialName);
-			m_strMaterialName = ConvertCharToWString(m_pstrMaterialName);
+			m_strMaterialName.push_back(ConvertCharToWString(m_pstrMaterialName));
 		}
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4AlbedoColor, sizeof(float), 4, pInFile);
+			m_vAlbedoColor.push_back(m_xmf4AlbedoColor);
+
 		}
 		else if (!strcmp(pstrToken, "<EmissiveColor>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4EmissiveColor, sizeof(float), 4, pInFile);
+			m_vEmissiveColor.push_back(m_xmf4EmissiveColor);
 		}
 		else if (!strcmp(pstrToken, "<SpecularColor>:"))
 		{
 			nReads = (UINT)::fread(&m_xmf4SpecularColor, sizeof(float), 4, pInFile);
+			m_vSpecularColor.push_back(m_xmf4SpecularColor);
 		}
 		else if (!strcmp(pstrToken, "<Glossiness>:"))
 		{
@@ -707,19 +879,19 @@ void BinaryLoader::LoadMaterialsFromFile(FILE* pInFile)
 		{
 			//m_pstrDiffuseTexName = LoadTextureFromFile(pInFile);
 			::ReadStringFromFile(pInFile, m_pstrDiffuseTexName);
-			m_strDiffuseTexName = ConvertCharToWString(m_pstrDiffuseTexName);
+			m_strDiffuseTexName.push_back(ConvertCharToWString(m_pstrDiffuseTexName));
 		}
 		else if (!strcmp(pstrToken, "<SpecularMap>:"))
 		{
 			//m_pstrSpecularTexName = LoadTextureFromFile(pInFile);
 			::ReadStringFromFile(pInFile, m_pstrSpecularTexName);
-			m_strSpecularTexName = ConvertCharToWString(m_pstrSpecularTexName);
+			m_strSpecularTexName.push_back(ConvertCharToWString(m_pstrSpecularTexName));
 		}
 		else if (!strcmp(pstrToken, "<NormalMap>:"))
 		{
 			//m_pstrNormalTexName = LoadTextureFromFile(pInFile);
 			::ReadStringFromFile(pInFile, m_pstrNormalTexName);
-			m_strNormalTexName = ConvertCharToWString(m_pstrNormalTexName);
+			m_strNormalTexName.push_back(ConvertCharToWString(m_pstrNormalTexName));
 		}
 		else if (!strcmp(pstrToken, "<MetallicMap>:"))
 		{
@@ -766,7 +938,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 
 	int nAnimationSets = 0;
 
-	for ( ; ; )
+	for (; ; )
 	{
 		::ReadStringFromFile(pInFile, pstrToken);
 		if (!strcmp(pstrToken, "<AnimationSets>:"))
@@ -775,27 +947,20 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<FrameNames>:"))
 		{
-			m_nBoneFrames = ::ReadIntegerFromFile(pInFile); 
+			m_nBoneFrames = ::ReadIntegerFromFile(pInFile);
 			for (int j = 0; j < m_nBoneFrames; j++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
-
-#ifdef _WITH_DEBUG_SKINNING_BONE
-				TCHAR pstrDebug[256] = { 0 };
-				TCHAR pwstrAnimationBoneName[64] = { 0 };
-				TCHAR pwstrBoneCacheName[64] = { 0 };
-				size_t nConverted = 0;
-				mbstowcs_s(&nConverted, pwstrAnimationBoneName, 64, pstrToken, _TRUNCATE);
-				mbstowcs_s(&nConverted, pwstrBoneCacheName, 64, pLoadedModel->m_ppBoneFrameCaches[j]->m_pstrFrameName, _TRUNCATE);
-				_stprintf_s(pstrDebug, 256, _T("AnimationBoneFrame:: Cache(%s) AnimationBone(%s)\n"), pwstrBoneCacheName, pwstrAnimationBoneName);
-				OutputDebugString(pstrDebug);
-#endif
+				m_vstrFrameNames.push_back(ConvertCharToWString(pstrToken));
 			}
 		}
 		else if (!strcmp(pstrToken, "<AnimationClipName>:"))
 		{
 			//당근칼-요주의
 			::ReadStringFromFile(pInFile, m_pstrAnimationClipName);
+			m_vstrAnimClipNames.push_back(ConvertCharToWString(m_pstrAnimationClipName));
+			m_nAnimClipConut++;
+
 		}
 		else if (!strcmp(pstrToken, "<AnimationSet>:"))
 		{
@@ -803,30 +968,43 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 
 			::ReadStringFromFile(pInFile, pstrToken); //Animation Set Name
 
-			float fLength = ::ReadFloatFromFile(pInFile);
-			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);
-			int nKeyFrames = ::ReadIntegerFromFile(pInFile);
+			float fLength = ::ReadFloatFromFile(pInFile);//총 애니메이션 실행길이
+			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);//->프레임 수
+			int nKeyFrames = ::ReadIntegerFromFile(pInFile);//->총 변환행렬 갯수
+			//m_ppxmf4x4KeyFrameTransforms = new XMFLOAT4X4 * [nKeyFrames];
+
+
+			wstring animName = ConvertCharToWString(pstrToken);
+			vector<float> timeContainer;
+
+			asd = new Matrix[m_nBoneFrames];
+
 			for (int i = 0; i < nKeyFrames; i++)
 			{
 				::ReadStringFromFile(pInFile, pstrToken);
 				if (!strcmp(pstrToken, "<Transforms>:"))
 				{
+					//m_ppxmf4x4KeyFrameTransforms[i] = new XMFLOAT4X4[m_nBoneFrames];
+					int nKey = ::ReadIntegerFromFile(pInFile); //i 용가리 기준 1~180까지의 변환행렬 번호
+					float fKeyTime = ::ReadFloatFromFile(pInFile);	//BinaryKeyFrameInfo에서 time을 맞고 있지
 
-					int nKey = ::ReadIntegerFromFile(pInFile); //i
-					float fKeyTime = ::ReadFloatFromFile(pInFile);
+					timeContainer.push_back(fKeyTime);
 
-#ifdef _WITH_ANIMATION_SRT
-					m_pfKeyFrameScaleTimes[i] = fKeyTime;
-					m_pfKeyFrameRotationTimes[i] = fKeyTime;
-					m_pfKeyFrameTranslationTimes[i] = fKeyTime;
-					nReads = (UINT)::fread(pAnimationSet->m_ppxmf3KeyFrameScales[i], sizeof(XMFLOAT3), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
-					nReads = (UINT)::fread(pAnimationSet->m_ppxmf4KeyFrameRotations[i], sizeof(XMFLOAT4), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
-					nReads = (UINT)::fread(pAnimationSet->m_ppxmf3KeyFrameTranslations[i], sizeof(XMFLOAT3), pLoadedModel->m_pAnimationSets->m_nBoneFrames, pInFile);
-#else
-					nReads = (UINT)::fread(m_ppxmf4x4KeyFrameTransforms[i], sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
-#endif
+					//이 아이는BinaryKeyFrameInfo에서 matTransform을 맞고있지
+
+					
+
+					nReads = (UINT)::fread(/*m_ppxmf4x4KeyFrameTransforms[i]*/asd, sizeof(XMFLOAT4X4), m_nBoneFrames, pInFile);
+
+
 				}
 			}
+			float maxTime = *std::max_element(timeContainer.begin(), timeContainer.end());
+
+			//_animClips.push_back(clipInfo);
+
+			AddAnimClipsData(m_nBoneFrames, nKeyFrames, animName, 0, nKeyFrames, nFramesPerSecond, timeContainer, asd, maxTime);
+			delete[] asd;
 		}
 		else if (!strcmp(pstrToken, "</AnimationSets>"))
 		{
@@ -834,4 +1012,3 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		}
 	}
 }
-

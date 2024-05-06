@@ -7,6 +7,7 @@
 #include "StructuredBuffer.h"
 
 #include "BinaryLoader.h"
+#include "BinaryMeshData.h";
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
 {
@@ -46,14 +47,13 @@ void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
 }
 
-shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loader)
+shared_ptr<Mesh> Mesh::CreateFromFBX(const FbxMeshInfo* meshInfo, FBXLoader& loader, wstring path)
 {
 	//흐름 6)여기서 FbxMeshInfo는 말만 FBX가 붙어있지 구조체 자체는 FBX내부함수와는 상관이 없다. 그러니 이름을 바꾸어서 바이너리로 써도 된다.
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 
 	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
 	//흐름 8)혹은 여기서 바꿔버리면 되지 않을까?
-
 
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 
@@ -85,6 +85,7 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 
 	//흐름 7)현 시점에서 이미 meshInfo가 완성되어있어야 한다.
 	//흐름 8)혹은 여기서 바꿔버리면 되지 않을까?
+
 
 	mesh->CreateVertexBuffer(meshInfo->vertices);
 
@@ -189,18 +190,18 @@ void Mesh::CreateBonesAndAnimations(class FBXLoader& loader)
 		AnimClipInfo info = {};
 
 		info.animName = ac->name;
-		info.duration = ac->endTime.GetSecondDouble() - ac->startTime.GetSecondDouble();
+		info.duration = ac->endTime.GetSecondDouble() - ac->startTime.GetSecondDouble();//플레이시간(애니메이션 플레이시간
 
 		int32 startFrame = static_cast<int32>(ac->startTime.GetFrameCount(ac->mode));
 		int32 endFrame = static_cast<int32>(ac->endTime.GetFrameCount(ac->mode));
-		info.frameCount = endFrame - startFrame;
+		info.frameCount = endFrame - startFrame;//총 프레임 갯수
 
-		info.keyFrames.resize(ac->keyFrames.size());
+		info.keyFrames.resize(ac->keyFrames.size());	//키프레임 갯수
 
 		const int32 boneCount = static_cast<int32>(ac->keyFrames.size());
 		for (int32 b = 0; b < boneCount; b++)
 		{
-			auto& vec = ac->keyFrames[b];
+			auto& vec = ac->keyFrames[b];//키프레임 벡터의 b번째 내용물[matPosition, time]
 
 			const int32 size = static_cast<int32>(vec.size());
 			frameCount = max(frameCount, static_cast<uint32>(size));
@@ -211,8 +212,8 @@ void Mesh::CreateBonesAndAnimations(class FBXLoader& loader)
 				FbxKeyFrameInfo& kf = vec[f];
 				// FBX에서 파싱한 정보들로 채워준다
 				KeyFrameInfo& kfInfo = info.keyFrames[b][f];
-				kfInfo.time = kf.time;
-				kfInfo.frame = static_cast<int32>(size);
+				kfInfo.time = kf.time;//현재 프레임의 시간경과
+				kfInfo.frame = static_cast<int32>(size);//현재 프레임의 위치
 				kfInfo.scale.x = static_cast<float>(kf.matTransform.GetS().mData[0]);
 				kfInfo.scale.y = static_cast<float>(kf.matTransform.GetS().mData[1]);
 				kfInfo.scale.z = static_cast<float>(kf.matTransform.GetS().mData[2]);
@@ -226,7 +227,7 @@ void Mesh::CreateBonesAndAnimations(class FBXLoader& loader)
 			}
 		}
 
-		_animClips.push_back(info);
+		_animClips.push_back(info);//결국 추가하는 내용은 애니메이션의 키프레임값
 	}
 #pragma endregion
 
@@ -299,10 +300,10 @@ void Mesh::CreateBinaryBonesAndAnimations(class BinaryLoader& loader)
 		AnimClipInfo info = {};
 
 		info.animName = ac->name;
-		info.duration = ac->endTime - ac->startTime;
+		info.duration = ac->animeEndTime;		//일단 여기서 프레임수가 아닌 애니메이션의 지속시간을 줘야 한다.
 
-		int32 startFrame = static_cast<int32>(ac->startTime * ac->mode);
-		int32 endFrame = static_cast<int32>(ac->endTime * ac->mode);
+		int32 startFrame = ac->startTime;
+		int32 endFrame = ac->endTime;
 		info.frameCount = endFrame - startFrame;
 
 		info.keyFrames.resize(ac->keyFrames.size());

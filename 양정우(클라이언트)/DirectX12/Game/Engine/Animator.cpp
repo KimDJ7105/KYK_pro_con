@@ -7,6 +7,8 @@
 #include "MeshRenderer.h"
 #include "StructuredBuffer.h"
 
+//실질적으로 애니메이션을 틀어준다.
+
 using std::min;
 using std::max;
 
