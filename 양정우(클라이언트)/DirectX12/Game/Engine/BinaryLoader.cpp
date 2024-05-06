@@ -111,6 +111,7 @@ void BinaryLoader::LoadBinary(const wstring& path)
 
 	//_resourceDirectory = path;
 	std::wstring directory = L"..\\Resources\\Binary";
+
 	_resourceDirectory = directory;
 
 	LoadGeometryAndAnimationFromFile(charPath);

@@ -105,7 +105,7 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 
 	//흐름 7)만약 여기서 애니메이션 정보가 있다면 추가하는것이다.
 	if (meshInfo->hasAnimation)
-		mesh->CreateBinaryBonesAndAnimations(loader);
+		//mesh->CreateBinaryBonesAndAnimations(loader);
 
 	return mesh;
 }
