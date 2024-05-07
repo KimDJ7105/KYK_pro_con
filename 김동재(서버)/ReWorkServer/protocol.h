@@ -17,7 +17,7 @@
 
 //Object Type----------------------------
 #define OT_PLAYER 0
-#define OT_OBJECT 1
+#define OT_KEYCARD 1
 #define OT_ROOM 2
 #define OT_CORRIDOR 3
 //---------------------------------------
