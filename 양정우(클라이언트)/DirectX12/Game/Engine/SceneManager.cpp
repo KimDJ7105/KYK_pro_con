@@ -529,10 +529,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-	
-
-
-
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 5; j++)
@@ -927,7 +923,7 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ, float aisleScal
 	{
 		//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Map\\Floor\\Floor.fbx");
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Floor.bin");
-
+		
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		shared_ptr<Material> material;
