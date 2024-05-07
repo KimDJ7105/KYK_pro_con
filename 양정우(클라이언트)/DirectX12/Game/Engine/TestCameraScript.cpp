@@ -21,6 +21,11 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::LateUpdate()
 {
+	//마우스 디버깅을 위해 P입력시 프로그램이 종료하도록 하였다.
+	if (INPUT->GetButton(KEY_TYPE::C))
+		PostQuitMessage(0);
+
+
 	HWND foregroundWindow = GetForegroundWindow();
 	wchar_t windowTitle[256] = { 0 };
 	GetWindowTextW(foregroundWindow, windowTitle, sizeof(windowTitle) / sizeof(windowTitle[0]));
@@ -30,35 +35,6 @@ void TestCameraScript::LateUpdate()
 		// previousTitle 배열이 비어 있는지 확인하고, 비어 있다면 windowTitle 내용을 복사합니다.
 		wcscpy_s(previousTitle, windowTitle);
 	}
-	else if (wcscmp(windowTitle, previousTitle) != 0 && isWindowCapture == true)
-	{
-		int len = WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, NULL, 0, NULL, NULL);
-		char* buffer = new char[len];
-		WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, buffer, len, NULL, NULL);
-
-		const char* compareString = "PROJECT_ReWork";
-
-		// strcmp 함수를 사용하여 buffer와 비교하고자 하는 문자열을 비교
-		if (strstr(buffer, compareString) != nullptr)
-		{
-			//현재 활성화된 화면이 게임화면이라면
-			::ShowCursor(false);
-			isMouseMod = true;
-			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
-		}
-		else {
-			//현재 활성화된 화면이 게임이 아니라면
-			::ShowCursor(true);
-			isMouseMod = false;
-		}
-
-		delete[] buffer;
-	}
-	else
-	{
-
-	}
-
 
 	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
 	{
@@ -68,20 +44,60 @@ void TestCameraScript::LateUpdate()
 			isMouseMod = true;
 			isWindowCapture = true;
 			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+			//std::cout << "윈도우의 상태 체크모드가 발동중" << std::endl;
 		}
 		else if (isMouseMod == true)
 		{
 			::ShowCursor(true);
 			isMouseMod = false;
 			isWindowCapture = false;
+			//std::cout << "윈도우의 상태 체크모드가 해제됨" << std::endl;
 		}
 	}
 	
+	if (isWindowCapture == true)
+	{
+		//창의 변화가 일어났다면.
+		if (wcscmp(windowTitle, previousTitle) != 0)
+		{
 
+			//std::cout << "창이 변경되었음" << std::endl;
 
-	//마우스 디버깅을 위해 P입력시 프로그램이 종료하도록 하였다.
-	if (INPUT->GetButton(KEY_TYPE::C))
-		PostQuitMessage(0);
+			int len = WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, NULL, 0, NULL, NULL);
+			char* buffer = new char[len];
+			WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, buffer, len, NULL, NULL);
+
+			const char* compareString = "PROJECT_ReWork";
+
+			// strcmp 함수를 사용하여 buffer와 비교하고자 하는 문자열을 비교
+			if (strstr(buffer, compareString) != nullptr)
+			{
+
+				//std::cout << "현재 화면은 게임화면입니다" << std::endl;
+
+				//현재 활성화된 화면이 게임화면이라면
+				isMouseMod = true;
+				::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+			}
+			else {
+
+				//std::cout << "현재 화면은 게임화면이 아닙니다." << std::endl;
+
+				//현재 활성화된 화면이 게임이 아니라면
+				isMouseMod = false;
+			}
+
+			delete[] buffer;
+		}
+		else
+		{
+			//std::cout << "창이 변경되지 않음" << std::endl;
+		}
+	}
+	else if(isWindowCapture == false)
+	{
+		
+	}
 
 	MoveUpdate();
 

@@ -102,7 +102,16 @@ float4 PS_Tex(VS_TEX_OUT input) : SV_Target
 {
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
     if (g_tex_on_0)
+    {
         color = g_tex_0.Sample(g_sam_0, input.uv);
+        
+        // 검은색인 경우에만 색상을 초록색으로 바꿉니다.
+        if (color.r < 0.1f && color.g < 0.1f && color.b < 0.1f)
+        {
+            color = float4(0.f, 1.f, 0.f, 1.f); // 초록색으로 변경합니다.
+        }
+    }
+    
     
     return color;
 }
