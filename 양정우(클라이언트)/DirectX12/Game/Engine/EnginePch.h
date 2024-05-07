@@ -211,7 +211,7 @@ struct Vertex
 	Vec3 normal;
 	Vec3 tangent;
 	Vec4 weights;
-	MyInt4 indices;
+	Vec4 indices;
 };
 
 #define DECLARE_SINGLE(type)		\

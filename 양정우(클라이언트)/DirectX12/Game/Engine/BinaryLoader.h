@@ -166,7 +166,7 @@ private:
 
 private:
 	char							m_pstrFrameName[64];
-	XMFLOAT4X4						m_xmf4x4ToParent;
+	XMFLOAT4X4						m_xmf4x4ToParent;// 부모노드로 가기위한 변환행렬
 	vector<Matrix>					m_vmatToParent;
 
 public:
@@ -217,7 +217,7 @@ private:
 	
 
 	XMINT4* m_pxmn4BoneIndices = NULL;
-	MyInt4* m_pvec4BoneIndices = NULL;	//당근칼 - 원래는 int의 4개씩 배열인데 일단 이렇게 했다.
+	Vec4* m_pvec4BoneIndices = NULL;	//당근칼 - 원래는 int의 4개씩 배열인데 일단 이렇게 했다.
 
 	XMFLOAT4* m_pxmf4BoneWeights = NULL;
 	Vec4* m_pvec4BoneWeights = NULL;

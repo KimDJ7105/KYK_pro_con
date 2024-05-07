@@ -22,7 +22,7 @@ TestCameraScript::~TestCameraScript()
 void TestCameraScript::LateUpdate()
 {
 	//마우스 디버깅을 위해 P입력시 프로그램이 종료하도록 하였다.
-	if (INPUT->GetButton(KEY_TYPE::ESC))
+	if (INPUT->GetButton(KEY_TYPE::C))
 		PostQuitMessage(0);
 
 	MoveUpdate();
@@ -30,18 +30,27 @@ void TestCameraScript::LateUpdate()
 	if (isMouseMod)
 	{
 		RotationUpdate();
+		
 	}
 	else if (!isMouseMod)
 	{
-
+		
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::P))
+	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
 	{
 		if (isMouseMod == false)
+		{
+			::ShowCursor(false);
 			isMouseMod = true;
+			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+		}
 		else if (isMouseMod == true)
+		{
+			::ShowCursor(true);
 			isMouseMod = false;
+		}
+			
 	}
 
 
@@ -53,21 +62,29 @@ void TestCameraScript::LateUpdate()
 		shared_ptr<GameObject> pickedObject;
 
 		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
-
-		int a = pickedObject->GetTransform()->GetObjectType();
-
-		//여기서 타입이 플레이어일때만
-		//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
-		if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+		if (pickedObject != NULL)
 		{
-			cs_packet_picking_info ppi;
-			ppi.size = sizeof(cs_packet_picking_info);
-			ppi.type = CS_PICKING_INFO;
-			ppi.shooter_id = playerID;
-			ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+			int a = pickedObject->GetTransform()->GetObjectType();
 
-			session->Send_Packet(&ppi);
+			//여기서 타입이 플레이어일때만
+			//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
+			if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+			{
+				cs_packet_picking_info ppi;
+				ppi.size = sizeof(cs_packet_picking_info);
+				ppi.type = CS_PICKING_INFO;
+				ppi.shooter_id = playerID;
+				ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+
+				session->Send_Packet(&ppi);
+			}
 		}
+		else
+		{
+			//Empty!
+		}
+
+		
 		
 
 		/*scene->RemoveGameObject(pickedObject); */
@@ -82,20 +99,20 @@ void TestCameraScript::MoveUpdate()
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		//pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 		//std::cout << "W 입력 처리중" << std::endl;
 
 		// Right벡터와 수직벡터의 외적값 -> 정면
-		//pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
+		pos += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		//pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 		//std::cout << "S 입력 처리중" << std::endl;
 
-		//pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
+		pos -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
@@ -115,7 +132,7 @@ void TestCameraScript::MoveUpdate()
 		//pos += XMVector3Cross(GetTransform()->GetLook(), Vec3(0.f, 1.f, 0.f)) * _speed * DELTA_TIME;
 	}
 
-	//pos.y = tempPos.y;
+	pos.y = tempPos.y;
 
 	// J가 눌렸다가 떼어지면
 	if (INPUT->GetButtonUp(KEY_TYPE::J))
