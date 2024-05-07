@@ -16,6 +16,12 @@ OBJECT::OBJECT(int type)
 
 	g_object_ID++;
 }
+
+void OBJECT::show_approx_pos()
+{
+	std::cout << "오브젝트" << obj_id << " 위치 : " << approx_pos[0] << " " << approx_pos[1] << std::endl;
+}
+
 void OBJECT::select_pos()
 {
 	bool check[4]{ 0, };

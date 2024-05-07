@@ -10,6 +10,8 @@ public :
 	void select_pos();
 	OBJECT(int type);
 
+	void show_approx_pos();
+
 private:
 	int approx_pos[2]{ -1,-1 };
 
