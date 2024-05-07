@@ -315,7 +315,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(15.f, 15.f, 10.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
