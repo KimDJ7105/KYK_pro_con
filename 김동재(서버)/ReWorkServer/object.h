@@ -7,6 +7,7 @@ public :
 	int obj_id;
 	int obj_type;
 
+	void select_pos();
 	OBJECT(int type);
 
 private:
