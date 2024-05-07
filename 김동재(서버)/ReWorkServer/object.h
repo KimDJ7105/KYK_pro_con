@@ -8,7 +8,7 @@ public :
 	int obj_type;
 
 	void select_pos();
-	OBJECT(int type);
+	OBJECT(int id, int type);
 
 	void show_approx_pos();
 

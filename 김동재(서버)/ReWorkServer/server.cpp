@@ -29,24 +29,25 @@ int SERVER::GetNewClientID()
 	return g_user_ID++;
 }
 
+int  SERVER::GetNewObjectID()
+{
+	return g_object_ID++;
+}
 
 SERVER::SERVER(boost::asio::io_context& io_service, int port)
 	: acceptor_(io_service, tcp::endpoint(tcp::v4(), port)),
 	socket_(io_service)
 {
 	std::cout << "초기 카드키 생성중" << std::endl;
-	Cardkeys[0] = std::make_shared<OBJECT>(OT_KEYCARD);
-	Cardkeys[1] = std::make_shared<OBJECT>(OT_KEYCARD);
-	Cardkeys[2] = std::make_shared<OBJECT>(OT_KEYCARD);
 
-	Cardkeys[0]->select_pos();
-	Cardkeys[1]->select_pos();
-	Cardkeys[2]->select_pos();
+	for (int i = 0; i < 3; i++) {
+		int o_id = GetNewObjectID();
+		Cardkeys[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
+		Cardkeys[o_id]->select_pos();
+		Cardkeys[o_id]->show_approx_pos();
+	}
+	
 	std::cout << "카드키 생성 완료" << std::endl;
-
-	Cardkeys[0]->show_approx_pos();
-	Cardkeys[1]->show_approx_pos();
-	Cardkeys[2]->show_approx_pos();
 
 	do_accept();
 }

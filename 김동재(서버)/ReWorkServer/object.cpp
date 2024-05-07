@@ -5,16 +5,13 @@ static std::mt19937 gen(rd());
 std::uniform_int_distribution<int> dist(0, 24);
 std::uniform_int_distribution<int> dist2(0, 3);
 
-atomic_int g_object_ID = MAX_USER + 1;
-
-OBJECT::OBJECT(int type)
+OBJECT::OBJECT(int id, int type)
 {
-	obj_id = g_object_ID;
+	obj_id = id;
 	obj_type = type;
 
 	approx_pos[0] = -1; approx_pos[1] = -1;
 
-	g_object_ID++;
 }
 
 void OBJECT::show_approx_pos()
