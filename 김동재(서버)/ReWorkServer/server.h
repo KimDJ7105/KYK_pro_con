@@ -1,5 +1,6 @@
 #pragma once
 #include "session.h"
+#include "object.h"
 
 class SERVER
 {
