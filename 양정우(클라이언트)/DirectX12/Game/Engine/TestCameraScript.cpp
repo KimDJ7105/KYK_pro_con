@@ -21,6 +21,64 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::LateUpdate()
 {
+	HWND foregroundWindow = GetForegroundWindow();
+	wchar_t windowTitle[256] = { 0 };
+	GetWindowTextW(foregroundWindow, windowTitle, sizeof(windowTitle) / sizeof(windowTitle[0]));
+
+	if (previousTitle[0] == L'\0')
+	{
+		// previousTitle 배열이 비어 있는지 확인하고, 비어 있다면 windowTitle 내용을 복사합니다.
+		wcscpy_s(previousTitle, windowTitle);
+	}
+	else if (wcscmp(windowTitle, previousTitle) != 0 && isWindowCapture == true)
+	{
+		int len = WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, NULL, 0, NULL, NULL);
+		char* buffer = new char[len];
+		WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, buffer, len, NULL, NULL);
+
+		const char* compareString = "PROJECT_ReWork";
+
+		// strcmp 함수를 사용하여 buffer와 비교하고자 하는 문자열을 비교
+		if (strstr(buffer, compareString) != nullptr)
+		{
+			//현재 활성화된 화면이 게임화면이라면
+			::ShowCursor(false);
+			isMouseMod = true;
+			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+		}
+		else {
+			//현재 활성화된 화면이 게임이 아니라면
+			::ShowCursor(true);
+			isMouseMod = false;
+		}
+
+		delete[] buffer;
+	}
+	else
+	{
+
+	}
+
+
+	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
+	{
+		if (isMouseMod == false)
+		{
+			::ShowCursor(false);
+			isMouseMod = true;
+			isWindowCapture = true;
+			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+		}
+		else if (isMouseMod == true)
+		{
+			::ShowCursor(true);
+			isMouseMod = false;
+			isWindowCapture = false;
+		}
+	}
+	
+
+
 	//마우스 디버깅을 위해 P입력시 프로그램이 종료하도록 하였다.
 	if (INPUT->GetButton(KEY_TYPE::C))
 		PostQuitMessage(0);
@@ -30,27 +88,10 @@ void TestCameraScript::LateUpdate()
 	if (isMouseMod)
 	{
 		RotationUpdate();
-		
 	}
 	else if (!isMouseMod)
 	{
 		
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
-	{
-		if (isMouseMod == false)
-		{
-			::ShowCursor(false);
-			isMouseMod = true;
-			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
-		}
-		else if (isMouseMod == true)
-		{
-			::ShowCursor(true);
-			isMouseMod = false;
-		}
-			
 	}
 
 
@@ -89,6 +130,8 @@ void TestCameraScript::LateUpdate()
 
 		/*scene->RemoveGameObject(pickedObject); */
 	}
+
+	wcscpy_s(previousTitle, windowTitle);
 }
 
 void TestCameraScript::MoveUpdate()

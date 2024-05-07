@@ -10,9 +10,6 @@
 class Game;     //전방선언
 Game* _game;    //Game 내에 존재하는 함수들을 사용하기 위한 null객체
 
-
-
-
 // 전역 변수:
 WindowInfo GWindowInfo;
 
@@ -104,7 +101,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         // TODO(게임로직 추가라인)
         game->Update();
     }
-
+    
 
     serverthread.join();
     return (int) msg.wParam;

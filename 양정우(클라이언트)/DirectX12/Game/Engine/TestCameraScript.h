@@ -20,5 +20,8 @@ private:
 	int id = 0;
 
 	bool isMouseMod = true;
+	bool isWindowCapture = true;
+
+	wchar_t previousTitle[256] = { 0 };
 };
 

@@ -85,7 +85,7 @@ void Engine::ShowFps()
 	uint32 fps = GET_SINGLE(Timer)->GetFps();
 
 	WCHAR text[100] = L"";
-	::wsprintf(text, L"FPS : %d", fps);
+	::wsprintf(text, L"PROJECT_ReWork (FPS : %d)", fps);
 
 	::SetWindowText(_window.hwnd, text);
 }
