@@ -43,7 +43,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
 
-		scene->AddGameObject(_activeSessionScene->CreateBoxObject(OT_OBJECT, p->id, p->x, p->y, p->z, 0, 0.0f, 0.0f, 0.0f));
+		scene->AddGameObject(_activeSessionScene->CreateBoxObject(OT_KEYCARD, p->id, p->x, p->y, p->z, 0, 0.0f, 0.0f, 0.0f));
 		break;
 	}
 	case SC_APPLY_DAMAGE :
@@ -55,6 +55,14 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PLAYER_DEAD :
 	{
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
+		break;
+	}
+	case SC_PUT_OBJECT :
+	{
+		sc_packet_put_object* p = reinterpret_cast<sc_packet_put_object*>(packet);
+
+		//x, y, z 값은 p->room1 과 p->room2 사이 복도의 중앙값을 사용
+		//_activeSessionScene->CreatePlayerObject(OT_KEYCARD, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때

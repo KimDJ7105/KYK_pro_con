@@ -270,6 +270,22 @@ void SESSION::start()
 		}
 	}
 
+	for (auto& object : objects) {
+		shared_ptr<OBJECT> obj = object.second;
+		if (obj == nullptr) continue;
+		if (obj->owner_id != -1) continue;
+
+		sc_packet_put_object put_obj;
+		put_obj.size = sizeof(sc_packet_put_object);
+		put_obj.type = SC_PUT_OBJECT;
+		put_obj.id = obj->obj_id;
+		put_obj.obj_type = obj->obj_type;
+		put_obj.room1 = obj->approx_pos[0];
+		put_obj.room2 = obj->approx_pos[1];
+
+		Send_Packet(&put_obj);
+	}
+
 }
 
 void SESSION::Send_Packet(void* packet)
