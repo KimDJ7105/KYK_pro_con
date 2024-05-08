@@ -115,13 +115,12 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		if (p->target_id == -1) break;
 
 		shared_ptr<SESSION> target = players[p->target_id];
-		shared_ptr<SESSION> shooter = players[p->shooter_id];
 
-		if (target == nullptr || shooter == nullptr) break;
+		if (target == nullptr) break;
 
-		std::cout << "플레이어 " << p->shooter_id << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
+		std::cout << "플레이어 " << my_id_ << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
 		
-		target->hp -= WP_DMG[shooter->equip_weapon];
+		target->hp -= WP_DMG[equip_weapon];
 
 		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
 
