@@ -134,6 +134,7 @@ struct sc_packet_login_info {
 	float dirx;
 	float diry;
 	float dirz;
+	int bullet_amount;
 };
 
 struct sc_packet_remove_player {

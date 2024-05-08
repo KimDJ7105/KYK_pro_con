@@ -267,6 +267,7 @@ void SESSION::start()
 	pl.dirx = view_dir[0];
 	pl.diry = view_dir[1];
 	pl.dirz = view_dir[2];
+	pl.bullet_amount = 30; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
 	Send_Packet(&pl);
 
 	sc_packet_put p;
