@@ -23,10 +23,11 @@
 //---------------------------------------
 
 //Packet type----------------------------
-#define CS_POS_INFO 1
-#define CS_BOX_CREATE 2
-#define CS_MOUSE_INFO 3
-#define CS_PICKING_INFO 4
+#define CS_POS_INFO      1
+#define CS_BOX_CREATE    2
+#define CS_MOUSE_INFO    3
+#define CS_PICKING_INFO  4
+#define CS_TRY_GET_KEY   5
 
 #define SC_POS           1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER    2 //오브젝트 생성
@@ -34,6 +35,7 @@
 #define SC_LOGIN_INFO	 4 //로그인 정보
 #define SC_APPLY_DAMAGE  5 //플레이어의 HP를 감소시킴
 #define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
+#define SC_PUT_OBJECT    7 //오브젝트를 생성
 
 #define SC_CREATE_BOX 10 //test용
 //---------------------------------------
@@ -85,6 +87,15 @@ struct cs_packet_picking_info {
 	BYTE type;
 	int shooter_id;
 	int target_id;
+};
+
+struct cs_packet_try_get_key {
+	BYTE size;
+	BYTE type;
+	int key_id;
+	float x;
+	float y;
+	float z;
 };
 
 //---------Server To Client-----------------
@@ -151,6 +162,15 @@ struct sc_packet_player_dead {
 	BYTE size;
 	BYTE type;
 	WORD id;
+};
+
+struct sc_packet_put_object {
+	BYTE size;
+	BYTE type;
+	WORD id;
+	int obj_type;
+	int room1;
+	int room2;
 };
 
 #pragma pack (pop)
