@@ -169,8 +169,7 @@ struct sc_packet_put_object {
 	BYTE type;
 	WORD id;
 	int obj_type;
-	int room1;
-	int room2;
+	int approx_num;
 };
 
 #pragma pack (pop)

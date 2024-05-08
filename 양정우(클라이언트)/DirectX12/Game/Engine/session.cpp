@@ -61,7 +61,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_put_object* p = reinterpret_cast<sc_packet_put_object*>(packet);
 
-		//x, y, z 값은 p->room1 과 p->room2 사이 복도의 중앙값을 사용
+		//x, y, z 값은 p->approx_pos(복도 번호) 를 통해서 구하기
 		//_activeSessionScene->CreatePlayerObject(OT_KEYCARD, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		break;
 	}

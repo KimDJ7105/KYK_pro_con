@@ -8,7 +8,7 @@ public :
 	int obj_type;
 	int owner_id;
 
-	int approx_pos[2]{ -1,-1 };
+	int spawn_num;
 
 	void select_pos();
 	OBJECT(int id, int type);

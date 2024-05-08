@@ -287,8 +287,7 @@ void SESSION::start()
 		put_obj.type = SC_PUT_OBJECT;
 		put_obj.id = obj->obj_id;
 		put_obj.obj_type = obj->obj_type;
-		put_obj.room1 = obj->approx_pos[0];
-		put_obj.room2 = obj->approx_pos[1];
+		put_obj.approx_num = obj->spawn_num;
 
 		Send_Packet(&put_obj);
 	}
