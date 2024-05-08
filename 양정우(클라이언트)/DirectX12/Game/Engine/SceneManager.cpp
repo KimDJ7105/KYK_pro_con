@@ -16,6 +16,7 @@
 #include "ParticleSystem.h"
 #include "Terrain.h"
 #include "SphereCollider.h"
+#include "BoxCollider.h"
 #include "MeshData.h"
 #include "TestDragon.h"
 
