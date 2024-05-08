@@ -16,7 +16,10 @@ BoxCollider::~BoxCollider()
 void BoxCollider::FinalUpdate()
 {
 	_boundingBox.Center = GetGameObject()->GetTransform()->GetWorldPosition();
-	_boundingBox.Extents = XMFLOAT3(1.f, 1.f, 1.f);
+
+	Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
+
+	_boundingBox.Extents = scale;
 }
 
 bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)

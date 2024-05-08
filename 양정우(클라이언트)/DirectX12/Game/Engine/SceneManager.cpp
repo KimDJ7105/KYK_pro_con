@@ -571,10 +571,16 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"CardKey");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->AddComponent(make_shared<BoxCollider>());
+
+			//이렇게하면 바운딩 박스가 완성되지 않을까?
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData2->GetAABBCenter());
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents());
+
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 		}
 	}
@@ -699,8 +705,6 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float a
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\AisleCeiling.bin");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-		meshData->GetAABBCenter();
-		meshData->GetAABBExtents();
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -709,12 +713,6 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float a
 			gameObject->GetTransform()->SetLocalPosition(aislePosition);
 			gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-			gameObject->AddComponent(make_shared<BoxCollider>());
-
-			//이렇게하면 바운딩 박스가 완성되지 않을까?
-			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData->GetAABBCenter());
-			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData->GetAABBExtents());
-
 			scene->AddGameObject(gameObject);
 		}
 	}
