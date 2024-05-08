@@ -50,9 +50,11 @@ public:
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
+	Vec3 FindAislePosition(int aisleNum);
+	void CreateKeyCard(int aisleNum);
 
-	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale);
-	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale);
+	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
+	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
 	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale);
 
 	void AddComputeShader(int threadX, int threadY, int threadZ);
