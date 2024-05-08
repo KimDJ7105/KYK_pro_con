@@ -113,7 +113,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		
 		target->hp -= WP_DMG[shooter->equip_weapon];
 
-		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp;
+		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
 
 		if (target->hp > 0) {
 			sc_packet_apply_damage pad;
@@ -129,6 +129,13 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		}
 			
+		break;
+	}
+	case CS_TRY_GET_KEY :
+	{
+		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
+
+		std::cout << "카드키 획득 요청 수신\n";
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
