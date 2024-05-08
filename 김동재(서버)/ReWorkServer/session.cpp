@@ -102,6 +102,18 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
+		if(remain_bullet <= 0) break;
+
+		remain_bullet -= 1;
+
+		sc_packet_modify_bullet mb;
+		mb.type = SC_MODIFY_BULLET;
+		mb.size = sizeof(sc_packet_modify_bullet);
+		mb.amount = -1;
+		Send_Packet(&mb);
+		
+		if (p->target_id == -1) break;
+
 		shared_ptr<SESSION> target = players[p->target_id];
 		shared_ptr<SESSION> shooter = players[p->shooter_id];
 
@@ -113,18 +125,28 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
 
-		if (target->hp > 0) {
-			sc_packet_apply_damage pad;
-			pad.type = SC_APPLY_DAMAGE;
-			pad.size = sizeof(sc_packet_apply_damage);
-			pad.id = p->target_id;
-			pad.hp = target->hp;
 
-			target->Send_Packet(&pad);
-		}
+		
+		sc_packet_apply_damage pad;
+		pad.type = SC_APPLY_DAMAGE;
+		pad.size = sizeof(sc_packet_apply_damage);
+		pad.id = p->target_id;
+		pad.hp = target->hp;
 
-		else {
+		target->Send_Packet(&pad);
 
+		if (target->hp <= 0) { //플레이어 체력이 0보다 낮아지면 모든 플레이어에게 사망을 전달한다.
+			sc_packet_player_dead pd;
+			pd.type = SC_PLAYER_DEAD;
+			pd.size = sizeof(sc_packet_player_dead);
+			pd.id = target->my_id_;
+
+			for (auto& pl : players) {
+				shared_ptr<SESSION> player = pl.second;
+				if (player == nullptr) continue;
+
+				player->Send_Packet(&pd);
+			}
 		}
 			
 		break;
@@ -226,7 +248,7 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	view_dir[2] = 0.0f;
 
 	hp = 100;
-	remain_bullet = 0;
+	remain_bullet = 30;
 	team = 0;
 
 	equip_weapon = WP_SMG;
