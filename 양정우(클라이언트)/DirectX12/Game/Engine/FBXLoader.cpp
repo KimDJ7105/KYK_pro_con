@@ -187,6 +187,8 @@ void FBXLoader::LoadMeshBin(FbxMesh* mesh)
 
 		}
 
+		//_meshes[0].materials = meshInfo.materials;
+
 		//_meshes[0].indices = meshInfo.indices;
 		
 		//_meshes[0].boneWeights.resize(loadedMeshData[0].vertices.size());

@@ -492,23 +492,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
-		////흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-		//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		//for (auto& gameObject : gameObjects)
-		//{
-		//	gameObject->SetName(L"Player1");
-		//	gameObject->SetCheckFrustum(false);
-		//	gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
-		//	gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//	gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-		//	//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//	scene->AddGameObject(gameObject);
-		//	gameObject->AddComponent(make_shared<TestDragon>());
-		//}
-
-
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Player1");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+			//gameObject->AddComponent(make_shared<TestDragon>());
+		}
+	}
+	{
 
 		//shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
@@ -560,7 +560,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		
 	}
 
-	//CreateKeyCard(0);
+	
+	{
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"CardKey");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+		}
+	}
 
 
 
@@ -963,7 +979,7 @@ void SceneManager::CreateKeyCard(int aisleNum)
 		gameObject->GetTransform()->SetLocalPosition(aislePos);
 		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 		scene->AddGameObject(gameObject);
 	}
 
