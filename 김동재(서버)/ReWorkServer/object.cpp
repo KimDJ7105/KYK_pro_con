@@ -10,6 +10,8 @@ OBJECT::OBJECT(int id, int type)
 	obj_id = id;
 	obj_type = type;
 
+	owner_id = -1;
+
 	approx_pos[0] = -1; approx_pos[1] = -1;
 
 }
