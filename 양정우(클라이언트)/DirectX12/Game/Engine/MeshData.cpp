@@ -54,7 +54,11 @@ shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 	BinaryLoader loader;
 	loader.LoadBinary(path);
 
+
+
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+	meshData->AABBCenter = loader.GetAABBCenter();
+	meshData->AABBExtents = loader.GetAABBExtents();
 
 	//메시덩어리 수
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)

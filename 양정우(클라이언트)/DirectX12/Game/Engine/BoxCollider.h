@@ -10,13 +10,16 @@ public:
 	virtual void FinalUpdate() override;
 	virtual bool Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance) override;
 
+	void CheckAABB(BoundingBox targetBox);
+
 	//void SetRadius(float radius) { _radius = radius; }
 	void SetCenter(Vec3 center) { _center = center; }
+	void SetExtents(Vec3 extents){ _extents = extents; }
 
 private:
 	// Local ±‚¡ÿ
-	//float		_radius = 1.f;
 	Vec3		_center = Vec3(0, 0, 0);
+	Vec3		_extents = Vec3(0, 0, 0);
 
 	BoundingBox _boundingBox;
 };

@@ -23,3 +23,10 @@ bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
 {
 	return _boundingBox.Intersects(rayOrigin, rayDir, OUT distance);
 }
+
+void BoxCollider::CheckAABB(BoundingBox targetBox)
+{
+	//충돌을 하였는지?
+}
+
+

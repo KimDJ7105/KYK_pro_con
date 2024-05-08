@@ -699,6 +699,8 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float a
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\AisleCeiling.bin");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		meshData->GetAABBCenter();
+		meshData->GetAABBExtents();
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -707,6 +709,12 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float a
 			gameObject->GetTransform()->SetLocalPosition(aislePosition);
 			gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
+			gameObject->AddComponent(make_shared<BoxCollider>());
+
+			//이렇게하면 바운딩 박스가 완성되지 않을까?
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData->GetAABBCenter());
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData->GetAABBExtents());
+
 			scene->AddGameObject(gameObject);
 		}
 	}

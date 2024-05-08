@@ -347,6 +347,7 @@ shared_ptr<MeshData> Resources::LoadBinaryModel(const wstring& path)
 		return meshData;
 
 	meshData = MeshData::LoadFromBinary(path);
+
 	meshData->SetName(key);
 	Add(key, meshData);
 
