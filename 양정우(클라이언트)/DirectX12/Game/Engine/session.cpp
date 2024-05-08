@@ -21,7 +21,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
 
 		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
-		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		playerID = p->id;
 		break;
 	}
@@ -29,13 +29,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
 		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
-		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		break;
 	}
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
-		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y, p->z, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz);
 
 		break;
 	}

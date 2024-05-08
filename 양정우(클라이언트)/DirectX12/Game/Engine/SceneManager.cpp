@@ -498,12 +498,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Player");
+			gameObject->SetName(L"Player1");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<TestDragon>());
 		}
@@ -517,12 +517,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		for (auto& gameObject : gameObjects2)
 		{
-			gameObject->SetName(L"Player");
+			gameObject->SetName(L"Player2");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 			//gameObject->AddComponent(make_shared<TestDragon>());
 		}
@@ -620,7 +620,8 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 	vp_ObjectManager.push_back(obj);
 
-	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player\\Player(No animation).fbx");
+	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
 	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -631,8 +632,8 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		gameObject->GetTransform()->SetObjectType(object_type);
 		gameObject->GetTransform()->SetObjectID(object_id);
 		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
-		gameObject->GetTransform()->SetLocalScale(Vec3(0.15f, 0.15f, 0.15f));		//(0.15f, 0.15f, 0.15f)
-		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+		gameObject->GetTransform()->SetLocalRotation(Vec3( dirX, dirY, dirZ));
 		gameObject->AddComponent(make_shared<SphereCollider>());
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
