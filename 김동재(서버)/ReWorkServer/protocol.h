@@ -36,6 +36,7 @@
 #define SC_APPLY_DAMAGE  5 //플레이어의 HP를 감소시킴
 #define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 #define SC_PUT_OBJECT    7 //오브젝트를 생성
+#define SC_MODIFY_BULLET 8 //총알 개수를 변경
 
 #define SC_CREATE_BOX 10 //test용
 //---------------------------------------
@@ -170,6 +171,12 @@ struct sc_packet_put_object {
 	WORD id;
 	int obj_type;
 	int approx_num;
+};
+
+struct sc_packet_modify_bullet {
+	BYTE size;
+	BYTE type;
+	int amount;
 };
 
 #pragma pack (pop)

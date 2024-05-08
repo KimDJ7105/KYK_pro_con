@@ -65,6 +65,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//_activeSessionScene->CreatePlayerObject(OT_KEYCARD, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		break;
 	}
+	case SC_MODIFY_BULLET :
+	{
+		sc_packet_modify_bullet* p = reinterpret_cast<sc_packet_modify_bullet*>(packet);
+		//총알 개수를 바꾸는 패킷임.
+		//p->amount 가 변동 값. 총알 개수 변수에 그대로 적용하면 됨.
+		break;
+	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
 		break;
