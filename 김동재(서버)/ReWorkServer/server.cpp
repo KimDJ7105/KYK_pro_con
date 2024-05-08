@@ -2,7 +2,7 @@
 #include "server.h"
 
 concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
-concurrency::concurrent_unordered_map<int,shared_ptr<OBJECT>> Cardkeys;
+concurrency::concurrent_unordered_map<int, shared_ptr<OBJECT>> objects;
 
 void SERVER::do_accept()
 {
@@ -42,9 +42,9 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 
 	for (int i = 0; i < 3; i++) {
 		int o_id = GetNewObjectID();
-		Cardkeys[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
-		Cardkeys[o_id]->select_pos();
-		Cardkeys[o_id]->show_approx_pos();
+		objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
+		objects[o_id]->select_pos();
+		objects[o_id]->show_approx_pos();
 	}
 	
 	std::cout << "카드키 생성 완료" << std::endl;

@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "object.h"
 
 class SESSION
 	: public std::enable_shared_from_this<SESSION>
@@ -40,3 +41,4 @@ public:
 };
 
 extern concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
+extern concurrency::concurrent_unordered_map<int, shared_ptr<OBJECT>> objects;
