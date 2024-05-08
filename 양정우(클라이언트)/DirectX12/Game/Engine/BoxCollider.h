@@ -22,5 +22,7 @@ private:
 	Vec3		_extents = Vec3(0, 0, 0);
 
 	BoundingBox _boundingBox;
+
+	BoundingOrientedBox _boundingOrientedBox;
 };
 

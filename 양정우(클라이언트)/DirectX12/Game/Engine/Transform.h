@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <DirectXMath.h>
 
 using std::weak_ptr;
 using std::min;
@@ -26,6 +27,7 @@ public:
 	const Matrix& GetLocalToWorldMatrix() { return _matWorld; }
 	//const Vec3& GetWorldPosition() { return _matWorld.Translation(); }'
 	Vec3 GetWorldPosition() { return _matWorld.Translation(); }
+	XMFLOAT4 GetWorldRotation();
 
 	Vec3 GetRight() { return _matWorld.Right(); }
 	Vec3 GetUp() { return _matWorld.Up(); }
