@@ -131,15 +131,7 @@ struct sc_packet_remove_player {
 	BYTE size;
 	BYTE type;
 	WORD id;
-};
-
-struct sc_packet_create_box {
-	BYTE size;
-	BYTE type;
-	WORD id;
-	float x;
-	float y;
-	float z;
+	int obj_type;
 };
 
 struct sc_packet_apply_damage {

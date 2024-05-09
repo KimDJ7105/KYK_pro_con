@@ -141,6 +141,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.type = SC_REMOVE_PLAYER;
 		rmp.size = sizeof(sc_packet_remove_player);
 		rmp.id = card->obj_id;
+		rmp.obj_type = OT_KEYCARD;
 		for (auto& p : players) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
