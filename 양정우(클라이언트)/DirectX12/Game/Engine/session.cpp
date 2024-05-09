@@ -40,6 +40,12 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 		break;
 	}
+	case SC_REMOVE_PLAYER :
+	{
+		sc_packet_remove_player* p = reinterpret_cast<sc_packet_remove_player*>(packet);
+		//p->id 와 같은 id를 가진 물체 삭제 (플레이어, 오브젝트)
+		break;
+	}
 	case SC_APPLY_DAMAGE :
 	{		
 		sc_packet_apply_damage* p = reinterpret_cast<sc_packet_apply_damage*>(packet);
