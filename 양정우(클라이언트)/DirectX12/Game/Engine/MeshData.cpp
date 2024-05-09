@@ -73,6 +73,8 @@ shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
 		{
 			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+
+
 			materials.push_back(material);
 		}
 
