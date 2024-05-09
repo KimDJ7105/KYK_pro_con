@@ -131,7 +131,22 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
 
+		shared_ptr<OBJECT> card = objects[p->key_id];
+		if (card == nullptr) break;
+
 		std::cout << "Ä«µåÅ° È¹µæ ¿äÃ» ¼ö½Å\n";
+		card->owner_id = my_id_;
+
+		sc_packet_remove_player rmp;
+		rmp.type = SC_REMOVE_PLAYER;
+		rmp.size = sizeof(sc_packet_remove_player);
+		rmp.id = card->obj_id;
+		for (auto& p : players) {
+			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
+			player->Send_Packet(&rmp);
+		}
+
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
