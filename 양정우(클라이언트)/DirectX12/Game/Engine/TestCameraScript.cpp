@@ -166,10 +166,10 @@ void TestCameraScript::LateUpdate()
 
 		if (keyCard != NULL)
 		{
-			/*shared_ptr<Scene> activedScene;
-			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(keyCard);*/
-			Vec3 pos = keyCard->GetTransform()->GetLocalPosition();
-			keyCard->GetTransform()->SetLocalPosition(Vec3(pos.x, pos.y + 20.f, pos.z));
+			shared_ptr<Scene> activedScene;
+			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(keyCard);
+			/*Vec3 pos = keyCard->GetTransform()->GetLocalPosition();
+			keyCard->GetTransform()->SetLocalPosition(Vec3(pos.x, pos.y + 20.f, pos.z));*/
 		}
 	}
 
