@@ -137,7 +137,7 @@ void BinaryLoader::CreateTextures()
 			{
 				wstring relativePath = _meshes[i].materials[j].diffuseTexName.c_str();
 				wstring filename = fs::path(relativePath).filename();
-				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".png";
+				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".dds";
 				if (filename.empty() == false && relativePath != L"null")
 					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
 			}
@@ -146,7 +146,7 @@ void BinaryLoader::CreateTextures()
 			{
 				wstring relativePath = _meshes[i].materials[j].normalTexName.c_str();
 				wstring filename = fs::path(relativePath).filename();
-				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".png";
+				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".dds";
 				if (filename.empty() == false && relativePath != L"null")
 					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
 			}
@@ -155,7 +155,7 @@ void BinaryLoader::CreateTextures()
 			{
 				wstring relativePath = _meshes[i].materials[j].specularTexName.c_str();
 				wstring filename = fs::path(relativePath).filename();
-				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".png";
+				wstring fullPath = _resourceDirectory + L"\\Texture\\" + filename + L".dds";
 				if (filename.empty() == false && relativePath != L"null")
 					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
 			}
