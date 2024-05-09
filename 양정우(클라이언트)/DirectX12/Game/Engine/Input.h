@@ -27,6 +27,9 @@ enum class KEY_TYPE
 	numLEFT = 100,
 	numRIGHT = 102,
 
+	numONE = 97,
+	numTHREE = 99,
+
 	KEY_1 = '1',
 	KEY_2 = '2',
 	KEY_3 = '3',

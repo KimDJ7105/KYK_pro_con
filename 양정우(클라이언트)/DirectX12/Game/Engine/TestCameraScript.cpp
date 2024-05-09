@@ -327,6 +327,7 @@ void TestCameraScript::RotatingPickedObject()
 {
 	Vec3 pos = pickedMovingObject->GetTransform()->GetLocalPosition();
 	Vec3 rotation = pickedMovingObject->GetTransform()->GetLocalRotation();
+	Vec3 scale = pickedMovingObject->GetTransform()->GetLocalScale();
 
 	
 	if (INPUT->GetButton(KEY_TYPE::UP))
@@ -369,7 +370,25 @@ void TestCameraScript::RotatingPickedObject()
 		rotation.y -= _objspeed * DELTA_TIME;
 	}
 
+	if (INPUT->GetButton(KEY_TYPE::numONE))
+	{
+		scale.x += _objspeed * DELTA_TIME;
+		scale.y += _objspeed * DELTA_TIME;
+		scale.z += _objspeed * DELTA_TIME;
+	}
+	if (INPUT->GetButton(KEY_TYPE::numTHREE))
+	{
+		scale.x -= _objspeed * DELTA_TIME;
+		scale.y -= _objspeed * DELTA_TIME;
+		scale.z -= _objspeed * DELTA_TIME;
+	}
+
+
 	pickedMovingObject->GetTransform()->SetLocalPosition(pos);
 	pickedMovingObject->GetTransform()->SetLocalRotation(rotation);
+	pickedMovingObject->GetTransform()->SetLocalScale(scale);
 
+	std::cout << "Object Pos : (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+	std::cout << "Object Rotation : (" << rotation.x << ", " << rotation.y << ", " << rotation.z << ")" << std::endl;
+	std::cout << "Object Scale : (" << scale.x << ", " << scale.y << ", " << scale.z << ")" << std::endl;
 }
