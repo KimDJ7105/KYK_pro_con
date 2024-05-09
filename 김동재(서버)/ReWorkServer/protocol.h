@@ -37,8 +37,6 @@
 #define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 #define SC_PUT_OBJECT    7 //오브젝트를 생성
 #define SC_MODIFY_BULLET 8 //총알 개수를 변경
-
-#define SC_CREATE_BOX 10 //test용
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -60,15 +58,6 @@ struct cs_packet_pos_info {
 	float y;
 	float z;
 };
-
-struct cs_packet_box_create {
-	BYTE size;
-	BYTE type;
-	float x;
-	float y;
-	float z;
-};
-
 
 struct cs_packet_logout {
 	BYTE size;
