@@ -13,8 +13,11 @@ public:
 
 	void RotationUpdate();
 
+	void RotatingPickedObject();
+
 private:
 	float		_speed = 300.f;
+	float		_objspeed = 5.f;
 
 	int type = 0;
 	int id = 0;
@@ -23,5 +26,7 @@ private:
 	bool isWindowCapture = true;
 
 	wchar_t previousTitle[256] = { 0 };
+
+	shared_ptr<GameObject> pickedMovingObject;
 };
 

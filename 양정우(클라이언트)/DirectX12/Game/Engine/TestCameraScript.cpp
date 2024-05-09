@@ -150,13 +150,27 @@ void TestCameraScript::LateUpdate()
 		{
 			//Empty!
 		}
-
-		
-		
-		
-
 		/*scene->RemoveGameObject(pickedObject); */
 	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
+	{
+		const POINT& pos = INPUT->GetMousePos();
+
+		shared_ptr<GameObject> pickedObject;
+
+		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
+
+		if (pickedObject == pickedMovingObject)
+			pickedMovingObject = NULL;
+		else
+			pickedMovingObject = pickedObject;
+	}
+
+
+	if (pickedMovingObject != NULL)
+		RotatingPickedObject();
+
 
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
@@ -307,4 +321,55 @@ void TestCameraScript::RotationUpdate()
 
 	//마우스의 위치를 중앙으로 초기화 해준다.
 	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+}
+
+void TestCameraScript::RotatingPickedObject()
+{
+	Vec3 pos = pickedMovingObject->GetTransform()->GetLocalPosition();
+	Vec3 rotation = pickedMovingObject->GetTransform()->GetLocalRotation();
+
+	
+	if (INPUT->GetButton(KEY_TYPE::UP))
+	{
+		pos.z += _speed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::DOWN))
+	{
+		pos.z -= _speed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::LEFT))
+	{
+		pos.x -= _speed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::RIGHT))
+	{
+		pos.x += _speed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::numUP))
+	{
+		rotation.x += _objspeed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::numDOWN))
+	{
+		rotation.x -= _objspeed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::numLEFT))
+	{
+		rotation.y += _objspeed * DELTA_TIME;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::numRIGHT))
+	{
+		rotation.y -= _objspeed * DELTA_TIME;
+	}
+
+	pickedMovingObject->GetTransform()->SetLocalPosition(pos);
+	pickedMovingObject->GetTransform()->SetLocalRotation(rotation);
+
 }
