@@ -1059,7 +1059,7 @@ Vec3 SceneManager::FindAislePosition(int aisleNum)
 	}
 }
 
-void SceneManager::CreateKeyCard(int aisleNum)
+void SceneManager::CreateKeyCard(int aisleNum, int objectID)
 {
 	Vec3 aislePos = FindAislePosition(aisleNum);
 
@@ -1077,6 +1077,7 @@ void SceneManager::CreateKeyCard(int aisleNum)
 		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		gameObject->GetTransform()->SetObjectType(OT_KEYCARD);
+		gameObject->GetTransform()->SetObjectID(objectID);
 
 
 		gameObject->AddComponent(make_shared<BoxCollider>());	// 官款爹 备 积己

@@ -158,7 +158,6 @@ void TestCameraScript::LateUpdate()
 		/*scene->RemoveGameObject(pickedObject); */
 	}
 
-	//E키 누르는곳
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
 		//플레이어 ID를 탐색
@@ -170,13 +169,15 @@ void TestCameraScript::LateUpdate()
 
 		if (keyCard != NULL)
 		{
+			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
 			cs_packet_try_get_key tgk;
 			tgk.size = sizeof(cs_packet_try_get_key);
 			tgk.type = CS_TRY_GET_KEY;
-			/*tgk.x = pos.x;
+			tgk.x = pos.x;
 			tgk.y = pos.y;
 			tgk.z = pos.z;
-			tgk.key_id = -1;*/
+			tgk.key_id = keyCard->GetTransform()->GetObjectID();
 			//pos xyz 는 플레이어의 현재 위치
 			//key_id는 충돌한 카드키의 id값
 			session->Send_Packet(&tgk);

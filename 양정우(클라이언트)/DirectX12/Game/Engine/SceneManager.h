@@ -53,7 +53,7 @@ public:
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
 	Vec3 FindAislePosition(int aisleNum);
-	void CreateKeyCard(int aisleNum);
+	void CreateKeyCard(int aisleNum, int objectID);
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
 	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
