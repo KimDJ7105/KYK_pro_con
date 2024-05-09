@@ -158,18 +158,23 @@ void TestCameraScript::LateUpdate()
 		/*scene->RemoveGameObject(pickedObject); */
 	}
 
+	//E키 누르는곳
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
+		//플레이어 ID를 탐색
 		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 		shared_ptr<GameObject> keyCard;
+
+		//playerObject와 OT_KEYCARD타입간의 충돌이 일어났는지를 확인
 		keyCard = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_KEYCARD);
 
 		if (keyCard != NULL)
 		{
+			//만약 충돌을 했고 그게 우리가 찾던 거면
 			shared_ptr<Scene> activedScene;
+			
+			//현재 작동하는 Scene에서 지워버린다.
 			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(keyCard);
-			/*Vec3 pos = keyCard->GetTransform()->GetLocalPosition();
-			keyCard->GetTransform()->SetLocalPosition(Vec3(pos.x, pos.y + 20.f, pos.z));*/
 		}
 	}
 
