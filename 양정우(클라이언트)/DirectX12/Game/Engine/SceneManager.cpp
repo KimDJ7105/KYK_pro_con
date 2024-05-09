@@ -269,41 +269,41 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Sphere(Object)
 	{
-		shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->SetName(L"OBJ");
-		obj->AddComponent(make_shared<Transform>());
-		obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
-		obj->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-			meshRenderer->SetMesh(sphereMesh);
-		}
-		{
-			/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
-			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			material->SetTexture(1, texture2);
-			meshRenderer->SetMaterial(material);*/
-			// Resource.cpp GameObject부분으로 이동
+		//shared_ptr<GameObject> obj = make_shared<GameObject>();
+		//obj->SetName(L"OBJ");
+		//obj->AddComponent(make_shared<Transform>());
+		//obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
+		//obj->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+		//obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		//obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
+		//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		//{
+		//	shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+		//	meshRenderer->SetMesh(sphereMesh);
+		//}
+		//{
+		//	/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		//	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+		//	shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+		//	shared_ptr<Material> material = make_shared<Material>();
+		//	material->SetShader(shader);
+		//	material->SetTexture(0, texture);
+		//	material->SetTexture(1, texture2);
+		//	meshRenderer->SetMaterial(material);*/
+		//	// Resource.cpp GameObject부분으로 이동
 
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-			//material->SetInt(0, 1);
-			meshRenderer->SetMaterial(material->Clone());
-			/*material->SetInt(0, 0);
-			meshRenderer->SetMaterial(material->Clone());*/
-		}
+		//	shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+		//	//material->SetInt(0, 1);
+		//	meshRenderer->SetMaterial(material->Clone());
+		//	/*material->SetInt(0, 0);
+		//	meshRenderer->SetMaterial(material->Clone());*/
+		//}
 
-		std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
-		std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+		//std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
+		//std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 
-		obj->AddComponent(meshRenderer);
-		scene->AddGameObject(obj);
+		//obj->AddComponent(meshRenderer);
+		//scene->AddGameObject(obj);
 	}
 #pragma endregion
 
@@ -564,7 +564,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player1");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -50.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(100000.f, 100000.f, 100000.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
 			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -620,54 +620,54 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			}
 		}
 	}
-	{
-		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
+	//{
+	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
 
-		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
 
-		for (auto& gameObject : gameObjects2)
-		{
-			gameObject->SetName(L"CardKey");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			gameObject->AddComponent(make_shared<BoxCollider>());
+	//	for (auto& gameObject : gameObjects2)
+	//	{
+	//		gameObject->SetName(L"CardKey");
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+	//		gameObject->AddComponent(make_shared<BoxCollider>());
 
-			//std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents());
-			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
-			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData2->GetAABBCenter());
+	//		//std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents());
+	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData2->GetAABBCenter());
 
-			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-			scene->AddGameObject(gameObject);
-		}
+	//		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+	//		scene->AddGameObject(gameObject);
+	//	}
 
-		
-		{
-			shared_ptr<GameObject> cube = make_shared<GameObject>();
-			cube->AddComponent(make_shared<Transform>());
-			cube->GetTransform()->SetLocalScale(Vec3(30.f, 30.f, 30.f));
-			cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-				meshRenderer->SetMesh(cubeMesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Tessellation");
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
-				shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				material->SetTexture(1, texture2);
-				meshRenderer->SetMaterial(material);
-			}
-			cube->AddComponent(meshRenderer);
-			scene->AddGameObject(cube);
-		}
+	//	
+	//	{
+	//		shared_ptr<GameObject> cube = make_shared<GameObject>();
+	//		cube->AddComponent(make_shared<Transform>());
+	//		cube->GetTransform()->SetLocalScale(Vec3(30.f, 30.f, 30.f));
+	//		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
+	//		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//		{
+	//			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+	//			meshRenderer->SetMesh(cubeMesh);
+	//		}
+	//		{
+	//			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Tessellation");
+	//			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+	//			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+	//			shared_ptr<Material> material = make_shared<Material>();
+	//			material->SetShader(shader);
+	//			material->SetTexture(0, texture);
+	//			material->SetTexture(1, texture2);
+	//			meshRenderer->SetMaterial(material);
+	//		}
+	//		cube->AddComponent(meshRenderer);
+	//		scene->AddGameObject(cube);
+	//	}
 
-	}
+	//}
 
 
 	return scene;
