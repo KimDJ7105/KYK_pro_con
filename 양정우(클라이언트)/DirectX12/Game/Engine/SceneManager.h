@@ -72,5 +72,7 @@ private:
 
 public:
 	shared_ptr<GameObject> GetPlayer(int ID);
+
+	void RemoveObject(int object_id);
 };
 

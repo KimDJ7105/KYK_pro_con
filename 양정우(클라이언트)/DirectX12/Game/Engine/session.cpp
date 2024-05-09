@@ -55,6 +55,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PLAYER_DEAD :
 	{
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
+
+		_activeSessionScene->RemoveObject(p->id);
 		break;
 	}
 	case SC_PUT_OBJECT :

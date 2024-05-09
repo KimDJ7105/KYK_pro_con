@@ -683,6 +683,23 @@ void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y
 	}
 }
 
+void SceneManager::RemoveObject(int object_id)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	shared_ptr<GameObject> removeObjectData;
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectID() == object_id)
+		{
+			removeObjectData = gameObject;
+			break;
+		}
+	}
+	GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(removeObjectData);
+}
+
 shared_ptr<GameObject> SceneManager::CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
 {
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
