@@ -170,11 +170,16 @@ void TestCameraScript::LateUpdate()
 
 		if (keyCard != NULL)
 		{
-			//만약 충돌을 했고 그게 우리가 찾던 거면
-			shared_ptr<Scene> activedScene;
-			
-			//현재 작동하는 Scene에서 지워버린다.
-			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(keyCard);
+			cs_packet_try_get_key tgk;
+			tgk.size = sizeof(cs_packet_try_get_key);
+			tgk.type = CS_TRY_GET_KEY;
+			/*tgk.x = pos.x;
+			tgk.y = pos.y;
+			tgk.z = pos.z;
+			tgk.key_id = -1;*/
+			//pos xyz 는 플레이어의 현재 위치
+			//key_id는 충돌한 카드키의 id값
+			session->Send_Packet(&tgk);
 		}
 	}
 
@@ -223,21 +228,6 @@ void TestCameraScript::MoveUpdate()
 	}
 
 	pos.y = tempPos.y;
-
-	// E가 눌렸다가 떼어지면
-	if (INPUT->GetButtonUp(KEY_TYPE::E))
-	{
-		// 아래 내용이 실행된다.
-		cs_packet_try_get_key tgk;
-		tgk.size = sizeof(cs_packet_try_get_key);
-		tgk.type = CS_TRY_GET_KEY;
-		tgk.x = pos.x;
-		tgk.y = pos.y;
-		tgk.z = pos.z;
-		tgk.key_id = -1;
-
-		session->Send_Packet(&tgk);
-	}
 
 	//위치가 변경되었을때만 서버에 전송하도록 수정
 	if (pos != tempPos)
