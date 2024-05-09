@@ -20,6 +20,7 @@
 #define OT_KEYCARD 1
 #define OT_ROOM 2
 #define OT_CORRIDOR 3
+#define OT_TERMINAL 4
 //---------------------------------------
 
 //Packet type----------------------------

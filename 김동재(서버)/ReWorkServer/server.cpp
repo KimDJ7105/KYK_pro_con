@@ -45,6 +45,11 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 		objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
 		objects[o_id]->select_pos();
 		objects[o_id]->show_approx_pos();
+
+		int t_id = GetNewObjectID();
+		objects[t_id] = std::make_shared<OBJECT>(t_id, OT_TERMINAL);
+		objects[t_id]->select_pos();
+		objects[t_id]->show_approx_pos();
 	}
 	
 	std::cout << "카드키 생성 완료" << std::endl;

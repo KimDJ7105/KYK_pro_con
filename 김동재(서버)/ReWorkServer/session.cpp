@@ -274,6 +274,7 @@ void SESSION::start()
 		}
 	}
 
+	//생성되어있는 기본 오브젝트의 위치를 전송
 	for (auto& object : objects) {
 		shared_ptr<OBJECT> obj = object.second;
 		if (obj == nullptr) continue;
