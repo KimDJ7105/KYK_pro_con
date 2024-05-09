@@ -23,6 +23,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
 		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		playerID = p->id;
+		_activeSessionScene->SetPlayerID(p->id);
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
@@ -37,13 +38,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
 		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz);
 
-		break;
-	}
-	case SC_CREATE_BOX : //테스트용 박스 생성
-	{
-		sc_packet_create_box* p = reinterpret_cast<sc_packet_create_box*>(packet);
-
-		scene->AddGameObject(_activeSessionScene->CreateBoxObject(OT_KEYCARD, p->id, p->x, p->y, p->z, 0, 0.0f, 0.0f, 0.0f));
 		break;
 	}
 	case SC_APPLY_DAMAGE :

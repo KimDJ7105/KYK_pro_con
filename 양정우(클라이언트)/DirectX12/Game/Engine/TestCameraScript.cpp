@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"
+#include "Scene.h"
 
 #include "session.h"
 
@@ -13,6 +14,7 @@ extern int playerID;
 
 TestCameraScript::TestCameraScript()
 {
+
 }
 
 TestCameraScript::~TestCameraScript()
@@ -151,8 +153,24 @@ void TestCameraScript::LateUpdate()
 
 		
 		
+		
 
 		/*scene->RemoveGameObject(pickedObject); */
+	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::E))
+	{
+		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+		shared_ptr<GameObject> keyCard;
+		keyCard = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_KEYCARD);
+
+		if (keyCard != NULL)
+		{
+			/*shared_ptr<Scene> activedScene;
+			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(keyCard);*/
+			Vec3 pos = keyCard->GetTransform()->GetLocalPosition();
+			keyCard->GetTransform()->SetLocalPosition(Vec3(pos.x, pos.y + 20.f, pos.z));
+		}
 	}
 
 	wcscpy_s(previousTitle, windowTitle);

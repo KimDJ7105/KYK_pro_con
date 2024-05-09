@@ -22,6 +22,7 @@
 
 #include "ObjectManager.h"
 
+
 shared_ptr<Scene> scene = std::make_shared<Scene>();
 
 std::vector<MyGameObject> vp_ObjectManager;
@@ -95,19 +96,20 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 	float minDistance = FLT_MAX;
 	shared_ptr<GameObject> picked;
 
+	// ViewSpace에서의 Ray 정의
+	Vec4 rayOrigin = Vec4(0.0f, 0.0f, 0.0f, 1.0f);		//중심에서
+	Vec4 rayDir = Vec4(viewX, viewY, 1.0f, 0.0f);		//여기로 쐈다.
+
+	// WorldSpace에서의 Ray 정의
+	rayOrigin = XMVector3TransformCoord(rayOrigin, viewMatrixInv);	//그걸 3D로 표현
+	rayDir = XMVector3TransformNormal(rayDir, viewMatrixInv);		//그걸 3D로 표현
+	rayDir.Normalize();	//방향을 노멀라이징한다.
+
+
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->GetCollider() == nullptr)
 			continue;
-
-		// ViewSpace에서의 Ray 정의
-		Vec4 rayOrigin = Vec4(0.0f, 0.0f, 0.0f, 1.0f);		//중심에서
-		Vec4 rayDir = Vec4(viewX, viewY, 1.0f, 0.0f);		//여기로 쐈다.
-
-		// WorldSpace에서의 Ray 정의
-		rayOrigin = XMVector3TransformCoord(rayOrigin, viewMatrixInv);	//그걸 3D로 표현
-		rayDir = XMVector3TransformNormal(rayDir, viewMatrixInv);		//그걸 3D로 표현
-		rayDir.Normalize();	//방향을 노멀라이징한다.
 
 		// WorldSpace에서 연산
 		float distance = 0.f;
@@ -117,6 +119,9 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 		//만약 최소거리가 distance보다 클때, 즉 광선이 오브젝트한테 맞았을때
 		if (distance < minDistance)
 		{
+			if (gameObject->GetTransform()->GetObjectType() == OT_PLAYER && gameObject->GetTransform()->GetObjectID() == _playerID)
+				continue;
+
 			minDistance = distance;	//최소거리를 갱신해주고
 			picked = gameObject;	//맞은 오브젝트를 기록
 		}
@@ -124,6 +129,63 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 
 	return picked;	//맞은 오브젝트를 리턴한다.
 }
+
+shared_ptr<GameObject> SceneManager::CheckCollisionWithSceneObjects(const std::shared_ptr<GameObject>& objectToCheck, int object_Type)
+{
+
+	//objectToChecks은 나 자신
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+
+	std::shared_ptr<GameObject> collidedObject;
+
+	for (auto& gameObject : gameObjects)
+	{
+		//collider컴포넌트가 없거나 자기 자신일때
+		if (gameObject->GetCollider() == nullptr || gameObject == objectToCheck)
+			continue;
+
+		//collider 타입이 BOX가 아닐때.
+		if (gameObject->GetCollider()->GetColliderType() != ColliderType::Box)
+			continue;
+
+		if (gameObject->GetTransform()->GetObjectType() != object_Type)
+			continue;
+
+
+		if (gameObject->GetTransform()->GetObjectType() == object_Type)
+		{
+			//체크하는 나 자신과 내가 원하는 게임오브젝트의 충돌판정을 시작한다.
+			if (objectToCheck->GetCollider()->isColliding(gameObject->GetCollider()->GetBoxCollider()))
+			{
+				//만약 충돌을 했다면.
+				return gameObject;
+			}
+		}
+
+		
+	}
+
+	return NULL;
+}
+
+shared_ptr<GameObject> SceneManager::GetPlayer(int ID)
+{
+
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != OT_PLAYER)
+			continue;
+
+		if (gameObject->GetTransform()->GetObjectID() == ID)
+			return gameObject;
+	}
+
+
+	return 0;
+}
+
 
 shared_ptr<Scene> SceneManager::LoadTestScene()
 {
@@ -152,6 +214,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
@@ -205,43 +268,43 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Sphere(Object)
-	//{
-	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-	//	obj->SetName(L"OBJ");
-	//	obj->AddComponent(make_shared<Transform>());
-	//	obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
-	//	obj->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
-	//	obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-	//	obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
-	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//	{
-	//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-	//		meshRenderer->SetMesh(sphereMesh);
-	//	}
-	//	{
-	//		/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
-	//		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
-	//		shared_ptr<Material> material = make_shared<Material>();
-	//		material->SetShader(shader);
-	//		material->SetTexture(0, texture);
-	//		material->SetTexture(1, texture2);
-	//		meshRenderer->SetMaterial(material);*/
-	//		// Resource.cpp GameObject부분으로 이동
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"OBJ");
+		obj->AddComponent(make_shared<Transform>());
+		obj->AddComponent(make_shared<SphereCollider>()); // 이것을 추가함으로서 픽킹의 적용을 받는다.
+		obj->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		obj->SetStatic(false);	// false로 하여 그림자의 적용을 받는다
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+			meshRenderer->SetMesh(sphereMesh);
+		}
+		{
+			/*shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			material->SetTexture(1, texture2);
+			meshRenderer->SetMaterial(material);*/
+			// Resource.cpp GameObject부분으로 이동
 
-	//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-	//		//material->SetInt(0, 1);
-	//		meshRenderer->SetMaterial(material->Clone());
-	//		/*material->SetInt(0, 0);
-	//		meshRenderer->SetMaterial(material->Clone());*/
-	//	}
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+			//material->SetInt(0, 1);
+			meshRenderer->SetMaterial(material->Clone());
+			/*material->SetInt(0, 0);
+			meshRenderer->SetMaterial(material->Clone());*/
+		}
 
-	//	std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
-	//	std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+		std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
+		std::dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 
-	//	obj->AddComponent(meshRenderer);
-	//	scene->AddGameObject(obj);
-	//}
+		obj->AddComponent(meshRenderer);
+		scene->AddGameObject(obj);
+	}
 #pragma endregion
 
 #pragma region Terrain
@@ -325,7 +388,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Monkey", L"..\\Resources\\Texture\\Aim.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Crosshair", L"..\\Resources\\Texture\\Aim.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -501,31 +564,31 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player1");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -50.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
 			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 			//gameObject->AddComponent(make_shared<TestDragon>());
 		}
-	}
-	{
+	//}
+	//{
 
-		//shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
+	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
-		//vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
 
-		//for (auto& gameObject : gameObjects2)
-		//{
-		//	gameObject->SetName(L"Player2");
-		//	gameObject->SetCheckFrustum(false);
-		//	gameObject->GetTransform()->SetLocalPosition(Vec3(10000.f, 10000.f, 10000.f));
-		//	gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-		//	gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-		//	//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//	scene->AddGameObject(gameObject);
-		//	//gameObject->AddComponent(make_shared<TestDragon>());
-		//}
+	//	for (auto& gameObject : gameObjects2)
+	//	{
+	//		gameObject->SetName(L"Player2");
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 50.f));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+	//		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
+	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+	//		scene->AddGameObject(gameObject);
+	//		//gameObject->AddComponent(make_shared<TestDragon>());
+	//	}
 
 
 
@@ -539,8 +602,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			CreateMap((375 + 225) * i, 0, (375 + 225) * j, 150);
 		}
 	}
-	
-
 	int x = 0;
 	for (int i = 0; i < 5; i++)
 	{
@@ -558,10 +619,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				x++;
 			}
 		}
-		
 	}
-
-	
 	{
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
 
@@ -571,20 +629,45 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"CardKey");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->AddComponent(make_shared<BoxCollider>());
 
-			//이렇게하면 바운딩 박스가 완성되지 않을까?
+			//std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents());
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData2->GetAABBCenter());
-			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents());
 
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			scene->AddGameObject(gameObject);
 		}
-	}
 
+		
+		{
+			shared_ptr<GameObject> cube = make_shared<GameObject>();
+			cube->AddComponent(make_shared<Transform>());
+			cube->GetTransform()->SetLocalScale(Vec3(30.f, 30.f, 30.f));
+			cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+				meshRenderer->SetMesh(cubeMesh);
+			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Tessellation");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+				shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				material->SetTexture(0, texture);
+				material->SetTexture(1, texture2);
+				meshRenderer->SetMaterial(material);
+			}
+			cube->AddComponent(meshRenderer);
+			scene->AddGameObject(cube);
+		}
+
+	}
 
 
 	return scene;
@@ -667,7 +750,14 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
 		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3( dirX, dirY, dirZ));
-		gameObject->AddComponent(make_shared<SphereCollider>());
+		//gameObject->AddComponent(make_shared<SphereCollider>());
+
+
+		gameObject->AddComponent(make_shared<BoxCollider>());
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y, z));
+
+
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
 	}
@@ -986,6 +1076,14 @@ void SceneManager::CreateKeyCard(int aisleNum)
 		gameObject->GetTransform()->SetLocalPosition(aislePos);
 		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+		gameObject->GetTransform()->SetObjectType(OT_KEYCARD);
+
+
+		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 구 생성
+
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(aislePos);
+
 		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 		scene->AddGameObject(gameObject);
 	}

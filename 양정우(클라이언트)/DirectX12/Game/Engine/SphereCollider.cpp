@@ -18,10 +18,11 @@ void SphereCollider::FinalUpdate()
 	_boundingSphere.Center = GetGameObject()->GetTransform()->GetWorldPosition();
 
 	Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
-	if (scale.x < 1.f)
+	/*if (scale.x < 1.f)
 	{
 		scale = Vec3(50.f, 50.f, 50.f);
-	}
+	}*/
+	scale = Vec3(50.f, 50.f, 50.f);
 
 	_boundingSphere.Radius = _radius * max(max(scale.x, scale.y), scale.z);
 }

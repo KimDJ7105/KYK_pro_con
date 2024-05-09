@@ -91,6 +91,10 @@ void FBXLoader::ParseNode(FbxNode* node)
 		}
 	}
 
+	//1300
+	// 
+	//3100
+
 	// Material ·Îµå
 	const uint32 materialCount = node->GetMaterialCount();
 	for (uint32 i = 0; i < materialCount; ++i)
@@ -164,13 +168,26 @@ void FBXLoader::LoadMeshBin(FbxMesh* mesh)
 		{
 			for (int j = 0; j < loadedMeshData[0].vertices.size(); j++)
 			{
-				if (fabs(_meshes[0].vertices[i].pos.x - (loadedMeshData[0].vertices[j].pos.x * -99.999999608917662)) <= 0.001
+				/*if (fabs(_meshes[0].vertices[i].pos.x - (loadedMeshData[0].vertices[j].pos.x * -99.999999608917662)) <= 0.001
 					&& fabs(_meshes[0].vertices[i].pos.y - (loadedMeshData[0].vertices[j].pos.z * 100.00000354158320)) <= 0.001
 					&& fabs(_meshes[0].vertices[i].pos.z - (loadedMeshData[0].vertices[j].pos.y * 100.00000143874041)) <= 0.001)
 				{
 					_meshes[0].vertices[i].pos.x = loadedMeshData[0].vertices[j].pos.x * -99.999999608917662;
 					_meshes[0].vertices[i].pos.y = loadedMeshData[0].vertices[j].pos.z * 100.00000354158320;
 					_meshes[0].vertices[i].pos.z = loadedMeshData[0].vertices[j].pos.y * 100.00000143874041;
+					_meshes[0].vertices[i].uv = loadedMeshData[0].vertices[j].uv;
+					_meshes[0].vertices[i].tangent = loadedMeshData[0].vertices[j].tangent;
+					_meshes[0].vertices[i].normal = loadedMeshData[0].vertices[j].normal;
+					x++;
+					break;
+				}*/
+				if (fabs(_meshes[0].vertices[i].pos.x - (loadedMeshData[0].vertices[j].pos.x * -100)) <= FLT_EPSILON
+					&& fabs(_meshes[0].vertices[i].pos.y - (loadedMeshData[0].vertices[j].pos.z * 100)) <= FLT_EPSILON
+					&& fabs(_meshes[0].vertices[i].pos.z - (loadedMeshData[0].vertices[j].pos.y * 100)) <= FLT_EPSILON)
+				{
+					_meshes[0].vertices[i].pos.x = loadedMeshData[0].vertices[j].pos.x * -100;
+					_meshes[0].vertices[i].pos.y = loadedMeshData[0].vertices[j].pos.z * 100;
+					_meshes[0].vertices[i].pos.z = loadedMeshData[0].vertices[j].pos.y * 100;
 					_meshes[0].vertices[i].uv = loadedMeshData[0].vertices[j].uv;
 					_meshes[0].vertices[i].tangent = loadedMeshData[0].vertices[j].tangent;
 					_meshes[0].vertices[i].normal = loadedMeshData[0].vertices[j].normal;

@@ -14,6 +14,12 @@ public:
 	virtual ~BaseCollider();
 
 	virtual bool Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance) = 0;
+	virtual bool isColliding(const BoundingBox& boxToCheck) = 0;
+
+	ColliderType GetColliderType() { return _colliderType; }
+
+	//virtual BoundingSphere GetSphereCollider();
+	virtual BoundingBox GetBoxCollider() const = 0;
 
 private:
 	ColliderType _colliderType = {};

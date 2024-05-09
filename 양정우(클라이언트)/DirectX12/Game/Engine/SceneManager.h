@@ -12,6 +12,8 @@ enum
 	MAX_LAYER = 32
 };
 
+
+
 class SceneManager
 {
 	DECLARE_SINGLE(SceneManager);
@@ -61,5 +63,14 @@ public:
 
 	shared_ptr<GameObject> GetPlayer() { return _player; }
 
+
+	void SetPlayerID(int pID) { _playerID = pID; }
+	shared_ptr<GameObject> CheckCollisionWithSceneObjects(const std::shared_ptr<GameObject>& objectToCheck, int object_Type);
+
+private:
+	int _playerID;
+
+public:
+	shared_ptr<GameObject> GetPlayer(int ID);
 };
 
