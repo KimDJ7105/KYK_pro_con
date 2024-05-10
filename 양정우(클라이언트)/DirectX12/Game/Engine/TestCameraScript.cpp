@@ -196,6 +196,18 @@ void TestCameraScript::LateUpdate()
 			//key_id는 충돌한 카드키의 id값
 			session->Send_Packet(&tgk);
 		}
+
+		shared_ptr<GameObject> terminal = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_TERMINAL);
+
+		if (terminal != NULL)
+		{
+			cs_packet_try_use_tmn tut;
+			tut.size = sizeof(cs_packet_try_use_tmn);
+			tut.type = CS_TRY_USE_TMN;
+			tut.terminal_id = terminal->GetTransform()->GetObjectID();
+
+			session->Send_Packet(&tut);
+		}
 	}
 
 	wcscpy_s(previousTitle, windowTitle);

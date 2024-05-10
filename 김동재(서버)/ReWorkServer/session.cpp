@@ -154,6 +154,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_try_use_tmn* p = (cs_packet_try_use_tmn*)packet;
 
+		std::cout << "터미널 사용 요청 수신\n";
+
 		shared_ptr<SESSION> user = players[my_id_];
 		if (user == nullptr) break;
 		//요청한 user가 카드키를 가지고 있는지 확인하고
