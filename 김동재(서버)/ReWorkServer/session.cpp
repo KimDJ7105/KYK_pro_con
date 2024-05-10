@@ -243,6 +243,18 @@ void SESSION::do_write(unsigned char* packet, std::size_t length)
 		});
 }
 
+int SESSION::find_useable_key()
+{
+	for (auto& object : objects) {
+		shared_ptr<OBJECT> key = object.second;
+		if (key == nullptr) continue;
+		if (key->obj_type != OT_KEYCARD) continue;
+		if (key->owner_id == my_id_) return key->obj_id;
+	}
+
+	return -1;
+}
+
 SESSION::SESSION(tcp::socket socket, int new_id)
 	: socket_(std::move(socket)), my_id_(new_id)
 {
