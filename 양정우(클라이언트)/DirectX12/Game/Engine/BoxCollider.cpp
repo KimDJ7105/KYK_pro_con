@@ -19,8 +19,8 @@ BoxCollider::~BoxCollider()
 void BoxCollider::FinalUpdate()
 {
 	
-	Vec3 pos = GetGameObject()->GetTransform()->GetLocalPosition();
-	Vec3 scale = _extents * 2.f;
+	Vec3 pos = GetGameObject()->GetTransform()->GetWorldPosition();
+	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
 
 	/*if (scale.x < 5.f)
 	{
@@ -37,20 +37,17 @@ void BoxCollider::FinalUpdate()
 		float max = std::max({ scale.x, scale.y, scale.z });
 		scale.z = max;
 	}*/
-	
-
-
 	Vec3 rotation = GetGameObject()->GetTransform()->GetLocalRotation();
 
-	_boundingBox.Center = pos + _center;
-	_boundingBox.Extents = scale;
+	_boundingBox.Center = pos;
+	_boundingBox.Extents = _extents;
 	//_boundingBox.Extents = _extents;
 
 	/*_boundingOrientedBox.Center = GetGameObject()->GetTransform()->GetWorldPosition();
-	_boundingOrientedBox.Extents = scale;
+	_boundingOrientedBox.Extents = _extents;
 	_boundingOrientedBox.Orientation = XMFLOAT4(rotation.x, rotation.y, rotation.z, 1.f);*/
 
-	GET_SINGLE(SceneManager)->UpdateAABBBox(_myNum, pos + _center, scale, rotation);
+	GET_SINGLE(SceneManager)->UpdateAABBBox(_myNum, pos, _extents * 2.f, rotation);
 }
 
 bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
