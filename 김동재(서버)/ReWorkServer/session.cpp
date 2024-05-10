@@ -150,6 +150,21 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
+	case CS_TRY_USE_TMN :
+	{
+		cs_packet_try_use_tmn* p = (cs_packet_try_use_tmn*)packet;
+
+		shared_ptr<SESSION> user = players[my_id_];
+		if (user == nullptr) break;
+		//요청한 user가 카드키를 가지고 있는지 확인하고
+		//카드키가 없으면 아무것도 안하고 넘어가고
+		//카드키가 있으면 소지 카드키에서 제외하고 터미널을 활성화 시킨다.
+		//질문 1. 터미널을 활성화 하면 활성화 한 본인 이외에 다른 유저도 사용 가능한가?
+		//질문 2. 한번 켜진 터미널은 E를 통해 상호작용하면 어케됨?
+		//질문 2에 따른 해결 방법 : 터미널에 owner_id가 -1이면 카드키로 활성화
+		//활성화 된 터미널은 owner_id가 활성화 한 유저의 id로 변함, 상호작용시 맵을..? 띄운다.
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 
