@@ -270,6 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\animation.hlsl" />
+    <FxCompile Include="..\Resources\Shader\boundingbox.hlsl" />
     <FxCompile Include="..\Resources\Shader\compute.hlsl" />
     <FxCompile Include="..\Resources\Shader\deferred.hlsl" />
     <FxCompile Include="..\Resources\Shader\forward.hlsl" />

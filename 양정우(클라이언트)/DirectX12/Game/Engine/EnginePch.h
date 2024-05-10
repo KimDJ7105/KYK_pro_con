@@ -1,12 +1,11 @@
 #pragma once
 
-#define DEBUG_ON
+//#define DEBUG_ON
 // 
 //디버깅용
 #ifdef DEBUG_ON
 #include <iostream>
 #endif
-
 
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0

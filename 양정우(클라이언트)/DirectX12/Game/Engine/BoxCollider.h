@@ -23,7 +23,9 @@ public:
 private:
 	// Local ±‚¡ÿ
 	Vec3		_center = Vec3(0, 0, 0);
-	Vec3		_extents = Vec3(0, 0, 0);
+	Vec3		_extents = Vec3(1, 1, 1);
+
+	int _myNum = -1;
 
 	BoundingBox _boundingBox;
 

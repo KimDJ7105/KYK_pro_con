@@ -60,6 +60,8 @@ public:
 	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale);
 	void CreateOutDoor(float mapX, float mapY, float mapZ, float aisleScale);
 	void CreateOutDoor2(float mapX, float mapY, float mapZ, float aisleScale);
+	int CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale);
+	void UpdateAABBBox(int boxNum, Vec3 pos, Vec3 scale, Vec3 rotation);
 
 	void AddComputeShader(int threadX, int threadY, int threadZ);
 
@@ -71,6 +73,8 @@ public:
 
 private:
 	int _playerID;
+
+	int boxNum = 0;
 
 public:
 	shared_ptr<GameObject> GetPlayer(int ID);
