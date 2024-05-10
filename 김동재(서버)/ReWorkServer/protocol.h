@@ -29,6 +29,7 @@
 #define CS_MOUSE_INFO    3
 #define CS_PICKING_INFO  4
 #define CS_TRY_GET_KEY   5
+#define CS_TRY_USE_TMN   6
 
 #define SC_POS           1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER    2 //오브젝트 생성
@@ -86,6 +87,12 @@ struct cs_packet_try_get_key {
 	float x;
 	float y;
 	float z;
+};
+
+struct cs_packet_try_use_tmn {
+	BYTE size;
+	BYTE type;
+	int terminal_id;
 };
 
 //---------Server To Client-----------------
