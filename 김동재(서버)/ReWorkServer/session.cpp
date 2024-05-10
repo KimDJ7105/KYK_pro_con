@@ -158,6 +158,30 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		shared_ptr<SESSION> user = players[my_id_];
 		if (user == nullptr) break;
+
+		shared_ptr<OBJECT> terminal = objects[p->terminal_id];
+		if (terminal == nullptr) break;
+
+		int key_id = find_useable_key();
+
+		if (terminal->owner_id == -1) { //아직 활성화 되지 않았으면 
+			if (key_id == -1) break;
+
+			//owner_id를 my_id로 변환
+			terminal->owner_id = my_id_;
+
+			//플레이어가 가진 카드키를 삭제
+			shared_ptr<OBJECT> key = objects[key_id];
+			if (key == nullptr) break;
+			key->owner_id = -1;
+
+			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
+		}
+		
+		else { //이미 활성화 된 터미널이면
+			
+		}
+
 		//요청한 user가 카드키를 가지고 있는지 확인하고
 		//카드키가 없으면 아무것도 안하고 넘어가고
 		//카드키가 있으면 소지 카드키에서 제외하고 터미널을 활성화 시킨다.
