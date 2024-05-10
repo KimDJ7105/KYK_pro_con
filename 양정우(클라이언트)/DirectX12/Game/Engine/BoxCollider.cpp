@@ -9,7 +9,7 @@ BoxCollider::BoxCollider() : BaseCollider(ColliderType::Box)
 
 
 
-	_myNum = GET_SINGLE(SceneManager)->CreateAABBBox(_center, _extents);
+	_myNum = GET_SINGLE(SceneManager)->RenderAABBBox(_center, _extents);
 }
 
 BoxCollider::~BoxCollider()

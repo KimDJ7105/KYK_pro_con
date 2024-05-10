@@ -639,37 +639,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	CreateOutDoor2(0, 0, -180, 150.f);
 
 
-	{
-		shared_ptr<GameObject> cube = make_shared<GameObject>();
-		cube->AddComponent(make_shared<Transform>());
-		cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 30.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-			meshRenderer->SetMesh(cubeMesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
-			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			material->SetTexture(1, texture2);
-			meshRenderer->SetMaterial(material);
-		}
-		cube->AddComponent(meshRenderer);
-
-
-
-		cube->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
-
-		std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetExtents(Vec3(5.f, 5.f, 5.f));
-		std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetCenter(Vec3(0.f, 40.f, 30.f));
-
-		scene->AddGameObject(cube);
-	}
+	
+	CreateAABBBox(Vec3(0.f, 40.f, 30.f), Vec3(10.f, 10.f, 10.f));
 
 	
 	//{
@@ -1422,7 +1393,33 @@ void SceneManager::CreateOutDoor2(float mapX, float mapY, float mapZ, float aisl
 	}
 }
 
-int SceneManager::CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale)
+void SceneManager::CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale)
+{
+	//내가 직접 설치하는 바운딩 박스
+	shared_ptr<GameObject> cube = make_shared<GameObject>();
+	cube->AddComponent(make_shared<Transform>());
+	cube->GetTransform()->SetLocalPosition(aabbPosition);
+	cube->GetTransform()->SetLocalScale(aabbScale);
+	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	{
+		shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+		meshRenderer->SetMesh(cubeMesh);
+	}
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"AABB");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		meshRenderer->SetMaterial(material);
+	}
+	cube->AddComponent(meshRenderer);
+	cube->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+	std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetExtents(Vec3(5.f, 5.f, 5.f));
+	std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetCenter(Vec3(0.f, 40.f, 30.f));
+
+	scene->AddGameObject(cube);
+}
+
+int SceneManager::RenderAABBBox(Vec3 aabbPosition, Vec3 aabbScale)
 {
 	shared_ptr<GameObject> cube = make_shared<GameObject>();
 	cube->AddComponent(make_shared<Transform>());
@@ -1440,7 +1437,7 @@ int SceneManager::CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale)
 		meshRenderer->SetMaterial(material);
 	}
 	cube->AddComponent(meshRenderer);
-	cube->GetTransform()->SetObjectType(99);
+	cube->GetTransform()->SetObjectType(99);		//바운딩 박스의 오브젝트타입 번호는99이다
 	cube->GetTransform()->SetObjectID(boxNum);
 	boxNum++;
 	scene->AddGameObject(cube);

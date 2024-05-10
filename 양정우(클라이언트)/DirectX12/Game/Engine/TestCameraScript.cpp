@@ -388,7 +388,9 @@ void TestCameraScript::RotatingPickedObject()
 	pickedMovingObject->GetTransform()->SetLocalRotation(rotation);
 	pickedMovingObject->GetTransform()->SetLocalScale(scale);
 
-	//std::cout << "Object Pos : (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
-	//std::cout << "Object Rotation : (" << rotation.x << ", " << rotation.y << ", " << rotation.z << ")" << std::endl;
-	//std::cout << "Object Scale : (" << scale.x << ", " << scale.y << ", " << scale.z << ")" << std::endl;
+#ifdef DEBUG_ON
+	std::cout << "Object Pos : (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+	std::cout << "Object Rotation : (" << rotation.x << ", " << rotation.y << ", " << rotation.z << ")" << std::endl;
+	std::cout << "Object Scale : (" << scale.x << ", " << scale.y << ", " << scale.z << ")" << std::endl;
+#endif
 }
