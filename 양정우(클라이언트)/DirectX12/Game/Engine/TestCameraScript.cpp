@@ -332,22 +332,22 @@ void TestCameraScript::RotatingPickedObject()
 	
 	if (INPUT->GetButton(KEY_TYPE::UP))
 	{
-		pos.z += _speed * DELTA_TIME;
+		pos.z += _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::DOWN))
 	{
-		pos.z -= _speed * DELTA_TIME;
+		pos.z -= _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::LEFT))
 	{
-		pos.x -= _speed * DELTA_TIME;
+		pos.x -= _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::RIGHT))
 	{
-		pos.x += _speed * DELTA_TIME;
+		pos.x += _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::numUP))

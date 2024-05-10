@@ -18,7 +18,7 @@ public:
 
 	virtual BoundingBox GetBoxCollider() const override { return _boundingBox; }
 
-
+	void SetStatic(bool _static) { isStatic == _static; }
 
 private:
 	// Local ±‚¡ÿ
@@ -30,5 +30,7 @@ private:
 	BoundingBox _boundingBox;
 
 	BoundingOrientedBox _boundingOrientedBox;
+
+	bool isStatic = true;
 };
 
