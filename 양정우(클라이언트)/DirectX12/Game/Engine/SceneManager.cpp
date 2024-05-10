@@ -215,7 +215,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
 
-
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 
@@ -793,6 +792,7 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		gameObject->AddComponent(make_shared<BoxCollider>());
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
 
 
 		_otherPlayer.push_back(gameObject);
@@ -919,6 +919,9 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float a
 			gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
 
+			gameObject->GetTransform()->SetObjectType(99);
+			gameObject->GetTransform()->SetObjectID(ID);
+
 			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(AisleWallScale[0]) * 0.5f);
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(AisleWallPos[0]));
@@ -957,6 +960,9 @@ void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float a
 			gameObject->GetTransform()->SetLocalPosition(aislePosition);
 			gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 3.14f, 0.f));
+
+			gameObject->GetTransform()->SetObjectType(99);
+			gameObject->GetTransform()->SetObjectID(ID);
 
 			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(AisleWallScale[1]) * 0.5f);
@@ -1068,6 +1074,10 @@ void SceneManager::CreateAisle2(float aisleX, float aisleY, float aisleZ, float 
 			gameObject->GetTransform()->SetLocalPosition(aislePosition);
 			gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 1.57, 0.f));
+
+			gameObject->GetTransform()->SetObjectType(99);
+			gameObject->GetTransform()->SetObjectID(ID);
+
 			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(AisleWallScale[0]) * 0.5f);
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(AisleWallPos[0]));
@@ -1105,6 +1115,10 @@ void SceneManager::CreateAisle2(float aisleX, float aisleY, float aisleZ, float 
 			gameObject->GetTransform()->SetLocalPosition(aislePosition);
 			gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 3.14f + 1.57, 0.f));
+
+			gameObject->GetTransform()->SetObjectType(99);
+			gameObject->GetTransform()->SetObjectID(ID);
+
 			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(AisleWallScale[1]) * 0.5f);
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(AisleWallPos[1]));

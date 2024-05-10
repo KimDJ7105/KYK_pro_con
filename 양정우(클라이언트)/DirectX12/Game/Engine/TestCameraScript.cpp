@@ -153,6 +153,7 @@ void TestCameraScript::LateUpdate()
 		/*scene->RemoveGameObject(pickedObject); */
 	}
 
+#ifdef DEBUG_ON
 	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
 		const POINT& pos = INPUT->GetMousePos();
@@ -166,7 +167,15 @@ void TestCameraScript::LateUpdate()
 		else
 			pickedMovingObject = pickedObject;
 	}
+#endif
 
+	shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+	shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+	if (overlap != NULL)
+	{
+		std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+	}
+	
 
 	if (pickedMovingObject != NULL)
 		RotatingPickedObject();

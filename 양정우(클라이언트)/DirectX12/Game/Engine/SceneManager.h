@@ -76,6 +76,7 @@ private:
 	int _playerID;
 
 	int boxNum = 0;
+	//충돌박스의 타입넘버는 99이다
 
 public:
 	shared_ptr<GameObject> GetPlayer(int ID);
