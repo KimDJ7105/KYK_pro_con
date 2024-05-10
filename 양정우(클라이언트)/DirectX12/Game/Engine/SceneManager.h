@@ -57,7 +57,7 @@ public:
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
 	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
-	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale);
+	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale, int type, int ID);
 	void CreateOutDoor(float mapX, float mapY, float mapZ, float aisleScale);
 	void CreateOutDoor2(float mapX, float mapY, float mapZ, float aisleScale);
 	void CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale);

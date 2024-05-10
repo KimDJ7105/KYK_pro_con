@@ -169,11 +169,18 @@ void TestCameraScript::LateUpdate()
 	}
 #endif
 
-	shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
-	shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
-	if (overlap != NULL)
+	//충돌검사
 	{
-		std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+		if (overlap != NULL)
+		{
+			std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+
+			Vec3 pos = GetTransform()->GetLocalPosition();
+
+			GetTransform()->SetLocalPosition(pos);
+		}
 	}
 	
 
