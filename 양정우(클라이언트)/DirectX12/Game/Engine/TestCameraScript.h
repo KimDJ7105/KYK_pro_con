@@ -28,5 +28,9 @@ private:
 	wchar_t previousTitle[256] = { 0 };
 
 	shared_ptr<GameObject> pickedMovingObject;
+
+	bool isOverlap = false;
+
+	Vec3 beforePos;
 };
 

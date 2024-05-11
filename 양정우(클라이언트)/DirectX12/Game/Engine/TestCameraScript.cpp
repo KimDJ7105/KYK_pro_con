@@ -38,6 +38,7 @@ void TestCameraScript::LateUpdate()
 		wcscpy_s(previousTitle, windowTitle);
 	}
 
+
 	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
 	{
 		if (isMouseMod == false)
@@ -100,19 +101,6 @@ void TestCameraScript::LateUpdate()
 	{
 		
 	}
-
-	MoveUpdate();
-
-	if (isMouseMod)
-	{
-		RotationUpdate();
-	}
-	else if (!isMouseMod)
-	{
-		
-	}
-
-
 	//Picking 입력을 확인
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
 	{
@@ -172,15 +160,37 @@ void TestCameraScript::LateUpdate()
 	//충돌검사
 	{
 		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+		playerObject->GetTransform()->GetLocalPosition();
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
 		if (overlap != NULL)
 		{
 			std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+			isOverlap = true;
 
-			Vec3 pos = GetTransform()->GetLocalPosition();
-
-			GetTransform()->SetLocalPosition(pos);
+			Vec3 normalPos = GetTransform()->GetLocalPosition() - beforePos;
+			GetTransform()->SetLocalPosition(normalPos);
+			beforePos = GetTransform()->GetLocalPosition();
 		}
+		else if (overlap == NULL)
+			isOverlap = false;
+	}
+
+	if (isOverlap)
+	{
+
+	}
+	else if (!isOverlap)
+	{
+		MoveUpdate();
+	}
+
+	if (isMouseMod)
+	{
+		RotationUpdate();
+	}
+	else if (!isMouseMod)
+	{
+
 	}
 	
 
@@ -274,6 +284,8 @@ void TestCameraScript::MoveUpdate()
 		session->Send_Packet(&packet);
 		//-------------------------------------
 	}
+
+	beforePos = pos;
 
 	GetTransform()->SetLocalPosition(pos);
 }
