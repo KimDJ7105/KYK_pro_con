@@ -259,8 +259,6 @@ void TestCameraScript::LateUpdate()
 	// 업데이트된 위치를 플레이어에 반영
 	GetTransform()->SetLocalPosition(currentPosition);
 
-	playerObject->GetTransform()->SetLocalPosition(Vec3(currentPosition.x, currentPosition.y - 38.f, currentPosition.z));
-
 
 
 	
@@ -549,6 +547,40 @@ void TestCameraScript::LateUpdate()
 	}
 
 	{
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+
+		Vec3 gunOffset(0.0f, -40.0f, 10.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+		// 플레이어의 회전값을 쿼터니언으로 변환
+		Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+		// gunOffset을 회전시킴
+		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+		// playerGunObject의 위치를 플레이어의 위치로 이동
+		playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+		Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
+		Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+		// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+		Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+		// 회전을 적용
+		playerObject->GetTransform()->SetLocalRotation(gunRotation);
+
+		// 플레이어를 기준으로 한 반대 방향으로 이동
+		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		playerObject->GetTransform()->SetLocalPosition(newPosition);
+
+		Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
+
+		std::cout << "his Pos : (" << hispos.x << ", " << hispos.y << ", " << hispos.z << ")" << std::endl;
 
 	}
 
@@ -628,8 +660,6 @@ void TestCameraScript::RotationUpdate()
 
 	Vec3 rotation = GetTransform()->GetLocalRotation();
 
-	Vec3 playerRotation = playerObject->GetTransform()->GetLocalRotation();
-
 	//만약 마우스가 움직임이 발생했다면
 	if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
 	{
@@ -642,10 +672,7 @@ void TestCameraScript::RotationUpdate()
 		{
 			rotation.y += DELTA_TIME * moveX;
 
-			playerRotation.y += DELTA_TIME * moveX;
-
 			GetTransform()->SetLocalRotation(rotation);
-			playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		// 왼쪽
@@ -653,10 +680,7 @@ void TestCameraScript::RotationUpdate()
 		{
 			rotation.y += DELTA_TIME * moveX;
 
-			playerRotation.y += DELTA_TIME * moveX;
-
 			GetTransform()->SetLocalRotation(rotation);
-			playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		// 아래
@@ -667,7 +691,6 @@ void TestCameraScript::RotationUpdate()
 			//playerRotation.x -= DELTA_TIME * moveY;
 
 			GetTransform()->SetLocalRotation(rotation);
-			//playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		//위
@@ -678,7 +701,6 @@ void TestCameraScript::RotationUpdate()
 			//playerRotation.x -= DELTA_TIME * moveY;
 
 			GetTransform()->SetLocalRotation(rotation);
-			//playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		
