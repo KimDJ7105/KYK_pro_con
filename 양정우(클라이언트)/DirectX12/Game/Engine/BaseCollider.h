@@ -21,6 +21,9 @@ public:
 	//virtual BoundingSphere GetSphereCollider();
 	virtual BoundingBox GetBoxCollider() const = 0;
 
+	virtual Vec3 GetMinPoint() = 0;
+	virtual Vec3 GetMaxPoint() = 0;
+
 private:
 	ColliderType _colliderType = {};
 };

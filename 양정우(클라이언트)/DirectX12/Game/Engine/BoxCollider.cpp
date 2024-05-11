@@ -71,4 +71,34 @@ bool BoxCollider::isColliding(const BoundingBox& boxToCheck) {
 	return _boundingBox.Intersects(boxToCheck);
 }
 
+Vec3 BoxCollider::GetMinPoint()
+{
+	Vec3 corners[8];
+	_boundingBox.GetCorners(corners);
+	Vec3 minPoint = corners[0];
+	for (int i = 1; i < 8; ++i) {
+		minPoint.x = std::min(minPoint.x, corners[i].x);
+		minPoint.y = std::min(minPoint.y, corners[i].y);
+		minPoint.z = std::min(minPoint.z, corners[i].z);
+	}
+
+	return minPoint;
+}
+
+Vec3 BoxCollider::GetMaxPoint()
+{
+	Vec3 corners[8];
+	_boundingBox.GetCorners(corners);
+
+	Vec3 maxPoint = corners[0];
+	for (int i = 1; i < 8; ++i) {
+
+		maxPoint.x = std::max(maxPoint.x, corners[i].x);
+		maxPoint.y = std::max(maxPoint.y, corners[i].y);
+		maxPoint.z = std::max(maxPoint.z, corners[i].z);
+	}
+
+	return maxPoint;
+}
+
 

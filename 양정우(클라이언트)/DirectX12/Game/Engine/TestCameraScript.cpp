@@ -7,6 +7,7 @@
 #include "Timer.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "BoxCollider.h"
 
 #include "session.h"
 
@@ -73,6 +74,84 @@ void TestCameraScript::LateUpdate()
 
 	std::cout << "move Dir : (" << moveDirection.x << ", " << moveDirection.y << ", " << moveDirection.z << ")" << std::endl;
 
+
+
+	shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+
+	shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+	if (overlap != NULL)
+	{
+		std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+		isOverlap = true;
+		//GetTransform()->SetLocalPosition(previousPosition);
+		// 충돌 방향 벡터 계산
+
+		//Vec3 playerMin = playerObject->GetCollider()->GetMinPoint();
+		//Vec3 playerMax = playerObject->GetCollider()->GetMaxPoint();
+
+		//Vec3 overlapMin = overlap->GetCollider()->GetMinPoint();
+		//Vec3 overlapMax = overlap->GetCollider()->GetMaxPoint();
+
+		//// 충돌이 발생한 축을 판단
+		//bool xAxisOverlap = (playerMax.x >= overlapMin.x && playerMin.x <= overlapMax.x);
+		//bool yAxisOverlap = (playerMax.y >= overlapMin.y && playerMin.y <= overlapMax.y);
+		//bool zAxisOverlap = (playerMax.z >= overlapMin.z && playerMin.z <= overlapMax.z);
+
+		//// 충돌이 발생한 축에 따라 충돌 방향을 판단
+		//if (xAxisOverlap) {
+		//	if (playerMax.x > overlapMin.x && playerMin.x < overlapMin.x) {
+		//		std::cout << "Overlap occurred on the left side" << std::endl;
+		//		moveDirection.x = std::max(0.0f, moveDirection.x);
+		//	}
+		//	else {
+		//		std::cout << "Overlap occurred on the right side" << std::endl;
+		//		moveDirection.x = std::min(0.0f, moveDirection.x);
+		//	}
+		//}
+		//if (yAxisOverlap) {
+		//	if (playerMax.y > overlapMin.y && playerMin.y < overlapMin.y) {
+		//		std::cout << "Overlap occurred on the bottom side" << std::endl;
+		//	}
+		//	else {
+		//		std::cout << "Overlap occurred on the top side" << std::endl;
+		//	}
+		//}
+		//if (zAxisOverlap) {
+		//	if (playerMax.z > overlapMin.z && playerMin.z < overlapMin.z) {
+		//		std::cout << "Overlap occurred on the back side" << std::endl;
+		//		moveDirection.z = std::max(0.0f, moveDirection.z);
+		//	}
+		//	else {
+		//		std::cout << "Overlap occurred on the front side" << std::endl;
+		//		moveDirection.z = std::min(0.0f, moveDirection.z);
+		//	}
+		//}
+
+		//GetTransform()->SetLocalPosition(previousPosition);
+
+
+		Vec3 collisionDirection = GetTransform()->GetLocalPosition() - overlap->GetTransform()->GetLocalPosition();
+
+		// 충돌 방향 벡터에 따라 플레이어의 이동 방향 조절
+		if (abs(collisionDirection.x) > abs(collisionDirection.z))
+		{
+			// 충돌 방향이 x 축 방향인 경우
+			moveDirection.z = 0.0f;
+		}
+		else
+		{
+			// 충돌 방향이 z 축 방향인 경우
+			moveDirection.x = 0.0f;
+		}
+
+		//충돌 발생 시 이전 위치로 되돌림
+		GetTransform()->SetLocalPosition(previousPosition);
+	}
+	else if (overlap == NULL)
+		isOverlap = false;
+
+
+
 	// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
 	currentPosition += moveDirection * moveSpeed * DELTA_TIME;
 
@@ -102,23 +181,16 @@ void TestCameraScript::LateUpdate()
 	GetTransform()->SetLocalPosition(currentPosition);
 
 
+	if (INPUT->GetButton(KEY_TYPE::P))
+	{
+		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+	}
 
 
 
 	//충돌검사
 	{
-		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 		
-		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
-		if (overlap != NULL)
-		{
-			std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
-			isOverlap = true;
-			GetTransform()->SetLocalPosition(previousPosition);
-
-		}
-		else if (overlap == NULL)
-			isOverlap = false;
 	}
 
 	//if (isOverlap)

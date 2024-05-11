@@ -14,11 +14,14 @@ public:
 
 	//void SetRadius(float radius) { _radius = radius; }
 	void SetCenter(Vec3 center) { _center = center; }
-	void SetExtents(Vec3 extents){ _extents = extents; }
+	void SetExtents(Vec3 extents) { _extents = extents; }
 
 	virtual BoundingBox GetBoxCollider() const override { return _boundingBox; }
 
 	void SetStatic(bool _static) { isStatic = _static; }
+
+	virtual Vec3 GetMinPoint();
+	virtual Vec3 GetMaxPoint();
 
 private:
 	// Local ±‚¡ÿ
@@ -32,5 +35,8 @@ private:
 	BoundingOrientedBox _boundingOrientedBox;
 
 	bool isStatic = true;
+
+	
+	
 };
 
