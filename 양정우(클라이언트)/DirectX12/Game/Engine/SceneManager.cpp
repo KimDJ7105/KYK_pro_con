@@ -423,6 +423,33 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		scene->AddGameObject(sphere);
 	}
 
+	
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(800.f, 600.f, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 600.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Hand", L"..\\Resources\\Texture\\Hand.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		scene->AddGameObject(sphere);
+	}
+
+
+
+
 #pragma endregion
 
 #pragma region Deferred_Rendering_Info
@@ -744,6 +771,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	//		scene->AddGameObject(gameObject);
 	//	}
 	//}
+
+	
 
 	return scene;
 }
@@ -1181,6 +1210,8 @@ void SceneManager::CreateAisle2(float aisleX, float aisleY, float aisleZ, float 
 			scene->AddGameObject(gameObject);
 		}
 	}
+
+
 
 
 #pragma endregion

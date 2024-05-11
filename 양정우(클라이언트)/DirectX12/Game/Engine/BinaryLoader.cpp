@@ -117,9 +117,9 @@ void BinaryLoader::LoadBinary(const wstring& path)
 	LoadGeometryAndAnimationFromFile(charPath);
 
 	AddMeshData();
-	AddBonesData();
+	//AddBonesData();
 	//AddAnimClipsData();->LoadAnimationFromFile의 903줄에서 실시간으로 읽으면서 추가중이다.
-	AddAnimNames();
+	//AddAnimNames();
 
 	
 	//위에서 채워넣은 정보를 기반으로 Texture와 Material을 만들어준다.
