@@ -12,6 +12,8 @@
 
 #include "session.h"
 
+
+
 struct Quaternion {
 	float x, y, z, w;
 
@@ -122,7 +124,14 @@ void TestCameraScript::LateUpdate()
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+		// SoundPlayer 객체 생성
+		SoundPlayer soundPlayer;
 
+		// 사운드 파일 경로
+		const wchar_t* filename = L"Footstep01.wav";
+
+		// 사운드 재생
+		soundPlayer.PlaySound(filename);
 
 	}
 	if (INPUT->GetButton(KEY_TYPE::S))

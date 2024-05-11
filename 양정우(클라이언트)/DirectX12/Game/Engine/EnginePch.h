@@ -22,6 +22,8 @@
 #include <mmeapi.h>
 #include <dsound.h>
 #include <fstream>
+#include <xaudio2.h>
+
 //using namespace std;
 
 
