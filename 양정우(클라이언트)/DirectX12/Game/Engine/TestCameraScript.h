@@ -28,5 +28,15 @@ private:
 	wchar_t previousTitle[256] = { 0 };
 
 	shared_ptr<GameObject> pickedMovingObject;
+
+	bool isOverlap = false;
+
+	// 중력 상수 정의
+	const float GRAVITY = 9.8f; // 예시로 지구 중력을 사용합니다.
+
+	// 플레이어의 수직 속도
+	float verticalVelocity = 0.0f;
+
+	Vec3 previousPosition;
 };
 

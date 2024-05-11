@@ -17,6 +17,9 @@ public:
 	//BoundingSphere GetSphereCollider() { return _boundingSphere; } override;
 	virtual BoundingBox GetBoxCollider() const override {return BoundingBox();}
 
+	virtual Vec3 GetMinPoint() = 0;
+	virtual Vec3 GetMaxPoint() = 0;
+
 private:
 	// Local ±‚¡ÿ
 	float		_radius = 1.f;

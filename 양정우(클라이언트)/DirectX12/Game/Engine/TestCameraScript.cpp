@@ -7,6 +7,7 @@
 #include "Timer.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "BoxCollider.h"
 
 #include "session.h"
 
@@ -14,7 +15,8 @@ extern int playerID;
 
 TestCameraScript::TestCameraScript()
 {
-
+	// 플레이어의 수직 속도 초기화
+	verticalVelocity = 0.0f;
 }
 
 TestCameraScript::~TestCameraScript()
@@ -23,6 +25,211 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::LateUpdate()
 {
+
+	// 현재 위치 저장
+	previousPosition = GetTransform()->GetLocalPosition();
+
+	// 매 프레임마다 중력에 의해 수직 속도를 감소시킴
+
+	// 땅에 닿은 상태를 판별하여 isGrounded 변수에 저장
+	bool isGrounded = (GetTransform()->GetLocalPosition().y <= 0.0f);
+
+	// 땅에 닿은 상태에서만 중력에 의한 속도 감소를 적용
+	if (isGrounded)
+	{
+		verticalVelocity -= GRAVITY * DELTA_TIME;
+	}
+
+	// 플레이어의 현재 위치를 가져옴
+	Vec3 currentPosition = GetTransform()->GetLocalPosition();
+
+	Vec3 tempPos = currentPosition;
+
+	// 플레이어의 이동 속도 및 방향 설정 (예시로 WASD 키를 이용한 이동)
+	const float moveSpeed = 100.0f;
+	Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
+
+	if (INPUT->GetButton(KEY_TYPE::W))
+	{
+		moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+	}
+	if (INPUT->GetButton(KEY_TYPE::S))
+	{
+		moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)); 
+	}
+	if (INPUT->GetButton(KEY_TYPE::A))
+	{
+		moveDirection -= GetTransform()->GetRight();
+	}
+	if (INPUT->GetButton(KEY_TYPE::D))
+	{
+		moveDirection += GetTransform()->GetRight();
+	}
+
+	// 이동 방향 벡터의 길이를 1로 정규화하여 이동 속도를 일정하게 함
+	if (moveDirection.LengthSquared() > 0.0f)
+	{
+		moveDirection.Normalize();
+	}
+
+	std::cout << "move Dir : (" << moveDirection.x << ", " << moveDirection.y << ", " << moveDirection.z << ")" << std::endl;
+
+
+
+	shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+
+	shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+	if (overlap != NULL)
+	{
+		std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+		isOverlap = true;
+		//GetTransform()->SetLocalPosition(previousPosition);
+		// 충돌 방향 벡터 계산
+
+		//Vec3 playerMin = playerObject->GetCollider()->GetMinPoint();
+		//Vec3 playerMax = playerObject->GetCollider()->GetMaxPoint();
+
+		//Vec3 overlapMin = overlap->GetCollider()->GetMinPoint();
+		//Vec3 overlapMax = overlap->GetCollider()->GetMaxPoint();
+
+		//// 충돌이 발생한 축을 판단
+		//bool xAxisOverlap = (playerMax.x >= overlapMin.x && playerMin.x <= overlapMax.x);
+		//bool yAxisOverlap = (playerMax.y >= overlapMin.y && playerMin.y <= overlapMax.y);
+		//bool zAxisOverlap = (playerMax.z >= overlapMin.z && playerMin.z <= overlapMax.z);
+
+		//// 충돌이 발생한 축에 따라 충돌 방향을 판단
+		//if (xAxisOverlap) {
+		//	if (playerMax.x > overlapMin.x && playerMin.x < overlapMin.x) {
+		//		std::cout << "Overlap occurred on the left side" << std::endl;
+		//		moveDirection.x = std::max(0.0f, moveDirection.x);
+		//	}
+		//	else {
+		//		std::cout << "Overlap occurred on the right side" << std::endl;
+		//		moveDirection.x = std::min(0.0f, moveDirection.x);
+		//	}
+		//}
+		//if (yAxisOverlap) {
+		//	if (playerMax.y > overlapMin.y && playerMin.y < overlapMin.y) {
+		//		std::cout << "Overlap occurred on the bottom side" << std::endl;
+		//	}
+		//	else {
+		//		std::cout << "Overlap occurred on the top side" << std::endl;
+		//	}
+		//}
+		//if (zAxisOverlap) {
+		//	if (playerMax.z > overlapMin.z && playerMin.z < overlapMin.z) {
+		//		std::cout << "Overlap occurred on the back side" << std::endl;
+		//		moveDirection.z = std::max(0.0f, moveDirection.z);
+		//	}
+		//	else {
+		//		std::cout << "Overlap occurred on the front side" << std::endl;
+		//		moveDirection.z = std::min(0.0f, moveDirection.z);
+		//	}
+		//}
+
+		//GetTransform()->SetLocalPosition(previousPosition);
+
+
+		Vec3 collisionDirection = GetTransform()->GetLocalPosition() - overlap->GetTransform()->GetLocalPosition();
+
+		// 충돌 방향 벡터에 따라 플레이어의 이동 방향 조절
+		if (abs(collisionDirection.x) > abs(collisionDirection.z))
+		{
+			// 충돌 방향이 x 축 방향인 경우
+			moveDirection.z = 0.0f;
+		}
+		else
+		{
+			// 충돌 방향이 z 축 방향인 경우
+			moveDirection.x = 0.0f;
+		}
+
+		//충돌 발생 시 이전 위치로 되돌림
+		GetTransform()->SetLocalPosition(previousPosition);
+	}
+	else if (overlap == NULL)
+		isOverlap = false;
+
+
+
+	// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
+	currentPosition += moveDirection * moveSpeed * DELTA_TIME;
+
+	// 플레이어가 땅 밑으로 떨어지는 것을 방지하기 위해 y 좌표를 0으로 고정
+	if (currentPosition.y < 0.0f)
+	{
+		currentPosition.y = 0.0f;
+		// 땅에 닿은 상태로 간주하여 수직 속도를 0으로 초기화
+		verticalVelocity = 0.0f;
+	}
+
+	if (currentPosition != tempPos)
+	{
+		//------------------------------------
+		cs_packet_pos_info packet;
+		packet.size = sizeof(cs_packet_pos_info);
+		packet.type = CS_POS_INFO;
+		packet.x = currentPosition.x;
+		packet.y = currentPosition.y;
+		packet.z = currentPosition.z;
+
+		session->Send_Packet(&packet);
+		//-------------------------------------
+	}
+
+	// 업데이트된 위치를 플레이어에 반영
+	GetTransform()->SetLocalPosition(currentPosition);
+
+
+	if (INPUT->GetButton(KEY_TYPE::P))
+	{
+		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+	}
+
+
+
+	//충돌검사
+	{
+		
+	}
+
+	//if (isOverlap)
+	//{
+	//	/*shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+	//	Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+	//	pos.x = pos.x - beforePosIncrease.x * _speed * DELTA_TIME;
+	//	pos.z = pos.z - beforePosIncrease.z * _speed * DELTA_TIME;
+	//	playerObject->GetTransform()->SetLocalPosition(pos);*/
+
+	//}
+	//else if (!isOverlap)
+	//{
+	//	MoveUpdate();
+	//}
+
+	if (isMouseMod)
+	{
+		RotationUpdate();
+	}
+	else if (!isMouseMod)
+	{
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//마우스 디버깅을 위해 P입력시 프로그램이 종료하도록 하였다.
 	if (INPUT->GetButton(KEY_TYPE::C))
 		PostQuitMessage(0);
@@ -37,6 +244,7 @@ void TestCameraScript::LateUpdate()
 		// previousTitle 배열이 비어 있는지 확인하고, 비어 있다면 windowTitle 내용을 복사합니다.
 		wcscpy_s(previousTitle, windowTitle);
 	}
+
 
 	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
 	{
@@ -100,19 +308,6 @@ void TestCameraScript::LateUpdate()
 	{
 		
 	}
-
-	MoveUpdate();
-
-	if (isMouseMod)
-	{
-		RotationUpdate();
-	}
-	else if (!isMouseMod)
-	{
-		
-	}
-
-
 	//Picking 입력을 확인
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
 	{
@@ -153,6 +348,7 @@ void TestCameraScript::LateUpdate()
 		/*scene->RemoveGameObject(pickedObject); */
 	}
 
+#ifdef DEBUG_ON
 	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
 		const POINT& pos = INPUT->GetMousePos();
@@ -166,7 +362,7 @@ void TestCameraScript::LateUpdate()
 		else
 			pickedMovingObject = pickedObject;
 	}
-
+#endif
 
 	if (pickedMovingObject != NULL)
 		RotatingPickedObject();
@@ -344,22 +540,22 @@ void TestCameraScript::RotatingPickedObject()
 	
 	if (INPUT->GetButton(KEY_TYPE::UP))
 	{
-		pos.z += _speed * DELTA_TIME;
+		pos.z += _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::DOWN))
 	{
-		pos.z -= _speed * DELTA_TIME;
+		pos.z -= _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::LEFT))
 	{
-		pos.x -= _speed * DELTA_TIME;
+		pos.x -= _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::RIGHT))
 	{
-		pos.x += _speed * DELTA_TIME;
+		pos.x += _objspeed * DELTA_TIME;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::numUP))
@@ -400,7 +596,9 @@ void TestCameraScript::RotatingPickedObject()
 	pickedMovingObject->GetTransform()->SetLocalRotation(rotation);
 	pickedMovingObject->GetTransform()->SetLocalScale(scale);
 
+#ifdef DEBUG_ON
 	std::cout << "Object Pos : (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
 	std::cout << "Object Rotation : (" << rotation.x << ", " << rotation.y << ", " << rotation.z << ")" << std::endl;
 	std::cout << "Object Scale : (" << scale.x << ", " << scale.y << ", " << scale.z << ")" << std::endl;
+#endif
 }
