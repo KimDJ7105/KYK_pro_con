@@ -113,6 +113,7 @@ void FBXLoader::LoadMeshBin(FbxMesh* mesh)
 {
 	BinaryMeshData a;
 	a.LoadMeshData(fortheBIN);
+
 	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();
 
 	FbxVector4* controlPoints = mesh->GetControlPoints();
@@ -358,11 +359,6 @@ void FBXLoader::LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo)
 
 void FBXLoader::LoadMesh(FbxMesh* mesh)
 {
-	/*BinaryMeshData a;
-	a.LoadMeshData(fortheBIN);
-	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();*/
-
-	//_meshes = loadedMeshData;
 
 	_meshes.push_back(FbxMeshInfo());
 	FbxMeshInfo& meshInfo = _meshes.back();

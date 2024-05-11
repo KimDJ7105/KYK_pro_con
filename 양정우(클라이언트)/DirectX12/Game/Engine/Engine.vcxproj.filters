@@ -174,6 +174,7 @@
     <ClCompile Include="BinaryMeshData.cpp">
       <Filter>Binary</Filter>
     </ClCompile>
+    <ClCompile Include="SoundPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -317,6 +318,7 @@
     <ClInclude Include="BinaryMeshData.h">
       <Filter>Binary</Filter>
     </ClInclude>
+    <ClInclude Include="SoundPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
