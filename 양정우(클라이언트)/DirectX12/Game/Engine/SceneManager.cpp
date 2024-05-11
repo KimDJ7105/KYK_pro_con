@@ -600,45 +600,26 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
-		//{
-		//	//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-		//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetName(L"Player1");
-		//		gameObject->SetCheckFrustum(false);
-		//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-		//		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//		scene->AddGameObject(gameObject);
-		//		//gameObject->AddComponent(make_shared<TestDragon>());
-		//	}
-		//}
-
 		{
-			//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+			//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+			//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+			//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-			for (auto& gameObject : gameObjects)
-			{
-				gameObject->SetName(L"Player1");
-				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-				scene->AddGameObject(gameObject);
-				gameObject->AddComponent(make_shared<TestDragon>());
-			}
+			//for (auto& gameObject : gameObjects)
+			//{
+			//	gameObject->SetName(L"Player1");
+			//	gameObject->SetCheckFrustum(false);
+			//	gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+			//	gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			//	gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+			//	//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			//	scene->AddGameObject(gameObject);
+			//	gameObject->AddComponent(make_shared<TestDragon>());
+			//}
 		}
 
 
 		{
-			//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
 			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\dddd.fbx");
 			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -654,27 +635,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				//gameObject->AddComponent(make_shared<TestDragon>());
 			}
 		}
-
-		//{
-		//	//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\Player_Walk.fbx");
-		//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetName(L"Player1");
-		//		gameObject->SetCheckFrustum(false);
-		//		gameObject->GetTransform()->SetLocalPosition(Vec3(11000.f, 111110.f, 111110.f));
-		//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-		//		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//		scene->AddGameObject(gameObject);
-		//		//gameObject->AddComponent(make_shared<TestDragon>());
-		//	}
-		//}
-
-
-
 	}
 #pragma endregion
 
