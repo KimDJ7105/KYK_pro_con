@@ -622,17 +622,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region All Map
-	int y = 0;
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			CreateMap((375 + 225) * i, 0, (375 + 225) * j, 150, OT_ROOM, y);
-			y++;
-		}
-	}
-	
 	int x = 0;
+	
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 4; j++)
@@ -650,27 +641,42 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			}
 		}
 	}
-	/*
 	for (int i = 0; i < 5; i++)
 	{
-		CreateOutDoor(-180, 0, 600 * i, 150.f);
-		CreateOutDoor(2400 + 180, 0, 600 * i, 150.f);
+		for (int j = 0; j < 5; j++)
+		{
+			CreateMap((375 + 225) * i, 0, (375 + 225) * j, 150, OT_ROOM, x);
+			x++;
+		}
+	}
+	
+	for (int i = 0; i < 5; i++)
+	{
+		CreateOutDoor(-180, 0, 600 * i, 150.f, x);
+		x++;
+		CreateOutDoor(2400 + 180, 0, 600 * i, 150.f, x);
+		x++;
 
-
-		CreateOutDoor2(600 * i, 0, -180, 150.f);
-		CreateOutDoor2(600 * i, 0, 2400 + 180, 150.f);
-	}*/
+		CreateOutDoor2(600 * i, 0, -180, 150.f, x);
+		x++;
+		CreateOutDoor2(600 * i, 0, 2400 + 180, 150.f, x);
+		x++;
+	}
 #pragma endregion
 
-	//CreateMap(0, 0, 0, 150);
-	/*CreateAisle(0, 0, 300, 150, OT_CORRIDOR,100);
-	CreateAisle2(0, 0, 0, 150, OT_CORRIDOR, 101);*/
-	//CreateOutDoor(-180, 0, 0, 150.f);
-	//CreateOutDoor2(0, 0, -180, 150.f);
+	/*CreateMap(0, 0, 0, 150, OT_ROOM, 69);
+	CreateMap(5000, 0, 0, 150, OT_ROOM, 69);*/
+	///*CreateAisle(0, 0, 300, 150, OT_CORRIDOR,100);
+	//CreateAisle2(0, 0, 0, 150, OT_CORRIDOR, 101);*/
+	/*CreateOutDoor(-180, 0, 0, 150.f);
+	CreateOutDoor2(0, 0, -180, 150.f);
+
+	CreateOutDoor(-1800000, 0, 0, 150.f);
+	CreateOutDoor2(0, 0, -1800000, 150.f);*/
 
 
-	/*CreateAABBBox(Vec3(0.f, 40.f, 40.f), Vec3(253, 85, 15));
-	CreateAABBBox(Vec3(0.f, 40.f, -40.f), Vec3(253, 85, 15));*/
+	//CreateAABBBox(Vec3(-180.f, 40.f, 0.f), Vec3(20, 35, 75));
+	//CreateAABBBox(Vec3(0.f, 40.f, -40.f), Vec3(253, 85, 15));
 	
 	
 
@@ -1517,7 +1523,7 @@ void SceneManager::CreateMap(float mapX, float mapY, float mapZ, float aisleScal
 
 }
 
-void SceneManager::CreateOutDoor(float mapX, float mapY, float mapZ, float aisleScale)
+void SceneManager::CreateOutDoor(float mapX, float mapY, float mapZ, float aisleScale, int ID)
 {
 	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Door001.bin");
 
@@ -1532,11 +1538,18 @@ void SceneManager::CreateOutDoor(float mapX, float mapY, float mapZ, float aisle
 		gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57, 0.f, 0.f));
 
+		gameObject->GetTransform()->SetObjectType(99);
+		gameObject->GetTransform()->SetObjectID(ID);
+
+		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(40, 75, 110) * 0.5);
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(mapX, 40.f, mapZ));
+
 		scene->AddGameObject(gameObject);
 	}
 }
 
-void SceneManager::CreateOutDoor2(float mapX, float mapY, float mapZ, float aisleScale)
+void SceneManager::CreateOutDoor2(float mapX, float mapY, float mapZ, float aisleScale, int ID)
 {
 	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Door001.bin");
 
@@ -1549,6 +1562,13 @@ void SceneManager::CreateOutDoor2(float mapX, float mapY, float mapZ, float aisl
 		gameObject->GetTransform()->SetLocalPosition(Vec3(mapX, mapY, mapZ));
 		gameObject->GetTransform()->SetLocalScale(Vec3(aisleScale, aisleScale, aisleScale));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57, 1.57f, 0.f));
+
+		gameObject->GetTransform()->SetObjectType(99);
+		gameObject->GetTransform()->SetObjectID(ID);
+
+		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(110, 75, 40) * 0.5);
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(mapX, 40.f, mapZ));
 
 		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 		scene->AddGameObject(gameObject);
@@ -1577,6 +1597,7 @@ void SceneManager::CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale)
 	cube->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 	std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetExtents(aabbScale * .5f);
 	std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetCenter(aabbPosition);
+	std::dynamic_pointer_cast<BoxCollider>(cube->GetCollider())->SetStatic(false);
 
 	scene->AddGameObject(cube);
 }

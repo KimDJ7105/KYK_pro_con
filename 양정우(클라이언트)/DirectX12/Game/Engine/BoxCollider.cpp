@@ -55,7 +55,7 @@ void BoxCollider::FinalUpdate()
 		Vec3 rotation = GetGameObject()->GetTransform()->GetLocalRotation();
 		_boundingBox.Center = _center;
 		_boundingBox.Extents = _extents;
-		//GET_SINGLE(SceneManager)->UpdateAABBBox(_myNum, _center, _extents, rotation);
+		//GET_SINGLE(SceneManager)->UpdateAABBBox(_myNum, _center, _extents * 2.f, rotation);
 	}
 }
 
