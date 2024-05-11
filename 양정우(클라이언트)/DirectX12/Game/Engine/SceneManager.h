@@ -57,9 +57,12 @@ public:
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
 	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
-	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale);
+	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale, int type, int ID);
 	void CreateOutDoor(float mapX, float mapY, float mapZ, float aisleScale);
 	void CreateOutDoor2(float mapX, float mapY, float mapZ, float aisleScale);
+	void CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale);
+	int RenderAABBBox(Vec3 aabbPosition, Vec3 aabbScale);
+	void UpdateAABBBox(int boxNum, Vec3 pos, Vec3 scale, Vec3 rotation);
 
 	void AddComputeShader(int threadX, int threadY, int threadZ);
 
@@ -71,6 +74,9 @@ public:
 
 private:
 	int _playerID;
+
+	int boxNum = 0;
+	//충돌박스의 타입넘버는 99이다
 
 public:
 	shared_ptr<GameObject> GetPlayer(int ID);
