@@ -117,29 +117,6 @@ void FBXLoader::LoadMeshBin(FbxMesh* mesh)
 	vector<FbxMeshInfo> loadedMeshData = a.GetMeshs();
 
 	FbxVector4* controlPoints = mesh->GetControlPoints();
-
-	//for (auto&& meshInfo : _meshes) {
-	//	// vertices 정보 초기화
-	//	//for (int i = 0; i < meshInfo.vertices.size(); i++)
-	//	//{
-	//	//	meshInfo.vertices[i].pos = { 0.0f, 0.0f, 0.0f };
-	//	//	meshInfo.vertices[i].uv = { 0.0f, 0.0f };
-	//	//	meshInfo.vertices[i].normal = { 0.0f, 0.0f, 0.0f };
-	//	//	meshInfo.vertices[i].tangent = { 0.0f, 0.0f, 0.0f };
-	//	//	//meshInfo.vertices[i].weights = { 0.f, 0.f, 0.f, 0.f };
-	//	//	//meshInfo.vertices[i].indices = { 1086324786, 0, 0, 0 };
-	//	//}
-
-	//	//meshInfo.vertices.clear(); // 이전의 정점 정보를 모두 제거
-	//	//meshInfo.vertices = {};
-
-	//	//meshInfo.indices.clear();
-	//	//meshInfo.indices = {};
-
-	//	/*meshInfo.boneWeights.clear();
-	//	meshInfo.boneWeights = {};*/
-	//}
-
 	
 	for (const auto& meshInfo : loadedMeshData) {
 		// 새로운 FbxMeshInfo를 생성하여 정보를 복사
@@ -169,19 +146,6 @@ void FBXLoader::LoadMeshBin(FbxMesh* mesh)
 		{
 			for (int j = 0; j < loadedMeshData[0].vertices.size(); j++)
 			{
-				/*if (fabs(_meshes[0].vertices[i].pos.x - (loadedMeshData[0].vertices[j].pos.x * -99.999999608917662)) <= 0.001
-					&& fabs(_meshes[0].vertices[i].pos.y - (loadedMeshData[0].vertices[j].pos.z * 100.00000354158320)) <= 0.001
-					&& fabs(_meshes[0].vertices[i].pos.z - (loadedMeshData[0].vertices[j].pos.y * 100.00000143874041)) <= 0.001)
-				{
-					_meshes[0].vertices[i].pos.x = loadedMeshData[0].vertices[j].pos.x * -99.999999608917662;
-					_meshes[0].vertices[i].pos.y = loadedMeshData[0].vertices[j].pos.z * 100.00000354158320;
-					_meshes[0].vertices[i].pos.z = loadedMeshData[0].vertices[j].pos.y * 100.00000143874041;
-					_meshes[0].vertices[i].uv = loadedMeshData[0].vertices[j].uv;
-					_meshes[0].vertices[i].tangent = loadedMeshData[0].vertices[j].tangent;
-					_meshes[0].vertices[i].normal = loadedMeshData[0].vertices[j].normal;
-					x++;
-					break;
-				}*/
 				if (fabs(_meshes[0].vertices[i].pos.x - (loadedMeshData[0].vertices[j].pos.x * -100)) <= FLT_EPSILON
 					&& fabs(_meshes[0].vertices[i].pos.y - (loadedMeshData[0].vertices[j].pos.z * 100)) <= FLT_EPSILON
 					&& fabs(_meshes[0].vertices[i].pos.z - (loadedMeshData[0].vertices[j].pos.y * 100)) <= FLT_EPSILON)
@@ -197,116 +161,9 @@ void FBXLoader::LoadMeshBin(FbxMesh* mesh)
 				}
 			}
 
-			/*
-
-			*/
-			//_meshes[0].vertices[i].weights = meshInfo.vertices[i].weights;
-			//_meshes[0].vertices[i].indices = meshInfo.vertices[i].indices;
-
 		}
-
-		//_meshes[0].materials = meshInfo.materials;
-
-		//_meshes[0].indices = meshInfo.indices;
-		
-		//_meshes[0].boneWeights.resize(loadedMeshData[0].vertices.size());
-		//_meshes[0].boneWeights = meshInfo.boneWeights;
 	}
 	
-	/*
-
-	_meshes.push_back(FbxMeshInfo());
-	FbxMeshInfo& meshInfo = _meshes.back();
-
-	meshInfo.name = s2ws(mesh->GetName());
-	const int32 vertexCount = loadedMeshData[0].vertices.size();
-
-	meshInfo.vertices.resize(vertexCount);
-	meshInfo.boneWeights.resize(vertexCount);
-
-	for (int32 i = 0; i < vertexCount; ++i)
-	{
-		double loadX = loadedMeshData[0].vertices[i].pos.x;
-		double loadY = loadedMeshData[0].vertices[i].pos.y;
-		double loadZ = loadedMeshData[0].vertices[i].pos.z;
-
-		double myX = static_cast<float>(mesh->GetControlPoints()[i].mData[0]);
-		double myY = static_cast<float>(mesh->GetControlPoints()[i].mData[2]);
-		double myZ = static_cast<float>(mesh->GetControlPoints()[i].mData[1]);
-
-		double X_Interpol = myX / loadX;
-		double Y_Interpol = myY / loadZ;
-		double Z_Interpol = myZ / loadY;
-
-		meshInfo.vertices[i].pos.x = loadX * X_Interpol;
-		meshInfo.vertices[i].pos.y = loadZ * Y_Interpol;
-		meshInfo.vertices[i].pos.z = loadY * Z_Interpol;
-	}*/
-
-	//const int32 materialCount = loadedMeshData[0].materials.size();
-
-	//meshInfo.indices.resize(materialCount);
-
-	//FbxGeometryElementMaterial* geometryElementMaterial = mesh->GetElementMaterial();
-
-	//// 읽어올때 무조건 삼각형으로 고정했으니...
-	//const int32 polygonSize = mesh->GetPolygonSize(0);
-	//assert(polygonSize == 3);
-
-	//uint32 arrIdx[3];
-	//uint32 vertexCounter = 0; // 정점의 개수
-
-	//const int32 triCount = mesh->GetPolygonCount(); // 메쉬의 삼각형 개수를 가져온다
-	//for (int32 i = 0; i < triCount; i++) // 삼각형의 개수
-	//{
-	//	for (int32 j = 0; j < 3; j++) // 삼각형은 세 개의 정점으로 구성
-	//	{
-	//		int32 controlPointIndex = mesh->GetPolygonVertex(i, j); // 제어점의 인덱스 추출
-	//		arrIdx[j] = controlPointIndex;
-
-	//		GetNormal(mesh, &meshInfo, controlPointIndex, vertexCounter);
-	//		GetTangent(mesh, &meshInfo, controlPointIndex, vertexCounter);
-	//		vertexCounter++;
-	//	}
-	//}
-
-	//int matchedPoint = 0;
-
-	//for (int k = 0; k < vertexCount; k++)
-	//{
-	//	double uv_X = loadedMeshData[0].vertices[k].uv.x;
-	//	double uv_Y = loadedMeshData[0].vertices[k].uv.y;
-
-	//	double M_uv_X = meshInfo.vertices[k].uv.x;
-	//	double M_uv_Y = meshInfo.vertices[k].uv.y;
-
-	//	if (uv_X == M_uv_X)
-	//	{
-	//		if (uv_Y == M_uv_Y)
-	//		{
-	//			//Match!
-	//			matchedPoint++;
-
-	//		}
-	//	}
-	//	meshInfo.vertices[k].uv.x = uv_X;
-	//	meshInfo.vertices[k].uv.y = uv_Y;
-	//}
-	//for (int k = 0; k < loadedMeshData[0].indices.size(); k++)
-	//{
-	//	for (int i = 0; i < loadedMeshData[0].indices[k].size(); i++)
-	//	{
-	//		uint32 indices1 = loadedMeshData[0].indices[k][i];
-	//		/*uint32 indices2 = loadedMeshData[0].indices[k][i * 3 + 1];
-	//		uint32 indices3 = loadedMeshData[0].indices[k][i * 3 + 2];*/
-	//		meshInfo.indices[k].push_back(indices1);
-	//		/*meshInfo.indices[k].push_back(indices2);
-	//		meshInfo.indices[k].push_back(indices3);*/
-	//	}
-	//	
-	//	
-	//}
-
 	FbxMeshInfo& meshInfo = _meshes.back();
 
 	LoadAnimationDataBin(mesh, &meshInfo);

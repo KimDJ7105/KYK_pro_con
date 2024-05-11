@@ -24,6 +24,7 @@ public:
 public:
 	static shared_ptr<MeshData> LoadFromFBX(const wstring& path);
 	static shared_ptr<MeshData> LoadFromBinary(const wstring& path);
+	static shared_ptr<MeshData> LoadPlayerModel(const wstring& keyname);
 
 	virtual void Load(const wstring& path);
 	virtual void Save(const wstring& path);

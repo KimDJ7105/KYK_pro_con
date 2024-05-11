@@ -42,6 +42,7 @@ public:
 
 	shared_ptr<class MeshData> LoadFBX(const wstring& path);
 	shared_ptr<class MeshData> LoadBinaryModel(const wstring& path);
+	shared_ptr<class MeshData> LoadPlayerModel(const wstring& Keyname);
 
 private:
 	void CreateDefaultShader();

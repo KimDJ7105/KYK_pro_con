@@ -354,6 +354,22 @@ shared_ptr<MeshData> Resources::LoadBinaryModel(const wstring& path)
 	return meshData;
 }
 
+shared_ptr<MeshData> Resources::LoadPlayerModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadFromBinary(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
 void Resources::CreateDefaultShader()
 {
 	// Skybox

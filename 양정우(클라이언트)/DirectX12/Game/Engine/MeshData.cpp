@@ -49,6 +49,24 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 	return meshData;
 }
 
+shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
+{
+	FBXLoader run;
+	run.LoadFbx(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+
+	FBXLoader loader2;
+	loader2.LoadFbx(L"..\\Resources\\FBX\\Player3\\Player_Walk.fbx");
+
+	FBXLoader loader3;
+	loader3.LoadFbx(L"..\\Resources\\FBX\\Player4\\Player_Walk.fbx");
+
+	FBXLoader loader4;
+	loader4.LoadFbx(L"..\\Resources\\FBX\\Player5\\Player_Walk.fbx");
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+	return meshData;
+}
+
+
 shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 {
 	BinaryLoader loader;
