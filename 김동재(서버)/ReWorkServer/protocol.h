@@ -39,6 +39,7 @@
 #define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 #define SC_PUT_OBJECT    7 //오브젝트를 생성
 #define SC_MODIFY_BULLET 8 //총알 개수를 변경
+#define SC_SHOW_MAP      9 //단말기를 통해 맵을 출력
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -166,6 +167,11 @@ struct sc_packet_modify_bullet {
 	BYTE size;
 	BYTE type;
 	int amount;
+};
+
+struct sc_packet_show_map {
+	BYTE size;
+	BYTE type;
 };
 
 #pragma pack (pop)
