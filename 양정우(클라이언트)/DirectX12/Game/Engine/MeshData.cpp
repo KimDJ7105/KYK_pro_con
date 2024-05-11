@@ -51,18 +51,58 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 
 shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 {
-	FBXLoader run;
-	run.LoadFbx(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player3\\Player_Walk.fbx");
+	{
+		FBXLoader loader2;
+		loader2.LoadFbx(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> walkAnim = loader2.GetAnimClip();
+		for (const auto& clip : walkAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // walk 범위 종료, walk 객체는 소멸됨
 
-	FBXLoader loader2;
-	loader2.LoadFbx(L"..\\Resources\\FBX\\Player3\\Player_Walk.fbx");
+	{
+		FBXLoader loader3;
+		loader3.LoadFbx(L"..\\Resources\\FBX\\Player4\\Player_Walk.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader3.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // run 범위 종료, run 객체는 소멸됨
 
-	FBXLoader loader3;
-	loader3.LoadFbx(L"..\\Resources\\FBX\\Player4\\Player_Walk.fbx");
+	{
+		FBXLoader loader4;
+		loader4.LoadFbx(L"..\\Resources\\FBX\\Player5\\Player_Walk.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader4.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // shoot 범위 종료, shoot 객체는 소멸됨
 
-	FBXLoader loader4;
-	loader4.LoadFbx(L"..\\Resources\\FBX\\Player5\\Player_Walk.fbx");
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
 	return meshData;
 }
 

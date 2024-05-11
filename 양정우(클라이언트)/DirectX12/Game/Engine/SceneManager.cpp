@@ -440,32 +440,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		scene->AddGameObject(sphere);
 	}
 
-	
-	//{
-	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
-	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-	//	sphere->AddComponent(make_shared<Transform>());
-	//	sphere->GetTransform()->SetLocalScale(Vec3(600.f, 400.f, 500.f));
-	//	sphere->GetTransform()->SetLocalPosition(Vec3(50, -100, 600.f));
-	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//	{
-	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-	//		meshRenderer->SetMesh(mesh);
-	//	}
-	//	{
-	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Hand", L"..\\Resources\\Texture\\Hand.png");
-	//		shared_ptr<Material> material = make_shared<Material>();
-	//		material->SetShader(shader);
-	//		material->SetTexture(0, texture);
-	//		meshRenderer->SetMaterial(material);
-	//	}
-	//	sphere->AddComponent(meshRenderer);
-	//	scene->AddGameObject(sphere);
-	//}
-
-
-
 
 #pragma endregion
 
@@ -646,19 +620,19 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		{
 			//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
 			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 			for (auto& gameObject : gameObjects)
 			{
 				gameObject->SetName(L"Player1");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(11000.f, 111110.f, 111110.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
 				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
-				//gameObject->AddComponent(make_shared<TestDragon>());
+				gameObject->AddComponent(make_shared<TestDragon>());
 			}
 		}
 
@@ -670,7 +644,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 			for (auto& gameObject : gameObjects)
 			{
-				gameObject->SetName(L"Player1");
+				gameObject->SetName(L"Player0");
 				gameObject->SetCheckFrustum(false);
 				gameObject->GetTransform()->SetLocalPosition(Vec3(1111111111111111110.f, 111111111111111110.f, 11111111111111111110.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
@@ -698,25 +672,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		//		//gameObject->AddComponent(make_shared<TestDragon>());
 		//	}
 		//}
-
-	//}
-	//{
-
-	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
-
-	//	for (auto& gameObject : gameObjects2)
-	//	{
-	//		gameObject->SetName(L"Player2");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 50.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		scene->AddGameObject(gameObject);
-	//		//gameObject->AddComponent(make_shared<TestDragon>());
-	//	}
 
 
 
@@ -766,82 +721,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-	/*CreateMap(0, 0, 0, 150, OT_ROOM, 69);
-	CreateMap(5000, 0, 0, 150, OT_ROOM, 69);*/
-	///*CreateAisle(0, 0, 300, 150, OT_CORRIDOR,100);
-	//CreateAisle2(0, 0, 0, 150, OT_CORRIDOR, 101);*/
-	/*CreateOutDoor(-180, 0, 0, 150.f);
-	CreateOutDoor2(0, 0, -180, 150.f);
-
-	CreateOutDoor(-1800000, 0, 0, 150.f);
-	CreateOutDoor2(0, 0, -1800000, 150.f);*/
 
 
-	//CreateAABBBox(Vec3(-180.f, 40.f, 0.f), Vec3(20, 35, 75));
-	//CreateAABBBox(Vec3(0.f, 40.f, -40.f), Vec3(253, 85, 15));
-	
-	
-
-
-	//{
-	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
-
-	//	for (auto& gameObject : gameObjects2)
-	//	{
-	//		gameObject->SetName(L"CardKey");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-
-
-	//		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents() * Vec3(5.f, 5.f, 5.f));
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData2->GetAABBCenter());
-
-
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		scene->AddGameObject(gameObject);
-	//	}
-	//}
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Console.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	Vec3 newPos = Vec3(meshData->GetAABBCenter().x, meshData->GetAABBCenter().y + 13.f, meshData->GetAABBCenter().z);
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"Console");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -50.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		scene->AddGameObject(gameObject);
-	//	}
-	//}
-
-
-	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\SMG01.bin");
-
-	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	for (auto& gameObject : gameObjects)
 	{
-		gameObject->SetName(L"MeGun");
-		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 35.f, 15.f));		//0.f, 45.f, 100.f
-		gameObject->GetTransform()->SetLocalScale(Vec3(6.f, 6.f, 6.f));
-		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 3.14f, 0.f));
-		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\SMG01.bin");
 
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		scene->AddGameObject(gameObject);
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"MeGun");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(111111111111111111115.f, 1111111111111111111135.f, 1111111111111111111111115.f));		//0.f, 45.f, 100.f
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+		}
 	}
 	
 

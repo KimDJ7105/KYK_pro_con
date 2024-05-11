@@ -141,4 +141,9 @@ private:
 public:
 	void LoadMeshBin(FbxMesh* mesh);
 	void LoadAnimationDataBin(FbxMesh* mesh, FbxMeshInfo* meshInfo);
+
+	void AddAnimClip(const shared_ptr<FbxAnimClipInfo>& clip) {
+		_animClips.push_back(clip);
+	}
+
 };

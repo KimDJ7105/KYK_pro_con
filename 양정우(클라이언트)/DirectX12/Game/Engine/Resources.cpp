@@ -362,7 +362,7 @@ shared_ptr<MeshData> Resources::LoadPlayerModel(const wstring& Keyname)
 	if (meshData)
 		return meshData;
 
-	meshData = MeshData::LoadFromBinary(Keyname);
+	meshData = MeshData::LoadPlayerModel(Keyname);
 
 	meshData->SetName(key);
 	Add(key, meshData);
