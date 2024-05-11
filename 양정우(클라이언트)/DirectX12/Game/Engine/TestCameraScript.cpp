@@ -12,6 +12,64 @@
 
 #include "session.h"
 
+struct Quaternion {
+	float x, y, z, w;
+
+	Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+
+	// 쿼터니언 곱셈 연산
+	Quaternion operator*(const Quaternion& q) const {
+		return Quaternion(
+			w * q.x + x * q.w + y * q.z - z * q.y,
+			w * q.y - x * q.z + y * q.w + z * q.x,
+			w * q.z + x * q.y - y * q.x + z * q.w,
+			w * q.w - x * q.x - y * q.y - z * q.z
+		);
+	}
+
+
+	// 쿼터니언의 회전 변환
+	Vec3 Rotate(const Vec3& v) const {
+		Vec3 quatVec(x, y, z);
+		Vec3 uv = quatVec.Cross(v);
+		Vec3 uuv = quatVec.Cross(uv);
+		uv *= (2.0f * w);
+		uuv *= 2.0f;
+		return v + uv + uuv;
+	}
+
+
+	Vec3 ToEulerAngles() const {
+		// roll (x-axis rotation)
+		float sinr_cosp = 2 * (w * x + y * z);
+		float cosr_cosp = 1 - 2 * (x * x + y * y);
+		float roll = atan2(sinr_cosp, cosr_cosp);
+
+		// pitch (y-axis rotation)
+		float sinp = 2 * (w * y - z * x);
+		float pitch;
+		if (fabs(sinp) >= 1)
+			pitch = copysign(3.141592 / 2, sinp); // use 90 degrees if out of range
+		else
+			pitch = asin(sinp);
+
+		// yaw (z-axis rotation)
+		float siny_cosp = 2 * (w * z + x * y);
+		float cosy_cosp = 1 - 2 * (y * y + z * z);
+		float yaw = atan2(siny_cosp, cosy_cosp);
+
+		return Vec3(roll, pitch, yaw);
+	}
+
+};
+
+Quaternion QuaternionFromAxisAngle(const Vec3& axis, float angle) {
+	float halfAngle = angle * 0.5f;
+	float s = sin(halfAngle);
+	return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos(halfAngle));
+}
+
+
 extern int playerID;
 
 TestCameraScript::TestCameraScript()
@@ -26,6 +84,17 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::LateUpdate()
 {
+
+	if (playerObject == NULL)
+	{
+		playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+	}
+
+	if (playerGunObject == NULL)
+	{
+		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
+	}
+
 
 	// 현재 위치 저장
 	previousPosition = GetTransform()->GetLocalPosition();
@@ -80,7 +149,6 @@ void TestCameraScript::LateUpdate()
 
 
 	{
-		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
 		if (overlap != NULL)
@@ -191,7 +259,11 @@ void TestCameraScript::LateUpdate()
 	// 업데이트된 위치를 플레이어에 반영
 	GetTransform()->SetLocalPosition(currentPosition);
 
+	playerObject->GetTransform()->SetLocalPosition(Vec3(currentPosition.x, currentPosition.y - 38.f, currentPosition.z));
 
+
+
+	
 	if (INPUT->GetButton(KEY_TYPE::P))
 	{
 		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
@@ -417,8 +489,74 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
+	{
+		//// rotation 변수 정의 및 초기화
+		//Vec3 rotation = GetTransform()->GetLocalRotation(); // 플레이어의 현재 회전값
+
+		//// 플레이어 중심으로부터 떨어진 위치 및 회전 적용
+		//Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+		//// 플레이어의 회전값을 쿼터니언으로 변환
+		//Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+		//	QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+		//// gunOffset을 회전시킴
+		//Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+		//// playerGunObject의 위치를 플레이어의 위치로 이동
+		//playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		//// 회전을 적용
+		//playerGunObject->GetTransform()->SetLocalRotation(GetTransform()->GetLocalRotation());
+
+		//// 플레이어를 기준으로 한 반대 방향으로 이동
+		//Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		//playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+	}
+
+	{
+
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+
+		Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+		// 플레이어의 회전값을 쿼터니언으로 변환
+		Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+		// gunOffset을 회전시킴
+		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+		// playerGunObject의 위치를 플레이어의 위치로 이동
+		playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+		Vec3 gunRotationOffset(-1.57f, 3.14f, 0.0f); // 총의 회전 오프셋
+		Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+		// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+		Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+		// 회전을 적용
+		playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
+
+		// 플레이어를 기준으로 한 반대 방향으로 이동
+		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+	}
+
+	{
+
+	}
+
+
 	wcscpy_s(previousTitle, windowTitle);
 }
+
+
 
 void TestCameraScript::MoveUpdate()
 {
@@ -489,6 +627,9 @@ void TestCameraScript::RotationUpdate()
 	::GetCursorPos(&nowMousePos);
 
 	Vec3 rotation = GetTransform()->GetLocalRotation();
+
+	Vec3 playerRotation = playerObject->GetTransform()->GetLocalRotation();
+
 	//만약 마우스가 움직임이 발생했다면
 	if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
 	{
@@ -500,30 +641,47 @@ void TestCameraScript::RotationUpdate()
 		if (moveX > 0)
 		{
 			rotation.y += DELTA_TIME * moveX;
+
+			playerRotation.y += DELTA_TIME * moveX;
+
 			GetTransform()->SetLocalRotation(rotation);
+			playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		// 왼쪽
 		if (moveX < 0)
 		{
 			rotation.y += DELTA_TIME * moveX;
+
+			playerRotation.y += DELTA_TIME * moveX;
+
 			GetTransform()->SetLocalRotation(rotation);
+			playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		// 아래
 		if (moveY > 0)
 		{
 			rotation.x += DELTA_TIME * moveY;
+
+			//playerRotation.x -= DELTA_TIME * moveY;
+
 			GetTransform()->SetLocalRotation(rotation);
+			//playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
 		//위
 		if (moveY < 0)
 		{
 			rotation.x += DELTA_TIME * moveY;
+
+			//playerRotation.x -= DELTA_TIME * moveY;
+
 			GetTransform()->SetLocalRotation(rotation);
+			//playerObject->GetTransform()->SetLocalRotation(playerRotation);
 		}
 
+		
 		//---------------------------------
 		// 이곳에서 rotation정보를 server에 넘겨주면 된다.
 		cs_packet_mouse_info mi;

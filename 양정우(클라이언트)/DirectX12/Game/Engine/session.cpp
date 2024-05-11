@@ -24,6 +24,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		playerID = p->id;
 		_activeSessionScene->SetPlayerID(p->id);
+		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->CreatePlayerGunObject(102, p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
