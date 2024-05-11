@@ -405,7 +405,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(500.f, 500.f, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(-200, 150, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0, 250, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
