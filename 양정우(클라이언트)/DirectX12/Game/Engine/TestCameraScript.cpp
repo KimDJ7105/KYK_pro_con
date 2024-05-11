@@ -46,7 +46,7 @@ void TestCameraScript::LateUpdate()
 	Vec3 tempPos = currentPosition;
 
 	// 플레이어의 이동 속도 및 방향 설정 (예시로 WASD 키를 이용한 이동)
-	const float moveSpeed = 100.0f;
+	const float moveSpeed = 200.0f;
 	Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
 
 	if (INPUT->GetButton(KEY_TYPE::W))
