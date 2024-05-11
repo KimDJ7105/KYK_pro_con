@@ -129,15 +129,25 @@ void TestCameraScript::LateUpdate()
 		Vec3 collisionDirection = GetTransform()->GetLocalPosition() - overlap->GetTransform()->GetLocalPosition();
 
 		// 충돌 방향 벡터에 따라 플레이어의 이동 방향 조절
-		if (abs(moveDirection.x) > 0)
+		if (moveDirection.x > 0)
 		{
 			// 충돌 방향이 x 축 방향인 경우
-			moveDirection.x = 0.0f;
+			moveDirection.x = -1.f;
 		}
-		if (abs(moveDirection.z) > 0)
+		else if (moveDirection.x < 0)
+		{
+			// 충돌 방향이 x 축 방향인 경우
+			moveDirection.x = 1.f;
+		}
+		if (moveDirection.z > 0)
 		{
 			// 충돌 방향이 z 축 방향인 경우
-			moveDirection.z = 0.0f;
+			moveDirection.z = -1.f;
+		}
+		else if (moveDirection.z < 0)
+		{
+			// 충돌 방향이 z 축 방향인 경우
+			moveDirection.z = 1.f;
 		}
 
 		//충돌 발생 시 이전 위치로 되돌림
