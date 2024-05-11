@@ -39,6 +39,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player == nullptr) continue;
+			if (player->my_id_ == my_id_) continue;
 
 			player->Send_Packet(&pos_pack);
 		}
@@ -332,16 +333,20 @@ void SESSION::start()
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
 	for (auto& pl : players) {
-		if (pl.second != nullptr)
-			pl.second->Send_Packet(&p);
+		shared_ptr<SESSION> player = pl.second;
+		if (player == nullptr) continue;
+		if (player->my_id_ == my_id_) continue;
+		player->Send_Packet(&p);
 	}
 
 	//다른 유저들의 정보를 클라이언트에게 전송
 	for (auto& pl : players) {
-		if (pl.second->my_id_ != my_id_) {
-			p.id = pl.second->my_id_;
-			p.x = pl.second->pos[0];
-			p.y = pl.second->pos[1];
+		shared_ptr<SESSION> player = pl.second;
+		if (player == nullptr) continue;
+		if (player->my_id_ != my_id_) {
+			p.id = player->my_id_;
+			p.x = player->pos[0];
+			p.y = player->pos[1];
 			Send_Packet(&p);
 		}
 	}
