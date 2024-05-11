@@ -19,7 +19,14 @@
 #include <array>
 #include <list>
 #include <map>
+#include <mmeapi.h>
+#include <dsound.h>
+#include <fstream>
 //using namespace std;
+
+
+#pragma comment(lib, "dsound.lib")
+#pragma comment(lib, "winmm.lib")
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -303,6 +310,10 @@ enum
 	WINDOW_MIDDLE_Y = WINDOW_HEIGHT / 2 + WINDOW_POSY,
 
 };
+
+
+
+//-----------------------------
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
