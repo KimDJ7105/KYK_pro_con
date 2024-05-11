@@ -31,6 +31,6 @@ private:
 
 	bool isOverlap = false;
 
-	Vec3 beforePos;
+	Vec3 beforePosIncrease;
 };
 

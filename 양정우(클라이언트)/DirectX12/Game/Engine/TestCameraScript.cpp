@@ -160,16 +160,16 @@ void TestCameraScript::LateUpdate()
 	//충돌검사
 	{
 		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
-		playerObject->GetTransform()->GetLocalPosition();
+		
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
 		if (overlap != NULL)
 		{
 			std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
 			isOverlap = true;
+			
 
-			Vec3 normalPos = GetTransform()->GetLocalPosition() - beforePos;
-			GetTransform()->SetLocalPosition(normalPos);
-			beforePos = GetTransform()->GetLocalPosition();
+			//isOverlap = false;
+
 		}
 		else if (overlap == NULL)
 			isOverlap = false;
@@ -177,6 +177,11 @@ void TestCameraScript::LateUpdate()
 
 	if (isOverlap)
 	{
+		/*shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+		Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+		pos.x = pos.x - beforePosIncrease.x * _speed * DELTA_TIME;
+		pos.z = pos.z - beforePosIncrease.z * _speed * DELTA_TIME;
+		playerObject->GetTransform()->SetLocalPosition(pos);*/
 
 	}
 	else if (!isOverlap)
@@ -285,7 +290,7 @@ void TestCameraScript::MoveUpdate()
 		//-------------------------------------
 	}
 
-	beforePos = pos;
+	//beforePosIncrease = Vec3(pos.x - tempPos.x, 0.f, pos.z - tempPos.z);
 
 	GetTransform()->SetLocalPosition(pos);
 }
