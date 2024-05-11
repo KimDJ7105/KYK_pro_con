@@ -75,6 +75,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//p->amount 가 변동 값. 총알 개수 변수에 그대로 적용하면 됨.
 		break;
 	}
+	case SC_SHOW_MAP :
+	{
+		sc_packet_show_map* p = reinterpret_cast<sc_packet_show_map*>(packet);
+		//map ui를  띄우면 됨
+		
+		break;
+	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
 		break;
