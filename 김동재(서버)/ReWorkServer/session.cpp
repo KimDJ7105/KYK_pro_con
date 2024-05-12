@@ -222,7 +222,16 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
+	case CS_RELOAD_MAG: {
+		remain_bullet = 30;
 
+		sc_packet_modify_bullet mb;
+		mb.type = SC_MODIFY_BULLET;
+		mb.size = sizeof(sc_packet_modify_bullet);
+		mb.amount = 30;
+		Send_Packet(&mb);
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 
