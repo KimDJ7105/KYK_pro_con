@@ -44,5 +44,8 @@ private:
 
 	double timeElapse = 0.0;
 	const double clickCooldown = 0.5;
+
+
+	int haveKeycard = 0;
 };
 

@@ -160,7 +160,9 @@ void TestCameraScript::LateUpdate()
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
 		if (overlap != NULL)
 		{
+#ifdef DEBUG_ON
 			std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
+#endif
 			isOverlap = true;
 			//GetTransform()->SetLocalPosition(previousPosition);
 			// 충돌 방향 벡터 계산
@@ -412,10 +414,14 @@ void TestCameraScript::LateUpdate()
 	//Picking 입력을 확인
 	if (INPUT->GetButton(KEY_TYPE::RBUTTON))
 	{
+#ifdef DEBUG_ON
 		std::cout << "COOLTIME" << std::endl;
+#endif
 		if (clickCooldown <= timeElapse)
 		{
+#ifdef DEBUG_ON
 			std::cout << "FIRE" << std::endl;
+#endif
 			const POINT& pos = INPUT->GetMousePos();
 
 			shared_ptr<GameObject> pickedObject;
@@ -495,6 +501,9 @@ void TestCameraScript::LateUpdate()
 			//pos xyz 는 플레이어의 현재 위치
 			//key_id는 충돌한 카드키의 id값
 			session->Send_Packet(&tgk);
+
+			GET_SINGLE(SceneManager)->SetKeyCardPosition(150 + 75 * haveKeycard, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130, haveKeycard);
+			haveKeycard++;
 		}
 
 		shared_ptr<GameObject> terminal = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_TERMINAL);

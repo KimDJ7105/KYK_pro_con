@@ -88,6 +88,9 @@ public:
 
 	void RemoveObject(int object_id);
 
+
+public:
 	void SetMapPosition(int x, int y);
+	void SetKeyCardPosition(int x, int y, int keyCardNum);
 };
 

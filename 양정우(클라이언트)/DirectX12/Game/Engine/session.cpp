@@ -11,6 +11,7 @@ SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 	prev_data_size_ = 0;
 	moving = false;
 	_activeSessionScene = GET_SINGLE(SceneManager);
+	isMapOpen = false;
 }
 
 void SESSION::Process_Packet(unsigned char* packet)
@@ -89,6 +90,16 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//map ui¸¦  ¶ç¿ì¸é µÊ
 		//if(¸ÊÀÌ ¾È¶°ÀÖÀ¸¸é) ¸Ê ¶ç¿ì±â
 		//else ¸Ê Áö¿ì±â
+		if (!isMapOpen)
+		{
+			isMapOpen = true;
+			_activeSessionScene->SetMapPosition(0, 0);
+		}
+		else if (isMapOpen)
+		{
+			isMapOpen = false;
+			_activeSessionScene->SetMapPosition(111111111110, 1111111111110);
+		}
 		break;
 	}
 	case SC_SET_ANIMATION :

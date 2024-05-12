@@ -52,10 +52,10 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 {
 	FBXLoader loader;
-	loader.LoadFbx(L"..\\Resources\\FBX\\Player3\\Player_Walk.fbx");
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
 	{
 		FBXLoader loader2;
-		loader2.LoadFbx(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+		loader2.LoadFbx(L"..\\Resources\\FBX\\Player1\\Player_Walk.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> walkAnim = loader2.GetAnimClip();
 		for (const auto& clip : walkAnim) {
 			loader.AddAnimClip(clip);
@@ -64,7 +64,7 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 
 	{
 		FBXLoader loader3;
-		loader3.LoadFbx(L"..\\Resources\\FBX\\Player4\\Player_Walk.fbx");
+		loader3.LoadFbx(L"..\\Resources\\FBX\\Player3\\Player_Walk.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader3.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -73,7 +73,7 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 
 	{
 		FBXLoader loader4;
-		loader4.LoadFbx(L"..\\Resources\\FBX\\Player5\\Player_Walk.fbx");
+		loader4.LoadFbx(L"..\\Resources\\FBX\\Player4\\Player_Walk.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader4.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);

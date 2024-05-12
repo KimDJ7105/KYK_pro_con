@@ -16,6 +16,8 @@ private:
 
 	SceneManager* _activeSessionScene{ nullptr };
 
+	bool isMapOpen;
+
 public:
 
 	SESSION(tcp::socket socket_);
