@@ -180,10 +180,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
 
+			sc_packet_card_used cu;
+			cu.size = sizeof(sc_packet_card_used);
+			cu.type = SC_CARD_USED;
+
 			sc_packet_show_map sm;
 			sm.type = SC_SHOW_MAP;
 			sm.size = sizeof(sc_packet_show_map);
 
+			Send_Packet(&cu);
 			Send_Packet(&sm);
 		}
 		
@@ -378,7 +383,7 @@ void SESSION::start()
 	for (auto& object : objects) {
 		shared_ptr<OBJECT> obj = object.second;
 		if (obj == nullptr) continue;
-		if (obj->owner_id != -1) continue;
+		if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
 
 		sc_packet_put_object put_obj;
 		put_obj.size = sizeof(sc_packet_put_object);
