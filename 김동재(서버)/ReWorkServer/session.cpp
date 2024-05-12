@@ -89,7 +89,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		sc_packet_modify_bullet mb;
 		mb.type = SC_MODIFY_BULLET;
 		mb.size = sizeof(sc_packet_modify_bullet);
-		mb.amount = -1;
+		mb.amount = remain_bullet;
 		Send_Packet(&mb);
 		
 		if (p->target_id == -1) break;
