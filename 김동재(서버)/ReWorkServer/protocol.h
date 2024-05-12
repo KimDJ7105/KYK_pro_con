@@ -38,6 +38,7 @@
 #define CS_TRY_GET_KEY   5
 #define CS_TRY_USE_TMN   6
 #define CS_PLAYER_STOP   7
+#define CS_RELOAD_MAG    8
 
 #define SC_POS           1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER    2 //오브젝트 생성
@@ -107,6 +108,11 @@ struct cs_packet_try_use_tmn {
 };
 
 struct cs_packet_player_stop {
+	BYTE size;
+	BYTE type;
+};
+
+struct cs_packet_reload_mag {
 	BYTE size;
 	BYTE type;
 };

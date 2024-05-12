@@ -521,6 +521,15 @@ void TestCameraScript::LateUpdate()
 			session->Send_Packet(&tut);
 		}
 	}
+	
+	if (INPUT->GetButtonDown(KEY_TYPE::R))
+	{
+		cs_packet_reload_mag lm;
+		lm.size = sizeof(cs_packet_reload_mag);
+		lm.type = CS_RELOAD_MAG;
+
+		session->Send_Packet(&lm);
+	}
 
 	{
 		//// rotation 변수 정의 및 초기화
