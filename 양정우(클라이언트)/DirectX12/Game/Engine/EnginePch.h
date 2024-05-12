@@ -10,6 +10,8 @@
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0
 
+#define OUT_OF_RENDER -100000000000
+
 // 각종 include
 #include <windows.h>
 #include <tchar.h>
@@ -21,6 +23,7 @@
 #include <map>
 #include <mmeapi.h>
 #include <dsound.h>
+#include <string>
 #include <fstream>
 //#include <xaudio2.h>
 

@@ -449,7 +449,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH * 0.7) * 0.1, (WINDOW_WIDTH * 0.7) * 0.1, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(-(WINDOW_WIDTH / 2) + 510 + 65 * i, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 501.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(-(WINDOW_WIDTH / 2) + 510 + 65 * i, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -464,6 +464,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(104);
+		sphere->GetTransform()->SetObjectID(i);
+
 		scene->AddGameObject(sphere);
 	}
 
@@ -575,12 +579,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 
 	//NowBullet
+	for (int i = 0; i < 10; i++)
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(-90, 10-(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -588,7 +593,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
+
+			wstring fileName = L"PR_NUM" + std::to_wstring(i) + L"_UI";
+			wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
+
+			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -596,16 +606,17 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		sphere->AddComponent(meshRenderer);
 		sphere->GetTransform()->SetObjectType(109);
-		sphere->GetTransform()->SetObjectID(1);
+		sphere->GetTransform()->SetObjectID(i);
 
 		scene->AddGameObject(sphere);
 	}
+	for (int i = 10; i < 20; i++)
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(-40, 10-(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -613,7 +624,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
+
+			wstring fileName = L"PR_NUM" + std::to_wstring(i - 10) + L"_UI";
+			wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
+
+			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -621,7 +637,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		sphere->AddComponent(meshRenderer);
 		sphere->GetTransform()->SetObjectType(109);
-		sphere->GetTransform()->SetObjectID(1);
+		sphere->GetTransform()->SetObjectID(i);
 
 		scene->AddGameObject(sphere);
 	}
@@ -1189,7 +1205,7 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 
 		gameObject->AddComponent(make_shared<BoxCollider>());
-		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 20.f, 5.f));
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
 
@@ -2087,4 +2103,63 @@ void SceneManager::AddComputeShader(int threadX, int threadY, int threadZ)
 	}
 }
 
+void SceneManager::CalculateHP(int damagedHP)
+{
+	int tensPlaceBeforeCalculate = (playerHP / 10) % 10;
 
+	int tensPlaceAfterCalculate = (damagedHP / 10) % 10;
+	playerHP = damagedHP;
+
+	// 체력 감소
+	if (tensPlaceBeforeCalculate > tensPlaceAfterCalculate)
+	{
+		int HPnum = tensPlaceAfterCalculate;
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (int i = HPnum + 1; i < 11; i++)
+		{
+			for (auto& gameObject : gameObjects)
+			{
+				if (gameObject->GetTransform()->GetObjectType() != 104)
+					continue;
+				if (gameObject->GetTransform()->GetObjectID() != i)
+					continue;
+				if (gameObject->GetTransform()->GetObjectID() == i)
+				{
+					if (gameObject->GetTransform()->GetLocalPosition().x == OUT_OF_RENDER)
+						continue;
+					Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+
+					pos.x = OUT_OF_RENDER;
+					pos.y = OUT_OF_RENDER;
+
+					gameObject->GetTransform()->SetLocalPosition(pos);
+				}
+			}
+		}
+	}//체력 증가
+	else if (tensPlaceBeforeCalculate < tensPlaceAfterCalculate)
+	{
+		int HPnum = tensPlaceAfterCalculate / 10;
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+		for (int i = 1; i < HPnum + 1; i++)
+		{
+			for (auto& gameObject : gameObjects)
+			{
+				if (gameObject->GetTransform()->GetObjectType() != 104)
+					continue;
+				if (gameObject->GetTransform()->GetObjectID() != i)
+					continue;
+				if (gameObject->GetTransform()->GetObjectID() == i)
+				{
+					if (gameObject->GetTransform()->GetLocalPosition().x != OUT_OF_RENDER)
+						continue;
+					Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+					pos.x = -(WINDOW_WIDTH / 2) + 510 + 65 * i;
+					pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+					gameObject->GetTransform()->SetLocalPosition(pos);
+				}
+			}
+		}
+	}
+}

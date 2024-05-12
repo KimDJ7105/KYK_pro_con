@@ -480,6 +480,9 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
+
+		
+
 		//플레이어 ID를 탐색
 		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 		shared_ptr<GameObject> keyCard;

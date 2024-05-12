@@ -17,6 +17,7 @@ private:
 	SceneManager* _activeSessionScene{ nullptr };
 
 	bool isMapOpen;
+	int haveKeycard;
 
 public:
 

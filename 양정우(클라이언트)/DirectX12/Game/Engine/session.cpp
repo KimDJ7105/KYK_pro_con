@@ -12,6 +12,7 @@ SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 	moving = false;
 	_activeSessionScene = GET_SINGLE(SceneManager);
 	isMapOpen = false;
+	haveKeycard = 0;
 }
 
 void SESSION::Process_Packet(unsigned char* packet)
@@ -31,6 +32,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->SetPlayerID(p->id);
 		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		_activeSessionScene->CreatePlayerGunObject(102, p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
+		p->bullet_amount;
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
@@ -59,6 +61,9 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_apply_damage* p = reinterpret_cast<sc_packet_apply_damage*>(packet);
 		//데미지를 자신한테 적용하는 패킷
 		//p->hp; 만큼 체력에서 "빼서" ui 최신화
+
+		_activeSessionScene->CalculateHP(p->hp);
+
 		break;
 	}
 	case SC_PLAYER_DEAD :
@@ -112,7 +117,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_CARD_USED :
 	{
 		//여기서 카드 UI 하나 지우면 됨
-
+		_activeSessionScene->SetKeyCardPosition(-1111111111111, -111111111111111, haveKeycard);
+		haveKeycard++;
 		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때

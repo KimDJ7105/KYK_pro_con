@@ -92,5 +92,13 @@ public:
 public:
 	void SetMapPosition(int x, int y);
 	void SetKeyCardPosition(int x, int y, int keyCardNum);
+
+
+private:
+	int playerHP = 100;
+	int bullet = 30;
+
+public:
+	void CalculateHP(int damagedHP);
 };
 
