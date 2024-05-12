@@ -23,6 +23,13 @@
 #define OT_TERMINAL 4
 //---------------------------------------
 
+//Animation Type-------------------------
+#define AT_IDLE 0
+#define AT_WALKING 1
+#define AT_RUNNING 2
+#define AT_SHOOTING 3
+//---------------------------------------
+
 //Packet type----------------------------
 #define CS_POS_INFO      1
 #define CS_BOX_CREATE    2
@@ -30,6 +37,7 @@
 #define CS_PICKING_INFO  4
 #define CS_TRY_GET_KEY   5
 #define CS_TRY_USE_TMN   6
+#define CS_PLAYER_STOP   7
 
 #define SC_POS           1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER    2 //오브젝트 생성
@@ -40,6 +48,7 @@
 #define SC_PUT_OBJECT    7 //오브젝트를 생성
 #define SC_MODIFY_BULLET 8 //총알 개수를 변경
 #define SC_SHOW_MAP      9 //단말기를 통해 맵을 출력
+#define SC_SET_ANIMATION 10 //객체의 애니메이션을 세팅
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -94,6 +103,11 @@ struct cs_packet_try_use_tmn {
 	BYTE size;
 	BYTE type;
 	int terminal_id;
+};
+
+struct cs_packet_player_stop {
+	BYTE size;
+	BYTE type;
 };
 
 //---------Server To Client-----------------
@@ -172,6 +186,13 @@ struct sc_packet_modify_bullet {
 struct sc_packet_show_map {
 	BYTE size;
 	BYTE type;
+};
+
+struct sc_packet_set_animation {
+	BYTE size;
+	BYTE type;
+	int obj_id;
+	int animation_id;
 };
 
 #pragma pack (pop)
