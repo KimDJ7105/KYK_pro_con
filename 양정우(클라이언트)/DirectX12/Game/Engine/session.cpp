@@ -23,6 +23,9 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
 		//_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+
+		//p->bullet_amount; 플레이어 초기 총알 개수 (30개)
+		//변수 만들어서 저장 필요
 		playerID = p->id;
 		_activeSessionScene->SetPlayerID(p->id);
 		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
@@ -53,7 +56,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_APPLY_DAMAGE :
 	{		
 		sc_packet_apply_damage* p = reinterpret_cast<sc_packet_apply_damage*>(packet);
-		
+		//데미지를 자신한테 적용하는 패킷
+		//p->hp; 만큼 체력에서 "빼서" ui 최신화
 		break;
 	}
 	case SC_PLAYER_DEAD :
@@ -75,14 +79,16 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_modify_bullet* p = reinterpret_cast<sc_packet_modify_bullet*>(packet);
 		//총알 개수를 바꾸는 패킷임.
-		//p->amount 가 변동 값. 총알 개수 변수에 그대로 적용하면 됨.
+		//p->amount 가 변동 값. 총알 개수 변수에 그대로 더하면 됨
+		//ui 최신화
 		break;
 	}
 	case SC_SHOW_MAP :
 	{
 		sc_packet_show_map* p = reinterpret_cast<sc_packet_show_map*>(packet);
 		//map ui를  띄우면 됨
-		
+		//if(맵이 안떠있으면) 맵 띄우기
+		//else 맵 지우기
 		break;
 	}
 	case SC_SET_ANIMATION :
