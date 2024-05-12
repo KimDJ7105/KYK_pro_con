@@ -9,6 +9,7 @@ SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
 	curr_packet_size_ = 0;
 	prev_data_size_ = 0;
+	moving = false;
 	_activeSessionScene = GET_SINGLE(SceneManager);
 }
 
@@ -173,6 +174,16 @@ void SESSION::Send_Packet(void* packet)
 	unsigned char* buff = new unsigned char[packet_size];
 	memcpy(buff, packet, packet_size);
 	do_write(buff, packet_size);
+}
+
+void SESSION::set_moving(bool mv)
+{
+	moving = mv;
+}
+
+bool SESSION::get_moving()
+{
+	return moving;
 }
 
 SESSION* session;
