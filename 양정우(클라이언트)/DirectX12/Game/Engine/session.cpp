@@ -109,6 +109,12 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//obj_id 오브젝트의 animation 설정
 		break;
 	}
+	case SC_CARD_USED :
+	{
+		//여기서 카드 UI 하나 지우면 됨
+
+		break;
+	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
 		break;

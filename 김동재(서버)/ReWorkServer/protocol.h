@@ -49,6 +49,7 @@
 #define SC_MODIFY_BULLET 8 //총알 개수를 변경
 #define SC_SHOW_MAP      9 //단말기를 통해 맵을 출력
 #define SC_SET_ANIMATION 10 //객체의 애니메이션을 세팅
+#define SC_CARD_USED     11 //카드가 사용되었음을 알림
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -194,6 +195,11 @@ struct sc_packet_set_animation {
 	BYTE type;
 	int obj_id;
 	int animation_id;
+};
+
+struct sc_packet_card_used {
+	BYTE size;
+	BYTE type;
 };
 
 #pragma pack (pop)
