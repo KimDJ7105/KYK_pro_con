@@ -2163,3 +2163,96 @@ void SceneManager::CalculateHP(int damagedHP)
 		}
 	}
 }
+
+void SceneManager::CalculateBullet(int nowBullet)
+{
+	//이전 총알의 십의자리수
+	int tensPlaceBeforeFire = (bullet / 10) % 10;
+	//이전 총알의 일의자리수
+	int onesPlaceBeforeBullet = bullet - tensPlaceBeforeFire * 10;
+
+	//현재 총알의 십의자리수
+	int tensPlaceAfterFire = (nowBullet / 10) % 10;
+	//현재 총알의 일의자리수
+	int onesPlaceAfterBullet = nowBullet - tensPlaceAfterFire * 10;
+
+	bullet = nowBullet;
+
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != 109)
+			continue;
+		if (gameObject->GetTransform()->GetObjectID() == onesPlaceBeforeBullet)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = OUT_OF_RENDER;
+			pos.y = OUT_OF_RENDER;
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+		if (gameObject->GetTransform()->GetObjectID() == onesPlaceAfterBullet)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = -40;
+			pos.y = 10 - (WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
+	//십의 자리가 변경되었다면
+	if (tensPlaceBeforeFire > tensPlaceAfterFire)
+	{
+		for (auto& gameObject : gameObjects)
+		{
+			if (gameObject->GetTransform()->GetObjectType() != 109)
+				continue;
+			if (gameObject->GetTransform()->GetObjectID() == tensPlaceBeforeFire + 10)
+			{
+				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+				pos.x = OUT_OF_RENDER;
+				pos.y = OUT_OF_RENDER;
+				gameObject->GetTransform()->SetLocalPosition(pos);
+			}
+			if (gameObject->GetTransform()->GetObjectID() == tensPlaceAfterFire + 10)
+			{
+				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+				pos.x = -90;
+				pos.y = 10 - (WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+				gameObject->GetTransform()->SetLocalPosition(pos);
+			}
+		}
+	}
+
+	
+}
+
+void SceneManager::SetBullet(int BulletCount)
+{
+	bullet = BulletCount;
+
+
+	//현재 총알의 십의자리수
+	int tensPlaceBulletCount = (BulletCount / 10) % 10;
+	//현재 총알의 일의자리수
+	int onesPlaceBulletCount = BulletCount - tensPlaceBulletCount * 10;
+
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != 109)
+			continue;
+		if (gameObject->GetTransform()->GetObjectID() == onesPlaceBulletCount)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = -40;
+			pos.y = 10 - (WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+		if (gameObject->GetTransform()->GetObjectID() == tensPlaceBulletCount + 10)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = -90;
+			pos.y = 10 - (WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
+}

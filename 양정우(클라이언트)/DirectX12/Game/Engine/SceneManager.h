@@ -100,5 +100,8 @@ private:
 
 public:
 	void CalculateHP(int damagedHP);
+
+	void CalculateBullet(int nowBullet);
+	void SetBullet(int BulletCount);
 };
 

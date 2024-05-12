@@ -32,7 +32,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->SetPlayerID(p->id);
 		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		_activeSessionScene->CreatePlayerGunObject(102, p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
-		p->bullet_amount;
+		_activeSessionScene->SetBullet(p->bullet_amount);
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
@@ -87,6 +87,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//총알 개수를 바꾸는 패킷임.
 		//p->amount 가 변동 값. 총알 개수 변수에 그대로 더하면 됨
 		//ui 최신화
+
+		_activeSessionScene->CalculateBullet(p->amount);
 		break;
 	}
 	case SC_SHOW_MAP :
