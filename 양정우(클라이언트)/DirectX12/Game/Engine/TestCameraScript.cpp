@@ -137,6 +137,8 @@ void TestCameraScript::LateUpdate()
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
 		moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)); 
+
+		GET_SINGLE(SceneManager)->SetMapPosition(0, 0);
 	}
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{

@@ -87,5 +87,7 @@ public:
 
 
 	void RemoveObject(int object_id);
+
+	void SetMapPosition(int x, int y);
 };
 
