@@ -12,6 +12,66 @@
 
 #include "session.h"
 
+
+
+struct Quaternion {
+	float x, y, z, w;
+
+	Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+
+	// 쿼터니언 곱셈 연산
+	Quaternion operator*(const Quaternion& q) const {
+		return Quaternion(
+			w * q.x + x * q.w + y * q.z - z * q.y,
+			w * q.y - x * q.z + y * q.w + z * q.x,
+			w * q.z + x * q.y - y * q.x + z * q.w,
+			w * q.w - x * q.x - y * q.y - z * q.z
+		);
+	}
+
+
+	// 쿼터니언의 회전 변환
+	Vec3 Rotate(const Vec3& v) const {
+		Vec3 quatVec(x, y, z);
+		Vec3 uv = quatVec.Cross(v);
+		Vec3 uuv = quatVec.Cross(uv);
+		uv *= (2.0f * w);
+		uuv *= 2.0f;
+		return v + uv + uuv;
+	}
+
+
+	Vec3 ToEulerAngles() const {
+		// roll (x-axis rotation)
+		float sinr_cosp = 2 * (w * x + y * z);
+		float cosr_cosp = 1 - 2 * (x * x + y * y);
+		float roll = atan2(sinr_cosp, cosr_cosp);
+
+		// pitch (y-axis rotation)
+		float sinp = 2 * (w * y - z * x);
+		float pitch;
+		if (fabs(sinp) >= 1)
+			pitch = copysign(3.141592 / 2, sinp); // use 90 degrees if out of range
+		else
+			pitch = asin(sinp);
+
+		// yaw (z-axis rotation)
+		float siny_cosp = 2 * (w * z + x * y);
+		float cosy_cosp = 1 - 2 * (y * y + z * z);
+		float yaw = atan2(siny_cosp, cosy_cosp);
+
+		return Vec3(roll, pitch, yaw);
+	}
+
+};
+
+Quaternion QuaternionFromAxisAngle(const Vec3& axis, float angle) {
+	float halfAngle = angle * 0.5f;
+	float s = sin(halfAngle);
+	return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos(halfAngle));
+}
+
+
 extern int playerID;
 
 TestCameraScript::TestCameraScript()
@@ -26,6 +86,17 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::LateUpdate()
 {
+
+	if (playerObject == NULL)
+	{
+		playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+	}
+
+	if (playerGunObject == NULL)
+	{
+		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
+	}
+
 
 	// 현재 위치 저장
 	previousPosition = GetTransform()->GetLocalPosition();
@@ -53,7 +124,14 @@ void TestCameraScript::LateUpdate()
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+		//// SoundPlayer 객체 생성
+		//SoundPlayer soundPlayer;
 
+		//// 사운드 파일 경로
+		//const wchar_t* filename = L"Footstep01.wav";
+
+		//// 사운드 재생
+		//soundPlayer.PlaySound(filename);
 
 	}
 	if (INPUT->GetButton(KEY_TYPE::S))
@@ -75,12 +153,7 @@ void TestCameraScript::LateUpdate()
 		moveDirection.Normalize();
 	}
 
-	std::cout << "move Dir : (" << moveDirection.x << ", " << moveDirection.y << ", " << moveDirection.z << ")" << std::endl;
-
-
-
 	{
-		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
 		if (overlap != NULL)
@@ -192,6 +265,8 @@ void TestCameraScript::LateUpdate()
 	GetTransform()->SetLocalPosition(currentPosition);
 
 
+
+	
 	if (INPUT->GetButton(KEY_TYPE::P))
 	{
 		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
@@ -240,11 +315,11 @@ void TestCameraScript::LateUpdate()
 
 
 
-
+#ifdef DEBUG_ON
 	//마우스 디버깅을 위해 P입력시 프로그램이 종료하도록 하였다.
 	if (INPUT->GetButton(KEY_TYPE::C))
 		PostQuitMessage(0);
-
+#endif
 
 	HWND foregroundWindow = GetForegroundWindow();
 	wchar_t windowTitle[256] = { 0 };
@@ -319,44 +394,50 @@ void TestCameraScript::LateUpdate()
 	{
 		
 	}
+
+
+
 	//Picking 입력을 확인
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
 	{
-		const POINT& pos = INPUT->GetMousePos();
-		
-		shared_ptr<GameObject> pickedObject;
-
-		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
-		if (pickedObject != NULL)
+		std::cout << "COOLTIME" << std::endl;
+		if (clickCooldown <= timeElapse)
 		{
-			int a = pickedObject->GetTransform()->GetObjectType();
+			std::cout << "FIRE" << std::endl;
+			const POINT& pos = INPUT->GetMousePos();
 
-			//여기서 타입이 플레이어일때만
-			//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
-			if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+			shared_ptr<GameObject> pickedObject;
+
+			pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
+			if (pickedObject != NULL)
 			{
-				cs_packet_picking_info ppi;
-				ppi.size = sizeof(cs_packet_picking_info);
-				ppi.type = CS_PICKING_INFO;
-				ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+				int a = pickedObject->GetTransform()->GetObjectType();
 
-				session->Send_Packet(&ppi);
+				//여기서 타입이 플레이어일때만
+				//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
+				if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+				{
+					cs_packet_picking_info ppi;
+					ppi.size = sizeof(cs_packet_picking_info);
+					ppi.type = CS_PICKING_INFO;
+					ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+
+					session->Send_Packet(&ppi);
+				}
+
+				else {
+					cs_packet_picking_info ppi;
+					ppi.size = sizeof(cs_packet_picking_info);
+					ppi.type = CS_PICKING_INFO;
+					ppi.target_id = -1;
+
+					session->Send_Packet(&ppi);
+				}
 			}
 
-			else {
-				cs_packet_picking_info ppi;
-				ppi.size = sizeof(cs_packet_picking_info);
-				ppi.type = CS_PICKING_INFO;
-				ppi.target_id = -1;
 
-				session->Send_Packet(&ppi);
-			}
+			timeElapse = 0.f;
 		}
-		else
-		{
-			//Empty!
-		}
-		/*scene->RemoveGameObject(pickedObject); */
 	}
 
 #ifdef DEBUG_ON
@@ -417,8 +498,107 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
+	{
+		//// rotation 변수 정의 및 초기화
+		//Vec3 rotation = GetTransform()->GetLocalRotation(); // 플레이어의 현재 회전값
+
+		//// 플레이어 중심으로부터 떨어진 위치 및 회전 적용
+		//Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+		//// 플레이어의 회전값을 쿼터니언으로 변환
+		//Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+		//	QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+		//// gunOffset을 회전시킴
+		//Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+		//// playerGunObject의 위치를 플레이어의 위치로 이동
+		//playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		//// 회전을 적용
+		//playerGunObject->GetTransform()->SetLocalRotation(GetTransform()->GetLocalRotation());
+
+		//// 플레이어를 기준으로 한 반대 방향으로 이동
+		//Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		//playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+	}
+	
+	{
+
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+
+		Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+		// 플레이어의 회전값을 쿼터니언으로 변환
+		Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+		// gunOffset을 회전시킴
+		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+		// playerGunObject의 위치를 플레이어의 위치로 이동
+		playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+		Vec3 gunRotationOffset(-1.57f, 3.14f, 0.0f); // 총의 회전 오프셋
+		Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+		// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+		Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+		// 회전을 적용
+		playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
+
+		// 플레이어를 기준으로 한 반대 방향으로 이동
+		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+	}
+
+	{
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+
+		Vec3 gunOffset(0.0f, -40.0f, 10.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+		// 플레이어의 회전값을 쿼터니언으로 변환
+		Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+		// gunOffset을 회전시킴
+		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+		// playerGunObject의 위치를 플레이어의 위치로 이동
+		playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+		Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
+		Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+		// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+		Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+		// 회전을 적용
+		playerObject->GetTransform()->SetLocalRotation(gunRotation);
+
+		// 플레이어를 기준으로 한 반대 방향으로 이동
+		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		playerObject->GetTransform()->SetLocalPosition(newPosition);
+
+		Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
+	}
+	
+
 	wcscpy_s(previousTitle, windowTitle);
+
+	timeElapse += DELTA_TIME;
 }
+
+
 
 void TestCameraScript::MoveUpdate()
 {
@@ -489,6 +669,7 @@ void TestCameraScript::RotationUpdate()
 	::GetCursorPos(&nowMousePos);
 
 	Vec3 rotation = GetTransform()->GetLocalRotation();
+
 	//만약 마우스가 움직임이 발생했다면
 	if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
 	{
@@ -500,6 +681,7 @@ void TestCameraScript::RotationUpdate()
 		if (moveX > 0)
 		{
 			rotation.y += DELTA_TIME * moveX;
+
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
@@ -507,6 +689,7 @@ void TestCameraScript::RotationUpdate()
 		if (moveX < 0)
 		{
 			rotation.y += DELTA_TIME * moveX;
+
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
@@ -514,6 +697,9 @@ void TestCameraScript::RotationUpdate()
 		if (moveY > 0)
 		{
 			rotation.x += DELTA_TIME * moveY;
+
+			//playerRotation.x -= DELTA_TIME * moveY;
+
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
@@ -521,9 +707,13 @@ void TestCameraScript::RotationUpdate()
 		if (moveY < 0)
 		{
 			rotation.x += DELTA_TIME * moveY;
+
+			//playerRotation.x -= DELTA_TIME * moveY;
+
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
+		
 		//---------------------------------
 		// 이곳에서 rotation정보를 server에 넘겨주면 된다.
 		cs_packet_mouse_info mi;

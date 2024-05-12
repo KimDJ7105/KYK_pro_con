@@ -51,6 +51,8 @@ public:
 	void CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
 	Vec3 FindAislePosition(int aisleNum);
 	void CreateGameObject(int aisleNum, int object_type, int object_ID);
@@ -79,7 +81,10 @@ private:
 	//충돌박스의 타입넘버는 99이다
 
 public:
-	shared_ptr<GameObject> GetPlayer(int ID);
+	shared_ptr<GameObject> GetPlayer(int ID);	//101
+
+	shared_ptr<GameObject> GetPlayerGun(int ID);	//102
+
 
 	void RemoveObject(int object_id);
 };

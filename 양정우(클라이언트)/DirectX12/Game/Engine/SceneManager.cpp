@@ -177,7 +177,24 @@ shared_ptr<GameObject> SceneManager::GetPlayer(int ID)
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject->GetTransform()->GetObjectType() != OT_PLAYER)
+		if (gameObject->GetTransform()->GetObjectType() != 101)
+			continue;
+
+		if (gameObject->GetTransform()->GetObjectID() == ID)
+			return gameObject;
+	}
+
+
+	return 0;
+}
+
+shared_ptr<GameObject> SceneManager::GetPlayerGun(int ID)
+{
+
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != 102)
 			continue;
 
 		if (gameObject->GetTransform()->GetObjectID() == ID)
@@ -380,7 +397,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH / 32, WINDOW_HEIGHT, 50.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -389,7 +406,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Crosshair", L"..\\Resources\\Texture\\Aim.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Crosshair", L"..\\Resources\\Texture\\PR_CROSSHAIR01_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -398,8 +415,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->AddComponent(meshRenderer);
 		scene->AddGameObject(sphere);
 	}
-
-
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
@@ -422,32 +437,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->AddComponent(meshRenderer);
 		scene->AddGameObject(sphere);
 	}
-
-	
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(600.f, 400.f, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(50, -100, 600.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Hand", L"..\\Resources\\Texture\\Hand.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		scene->AddGameObject(sphere);
-	}
-
-
 
 
 #pragma endregion
@@ -609,34 +598,34 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX Player
 	{
-		//{
-		//	//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-		//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		{
+			//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+			//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+			//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetName(L"Player1");
-		//		gameObject->SetCheckFrustum(false);
-		//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-		//		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//		scene->AddGameObject(gameObject);
-		//		//gameObject->AddComponent(make_shared<TestDragon>());
-		//	}
-		//}
+			//for (auto& gameObject : gameObjects)
+			//{
+			//	gameObject->SetName(L"Player1");
+			//	gameObject->SetCheckFrustum(false);
+			//	gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+			//	gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			//	gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+			//	//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			//	scene->AddGameObject(gameObject);
+			//	gameObject->AddComponent(make_shared<TestDragon>());
+			//}
+		}
+
 
 		{
-			//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\dddd.fbx");
 			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 			for (auto& gameObject : gameObjects)
 			{
-				gameObject->SetName(L"Player1");
+				gameObject->SetName(L"Player0");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(11000.f, 111110.f, 111110.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1111111111111111110.f, 111111111111111110.f, 11111111111111111110.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
 				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -644,65 +633,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				//gameObject->AddComponent(make_shared<TestDragon>());
 			}
 		}
-
-
-		//{
-		//	//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\dddd.fbx");
-		//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetName(L"Player1");
-		//		gameObject->SetCheckFrustum(false);
-		//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-		//		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//		scene->AddGameObject(gameObject);
-		//		//gameObject->AddComponent(make_shared<TestDragon>());
-		//	}
-		//}
-
-		//{
-		//	//흐름 2)즉 여기에서 meshData에 대한 내용을 채워넣어야 한다.
-		//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\Player_Walk.fbx");
-		//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetName(L"Player1");
-		//		gameObject->SetCheckFrustum(false);
-		//		gameObject->GetTransform()->SetLocalPosition(Vec3(11000.f, 111110.f, 111110.f));
-		//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-		//		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//		scene->AddGameObject(gameObject);
-		//		//gameObject->AddComponent(make_shared<TestDragon>());
-		//	}
-		//}
-
-	//}
-	//{
-
-	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
-
-	//	for (auto& gameObject : gameObjects2)
-	//	{
-	//		gameObject->SetName(L"Player2");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 50.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		scene->AddGameObject(gameObject);
-	//		//gameObject->AddComponent(make_shared<TestDragon>());
-	//	}
-
-
-
 	}
 #pragma endregion
 
@@ -749,66 +679,24 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-	/*CreateMap(0, 0, 0, 150, OT_ROOM, 69);
-	CreateMap(5000, 0, 0, 150, OT_ROOM, 69);*/
-	///*CreateAisle(0, 0, 300, 150, OT_CORRIDOR,100);
-	//CreateAisle2(0, 0, 0, 150, OT_CORRIDOR, 101);*/
-	/*CreateOutDoor(-180, 0, 0, 150.f);
-	CreateOutDoor2(0, 0, -180, 150.f);
-
-	CreateOutDoor(-1800000, 0, 0, 150.f);
-	CreateOutDoor2(0, 0, -1800000, 150.f);*/
 
 
-	//CreateAABBBox(Vec3(-180.f, 40.f, 0.f), Vec3(20, 35, 75));
-	//CreateAABBBox(Vec3(0.f, 40.f, -40.f), Vec3(253, 85, 15));
-	
-	
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\SMG01.bin");
 
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-	//{
-	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
-
-	//	for (auto& gameObject : gameObjects2)
-	//	{
-	//		gameObject->SetName(L"CardKey");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 50.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-
-
-	//		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(meshData2->GetAABBExtents() * Vec3(5.f, 5.f, 5.f));
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(meshData2->GetAABBCenter());
-
-
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		scene->AddGameObject(gameObject);
-	//	}
-	//}
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Console.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	Vec3 newPos = Vec3(meshData->GetAABBCenter().x, meshData->GetAABBCenter().y + 13.f, meshData->GetAABBCenter().z);
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"Console");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -50.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
-
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		scene->AddGameObject(gameObject);
-	//	}
-	//}
-
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"MeGun");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(111111111111111111115.f, 1111111111111111111135.f, 1111111111111111111111115.f));		//0.f, 45.f, 100.f
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			scene->AddGameObject(gameObject);
+		}
+	}
 	
 
 	return scene;
@@ -885,15 +773,6 @@ shared_ptr<GameObject> SceneManager::CreateBoxObject(int object_type, int object
 
 void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
 {
-	MyGameObject obj;
-	obj.m_ObjectType = object_type;
-	obj.m_ObjectID = object_id;
-	obj.m_ObjectLocation = Vec3(x, y, z);
-	obj.m_animationID = animation_id;
-	obj.m_Direction = Vec3(dirX, dirY, dirZ);
-
-	vp_ObjectManager.push_back(obj);
-
 	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
 	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
@@ -915,13 +794,65 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 20.f, 5.f));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-
-
-		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
 	}
+}
+
+void SceneManager::CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+{
+	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\dddd.fbx");
+	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
+
+	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	for (auto& gameObject : gameObjects)
+	{
+		gameObject->SetName(L"Me");
+		gameObject->SetCheckFrustum(false);
+		gameObject->GetTransform()->SetObjectType(object_type);
+		gameObject->GetTransform()->SetObjectID(object_id);
+		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
+		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 
 
+		//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		//gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+		//gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+
+
+		//gameObject->AddComponent(make_shared<SphereCollider>());
+
+
+		gameObject->AddComponent(make_shared<BoxCollider>());
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 20.f, 5.f));
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
+		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
+		scene->AddGameObject(gameObject);
+	}
+}
+
+void SceneManager::CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+{
+	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\dddd.fbx");
+	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\SMG01.bin");
+
+	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	for (auto& gameObject : gameObjects)
+	{
+		gameObject->SetName(L"MeGun");
+		gameObject->SetCheckFrustum(false);
+		gameObject->GetTransform()->SetObjectType(object_type);
+		gameObject->GetTransform()->SetObjectID(object_id);
+		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
+		gameObject->GetTransform()->SetLocalScale(Vec3(6.f, 6.f, 6.f));
+		gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f + dirX, 3.14f + dirY, dirZ));
+
+
+
+		scene->AddGameObject(gameObject);
+	}
 }
 
 void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)

@@ -38,5 +38,11 @@ private:
 	float verticalVelocity = 0.0f;
 
 	Vec3 previousPosition;
+
+	shared_ptr<GameObject> playerObject;
+	shared_ptr<GameObject> playerGunObject;
+
+	double timeElapse = 0.0;
+	const double clickCooldown = 0.5;
 };
 
