@@ -22,7 +22,7 @@
 #include <mmeapi.h>
 #include <dsound.h>
 #include <fstream>
-#include <xaudio2.h>
+//#include <xaudio2.h>
 
 //using namespace std;
 
@@ -300,13 +300,13 @@ struct MyGameObject
 enum
 {
 	//윈도우 크기
-	WINDOW_WIDTH = 800,
-	WINDOW_HEIGHT = 600,
+	WINDOW_WIDTH = 1600,
+	WINDOW_HEIGHT = 1200,
 	//창모드 여부
 	IS_WINDOW_MODE = true,
 	//윈도우 위치
-	WINDOW_POSX = 100,
-	WINDOW_POSY = 100,
+	WINDOW_POSX = 0,
+	WINDOW_POSY = 0,
 	//윈도우의 중심
 	WINDOW_MIDDLE_X = WINDOW_WIDTH / 2 + WINDOW_POSX,
 	WINDOW_MIDDLE_Y = WINDOW_HEIGHT / 2 + WINDOW_POSY,
