@@ -138,7 +138,7 @@ void TestCameraScript::LateUpdate()
 	{
 		moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f)); 
 
-		GET_SINGLE(SceneManager)->SetMapPosition(0, 0);
+		//GET_SINGLE(SceneManager)->SetMapPosition(0, 0);
 	}
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
@@ -410,7 +410,7 @@ void TestCameraScript::LateUpdate()
 
 
 	//Picking 입력을 확인
-	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
+	if (INPUT->GetButton(KEY_TYPE::RBUTTON))
 	{
 		std::cout << "COOLTIME" << std::endl;
 		if (clickCooldown <= timeElapse)
