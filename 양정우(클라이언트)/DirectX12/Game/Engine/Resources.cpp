@@ -370,6 +370,22 @@ shared_ptr<MeshData> Resources::LoadPlayerModel(const wstring& Keyname)
 	return meshData;
 }
 
+shared_ptr<MeshData> Resources::LoadGunAnimation(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadGunModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
 void Resources::CreateDefaultShader()
 {
 	// Skybox

@@ -53,7 +53,8 @@ public:
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
-	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
+	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
+	void ChangeObjectAnimation(int object_id, int animationID);
 	Vec3 FindAislePosition(int aisleNum);
 	void CreateGameObject(int aisleNum, int object_type, int object_ID);
 

@@ -45,8 +45,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
-		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz, p->animation_id);
 		//p->animation_id 로 애니메이션 설정 가능
+
+		//마우스이동을 할때는 -1값이다.
+		//움직임이 감지되었을때는 p->animation_id로 셋해주면 된다.
+
+		//_activeSessionScene->ChangeObjectAnimation(p->id, p->animation_id);
 		break;
 	}
 	case SC_REMOVE_PLAYER :
@@ -60,7 +65,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{		
 		sc_packet_apply_damage* p = reinterpret_cast<sc_packet_apply_damage*>(packet);
 		//데미지를 자신한테 적용하는 패킷
-		//p->hp; 만큼 체력에서 "빼서" ui 최신화
 
 		_activeSessionScene->CalculateHP(p->hp);
 
@@ -85,7 +89,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_modify_bullet* p = reinterpret_cast<sc_packet_modify_bullet*>(packet);
 		//총알 개수를 바꾸는 패킷임.
-		//p->amount 가 변동 값. 총알 개수 변수에 그대로 더하면 됨
 		//ui 최신화
 
 		_activeSessionScene->CalculateBullet(p->amount);
@@ -114,6 +117,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_set_animation* p = reinterpret_cast<sc_packet_set_animation*>(packet);
 		//p->obj_id / p->animation_id
 		//obj_id 오브젝트의 animation 설정
+
+		_activeSessionScene->ChangeObjectAnimation(p->obj_id, p->animation_id);
 		break;
 	}
 	case SC_CARD_USED :
