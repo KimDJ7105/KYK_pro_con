@@ -39,7 +39,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
 		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz);
-
+		//p->animation_id 로 애니메이션 설정 가능
 		break;
 	}
 	case SC_REMOVE_PLAYER :
@@ -82,6 +82,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_show_map* p = reinterpret_cast<sc_packet_show_map*>(packet);
 		//map ui를  띄우면 됨
 		
+		break;
+	}
+	case SC_SET_ANIMATION :
+	{
+		sc_packet_set_animation* p = reinterpret_cast<sc_packet_set_animation*>(packet);
+		//p->obj_id / p->animation_id
+		//obj_id 오브젝트의 animation 설정
 		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
