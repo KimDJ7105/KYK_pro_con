@@ -87,7 +87,7 @@ public:
 	shared_ptr<GameObject> GetPlayerGun(int ID);	//102
 
 
-	void RemoveObject(int object_id);
+	void RemoveObject(int object_type, int object_id);
 
 
 public:
