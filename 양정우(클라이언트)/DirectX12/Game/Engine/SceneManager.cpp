@@ -894,7 +894,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"Player1");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -914,7 +914,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"PlayerGunAnimation");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -1333,12 +1333,6 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 		{
 			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 			otherPlayer->GetTransform()->SetLocalRotation(Vec3(0.f, dirY, dirZ));
-
-
-			if (animationID != -1)
-			{
-				std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(1);
-			}
 		}
 	}
 }
@@ -1347,14 +1341,28 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 
 void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 {
-	for (auto& otherPlayer : _otherPlayer)
+	if (animationID != -1)
 	{
-		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
+		for (auto& otherPlayer : _otherPlayer)
 		{
-			std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(0);
-
+			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
+			{
+				if (animationID == AT_IDLE)
+				{
+					otherPlayer->GetAnimator()->Play(0);
+				}
+				if (animationID == AT_WALKING)
+				{
+					otherPlayer->GetAnimator()->Play(1);
+				}
+				if (animationID == AT_SHOOTING)
+				{
+					otherPlayer->GetAnimator()->Play(2);
+				}
+			}
 		}
 	}
+	
 }
 
 

@@ -534,13 +534,13 @@ void TestCameraScript::LateUpdate()
 	
 	if (INPUT->GetButtonDown(KEY_TYPE::R))
 	{
-		auto& obj = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		/*auto& obj = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 		for (auto& a : obj)
 		{
 			if (a->GetTransform()->GetObjectType() != OT_PLAYER)
 				continue;
 			a->GetAnimator()->Play(1);
-		}
+		}*/
 
 		cs_packet_reload_mag lm;
 		lm.size = sizeof(cs_packet_reload_mag);
