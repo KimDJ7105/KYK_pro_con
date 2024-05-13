@@ -23,8 +23,6 @@ private:
 	array<float, 3> pos;
 	array<float, 3> view_dir;
 
-	bool dead;
-
 private:
 	void Send_Packet(void* packet, unsigned id);
 	
