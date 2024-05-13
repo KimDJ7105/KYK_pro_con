@@ -23,3 +23,8 @@ void TestDragon::Update()
 		GetAnimator()->Play(index);
 	}
 }
+
+void TestDragon::Set(int num)
+{
+	GetAnimator()->Play(num);
+}

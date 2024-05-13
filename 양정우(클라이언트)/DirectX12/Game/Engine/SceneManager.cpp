@@ -1257,7 +1257,8 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-		//gameObject->AddComponent(make_shared<TestDragon>());
+		gameObject->AddComponent(make_shared<TestDragon>());
+
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
 		
@@ -1336,7 +1337,7 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 
 			if (animationID != -1)
 			{
-				std::dynamic_pointer_cast<Animator>(otherPlayer->GetAnimator())->Play(1);
+				std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(1)
 			}
 		}
 	}
@@ -1350,7 +1351,8 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 	{
 		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
-			std::dynamic_pointer_cast<Animator>(otherPlayer->GetAnimator())->Play(0);
+			std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(0);
+
 		}
 	}
 }

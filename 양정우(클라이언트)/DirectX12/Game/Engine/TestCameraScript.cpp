@@ -156,6 +156,7 @@ void TestCameraScript::LateUpdate()
 		moveDirection.Normalize();
 	}
 
+	if (playerObject != NULL)
 	{
 
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
