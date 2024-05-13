@@ -444,6 +444,14 @@ void TestCameraScript::LateUpdate()
 					session->Send_Packet(&ppi);
 				}
 
+				else {
+					cs_packet_picking_info ppi;
+					ppi.size = sizeof(cs_packet_picking_info);
+					ppi.type = CS_PICKING_INFO;
+					ppi.target_id = -1;
+
+					session->Send_Packet(&ppi);
+				}
 			}
 
 			else {
