@@ -303,8 +303,8 @@ struct MyGameObject
 enum
 {
 	//윈도우 크기
-	WINDOW_WIDTH = 800,
-	WINDOW_HEIGHT = 600,
+	WINDOW_WIDTH = 1600,
+	WINDOW_HEIGHT = 1200,
 	//창모드 여부
 	IS_WINDOW_MODE = true,
 	//윈도우 위치

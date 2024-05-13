@@ -118,7 +118,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//p->obj_id / p->animation_id
 		//obj_id 오브젝트의 animation 설정
 
-		_activeSessionScene->ChangeObjectAnimation(p->obj_id, p->animation_id);
+		//_activeSessionScene->ChangeObjectAnimation(p->obj_id, p->animation_id);
 		break;
 	}
 	case SC_CARD_USED :
