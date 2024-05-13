@@ -58,7 +58,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_remove_player* p = reinterpret_cast<sc_packet_remove_player*>(packet);
 		//p->id 와 같은 id를 가진 물체 삭제 (플레이어, 오브젝트)
-		_activeSessionScene->RemoveObject(p->obj_type, p->id);
+		p->obj_type;
+		_activeSessionScene->RemoveObject(p->id);
 		break;
 	}
 	case SC_APPLY_DAMAGE :
@@ -73,7 +74,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PLAYER_DEAD :
 	{
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
-		_activeSessionScene->RemoveObject(OT_PLAYER, p->id);
+		_activeSessionScene->RemoveObject(p->id);
 		break;
 	}
 	case SC_PUT_OBJECT :

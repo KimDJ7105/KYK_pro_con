@@ -1084,7 +1084,7 @@ void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y
 	}
 }
 
-void SceneManager::RemoveObject(int object_type, int object_id)
+void SceneManager::RemoveObject(int object_id)
 {
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
@@ -1092,14 +1092,7 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject->GetTransform()->GetObjectID() != object_type)
-			continue;
-
-		if (gameObject->GetTransform()->GetObjectID() != object_id)
-			continue;
-
-		if (gameObject->GetTransform()->GetObjectID() == object_type 
-			&& gameObject->GetTransform()->GetObjectID() == object_id)
+		if (gameObject->GetTransform()->GetObjectID() == object_id)
 		{
 			removeObjectData = gameObject;
 			break;
