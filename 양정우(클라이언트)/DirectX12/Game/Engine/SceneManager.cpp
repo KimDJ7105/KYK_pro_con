@@ -899,10 +899,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 
-				gameObject->GetTransform()->SetObjectType(9999);
-				gameObject->GetTransform()->SetObjectID(9999);
-
-				//gameObject->AddComponent(make_shared<TestDragon>());
+				gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
 				scene->AddGameObject(gameObject);
 				
@@ -917,7 +914,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"PlayerGunAnimation");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 15.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -941,7 +938,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
 				//gameObject->AddComponent(make_shared<TestDragon>());
 			}
@@ -1260,7 +1257,7 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
 		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-		//gameObject->AddComponent(make_shared<TestDragon>());
+		gameObject->AddComponent(make_shared<TestDragon>());
 
 		_otherPlayer.push_back(gameObject);
 		scene->AddGameObject(gameObject);
@@ -1314,7 +1311,7 @@ void SceneManager::CreatePlayerGunObject(int object_type, int object_id, float x
 
 	for (auto& gameObject : gameObjects)
 	{
-		gameObject->SetName(L"MeGun2");
+		gameObject->SetName(L"MeGun");
 		gameObject->SetCheckFrustum(false);
 		gameObject->GetTransform()->SetObjectType(object_type);
 		gameObject->GetTransform()->SetObjectID(object_id);
@@ -1337,6 +1334,11 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 			otherPlayer->GetTransform()->SetLocalRotation(Vec3(0.f, dirY, dirZ));
 
+
+			if (animationID != -1)
+			{
+				std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(1);
+			}
 		}
 	}
 }
@@ -1345,29 +1347,14 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 
 void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 {
-	if (animationID != -1)
+	for (auto& otherPlayer : _otherPlayer)
 	{
-		for (auto& otherPlayer : _otherPlayer)
+		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
-			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
-			{
-				if (animationID == AT_IDLE)
-				{
-					otherPlayer->GetAnimator()->Play(0);
-				}
-				if (animationID == AT_WALKING)
-				{
-					otherPlayer->GetAnimator()->Play(1);
-				}
-				/*if (animationID == AT_SHOOTING)
-				{
-					otherPlayer->GetAnimator()->Play(2);
-				}*/
+			std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(0);
 
-			}
 		}
 	}
-	
 }
 
 
