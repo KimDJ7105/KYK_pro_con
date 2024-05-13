@@ -1337,7 +1337,7 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 
 			if (animationID != -1)
 			{
-				std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(1)
+				std::dynamic_pointer_cast<TestDragon>(otherPlayer)->Set(1);
 			}
 		}
 	}

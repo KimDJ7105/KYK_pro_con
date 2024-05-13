@@ -74,6 +74,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
 
+		if (playerID != p->id) {
+			_activeSessionScene->RemoveObject(p->id);
+		}
+
+		else {
+			std::cout << "I'm Dead\n";
+		}
 		break;
 	}
 	case SC_PUT_OBJECT :
