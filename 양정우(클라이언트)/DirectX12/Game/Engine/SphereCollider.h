@@ -9,9 +9,16 @@ public:
 
 	virtual void FinalUpdate() override;
 	virtual bool Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance) override;
+	virtual bool isColliding(const BoundingBox& boxToCheck) override {return false; }
 
 	void SetRadius(float radius) { _radius = radius; }
 	void SetCenter(Vec3 center) { _center = center; }
+
+	//BoundingSphere GetSphereCollider() { return _boundingSphere; } override;
+	virtual BoundingBox GetBoxCollider() const override {return BoundingBox();}
+
+	virtual Vec3 GetMinPoint() = 0;
+	virtual Vec3 GetMaxPoint() = 0;
 
 private:
 	// Local ±‚¡ÿ

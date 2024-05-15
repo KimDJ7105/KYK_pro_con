@@ -49,12 +49,113 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 	return meshData;
 }
 
+shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
+{
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+	{
+		FBXLoader loader3;
+		loader3.LoadFbx(L"..\\Resources\\FBX\\Player3\\Player_Walk.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader3.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // run 범위 종료, run 객체는 소멸됨
+
+	{
+		FBXLoader loader4;
+		loader4.LoadFbx(L"..\\Resources\\FBX\\Player4\\Player_Walk.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader4.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // shoot 범위 종료, shoot 객체는 소멸됨
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+shared_ptr<MeshData> MeshData::LoadGunModel(const wstring& keyname)
+{
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Gun2\\test01.fbx");
+	{
+		FBXLoader loader3;
+		loader3.LoadFbx(L"..\\Resources\\FBX\\Player_Gun3\\test01.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader3.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // run 범위 종료, run 객체는 소멸됨
+
+	{
+		FBXLoader loader4;
+		loader4.LoadFbx(L"..\\Resources\\FBX\\Player_Gun4\\test01.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader4.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	} // shoot 범위 종료, shoot 객체는 소멸됨
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+
 shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 {
 	BinaryLoader loader;
 	loader.LoadBinary(path);
 
+
+
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+	meshData->AABBCenter = loader.GetAABBCenter();
+	meshData->AABBExtents = loader.GetAABBExtents();
 
 	//메시덩어리 수
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
@@ -69,6 +170,8 @@ shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
 		{
 			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+
+
 			materials.push_back(material);
 		}
 

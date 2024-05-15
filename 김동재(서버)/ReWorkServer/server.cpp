@@ -40,12 +40,42 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 {
 	std::cout << "초기 카드키 생성중" << std::endl;
 
-	for (int i = 0; i < 3; i++) {
+	//0 1 4 13  5 9
+	int o_id = GetNewObjectID();
+	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
+	objects[o_id]->spawn_num = 0;
+
+	o_id = GetNewObjectID();
+	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_TERMINAL);
+	objects[o_id]->spawn_num = 1;
+
+	o_id = GetNewObjectID();
+	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
+	objects[o_id]->spawn_num = 4;
+
+	o_id = GetNewObjectID();
+	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_TERMINAL);
+	objects[o_id]->spawn_num = 13;
+
+	o_id = GetNewObjectID();
+	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
+	objects[o_id]->spawn_num = 5;
+
+	o_id = GetNewObjectID();
+	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_TERMINAL);
+	objects[o_id]->spawn_num = 9;
+
+	/*for (int i = 0; i < 3; i++) {
 		int o_id = GetNewObjectID();
 		objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
 		objects[o_id]->select_pos();
 		objects[o_id]->show_approx_pos();
-	}
+
+		int t_id = GetNewObjectID();
+		objects[t_id] = std::make_shared<OBJECT>(t_id, OT_TERMINAL);
+		objects[t_id]->select_pos();
+		objects[t_id]->show_approx_pos();
+	}*/
 	
 	std::cout << "카드키 생성 완료" << std::endl;
 

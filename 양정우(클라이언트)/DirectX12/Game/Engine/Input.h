@@ -14,6 +14,7 @@ enum class KEY_TYPE
 
 	Q = 'Q',
 	E = 'E',
+	R = 'R',
 	Z = 'Z',
 	C = 'C',
 
@@ -21,6 +22,14 @@ enum class KEY_TYPE
 	P = 'P',
 
 	ESC = 27,
+
+	numUP = 104,
+	numDOWN = 98,
+	numLEFT = 100,
+	numRIGHT = 102,
+
+	numONE = 97,
+	numTHREE = 99,
 
 	KEY_1 = '1',
 	KEY_2 = '2',

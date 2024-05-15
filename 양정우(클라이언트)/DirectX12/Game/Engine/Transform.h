@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <DirectXMath.h>
 
 using std::weak_ptr;
 using std::min;
@@ -26,6 +27,7 @@ public:
 	const Matrix& GetLocalToWorldMatrix() { return _matWorld; }
 	//const Vec3& GetWorldPosition() { return _matWorld.Translation(); }'
 	Vec3 GetWorldPosition() { return _matWorld.Translation(); }
+	XMFLOAT4 GetWorldRotation();
 
 	Vec3 GetRight() { return _matWorld.Right(); }
 	Vec3 GetUp() { return _matWorld.Up(); }
@@ -63,7 +65,20 @@ public:
 	int GetObjectType() { return _objectType; }
 
 private:
-	int _objectID = -1;
+	int _objectID = -1;		
 	int _objectType = -1;
+
+	//99번 - 충돌박스가 있는 스태틱 오브젝트(벽)
+	//101번 - 플레이어 손 오브젝트 아이디
+	//102번 - 플레이어가 들고있는 총UI 아이디.
+	//103번 - 맵 오브젝트 - 1번은 맵틀, 2번은 맵
+	//104번 - 체력 UI - 1번부터 10번까지 순서대로 체력번호
+	//105번 - 키카드 - 1번부터 3번까지 있음
+	//106번 - 총 UI
+	//107번 - 슬래시(총알갯수구분슬래시)UI
+	//108번 - 최대장탄수 1번은 10의자리, 2번은 1의자리.
+	//109번 - 현재 총알의 장탄수 
+	//		- 0번부터 9번까지 1의자리
+	//		- 10번부터 19번까지 10의자리
 };
 

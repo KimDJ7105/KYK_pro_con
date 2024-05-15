@@ -12,6 +12,8 @@ enum
 	MAX_LAYER = 32
 };
 
+
+
 class SceneManager
 {
 	DECLARE_SINGLE(SceneManager);
@@ -49,15 +51,58 @@ public:
 	void CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
-	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
+	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
+	void ChangeObjectAnimation(int object_id, int animationID);
+	Vec3 FindAislePosition(int aisleNum);
+	void CreateGameObject(int aisleNum, int object_type, int object_ID);
 
-	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale);
-	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale);
-	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale);
+	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
+	void CreateAisle2(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
+	void CreateMap(float mapX, float mapY, float mapZ, float aisleScale, int type, int ID);
+	void CreateOutDoor(float mapX, float mapY, float mapZ, float aisleScale, int ID);
+	void CreateOutDoor2(float mapX, float mapY, float mapZ, float aisleScale, int ID);
+	void CreateAABBBox(Vec3 aabbPosition, Vec3 aabbScale);
+	int RenderAABBBox(Vec3 aabbPosition, Vec3 aabbScale);
+	void UpdateAABBBox(int boxNum, Vec3 pos, Vec3 scale, Vec3 rotation);
 
 	void AddComputeShader(int threadX, int threadY, int threadZ);
 
 	shared_ptr<GameObject> GetPlayer() { return _player; }
 
+
+	void SetPlayerID(int pID) { _playerID = pID; }
+	shared_ptr<GameObject> CheckCollisionWithSceneObjects(const std::shared_ptr<GameObject>& objectToCheck, int object_Type);
+
+private:
+	int _playerID;
+
+	int boxNum = 0;
+	//충돌박스의 타입넘버는 99이다
+
+public:
+	shared_ptr<GameObject> GetPlayer(int ID);	//101
+
+	shared_ptr<GameObject> GetPlayerGun(int ID);	//102
+
+
+	void RemoveObject(int object_id);
+
+
+public:
+	void SetMapPosition(int x, int y);
+	void SetKeyCardPosition(int x, int y, int keyCardNum);
+
+
+private:
+	int playerHP = 100;
+	int bullet = 30;
+
+public:
+	void CalculateHP(int damagedHP);
+
+	void CalculateBullet(int nowBullet);
+	void SetBullet(int BulletCount);
 };
 

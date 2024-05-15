@@ -32,6 +32,8 @@ private:
 
 	void do_write(unsigned char* packet, std::size_t length);
 
+	int find_useable_key();
+
 public:
 	SESSION(tcp::socket socket, int new_id);
 

@@ -277,5 +277,8 @@ public:
 		return _meshes;
 	}
 
+	XMFLOAT3 GetAABBCenter() { return m_xmf3AABBCenter; }
+	XMFLOAT3 GetAABBExtents() { return m_xmf3AABBExtents; }
+
 };
 

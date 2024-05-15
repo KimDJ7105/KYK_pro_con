@@ -347,6 +347,39 @@ shared_ptr<MeshData> Resources::LoadBinaryModel(const wstring& path)
 		return meshData;
 
 	meshData = MeshData::LoadFromBinary(path);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+shared_ptr<MeshData> Resources::LoadPlayerModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadPlayerModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+shared_ptr<MeshData> Resources::LoadGunAnimation(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadGunModel(Keyname);
+
 	meshData->SetName(key);
 	Add(key, meshData);
 
@@ -589,6 +622,31 @@ void Resources::CreateDefaultShader()
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\terrain.hlsl", info, arg);
 		Add<Shader>(L"Terrain", shader);
+	}
+
+	// BoundingBox
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::WIREFRAME,
+			DEPTH_STENCIL_TYPE::LESS,
+			BLEND_TYPE::ALPHA_BLEND,
+			D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"HS_Main",
+			"DS_Main",
+			"",
+			"PS_Main",
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\boundingbox.hlsl", info, arg);
+		Add<Shader>(L"AABB", shader);
 	}
 
 	// ComputeAnimation

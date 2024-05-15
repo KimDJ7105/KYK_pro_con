@@ -69,7 +69,10 @@ void Animator::PushData()
 
 void Animator::Play(uint32 idx)
 {
-	assert(idx < _animClips->size());
-	_clipIndex = idx;
-	_updateTime = 0.f;
+	if (idx != _clipIndex)
+	{
+		assert(idx < _animClips->size());
+		_clipIndex = idx;
+		_updateTime = 0.f;
+	}
 }

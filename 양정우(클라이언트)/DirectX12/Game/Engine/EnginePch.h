@@ -1,15 +1,16 @@
 #pragma once
 
-//#define DEBUG_ON
+#define DEBUG_ON
 // 
 //디버깅용
 #ifdef DEBUG_ON
 #include <iostream>
 #endif
 
-
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0
+
+#define OUT_OF_RENDER -100000000000
 
 // 각종 include
 #include <windows.h>
@@ -20,7 +21,17 @@
 #include <array>
 #include <list>
 #include <map>
+#include <mmeapi.h>
+#include <dsound.h>
+#include <string>
+#include <fstream>
+//#include <xaudio2.h>
+
 //using namespace std;
+
+
+#pragma comment(lib, "dsound.lib")
+#pragma comment(lib, "winmm.lib")
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -60,8 +71,8 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "FBX\\debug\\libxml2-md.lib")
 #pragma comment(lib, "FBX\\debug\\zlib-md.lib")
 #else
-#pragma comment(lib, "FBX\\release\libfbxsdk-md.lib")
-#pragma comment(lib, "FBX\\release\libxml2-md.lib")
+#pragma comment(lib, "FBX\\release\\libfbxsdk-md.lib")
+#pragma comment(lib, "FBX\\release\\libxml2-md.lib")
 #pragma comment(lib, "FBX\\release\\zlib-md.lib")
 #endif
 
@@ -292,18 +303,22 @@ struct MyGameObject
 enum
 {
 	//윈도우 크기
-	WINDOW_WIDTH = 800,
-	WINDOW_HEIGHT = 600,
+	WINDOW_WIDTH = 1600,
+	WINDOW_HEIGHT = 1200,
 	//창모드 여부
 	IS_WINDOW_MODE = true,
 	//윈도우 위치
-	WINDOW_POSX = 100,
-	WINDOW_POSY = 100,
+	WINDOW_POSX = 0,
+	WINDOW_POSY = 0,
 	//윈도우의 중심
 	WINDOW_MIDDLE_X = WINDOW_WIDTH / 2 + WINDOW_POSX,
 	WINDOW_MIDDLE_Y = WINDOW_HEIGHT / 2 + WINDOW_POSY,
 
 };
+
+
+
+//-----------------------------
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

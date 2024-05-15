@@ -20,6 +20,14 @@
 #define OT_KEYCARD 1
 #define OT_ROOM 2
 #define OT_CORRIDOR 3
+#define OT_TERMINAL 4
+//---------------------------------------
+
+//Animation Type-------------------------
+#define AT_IDLE 0
+#define AT_WALKING 1
+#define AT_RUNNING 2
+#define AT_SHOOTING 3
 //---------------------------------------
 
 //Packet type----------------------------
@@ -28,6 +36,9 @@
 #define CS_MOUSE_INFO    3
 #define CS_PICKING_INFO  4
 #define CS_TRY_GET_KEY   5
+#define CS_TRY_USE_TMN   6
+#define CS_PLAYER_STOP   7
+#define CS_RELOAD_MAG    8
 
 #define SC_POS           1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER    2 //오브젝트 생성
@@ -36,8 +47,10 @@
 #define SC_APPLY_DAMAGE  5 //플레이어의 HP를 감소시킴
 #define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
 #define SC_PUT_OBJECT    7 //오브젝트를 생성
-
-#define SC_CREATE_BOX 10 //test용
+#define SC_MODIFY_BULLET 8 //총알 개수를 변경
+#define SC_SHOW_MAP      9 //단말기를 통해 맵을 출력
+#define SC_SET_ANIMATION 10 //객체의 애니메이션을 세팅
+#define SC_CARD_USED     11 //카드가 사용되었음을 알림
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -60,15 +73,6 @@ struct cs_packet_pos_info {
 	float z;
 };
 
-struct cs_packet_box_create {
-	BYTE size;
-	BYTE type;
-	float x;
-	float y;
-	float z;
-};
-
-
 struct cs_packet_logout {
 	BYTE size;
 	BYTE type;
@@ -85,7 +89,6 @@ struct cs_packet_mouse_info {
 struct cs_packet_picking_info {
 	BYTE size;
 	BYTE type;
-	int shooter_id;
 	int target_id;
 };
 
@@ -96,6 +99,22 @@ struct cs_packet_try_get_key {
 	float x;
 	float y;
 	float z;
+};
+
+struct cs_packet_try_use_tmn {
+	BYTE size;
+	BYTE type;
+	int terminal_id;
+};
+
+struct cs_packet_player_stop {
+	BYTE size;
+	BYTE type;
+};
+
+struct cs_packet_reload_mag {
+	BYTE size;
+	BYTE type;
 };
 
 //---------Server To Client-----------------
@@ -110,6 +129,7 @@ struct sc_packet_pos {
 	float dirx;
 	float diry;
 	float dirz;
+	int animation_id;
 };
 
 struct sc_packet_put {
@@ -134,21 +154,14 @@ struct sc_packet_login_info {
 	float dirx;
 	float diry;
 	float dirz;
+	int bullet_amount;
 };
 
 struct sc_packet_remove_player {
 	BYTE size;
 	BYTE type;
 	WORD id;
-};
-
-struct sc_packet_create_box {
-	BYTE size;
-	BYTE type;
-	WORD id;
-	float x;
-	float y;
-	float z;
+	int obj_type;
 };
 
 struct sc_packet_apply_damage {
@@ -169,8 +182,30 @@ struct sc_packet_put_object {
 	BYTE type;
 	WORD id;
 	int obj_type;
-	int room1;
-	int room2;
+	int approx_num;
+};
+
+struct sc_packet_modify_bullet {
+	BYTE size;
+	BYTE type;
+	int amount;
+};
+
+struct sc_packet_show_map {
+	BYTE size;
+	BYTE type;
+};
+
+struct sc_packet_set_animation {
+	BYTE size;
+	BYTE type;
+	int obj_id;
+	int animation_id;
+};
+
+struct sc_packet_card_used {
+	BYTE size;
+	BYTE type;
 };
 
 #pragma pack (pop)

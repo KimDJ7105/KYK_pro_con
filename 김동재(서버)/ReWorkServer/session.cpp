@@ -35,6 +35,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.dirx = P->view_dir[0];
 		pos_pack.diry = P->view_dir[1];
 		pos_pack.dirz = P->view_dir[2];
+		pos_pack.animation_id = AT_WALKING;
 
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
@@ -46,29 +47,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		//std::cout << "Packet Sended From Client " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 
-		break;
-	}
-	case CS_BOX_CREATE: {
-		cs_packet_box_create* p = (cs_packet_box_create*)packet;
-
-		sc_packet_create_box cb;
-		cb.size = sizeof(sc_packet_create_box);
-		cb.type = SC_CREATE_BOX;
-		cb.x = p->x;
-		cb.y = p->y;
-		cb.z = p->z;
-		cb.id = ++box_id;
-
-		for (auto& pl : players) {
-			shared_ptr<SESSION> player = pl.second;
-			if (player == nullptr) continue;
-
-			std::cout << "Send Create Box Packet\n";
-
-			player->Send_Packet(&cb);
-		}
-
-		std::cout << "Box Is Created! orderID : " << cb.id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
 		break;
 	}
 	case CS_MOUSE_INFO: {
@@ -88,7 +66,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.dirx = p->x;
 		pos_pack.diry = p->y;
 		pos_pack.dirz = p->z;
-
+		pos_pack.animation_id = -1;
 
 		for (auto& pl : players) {
 			shared_ptr<SESSION> player = pl.second;
@@ -104,29 +82,50 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
-		shared_ptr<SESSION> target = players[p->target_id];
-		shared_ptr<SESSION> shooter = players[p->shooter_id];
+		if(remain_bullet <= 0) break;
 
-		if (target == nullptr || shooter == nullptr) break;
+		remain_bullet -= 1;
 
-		std::cout << "플레이어 " << p->shooter_id << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
+		sc_packet_modify_bullet mb;
+		mb.type = SC_MODIFY_BULLET;
+		mb.size = sizeof(sc_packet_modify_bullet);
+		mb.amount = remain_bullet;
+		Send_Packet(&mb);
 		
-		target->hp -= WP_DMG[shooter->equip_weapon];
+		if (p->target_id == -1) break;
+
+		shared_ptr<SESSION> target = players[p->target_id];
+
+		if (target == nullptr) break;
+
+		std::cout << "플레이어 " << my_id_ << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
+		
+		target->hp -= WP_DMG[equip_weapon];
 
 		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
 
-		if (target->hp > 0) {
-			sc_packet_apply_damage pad;
-			pad.type = SC_APPLY_DAMAGE;
-			pad.size = sizeof(sc_packet_apply_damage);
-			pad.id = p->target_id;
-			pad.hp = target->hp;
 
-			target->Send_Packet(&pad);
-		}
+		
+		sc_packet_apply_damage pad;
+		pad.type = SC_APPLY_DAMAGE;
+		pad.size = sizeof(sc_packet_apply_damage);
+		pad.id = p->target_id;
+		pad.hp = target->hp;
 
-		else {
+		target->Send_Packet(&pad);
 
+		if (target->hp <= 0) { //플레이어 체력이 0보다 낮아지면 모든 플레이어에게 사망을 전달한다.
+			sc_packet_player_dead pd;
+			pd.type = SC_PLAYER_DEAD;
+			pd.size = sizeof(sc_packet_player_dead);
+			pd.id = target->my_id_;
+
+			for (auto& pl : players) {
+				shared_ptr<SESSION> player = pl.second;
+				if (player == nullptr) continue;
+
+				player->Send_Packet(&pd);
+			}
 		}
 			
 		break;
@@ -135,7 +134,102 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
 
+		shared_ptr<OBJECT> card = objects[p->key_id];
+		if (card == nullptr) break;
+
 		std::cout << "카드키 획득 요청 수신\n";
+		card->owner_id = my_id_;
+
+		sc_packet_remove_player rmp;
+		rmp.type = SC_REMOVE_PLAYER;
+		rmp.size = sizeof(sc_packet_remove_player);
+		rmp.id = card->obj_id;
+		rmp.obj_type = OT_KEYCARD;
+		for (auto& p : players) {
+			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
+			player->Send_Packet(&rmp);
+		}
+
+		break;
+	}
+	case CS_TRY_USE_TMN :
+	{
+		cs_packet_try_use_tmn* p = (cs_packet_try_use_tmn*)packet;
+
+		std::cout << "터미널 사용 요청 수신\n";
+
+		shared_ptr<SESSION> user = players[my_id_];
+		if (user == nullptr) break;
+
+		shared_ptr<OBJECT> terminal = objects[p->terminal_id];
+		if (terminal == nullptr) break;
+
+		int key_id = find_useable_key();
+
+		if (terminal->owner_id == -1) { //아직 활성화 되지 않았으면 
+			if (key_id == -1) break;
+
+			//owner_id를 my_id로 변환
+			terminal->owner_id = my_id_;
+
+			//플레이어가 가진 카드키를 삭제
+			shared_ptr<OBJECT> key = objects[key_id];
+			if (key == nullptr) break;
+			key->owner_id = -1;
+
+			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
+
+			sc_packet_card_used cu;
+			cu.size = sizeof(sc_packet_card_used);
+			cu.type = SC_CARD_USED;
+
+			sc_packet_show_map sm;
+			sm.type = SC_SHOW_MAP;
+			sm.size = sizeof(sc_packet_show_map);
+
+			Send_Packet(&cu);
+			Send_Packet(&sm);
+		}
+		
+		else { //이미 활성화 된 터미널이면
+			sc_packet_show_map sm;
+			sm.type = SC_SHOW_MAP;
+			sm.size = sizeof(sc_packet_show_map);
+
+			Send_Packet(&sm);
+		}
+
+		break;
+	}
+	case CS_PLAYER_STOP : {
+		cs_packet_player_stop* p = (cs_packet_player_stop*)packet;
+
+		sc_packet_set_animation sa;
+		sa.type = SC_SET_ANIMATION;
+		sa.size = sizeof(sc_packet_set_animation);
+		sa.obj_id = my_id_;
+		sa.animation_id = AT_IDLE;
+
+		for (auto& pl : players) {
+			shared_ptr<SESSION> player = pl.second;
+			if (player == nullptr) continue;
+			if (player->my_id_ == my_id_) continue;
+
+			player->Send_Packet(&sa);
+
+		}
+
+		break;
+	}
+	case CS_RELOAD_MAG: {
+		remain_bullet = 30;
+
+		sc_packet_modify_bullet mb;
+		mb.type = SC_MODIFY_BULLET;
+		mb.size = sizeof(sc_packet_modify_bullet);
+		mb.amount = 30;
+		Send_Packet(&mb);
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
@@ -214,6 +308,18 @@ void SESSION::do_write(unsigned char* packet, std::size_t length)
 		});
 }
 
+int SESSION::find_useable_key()
+{
+	for (auto& object : objects) {
+		shared_ptr<OBJECT> key = object.second;
+		if (key == nullptr) continue;
+		if (key->obj_type != OT_KEYCARD) continue;
+		if (key->owner_id == my_id_) return key->obj_id;
+	}
+
+	return -1;
+}
+
 SESSION::SESSION(tcp::socket socket, int new_id)
 	: socket_(std::move(socket)), my_id_(new_id)
 {
@@ -228,7 +334,7 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	view_dir[2] = 0.0f;
 
 	hp = 100;
-	remain_bullet = 0;
+	remain_bullet = 30;
 	team = 0;
 
 	equip_weapon = WP_SMG;
@@ -248,6 +354,7 @@ void SESSION::start()
 	pl.dirx = view_dir[0];
 	pl.diry = view_dir[1];
 	pl.dirz = view_dir[2];
+	pl.bullet_amount = 30; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
 	Send_Packet(&pl);
 
 	sc_packet_put p;
@@ -263,32 +370,36 @@ void SESSION::start()
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
 	for (auto& pl : players) {
-		if (pl.second != nullptr)
-			pl.second->Send_Packet(&p);
+		shared_ptr<SESSION> player = pl.second;
+		if (player == nullptr) continue;
+		if (player->my_id_ == my_id_) continue;
+		player->Send_Packet(&p);
 	}
 
 	//다른 유저들의 정보를 클라이언트에게 전송
 	for (auto& pl : players) {
-		if (pl.second->my_id_ != my_id_) {
-			p.id = pl.second->my_id_;
-			p.x = pl.second->pos[0];
-			p.y = pl.second->pos[1];
+		shared_ptr<SESSION> player = pl.second;
+		if (player == nullptr) continue;
+		if (player->my_id_ != my_id_) {
+			p.id = player->my_id_;
+			p.x = player->pos[0];
+			p.y = player->pos[1];
 			Send_Packet(&p);
 		}
 	}
 
+	//생성되어있는 기본 오브젝트의 위치를 전송
 	for (auto& object : objects) {
 		shared_ptr<OBJECT> obj = object.second;
 		if (obj == nullptr) continue;
-		if (obj->owner_id != -1) continue;
+		if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
 
 		sc_packet_put_object put_obj;
 		put_obj.size = sizeof(sc_packet_put_object);
 		put_obj.type = SC_PUT_OBJECT;
 		put_obj.id = obj->obj_id;
 		put_obj.obj_type = obj->obj_type;
-		put_obj.room1 = obj->approx_pos[0];
-		put_obj.room2 = obj->approx_pos[1];
+		put_obj.approx_num = obj->spawn_num;
 
 		Send_Packet(&put_obj);
 	}

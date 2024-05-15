@@ -118,3 +118,30 @@ Vec3 Transform::DecomposeRotationMatrix(const Matrix& rotation)
 
 	return ret;
 }
+
+XMFLOAT4 Transform::GetWorldRotation()
+{
+	XMFLOAT4 worldRotation = XMFLOAT4(_localRotation.x, _localRotation.y, _localRotation.z, 1.0f);
+
+	// 부모의 회전을 고려하여 계산
+	auto parent = _parent.lock();
+	if (parent)
+	{
+		XMFLOAT4 parentRotation = parent->GetWorldRotation();
+
+		// 현재 쿼터니언으로 변환
+		XMVECTOR currentRotation = XMLoadFloat4(&worldRotation);
+		XMVECTOR parentQuat = XMLoadFloat4(&parentRotation);
+
+		// 부모의 회전을 현재 회전에 합산
+		XMVECTOR resultQuat = XMQuaternionMultiply(currentRotation, parentQuat);
+
+		// 합산된 쿼터니언을 정규화
+		resultQuat = XMQuaternionNormalize(resultQuat);
+
+		// 정규화된 쿼터니언을 XMFLOAT4로 변환
+		XMStoreFloat4(&worldRotation, resultQuat);
+	}
+
+	return worldRotation;
+}

@@ -12,8 +12,12 @@ private:
 	int prev_data_size_;
 	unsigned char data_[1024];
 	unsigned char packet_[1024];
+	bool moving;
 
 	SceneManager* _activeSessionScene{ nullptr };
+
+	bool isMapOpen;
+	int haveKeycard;
 
 public:
 
@@ -28,6 +32,10 @@ public:
 	void do_read();
 
 	void Send_Packet(void* packet);
+
+	void set_moving(bool mv);
+
+	bool get_moving();
 
 };
 

@@ -21,7 +21,7 @@ void Texture::Load(const wstring& path)
 	wstring newPath;
 	if (ext == L"")
 	{
-		ext = L".png";
+		ext = L".dds";
 		newPath = path + ext;
 	}
 	else newPath = path;

@@ -4,6 +4,7 @@
 #include "Client.h"
 #include "Game.h"
 #include "session.h"
+#include "SoundPlayer.h"
 
 #define MAX_LOADSTRING 100
 
@@ -84,6 +85,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     FILE* pConsoleStream;
     freopen_s(&pConsoleStream, "CONOUT$", "w", stdout);
 #endif
+
+
     // 기본 메시지 루프입니다:
     while (true)
     {

@@ -28,6 +28,10 @@ void Scene::Update()
 {
 	for (const std::shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
+		if (gameObject == NULL)
+			continue;
+		if (gameObject->GetIsUpdate() == false)
+			continue;
 		gameObject->Update();
 	}
 }
@@ -36,6 +40,10 @@ void Scene::LateUpdate()
 {
 	for (const std::shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
+		if (gameObject == NULL)
+			continue;
+		if (gameObject->GetIsUpdate() == false)
+			continue;
 		gameObject->LateUpdate();
 	}
 }
@@ -44,6 +52,10 @@ void Scene::FinalUpdate()
 {
 	for (const std::shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
+		if (gameObject == NULL)
+			continue;
+		if (gameObject->GetIsUpdate() == false)
+			continue;
 		gameObject->FinalUpdate();
 	}
 }

@@ -167,6 +167,7 @@
     <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BinaryLoader.h" />
     <ClInclude Include="BinaryMeshData.h" />
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Component.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="session.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="SwapChain.h" />
@@ -215,6 +217,7 @@
     <ClCompile Include="BaseCollider.cpp" />
     <ClCompile Include="BinaryLoader.cpp" />
     <ClCompile Include="BinaryMeshData.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -251,6 +254,7 @@
     <ClCompile Include="session.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="SwapChain.cpp" />
@@ -268,6 +272,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\animation.hlsl" />
+    <FxCompile Include="..\Resources\Shader\boundingbox.hlsl" />
     <FxCompile Include="..\Resources\Shader\compute.hlsl" />
     <FxCompile Include="..\Resources\Shader\deferred.hlsl" />
     <FxCompile Include="..\Resources\Shader\forward.hlsl" />
