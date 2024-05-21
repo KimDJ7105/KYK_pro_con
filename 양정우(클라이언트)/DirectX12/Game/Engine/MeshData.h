@@ -44,4 +44,10 @@ private:
 public:
 	XMFLOAT3 GetAABBCenter(){ return AABBCenter; }
 	XMFLOAT3 GetAABBExtents() { return AABBExtents; }
+
+
+private:
+	shared_ptr<Mesh> m_Mesh;
+	vector<shared_ptr<Material>>	m_Materials;
+	vector<MeshRenderInfo> m_MeshRenderers;
 };

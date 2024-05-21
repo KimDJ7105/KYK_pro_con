@@ -894,13 +894,18 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"Player1");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 
-				gameObject->AddComponent(make_shared<TestDragon>());
+				//gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
+
+				gameObject->GetTransform()->SetObjectID(999);
+				gameObject->GetTransform()->SetObjectType(999);
+
 				scene->AddGameObject(gameObject);
 				
 			}
@@ -912,17 +917,75 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 			for (auto& gameObject : gameObjects)
 			{
-				gameObject->SetName(L"PlayerGunAnimation");
+				gameObject->SetName(L"PlayerGunAnimation1");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-				gameObject->AddComponent(make_shared<TestDragon>());
+				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				//gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
+
+				gameObject->GetTransform()->SetObjectID(999);
+				gameObject->GetTransform()->SetObjectType(999);
+				
 
 				scene->AddGameObject(gameObject);
 				
+			}
+		}
+
+
+
+		{
+			//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Player2");
+				gameObject->SetCheckFrustum(false);
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f + 10.f, 0.f, 0.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+
+				//gameObject->AddComponent(make_shared<TestDragon>());
+				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
+
+				gameObject->GetTransform()->SetObjectID(9999);
+				gameObject->GetTransform()->SetObjectType(9999);
+
+				scene->AddGameObject(gameObject);
+
+			}
+		}
+		{
+			//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadGunAnimation(L"..\\Resources\\FBX\\Player_Gun2\\test01.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"PlayerGunAnimation2");
+				gameObject->SetCheckFrustum(false);
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f + 10.f, 13.f, 15.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
+				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				//gameObject->AddComponent(make_shared<TestDragon>());
+				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
+
+				gameObject->GetTransform()->SetObjectID(9999);
+				gameObject->GetTransform()->SetObjectType(9999);
+
+
+				scene->AddGameObject(gameObject);
+
 			}
 		}
 
@@ -938,7 +1001,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
 				//gameObject->AddComponent(make_shared<TestDragon>());
 			}
@@ -1084,21 +1147,26 @@ void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y
 	}
 }
 
-void SceneManager::RemoveObject(int object_id)
+void SceneManager::RemoveObject(int object_type, int object_id)
 {
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-	shared_ptr<GameObject> removeObjectData;
-
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject->GetTransform()->GetObjectID() == object_id)
+
+		//if (gameObject->GetTransform()->GetObjectID() != object_type)
+		//	continue;
+		//if (gameObject->GetTransform()->GetObjectID() != object_id)
+		//	continue;
+
+		if (gameObject->GetTransform()->GetObjectID() == object_id
+			&& gameObject->GetTransform()->GetObjectType() == object_type)
 		{
-			removeObjectData = gameObject;
+			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObject);
 			break;
 		}
 	}
-	GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(removeObjectData);
+	
 }
 
 void SceneManager::SetMapPosition(int x, int y)

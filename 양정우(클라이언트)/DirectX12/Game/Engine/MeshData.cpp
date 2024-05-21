@@ -92,6 +92,8 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 		info.mesh = mesh;
 		info.materials = materials;
 		meshData->_meshRenders.push_back(info);
+
+		//copy(m_meshRenders.begin(), m_meshRenders.end(), back_inserter(meshData->m_meshRenders));
 	}
 
 	return meshData;
@@ -140,6 +142,9 @@ shared_ptr<MeshData> MeshData::LoadGunModel(const wstring& keyname)
 		info.mesh = mesh;
 		info.materials = materials;
 		meshData->_meshRenders.push_back(info);
+
+
+		//copy(m_meshRenders.begin(), m_meshRenders.end(), back_inserter(meshData->m_meshRenders));
 	}
 
 	return meshData;
@@ -209,7 +214,10 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 
 		//머터리얼
 		for (uint32 i = 0; i < info.materials.size(); i++)
+		{
+			//gameObject->GetMeshRenderer()->SetMaterial(info.materials[i]->Clone(), i);
 			gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
+		}
 
 		//만약 메시정보 내부에 애니메이션 정보가 있다면.
 		if (info.mesh->IsAnimMesh())

@@ -549,7 +549,16 @@ void TestCameraScript::LateUpdate()
 		session->Send_Packet(&lm);
 	}
 
-
+	if (INPUT->GetButtonDown(KEY_TYPE::J))
+	{
+		auto& obj = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (auto& a : obj)
+		{
+			if (a->GetTransform()->GetObjectID() != 999)
+				continue;
+			a->GetAnimator()->Play(1);
+		}
+	}
 
 
 	{

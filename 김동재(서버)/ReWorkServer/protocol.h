@@ -16,11 +16,22 @@
 #define MY_PORT 4000
 
 //Object Type----------------------------
-#define OT_PLAYER 0
-#define OT_KEYCARD 1
-#define OT_ROOM 2
-#define OT_CORRIDOR 3
-#define OT_TERMINAL 4
+#define OT_PLAYER		0
+#define OT_KEYCARD		1
+#define OT_ROOM			2
+#define OT_CORRIDOR		3
+#define OT_TERMINAL		4
+
+#define OT_WALLAABB			99
+#define OT_UI_PLAYERHAND	101
+#define OT_UI_SMG_3D		102
+#define OT_UI_MAP			103
+#define OT_UI_HP			104
+#define OT_UI_KEYCARD		105
+#define OT_UI_SMG			106
+#define OT_UI_SLASH			107
+#define OT_UI_MAXBULLET		108
+#define OT_UI_CURRENTBULLET	109
 //---------------------------------------
 
 //Animation Type-------------------------
