@@ -27,7 +27,6 @@ shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
-		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
 		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, path);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
@@ -75,7 +74,6 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
-		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
 		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
@@ -92,8 +90,6 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 		info.mesh = mesh;
 		info.materials = materials;
 		meshData->_meshRenders.push_back(info);
-
-		//copy(m_meshRenders.begin(), m_meshRenders.end(), back_inserter(meshData->m_meshRenders));
 	}
 
 	return meshData;
@@ -125,7 +121,6 @@ shared_ptr<MeshData> MeshData::LoadGunModel(const wstring& keyname)
 
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
-		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
 		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
@@ -142,9 +137,6 @@ shared_ptr<MeshData> MeshData::LoadGunModel(const wstring& keyname)
 		info.mesh = mesh;
 		info.materials = materials;
 		meshData->_meshRenders.push_back(info);
-
-
-		//copy(m_meshRenders.begin(), m_meshRenders.end(), back_inserter(meshData->m_meshRenders));
 	}
 
 	return meshData;
@@ -165,7 +157,6 @@ shared_ptr<MeshData> MeshData::LoadFromBinary(const wstring& path)
 	//메시덩어리 수
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
 	{
-		// 흐름 5) 여기서 일단 mesh에 대한 정보를 채워나하고있다.
 		shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader);
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);

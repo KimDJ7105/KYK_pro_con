@@ -898,13 +898,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 
 				//gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
 
 				gameObject->GetTransform()->SetObjectID(999);
 				gameObject->GetTransform()->SetObjectType(999);
+
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+
 
 				scene->AddGameObject(gameObject);
 				
@@ -923,12 +931,19 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
-				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				//gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
 
 				gameObject->GetTransform()->SetObjectID(999);
 				gameObject->GetTransform()->SetObjectType(999);
+
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
 				
 
 				scene->AddGameObject(gameObject);
@@ -951,13 +966,20 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f + 10.f, 0.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 
 				//gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
 
 				gameObject->GetTransform()->SetObjectID(9999);
 				gameObject->GetTransform()->SetObjectType(9999);
+
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
 
 				scene->AddGameObject(gameObject);
 
@@ -976,13 +998,20 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f + 10.f, 13.f, 15.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
-				//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				//gameObject->AddComponent(make_shared<TestDragon>());
 				//std::dynamic_pointer_cast<TestDragon>(gameObject->GetMeshRenderer())->Set(2);
 
 				gameObject->GetTransform()->SetObjectID(9999);
 				gameObject->GetTransform()->SetObjectType(9999);
 
+
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
 
 				scene->AddGameObject(gameObject);
 

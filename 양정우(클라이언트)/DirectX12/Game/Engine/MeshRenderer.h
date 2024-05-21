@@ -39,5 +39,8 @@ public:
 private:
 	shared_ptr<Mesh> _mesh;
 	vector<shared_ptr<Material>> _materials;
+
+public:
+	uint32 GetMaterialCount() const { return static_cast<uint32>(_materials.size()); } // 새로 추가된 함수
 };
 
