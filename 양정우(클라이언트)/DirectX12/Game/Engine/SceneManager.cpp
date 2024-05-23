@@ -1303,65 +1303,99 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 	vp_ObjectManager.push_back(obj);
 
-	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-	////shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
 
+
+	//Old Ver.
+	//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
 	//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 	//for (auto& gameObject : gameObjects)
 	//{
-	//	gameObject->SetName(L"Player");
+	//	gameObject->SetName(L"Player1");
 	//	gameObject->SetCheckFrustum(false);
 	//	gameObject->GetTransform()->SetObjectType(object_type);
 	//	gameObject->GetTransform()->SetObjectID(object_id);
-	//	gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));		//0.f, 45.f, 100.f
+	//	gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 	//	gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 	//	gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
-	//	//gameObject->AddComponent(make_shared<SphereCollider>());
-
 
 	//	gameObject->AddComponent(make_shared<BoxCollider>());
 	//	std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
 	//	std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
 	//	std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-
+	//	//gameObject->AddComponent(make_shared<TestDragon>());
 
 	//	_otherPlayer.push_back(gameObject);
 	//	scene->AddGameObject(gameObject);
+	//	
 	//}
 
-
-
-	//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
-	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	for (auto& gameObject : gameObjects)
+	//------------------------------
+	//New Ver.
 	{
-		gameObject->SetName(L"Player1");
-		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetObjectType(object_type);
-		gameObject->GetTransform()->SetObjectID(object_id);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
-		/*gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));*/
-		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+		//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		gameObject->AddComponent(make_shared<BoxCollider>());
-		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
-		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
-		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-		gameObject->AddComponent(make_shared<TestDragon>());
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Player");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+			gameObject->GetTransform()->SetObjectType(object_type);
+			gameObject->GetTransform()->SetObjectID(object_id);
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 
-		_otherPlayer.push_back(gameObject);
-		scene->AddGameObject(gameObject);
-		
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+
+			//히트박스
+			gameObject->AddComponent(make_shared<BoxCollider>());
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
+
+			_otherPlayer.push_back(gameObject);
+			scene->AddGameObject(gameObject);
+
+		}
 	}
+	//{
+	//	//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadGunAnimation(L"..\\Resources\\FBX\\Player_Gun2\\test01.fbx");
+	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetName(L"PlayerGunAnimation");
+	//		gameObject->SetCheckFrustum(false);
+	//		//gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(5 + x, 13 + y, 15 + z));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+	//		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+	//		gameObject->GetTransform()->SetObjectType(object_type);
+	//		gameObject->GetTransform()->SetObjectID(object_id);
+	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+
+	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
+	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+	//		{
+	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+	//		}
 
 
+	//		scene->AddGameObject(gameObject);
+
+	//	}
+	//}
 
 }
 

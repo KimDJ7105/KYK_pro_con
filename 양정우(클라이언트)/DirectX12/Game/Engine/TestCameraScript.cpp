@@ -554,7 +554,7 @@ void TestCameraScript::LateUpdate()
 		auto& obj = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 		for (auto& a : obj)
 		{
-			if (a->GetTransform()->GetObjectID() != 999)
+			if (a->GetTransform()->GetObjectID() != 9999)
 				continue;
 			a->GetAnimator()->Play(1);
 		}
