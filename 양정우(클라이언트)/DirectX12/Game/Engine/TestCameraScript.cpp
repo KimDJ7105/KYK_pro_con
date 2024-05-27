@@ -144,56 +144,15 @@ void TestCameraScript::LateUpdate()
 	{
 		moveDirection.Normalize();
 	}
+	// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
+	currentPosition += moveDirection * moveSpeed * DELTA_TIME;
 
 	if (playerObject != NULL)
 	{
 		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
 		if (overlap != NULL)
 		{
-#ifdef DEBUG_ON
-			std::cout << overlap->GetTransform()->GetObjectID() << std::endl;
-#endif
 			isOverlap = true;
-
-			// 충돌 방향 벡터 계산
-			Vec3 playerMin = playerObject->GetCollider()->GetMinPoint();
-			Vec3 playerMax = playerObject->GetCollider()->GetMaxPoint();
-			Vec3 overlapMin = overlap->GetCollider()->GetMinPoint();
-			Vec3 overlapMax = overlap->GetCollider()->GetMaxPoint();
-
-			// 충돌이 발생한 축을 판단
-			float dx = std::min(playerMax.x - overlapMin.x, overlapMax.x - playerMin.x);
-			float dy = std::min(playerMax.y - overlapMin.y, overlapMax.y - playerMin.y);
-			float dz = std::min(playerMax.z - overlapMin.z, overlapMax.z - playerMin.z);
-
-			// 가장 작은 값을 가진 축을 충돌 축으로 판단
-			if (dx < dy && dx < dz)
-			{
-				// X축 충돌
-				if (currentPosition.x > overlap->GetTransform()->GetLocalPosition().x)
-					currentPosition.x += dx;
-				else
-					currentPosition.x -= dx;
-			}
-			else if (dy < dx && dy < dz)
-			{
-				// Y축 충돌
-				if (currentPosition.y > overlap->GetTransform()->GetLocalPosition().y)
-					currentPosition.y += dy;
-				else
-					currentPosition.y -= dy;
-			}
-			else
-			{
-				// Z축 충돌
-				if (currentPosition.z > overlap->GetTransform()->GetLocalPosition().z)
-					currentPosition.z += dz;
-				else
-					currentPosition.z -= dz;
-			}
-
-			// 충돌이 발생한 경우 이동 방향 초기화
-			moveDirection = Vec3(0.0f, 0.0f, 0.0f);
 			currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
 		}
 		else
@@ -202,8 +161,7 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
-	// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
-	currentPosition += moveDirection * moveSpeed * DELTA_TIME;
+	
 
 	// 플레이어가 땅 밑으로 떨어지는 것을 방지하기 위해 y 좌표를 0으로 고정
 	if (currentPosition.y < 0.0f)
@@ -429,7 +387,7 @@ void TestCameraScript::LateUpdate()
 	}
 
 #ifdef DEBUG_ON
-	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
+	/*if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
 		const POINT& pos = INPUT->GetMousePos();
 
@@ -441,7 +399,7 @@ void TestCameraScript::LateUpdate()
 			pickedMovingObject = NULL;
 		else
 			pickedMovingObject = pickedObject;
-	}
+	}*/
 #endif
 
 	if (pickedMovingObject != NULL)
@@ -509,42 +467,7 @@ void TestCameraScript::LateUpdate()
 		session->Send_Packet(&lm);
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::J))
-	{
-		auto& obj = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
-		for (auto& a : obj)
-		{
-			if (a->GetTransform()->GetObjectID() != 9999)
-				continue;
-			a->GetAnimator()->Play(1);
-		}
-	}
 
-
-	{
-		//// rotation 변수 정의 및 초기화
-		//Vec3 rotation = GetTransform()->GetLocalRotation(); // 플레이어의 현재 회전값
-
-		//// 플레이어 중심으로부터 떨어진 위치 및 회전 적용
-		//Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
-
-		//// 플레이어의 회전값을 쿼터니언으로 변환
-		//Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-		//	QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
-
-		//// gunOffset을 회전시킴
-		//Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
-
-		//// playerGunObject의 위치를 플레이어의 위치로 이동
-		//playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-		//// 회전을 적용
-		//playerGunObject->GetTransform()->SetLocalRotation(GetTransform()->GetLocalRotation());
-
-		//// 플레이어를 기준으로 한 반대 방향으로 이동
-		//Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-		//playerGunObject->GetTransform()->SetLocalPosition(newPosition);
-	}
 	
 	{
 
