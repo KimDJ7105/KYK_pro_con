@@ -2,7 +2,7 @@
 
 #pragma comment(lib, "Engine.lib")
 
-
+#include <sdkddkver.h>
 #include <boost/asio.hpp>
 #include "../../../../±èµ¿Àç(¼­¹ö)/ReWorkServer/protocol.h"
 

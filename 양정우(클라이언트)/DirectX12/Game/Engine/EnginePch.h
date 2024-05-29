@@ -8,7 +8,7 @@
 #endif
 
 // std::byte 사용하지 않음
-#define _HAS_STD_BYTE 0
+#undef _HAS_STD_BYTE
 
 #define OUT_OF_RENDER -100000000000
 
@@ -303,8 +303,8 @@ struct MyGameObject
 enum
 {
 	//윈도우 크기
-	WINDOW_WIDTH = 1600,
-	WINDOW_HEIGHT = 1200,
+	WINDOW_WIDTH = 800,
+	WINDOW_HEIGHT = 600,
 	//창모드 여부
 	IS_WINDOW_MODE = true,
 	//윈도우 위치
