@@ -15,6 +15,10 @@
 #define MY_SERVER_PORT  "4000"
 #define MY_PORT 4000
 
+//Lobby Info-----------------------------
+#define LOBBY_PORT 50000
+//---------------------------------------
+
 //Object Type----------------------------
 #define OT_PLAYER		0
 #define OT_KEYCARD		1
