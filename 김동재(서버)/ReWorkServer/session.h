@@ -42,5 +42,6 @@ public:
 	void Send_Packet(void* packet);
 };
 
+extern shared_ptr<SESSION> lobby; //만일 이게 여러 쓰레드에서 호출되면 락을 걸어야 함.... 현재 상태는 그럼
 extern concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
 extern concurrency::concurrent_unordered_map<int, shared_ptr<OBJECT>> objects;

@@ -1,6 +1,7 @@
 #pragma once
 #include "server.h"
 
+std::shared_ptr<SESSION> lobby;
 concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
 concurrency::concurrent_unordered_map<int, shared_ptr<OBJECT>> objects;
 
@@ -13,11 +14,17 @@ void SERVER::do_accept()
 			{
 				int p_id = GetNewClientID();
 				
-				if(p_id == LOBBY_ID) std::cout << "Lobby server connected\n";
-				else std::cout << "Client " << p_id << " loged in\n";
+				if (p_id == LOBBY_ID) {
+					std::cout << "Lobby server connected\n";
+					lobby = std::make_shared<SESSION>(std::move(socket_), p_id);
+					lobby->start();
+				}
+				else {
+					std::cout << "Client " << p_id << " loged in\n";
 
-				players[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id);
-				players[p_id]->start();
+					players[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id);
+					players[p_id]->start();
+				}
 				do_accept();
 			}
 		});
