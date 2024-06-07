@@ -344,6 +344,8 @@ void SESSION::start()
 {
 	do_read();
 
+	if (my_id_ == LOBBY_ID) return;
+
 	sc_packet_login_info pl;
 	pl.id = my_id_;
 	pl.size = sizeof(sc_packet_login_info);

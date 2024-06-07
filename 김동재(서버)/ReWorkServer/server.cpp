@@ -12,7 +12,10 @@ void SERVER::do_accept()
 			if (!ec)
 			{
 				int p_id = GetNewClientID();
-				std::cout << "Client " << p_id << " loged in\n";
+				
+				if(p_id == LOBBY_ID) std::cout << "Lobby server connected\n";
+				else std::cout << "Client " << p_id << " loged in\n";
+
 				players[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id);
 				players[p_id]->start();
 				do_accept();
@@ -40,7 +43,7 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 {
 	std::cout << "초기 카드키 생성중" << std::endl;
 
-	//0 1 4 13  5 9
+	//테스트를 위한 오브젝트 위치 임의 지정
 	int o_id = GetNewObjectID();
 	objects[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
 	objects[o_id]->spawn_num = 0;
