@@ -8,5 +8,7 @@
 
 #include <boost/asio.hpp>
 
+#include "../ReWorkServer/protocol.h"
+
 using namespace std;
 using boost::asio::ip::tcp;
