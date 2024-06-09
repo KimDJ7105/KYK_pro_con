@@ -202,26 +202,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_PLAYER_STOP : {
-		cs_packet_player_stop* p = (cs_packet_player_stop*)packet;
-
-		sc_packet_set_animation sa;
-		sa.type = SC_SET_ANIMATION;
-		sa.size = sizeof(sc_packet_set_animation);
-		sa.obj_id = my_id_;
-		sa.animation_id = AT_IDLE;
-
-		for (auto& pl : players) {
-			shared_ptr<SESSION> player = pl.second;
-			if (player == nullptr) continue;
-			if (player->my_id_ == my_id_) continue;
-
-			player->Send_Packet(&sa);
-
-		}
-
-		break;
-	}
 	case CS_RELOAD_MAG: {
 		remain_bullet = 30;
 

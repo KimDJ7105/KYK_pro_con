@@ -200,30 +200,6 @@ void TestCameraScript::LateUpdate()
 		verticalVelocity = 0.0f;
 	}
 
-	if (currentPosition != tempPos)
-	{
-		session->set_moving(true);
-		//------------------------------------
-		cs_packet_pos_info packet;
-		packet.size = sizeof(cs_packet_pos_info);
-		packet.type = CS_POS_INFO;
-		packet.x = currentPosition.x;
-		packet.y = currentPosition.y;
-		packet.z = currentPosition.z;
-
-		session->Send_Packet(&packet);
-		//-------------------------------------
-	}
-	else if (session->get_moving())
-	{
-		session->set_moving(false);
-
-		cs_packet_player_stop packet;
-		packet.size = sizeof(cs_packet_player_stop);
-		packet.type = CS_PLAYER_STOP;
-		session->Send_Packet(&packet);
-	}
-
 	// 업데이트된 위치를 플레이어에 반영
 	GetTransform()->SetLocalPosition(currentPosition);
 

@@ -123,11 +123,6 @@ struct cs_packet_try_use_tmn {
 	int terminal_id;
 };
 
-struct cs_packet_player_stop {
-	BYTE size;
-	BYTE type;
-};
-
 struct cs_packet_reload_mag {
 	BYTE size;
 	BYTE type;
