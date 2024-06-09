@@ -212,6 +212,37 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		Send_Packet(&mb);
 		break;
 	}
+	case CS_MOVE_KEY_DOWN: {
+		sc_packet_set_animation set_anima;
+		set_anima.type = SC_SET_ANIMATION;
+		set_anima.size = sizeof(sc_packet_set_animation);
+		set_anima.obj_id = my_id_;
+		set_anima.animation_id = AT_WALKING;
+
+		for (auto& p : players) {
+			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&set_anima);
+		}
+
+		break;
+	}
+	case CS_MOVE_KEY_UP: {
+		sc_packet_set_animation set_anima;
+		set_anima.type = SC_SET_ANIMATION;
+		set_anima.size = sizeof(sc_packet_set_animation);
+		set_anima.obj_id = my_id_;
+		set_anima.animation_id = AT_IDLE;
+
+		for (auto& p : players) {
+			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&set_anima);
+		}
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 
