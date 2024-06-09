@@ -47,5 +47,11 @@ private:
 
 
 	int haveKeycard = 0;
+
+
+	bool wKeyState = false;
+	bool aKeyState = false;
+	bool sKeyState = false;
+	bool dKeyState = false;
 };
 

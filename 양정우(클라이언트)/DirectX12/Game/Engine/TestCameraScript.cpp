@@ -122,22 +122,51 @@ void TestCameraScript::LateUpdate()
 	const float moveSpeed = 200.0f;
 	Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
 
-	if (INPUT->GetButton(KEY_TYPE::W))
+	if (INPUT->GetButtonDown(KEY_TYPE::W))
+	{
+		wKeyState = true;
+		std::cout << "W키 눌림" << std::endl;
+	}
+	else if (INPUT->GetButtonUp(KEY_TYPE::W))
+	{
+		wKeyState = false;
+		std::cout << "W키 떼짐" << std::endl;
+	}
+	if (INPUT->GetButtonDown(KEY_TYPE::S))
+		sKeyState = true;
+	else if (INPUT->GetButtonUp(KEY_TYPE::S))
+		sKeyState = false;
+
+	if (INPUT->GetButtonDown(KEY_TYPE::A))
+		aKeyState = true;
+	else if (INPUT->GetButtonUp(KEY_TYPE::A))
+		aKeyState = false;
+
+	if (INPUT->GetButtonDown(KEY_TYPE::D))
+		dKeyState = true;
+	else if (INPUT->GetButtonUp(KEY_TYPE::D))
+		dKeyState = false;
+
+
+	if (wKeyState)
 	{
 		moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+		std::cout << "앞으로 이동중" << std::endl;
 	}
-	if (INPUT->GetButton(KEY_TYPE::S))
+	if (sKeyState)
 	{
 		moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
 	}
-	if (INPUT->GetButton(KEY_TYPE::A))
+	if (aKeyState)
 	{
 		moveDirection -= GetTransform()->GetRight();
 	}
-	if (INPUT->GetButton(KEY_TYPE::D))
+	if (dKeyState)
 	{
 		moveDirection += GetTransform()->GetRight();
 	}
+
+	
 
 	// 이동 방향 벡터의 길이를 1로 정규화하여 이동 속도를 일정하게 함
 	if (moveDirection.LengthSquared() > 0.0f)
@@ -207,26 +236,6 @@ void TestCameraScript::LateUpdate()
 	}
 
 
-
-	//충돌검사
-	{
-		
-	}
-
-	//if (isOverlap)
-	//{
-	//	/*shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
-	//	Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
-	//	pos.x = pos.x - beforePosIncrease.x * _speed * DELTA_TIME;
-	//	pos.z = pos.z - beforePosIncrease.z * _speed * DELTA_TIME;
-	//	playerObject->GetTransform()->SetLocalPosition(pos);*/
-
-	//}
-	//else if (!isOverlap)
-	//{
-	//	MoveUpdate();
-	//}
-
 	if (isMouseMod)
 	{
 		RotationUpdate();
@@ -235,17 +244,6 @@ void TestCameraScript::LateUpdate()
 	{
 
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -542,6 +540,8 @@ void TestCameraScript::LateUpdate()
 	wcscpy_s(previousTitle, windowTitle);
 
 	timeElapse += DELTA_TIME;
+
+
 }
 
 
