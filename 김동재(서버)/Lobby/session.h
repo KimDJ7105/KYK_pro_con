@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
-#include "object.h"
 
+//클라이언트와 통신하기 위한 session
 class SESSION
 	: public std::enable_shared_from_this<SESSION>
 {
@@ -14,25 +14,14 @@ private:
 	int curr_packet_size_;
 	int prev_data_size_;
 
-	int hp;
-	int remain_bullet;
-	int team;
-
-	int equip_weapon;
-
-	array<float, 3> pos;
-	array<float, 3> view_dir;
-
 private:
 	void Send_Packet(void* packet, unsigned id);
-	
+
 	void Process_Packet(unsigned char* packet, int id);
 
 	void do_read();
 
 	void do_write(unsigned char* packet, std::size_t length);
-
-	int find_useable_key();
 
 public:
 	SESSION(tcp::socket socket, int new_id);
@@ -42,6 +31,5 @@ public:
 	void Send_Packet(void* packet);
 };
 
-extern shared_ptr<SESSION> lobby; //만일 이게 여러 쓰레드에서 호출되면 락을 걸어야 함.... 현재 상태는 그럼
 extern concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
-extern concurrency::concurrent_unordered_map<int, shared_ptr<OBJECT>> objects;
+
