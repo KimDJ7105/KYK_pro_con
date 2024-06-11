@@ -21,11 +21,13 @@
 //---------------------------------------
 
 //Object Type----------------------------
-#define OT_PLAYER		0
-#define OT_KEYCARD		1
-#define OT_ROOM			2
-#define OT_CORRIDOR		3
-#define OT_TERMINAL		4
+#define OT_PLAYER			0
+#define OT_KEYCARD			1
+#define OT_ROOM				2
+#define OT_CORRIDOR			3
+#define OT_TERMINAL			4
+#define OT_RESURRECTION_PAD 5
+#define OT_GRINDER          6
 
 #define OT_WALLAABB			99
 #define OT_UI_PLAYERHAND	101
@@ -57,17 +59,18 @@
 #define CS_MOVE_KEY_DOWN 8
 #define CS_MOVE_KEY_UP   9
 
-#define SC_POS           1 //오브젝트 이동 & 회전
-#define SC_PUT_PLAYER    2 //오브젝트 생성
-#define SC_REMOVE_PLAYER 3 //오브젝트 제거
-#define SC_LOGIN_INFO	 4 //로그인 정보
-#define SC_APPLY_DAMAGE  5 //플레이어의 HP를 감소시킴
-#define SC_PLAYER_DEAD   6 //플레이어의 HP가 0이 될때
-#define SC_PUT_OBJECT    7 //오브젝트를 생성
-#define SC_MODIFY_BULLET 8 //총알 개수를 변경
-#define SC_SHOW_MAP      9 //단말기를 통해 맵을 출력
-#define SC_SET_ANIMATION 10 //객체의 애니메이션을 세팅
-#define SC_CARD_USED     11 //카드가 사용되었음을 알림
+#define SC_POS            1 //오브젝트 이동 & 회전
+#define SC_PUT_PLAYER     2 //오브젝트 생성
+#define SC_REMOVE_PLAYER  3 //오브젝트 제거
+#define SC_LOGIN_INFO	  4 //로그인 정보
+#define SC_APPLY_DAMAGE   5 //플레이어의 HP를 감소시킴
+#define SC_PLAYER_DEAD    6 //플레이어의 HP가 0이 될때
+#define SC_PUT_OBJECT     7 //오브젝트를 생성
+#define SC_MODIFY_BULLET  8 //총알 개수를 변경
+#define SC_SHOW_MAP       9 //단말기를 통해 맵을 출력
+#define SC_SET_ANIMATION  10 //객체의 애니메이션을 세팅
+#define SC_CARD_USED      11 //카드가 사용되었음을 알림
+#define SC_PUT_OBJECT_POS 12 //오브젝트를 정확한 위치에 생성
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -228,6 +231,19 @@ struct sc_packet_set_animation {
 struct sc_packet_card_used {
 	BYTE size;
 	BYTE type;
+}; 
+
+struct sc_packet_put_object_pos {
+	BYTE size;
+	BYTE type;
+	WORD id;
+	int obj_type;
+	float x;
+	float y;
+	float z;
+	float dirx;
+	float diry;
+	float dirz;
 };
 
 #pragma pack (pop)
