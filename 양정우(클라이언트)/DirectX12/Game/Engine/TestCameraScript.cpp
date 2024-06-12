@@ -122,15 +122,15 @@ void TestCameraScript::LateUpdate()
 	const float moveSpeed = 200.0f;
 	Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
 
-	if (INPUT->GetButtonDown(KEY_TYPE::W))
+	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		wKeyState = true;
-		std::cout << "WÅ° ´­¸²" << std::endl;
+		//std::cout << "WÅ° ´­¸²" << std::endl;
 	}
-	else if (INPUT->GetButtonUp(KEY_TYPE::W))
+	else 
 	{
 		wKeyState = false;
-		std::cout << "WÅ° ¶¼Áü" << std::endl;
+		// std::cout << "WÅ° ¶¼Áü" << std::endl;
 	}
 	if (INPUT->GetButtonDown(KEY_TYPE::S))
 		sKeyState = true;
