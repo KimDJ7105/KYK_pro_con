@@ -5,6 +5,7 @@
 #include <concurrent_unordered_map.h>
 #include <array>
 #include <random>
+#include <cstring>
 
 #include <boost/asio.hpp>
 
