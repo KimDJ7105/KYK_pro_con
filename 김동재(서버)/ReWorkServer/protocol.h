@@ -71,6 +71,10 @@
 #define SC_SET_ANIMATION  10 //객체의 애니메이션을 세팅
 #define SC_CARD_USED      11 //카드가 사용되었음을 알림
 #define SC_PUT_OBJECT_POS 12 //오브젝트를 정확한 위치에 생성
+
+#define SL_SET_PORT    101 //로비서버가 관리하는 서버의 ip와 포트번호를 변경
+
+#define LS_PLAYER_INFO    201 //서버에 플레이어의 정보(id, 장비, 팀 등)을 전달
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -244,6 +248,19 @@ struct sc_packet_put_object_pos {
 	float dirx;
 	float diry;
 	float dirz;
+};
+
+//------------server to lobby packet-------------
+struct sl_packet_set_port {
+	BYTE size;
+	BYTE type;
+	char port[6];
+};
+
+//------------lobby to server packet-------------
+struct ls_packet_player_info {
+	BYTE size;
+	BYTE type;
 };
 
 #pragma pack (pop)
