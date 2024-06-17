@@ -355,7 +355,7 @@ void SESSION::start()
 {
 	do_read();
 
-	if (my_id_ == LOBBY_ID) {
+	/*if (my_id_ == LOBBY_ID) {
 		sl_packet_set_port sip;
 		sip.type = SL_SET_PORT;
 		sip.size = sizeof(sl_packet_set_port);
@@ -364,7 +364,7 @@ void SESSION::start()
 		Send_Packet(&sip);
 
 		return;
-	}
+	}*/
 
 	sc_packet_login_info pl;
 	pl.id = my_id_;
