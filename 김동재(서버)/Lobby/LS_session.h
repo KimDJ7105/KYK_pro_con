@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "session.h"
 
 //================================================================================
 //서버 통신을 위한 SESSION Class

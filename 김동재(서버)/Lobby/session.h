@@ -32,4 +32,5 @@ public:
 };
 
 extern concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
-
+extern char server_port[6];
+extern mutex p_lock;
