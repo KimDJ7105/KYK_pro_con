@@ -19,42 +19,23 @@ void Input::Update()
 		return;
 	}
 
-	BYTE asciiKeys[KEY_TYPE_COUNT] = {};
-	if (::GetKeyboardState(asciiKeys) == false)
-		return;
-	 
-	if ((GetAsyncKeyState('W') & 0x01) == 1) _states['W'] = KEY_STATE::PRESS;
-	else _states['W'] = KEY_STATE::NONE;
-	if ((GetAsyncKeyState(VK_ESCAPE) & 0x01) == 1) 
-		if (_states[VK_ESCAPE] == KEY_STATE::NONE) 
-			_states[VK_ESCAPE] = KEY_STATE::DOWN;
-			else _states[VK_ESCAPE] = KEY_STATE::PRESS;
-	else _states[VK_ESCAPE] = KEY_STATE::NONE;
-
-	//for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
-	//{
-	//	// 키가 눌려 있으면 true
-	//	if (asciiKeys[key] & 0x80)
-	//	{
-	//		KEY_STATE& state = _states[key];
-
-	//		// 이전 프레임에 키를 누른 상태라면 PRESS
-	//		if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
-	//			state = KEY_STATE::PRESS;
-	//		else
-	//			state = KEY_STATE::DOWN;
-	//	}
-	//	else
-	//	{
-	//		KEY_STATE& state = _states[key];
-
-	//		// 이전 프레임에 키를 누른 상태라면 UP
-	//		if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
-	//			state = KEY_STATE::UP;
-	//		else
-	//			state = KEY_STATE::NONE;
-	//	}
-	//}
+    for (uint32 key = 0; key < KEY_TYPE_COUNT; key++) {
+        SHORT keyState = ::GetAsyncKeyState(key);
+        if (keyState & 0x8000) { // 키가 눌려 있을 때
+            KEY_STATE& state = _states[key];
+            if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
+                state = KEY_STATE::PRESS;
+            else
+                state = KEY_STATE::DOWN;
+        }
+        else {
+            KEY_STATE& state = _states[key];
+            if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
+                state = KEY_STATE::UP;
+            else
+                state = KEY_STATE::NONE;
+        }
+    }
 
 	// 매 프레임마다의 마우스 위치를 기억한다.
 	::GetCursorPos(&_mousePos);
