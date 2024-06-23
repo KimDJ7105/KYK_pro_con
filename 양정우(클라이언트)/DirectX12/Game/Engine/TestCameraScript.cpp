@@ -200,6 +200,28 @@ void TestCameraScript::LateUpdate()
 		verticalVelocity = 0.0f;
 	}
 
+
+	//위치가 변경되었을때만 서버에 전송하도록 수정
+	if (currentPosition != tempPos)
+	{
+		isMoving = true;
+		//------------------------------------
+		cs_packet_pos_info packet;
+		packet.size = sizeof(cs_packet_pos_info);
+		packet.type = CS_POS_INFO;
+		packet.x = currentPosition.x;
+		packet.y = currentPosition.y;
+		packet.z = currentPosition.z;
+
+		session->Send_Packet(&packet);
+		//-------------------------------------
+	}
+	else if (currentPosition == tempPos)
+	{
+		isMoving = false;
+	}
+
+
 	// 업데이트된 위치를 플레이어에 반영
 	GetTransform()->SetLocalPosition(currentPosition);
 

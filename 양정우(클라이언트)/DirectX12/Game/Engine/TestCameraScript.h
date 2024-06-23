@@ -53,5 +53,8 @@ private:
 	bool aKeyState = false;
 	bool sKeyState = false;
 	bool dKeyState = false;
+
+
+	bool isMoving = false;
 };
 
