@@ -126,27 +126,115 @@ void TestCameraScript::LateUpdate()
 	{
 		wKeyState = true;
 		std::cout << "W키 눌림" << std::endl;
+		if (!isMoving) {
+			isMoving = true;
+
+			cs_packet_move_key_down mkd;
+			mkd.size = sizeof(cs_packet_move_key_down);
+			mkd.type = CS_MOVE_KEY_DOWN;
+
+			session->Send_Packet(&mkd);
+		}
 	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::W))
 	{
 		wKeyState = false;
 		std::cout << "W키 떼짐" << std::endl;
+
+		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+			isMoving = false;
+
+			cs_packet_move_key_up mku;
+			mku.size = sizeof(cs_packet_move_key_up);
+			mku.type = CS_MOVE_KEY_UP;
+
+			session->Send_Packet(&mku);
+		}
 	}
+
 	if (INPUT->GetButtonDown(KEY_TYPE::S))
+	{
 		sKeyState = true;
+		if (!isMoving) {
+			isMoving = true;
+
+			cs_packet_move_key_down mkd;
+			mkd.size = sizeof(cs_packet_move_key_down);
+			mkd.type = CS_MOVE_KEY_DOWN;
+
+			session->Send_Packet(&mkd);
+		}
+	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::S))
+	{
 		sKeyState = false;
 
+		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+			isMoving = false;
+
+			cs_packet_move_key_up mku;
+			mku.size = sizeof(cs_packet_move_key_up);
+			mku.type = CS_MOVE_KEY_UP;
+
+			session->Send_Packet(&mku);
+		}
+
+	}
+
 	if (INPUT->GetButtonDown(KEY_TYPE::A))
+	{
 		aKeyState = true;
+		if (!isMoving) {
+			isMoving = true;
+
+			cs_packet_move_key_down mkd;
+			mkd.size = sizeof(cs_packet_move_key_down);
+			mkd.type = CS_MOVE_KEY_DOWN;
+
+			session->Send_Packet(&mkd);
+		}
+	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::A))
+	{
 		aKeyState = false;
+		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+			isMoving = false;
+
+			cs_packet_move_key_up mku;
+			mku.size = sizeof(cs_packet_move_key_up);
+			mku.type = CS_MOVE_KEY_UP;
+
+			session->Send_Packet(&mku);
+		}
+	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::D))
+	{
 		dKeyState = true;
+		if (!isMoving) {
+			isMoving = true;
+
+			cs_packet_move_key_down mkd;
+			mkd.size = sizeof(cs_packet_move_key_down);
+			mkd.type = CS_MOVE_KEY_DOWN;
+
+			session->Send_Packet(&mkd);
+		}
+	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::D))
+	{
 		dKeyState = false;
 
+		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+			isMoving = false;
+
+			cs_packet_move_key_up mku;
+			mku.size = sizeof(cs_packet_move_key_up);
+			mku.type = CS_MOVE_KEY_UP;
+
+			session->Send_Packet(&mku);
+		}
+	}
 
 	if (wKeyState)
 	{
@@ -204,7 +292,6 @@ void TestCameraScript::LateUpdate()
 	//위치가 변경되었을때만 서버에 전송하도록 수정
 	if (currentPosition != tempPos)
 	{
-		isMoving = true;
 		//------------------------------------
 		cs_packet_pos_info packet;
 		packet.size = sizeof(cs_packet_pos_info);
@@ -218,7 +305,6 @@ void TestCameraScript::LateUpdate()
 	}
 	else if (currentPosition == tempPos)
 	{
-		isMoving = false;
 	}
 
 

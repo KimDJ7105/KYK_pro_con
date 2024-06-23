@@ -241,6 +241,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&set_anima);
 		}
+
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
