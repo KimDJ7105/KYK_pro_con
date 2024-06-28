@@ -38,6 +38,8 @@ enum class KEY_TYPE
 
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,
+
+	SPACEBAR = VK_SPACE,
 };
 
 enum class KEY_STATE

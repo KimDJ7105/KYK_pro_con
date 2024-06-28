@@ -21,7 +21,9 @@ class SceneManager
 public:
 	void Update();
 	void Render();
-	void LoadScene(std::wstring sceneName);
+	void LoadMainScene(std::wstring sceneName);
+
+	void LoadLobbyScene(std::wstring sceneName);
 
 	void SetLayerName(uint8 index, const wstring& name);
 	const wstring& IndexToLayerName(uint8 index) { return _layerNames[index]; }
@@ -35,6 +37,8 @@ public:
 
 private:
 	shared_ptr<Scene> LoadTestScene();
+
+	shared_ptr<Scene> LoadLobbyScene();
 
 private:
 	shared_ptr<Scene> _activeScene;
