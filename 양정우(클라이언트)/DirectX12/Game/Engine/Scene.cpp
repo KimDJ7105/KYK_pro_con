@@ -35,8 +35,7 @@ void Scene::Update()
 		gameObject->Update();
 	}
 }
-#include "Input.h"
-int temp;
+
 void Scene::LateUpdate()
 {
 	for (const std::shared_ptr<GameObject>& gameObject : _gameObjects)
@@ -46,12 +45,6 @@ void Scene::LateUpdate()
 		if (gameObject->GetIsUpdate() == false)
 			continue;
 		gameObject->LateUpdate();
-	}
-	temp = INPUT->GetButton(KEY_TYPE::W);
-
-	if (temp != INPUT->GetButton(KEY_TYPE::W))
-	{
-		std::cout << INPUT->GetButton(KEY_TYPE::W) << std::endl;
 	}
 }
 
