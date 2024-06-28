@@ -34,6 +34,8 @@ int main()
 	 
 	lobby_server_session->do_connect(endpoint);
 	std::thread serverthread(server_connect_thread, &io_con);
+
+	std::cout << "메인 서버 접속\n";
 	//-------------------------------------------------------------
 
 	//클라이언트의 접속을 accept
