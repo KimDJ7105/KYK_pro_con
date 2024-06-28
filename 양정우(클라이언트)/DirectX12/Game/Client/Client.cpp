@@ -64,6 +64,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::unique_ptr<Game> game = std::make_unique<Game>();
     game->Init(GWindowInfo);
 
+
+    //당근칼
+    // 아래에는 Lobby Scene과 연결할 Lobby Server에 대한 코드
     //----------------------------------------------------------------
     io_context io_con;
     tcp::resolver resolver(io_con);
