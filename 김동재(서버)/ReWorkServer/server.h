@@ -1,6 +1,6 @@
 #pragma once
 #include "session.h"
-#include "object.h"
+#include "game.h"
 
 class SERVER
 {
@@ -9,6 +9,8 @@ private:
 	tcp::socket socket_;
 	atomic_int g_user_ID;
 	atomic_int g_object_ID = MAX_USER + 1;
+
+	std::unordered_map<int, std::unique_ptr<GAME>> games;
 
 private:
 	void do_accept();
