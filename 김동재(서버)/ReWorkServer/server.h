@@ -8,15 +8,14 @@ private:
 	tcp::acceptor acceptor_;
 	tcp::socket socket_;
 	atomic_int g_user_ID;
-	atomic_int g_object_ID = MAX_USER + 1;
+	atomic_int g_game_ID;
 
-	std::unordered_map<int, std::unique_ptr<GAME>> games;
+	std::unordered_map<int, std::shared_ptr<GAME>> games;
 
 private:
 	void do_accept();
 	
 	int GetNewClientID();
-	int GetNewObjectID();
 
 public:
 	SERVER(boost::asio::io_context& io_service, int port);
