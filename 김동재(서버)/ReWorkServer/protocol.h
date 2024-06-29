@@ -9,7 +9,7 @@
 #define BOARD_WIDTH   52
 #define BOARD_HEIGHT  30
 
-#define MAX_USER 10000
+#define MAX_USER 12
 
 #define MY_SERVER_IP "127.0.0.1"
 #define MY_SERVER_PORT  "55000"
