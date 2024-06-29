@@ -1,7 +1,7 @@
 #pragma once
 #include "session.h"
+#include "game.h"
 
-int box_id = MAX_USER;
 int WP_DMG[5]{ 6,0,0,0,0 };
 
 void SESSION::Send_Packet(void* packet, unsigned id)
@@ -9,12 +9,12 @@ void SESSION::Send_Packet(void* packet, unsigned id)
 	int packet_size = reinterpret_cast<unsigned char*>(packet)[0];
 	unsigned char* buff = new unsigned char[packet_size];
 	memcpy(buff, packet, packet_size);
-	players[id]->do_write(buff, packet_size);
+	my_game->ingame_player[id]->do_write(buff, packet_size);
 }
 
 void SESSION::Process_Packet(unsigned char* packet, int id)
 {
-	auto P = players[id];
+	auto P = my_game->ingame_player[id];
 	int y = P->pos[1];
 	int x = P->pos[0];
 	switch (packet[1]) {
@@ -37,7 +37,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.dirz = P->view_dir[2];
 		pos_pack.animation_id = AT_WALKING;
 
-		for (auto& pl : players) {
+		for (auto& pl : my_game->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -68,7 +68,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.dirz = p->z;
 		pos_pack.animation_id = -1;
 
-		for (auto& pl : players) {
+		for (auto& pl : my_game->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -94,7 +94,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		
 		if (p->target_id == -1) break;
 
-		shared_ptr<SESSION> target = players[p->target_id];
+		shared_ptr<SESSION> target = my_game->ingame_player[p->target_id];
 
 		if (target == nullptr) break;
 
@@ -120,7 +120,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			pd.size = sizeof(sc_packet_player_dead);
 			pd.id = target->my_id_;
 
-			for (auto& pl : players) {
+			for (auto& pl : my_game->ingame_player) {
 				shared_ptr<SESSION> player = pl.second;
 				if (player == nullptr) continue;
 
@@ -134,7 +134,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
 
-		shared_ptr<OBJECT> card = objects[p->key_id];
+		shared_ptr<OBJECT> card = my_game->ingame_object[p->key_id];
 		if (card == nullptr) break;
 
 		std::cout << "카드키 획득 요청 수신\n";
@@ -145,7 +145,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.size = sizeof(sc_packet_remove_player);
 		rmp.id = card->obj_id;
 		rmp.obj_type = OT_KEYCARD;
-		for (auto& p : players) {
+		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			player->Send_Packet(&rmp);
@@ -159,10 +159,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "터미널 사용 요청 수신\n";
 
-		shared_ptr<SESSION> user = players[my_id_];
+		shared_ptr<SESSION> user = my_game->ingame_player[my_id_];
 		if (user == nullptr) break;
 
-		shared_ptr<OBJECT> terminal = objects[p->terminal_id];
+		shared_ptr<OBJECT> terminal = my_game->ingame_object[p->terminal_id];
 		if (terminal == nullptr) break;
 
 		int key_id = find_useable_key();
@@ -174,7 +174,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			terminal->owner_id = my_id_;
 
 			//플레이어가 가진 카드키를 삭제
-			shared_ptr<OBJECT> key = objects[key_id];
+			shared_ptr<OBJECT> key = my_game->ingame_object[key_id];
 			if (key == nullptr) break;
 			key->owner_id = -1;
 
@@ -219,7 +219,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.obj_id = my_id_;
 		set_anima.animation_id = AT_WALKING;
 
-		for (auto& p : players) {
+		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -235,7 +235,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.obj_id = my_id_;
 		set_anima.animation_id = AT_IDLE;
 
-		for (auto& p : players) {
+		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -269,7 +269,7 @@ void SESSION::do_read()
 			{
 				if (ec.value() == boost::asio::error::operation_aborted) return;
 				cout << "Receive Error on Session[" << my_id_ << "] EC[" << ec << "]\n";
-				players[my_id_] = nullptr;
+				my_game->ingame_player[my_id_] = nullptr;
 				//players.unsafe_erase(my_id_);
 				return;
 			}
@@ -322,7 +322,7 @@ void SESSION::do_write(unsigned char* packet, std::size_t length)
 
 int SESSION::find_useable_key()
 {
-	for (auto& object : objects) {
+	for (auto& object : my_game->ingame_object) {
 		shared_ptr<OBJECT> key = object.second;
 		if (key == nullptr) continue;
 		if (key->obj_type != OT_KEYCARD) continue;
@@ -392,7 +392,7 @@ void SESSION::start()
 	p.dirz = view_dir[2];
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
-	for (auto& pl : players) {
+	for (auto& pl : my_game->ingame_player) {
 		shared_ptr<SESSION> player = pl.second;
 		if (player == nullptr) continue;
 		if (player->my_id_ == my_id_) continue;
@@ -400,7 +400,7 @@ void SESSION::start()
 	}
 
 	//다른 유저들의 정보를 클라이언트에게 전송
-	for (auto& pl : players) {
+	for (auto& pl : my_game->ingame_player) {
 		shared_ptr<SESSION> player = pl.second;
 		if (player == nullptr) continue;
 		if (player->my_id_ != my_id_) {
@@ -412,7 +412,7 @@ void SESSION::start()
 	}
 
 	//생성되어있는 기본 오브젝트의 위치를 전송
-	for (auto& object : objects) {
+	for (auto& object : my_game->ingame_object) {
 		shared_ptr<OBJECT> obj = object.second;
 		if (obj == nullptr) continue;
 		if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
@@ -435,4 +435,9 @@ void SESSION::Send_Packet(void* packet)
 	unsigned char* buff = new unsigned char[packet_size];
 	memcpy(buff, packet, packet_size);
 	do_write(buff, packet_size);
+}
+
+void SESSION::set_mygame(std::shared_ptr<GAME> p)
+{
+	my_game = p;
 }

@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "object.h"
 
+class GAME;
+
 class SESSION
 	: public std::enable_shared_from_this<SESSION>
 {
@@ -23,6 +25,8 @@ private:
 	array<float, 3> pos;
 	array<float, 3> view_dir;
 
+	std::shared_ptr<GAME> my_game;
+
 private:
 	void Send_Packet(void* packet, unsigned id);
 	
@@ -40,8 +44,8 @@ public:
 	void start();
 
 	void Send_Packet(void* packet);
+
+	void set_mygame(std::shared_ptr<GAME> p);
 };
 
 extern shared_ptr<SESSION> lobby; //만일 이게 여러 쓰레드에서 호출되면 락을 걸어야 함.... 현재 상태는 그럼
-extern concurrency::concurrent_unordered_map<int, shared_ptr<SESSION>> players;
-extern concurrency::concurrent_unordered_map<int, shared_ptr<OBJECT>> objects;
