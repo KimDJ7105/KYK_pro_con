@@ -13,7 +13,7 @@ void SERVER::do_accept()
 				int p_id = GetNewClientID();
 				
 				//if (p_id == LOBBY_ID) {
-				if(p_id == -1) {
+				if(p_id == LOBBY_ID) {
 					std::cout << "Lobby server connected\n";
 					lobby = std::make_shared<SESSION>(std::move(socket_), p_id);	
 					lobby->start();

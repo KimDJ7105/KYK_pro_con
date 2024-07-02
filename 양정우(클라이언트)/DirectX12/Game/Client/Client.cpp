@@ -70,7 +70,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //----------------------------------------------------------------
     io_context io_con;
     tcp::resolver resolver(io_con);
-    auto endpoint = resolver.resolve(MY_SERVER_IP, MY_SERVER_PORT);
+    auto endpoint = resolver.resolve(LOBBY_IP, MY_LOBBY_PORT);
 
     tcp::socket sock(io_con);
 

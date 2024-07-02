@@ -16,6 +16,8 @@
 #define MY_PORT 55000
 
 //Lobby Info-----------------------------
+#define LOBBY_IP "127.0.0.1"
+#define MY_LOBBY_PORT "50000"
 #define LOBBY_PORT 50000
 #define LOBBY_ID 0
 //---------------------------------------
