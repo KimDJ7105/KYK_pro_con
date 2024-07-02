@@ -2,7 +2,7 @@
 
 int playerID = -1;
 char server_port[6];
-mutex p_lock;
+char server_ip[16];
 
 LS_SESSION::LS_SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
@@ -16,11 +16,18 @@ void LS_SESSION::Process_Packet(unsigned char* packet)
 	switch (packet[1]) {
 	case SL_SET_PORT: {
 		sl_packet_set_port* p = (sl_packet_set_port*)packet;
-		p_lock.lock();
+		
 		strcpy_s(server_port, p->port);
-		p_lock.unlock();
 
 		std::cout << "서버의 포트가 " << p->port << "로 변경되었습니다.\n";
+		break;
+	}
+	case SL_SET_IP: {
+		sl_packet_set_ip* p = (sl_packet_set_ip*)packet;
+		
+		strcpy_s(server_ip, p->ip);
+
+		std::cout << "서버의 ip가 " << p->ip << "로 변경되었습니다.\n";
 		break;
 	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
