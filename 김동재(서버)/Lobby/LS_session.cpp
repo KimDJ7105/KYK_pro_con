@@ -1,6 +1,7 @@
 #include "LS_session.h"
 
 int playerID = -1;
+
 char server_port[6];
 char server_ip[16];
 

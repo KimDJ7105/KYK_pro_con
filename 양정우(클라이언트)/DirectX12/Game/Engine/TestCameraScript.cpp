@@ -13,8 +13,6 @@
 
 #include "session.h"
 
-char main_server_ip[16];
-char main_server_port[6];
 
 struct Quaternion {
 	float x, y, z, w;
@@ -85,7 +83,7 @@ TestCameraScript::TestCameraScript()
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
 
-	io_context io_con;
+	io_context io_con; //진짜칼 : 이거 지역변수라 ㅈ됨 이거 수정할것
 	tcp::resolver resolver(io_con);
 	auto endpoint = resolver.resolve(main_server_ip, main_server_port);
 
@@ -153,7 +151,7 @@ void TestCameraScript::LateUpdate()
 			mkd.size = sizeof(cs_packet_move_key_down);
 			mkd.type = CS_MOVE_KEY_DOWN;
 
-			session->Send_Packet(&mkd);
+			main_session->Send_Packet(&mkd);
 		}
 	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::W))
@@ -168,7 +166,7 @@ void TestCameraScript::LateUpdate()
 			mku.size = sizeof(cs_packet_move_key_up);
 			mku.type = CS_MOVE_KEY_UP;
 
-			session->Send_Packet(&mku);
+			main_session->Send_Packet(&mku);
 		}
 	}
 
@@ -182,7 +180,7 @@ void TestCameraScript::LateUpdate()
 			mkd.size = sizeof(cs_packet_move_key_down);
 			mkd.type = CS_MOVE_KEY_DOWN;
 
-			session->Send_Packet(&mkd);
+			main_session->Send_Packet(&mkd);
 		}
 	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::S))
@@ -196,7 +194,7 @@ void TestCameraScript::LateUpdate()
 			mku.size = sizeof(cs_packet_move_key_up);
 			mku.type = CS_MOVE_KEY_UP;
 
-			session->Send_Packet(&mku);
+			main_session->Send_Packet(&mku);
 		}
 
 	}
@@ -211,7 +209,7 @@ void TestCameraScript::LateUpdate()
 			mkd.size = sizeof(cs_packet_move_key_down);
 			mkd.type = CS_MOVE_KEY_DOWN;
 
-			session->Send_Packet(&mkd);
+			main_session->Send_Packet(&mkd);
 		}
 	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::A))
@@ -224,7 +222,7 @@ void TestCameraScript::LateUpdate()
 			mku.size = sizeof(cs_packet_move_key_up);
 			mku.type = CS_MOVE_KEY_UP;
 
-			session->Send_Packet(&mku);
+			main_session->Send_Packet(&mku);
 		}
 	}
 
@@ -238,7 +236,7 @@ void TestCameraScript::LateUpdate()
 			mkd.size = sizeof(cs_packet_move_key_down);
 			mkd.type = CS_MOVE_KEY_DOWN;
 
-			session->Send_Packet(&mkd);
+			main_session->Send_Packet(&mkd);
 		}
 	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::D))
@@ -252,7 +250,7 @@ void TestCameraScript::LateUpdate()
 			mku.size = sizeof(cs_packet_move_key_up);
 			mku.type = CS_MOVE_KEY_UP;
 
-			session->Send_Packet(&mku);
+			main_session->Send_Packet(&mku);
 		}
 	}
 
@@ -320,7 +318,7 @@ void TestCameraScript::LateUpdate()
 		packet.y = currentPosition.y;
 		packet.z = currentPosition.z;
 
-		session->Send_Packet(&packet);
+		main_session->Send_Packet(&packet);
 		//-------------------------------------
 	}
 	else if (currentPosition == tempPos)
@@ -462,7 +460,7 @@ void TestCameraScript::LateUpdate()
 					ppi.type = CS_PICKING_INFO;
 					ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
-					session->Send_Packet(&ppi);
+					main_session->Send_Packet(&ppi);
 				}
 
 				else {
@@ -471,7 +469,7 @@ void TestCameraScript::LateUpdate()
 					ppi.type = CS_PICKING_INFO;
 					ppi.target_id = -1;
 
-					session->Send_Packet(&ppi);
+					main_session->Send_Packet(&ppi);
 				}
 			}
 
@@ -481,7 +479,7 @@ void TestCameraScript::LateUpdate()
 				ppi.type = CS_PICKING_INFO;
 				ppi.target_id = -1;
 
-				session->Send_Packet(&ppi);
+				main_session->Send_Packet(&ppi);
 			}
 
 			timeElapse = 0.f;
@@ -533,7 +531,7 @@ void TestCameraScript::LateUpdate()
 			tgk.key_id = keyCard->GetTransform()->GetObjectID();
 			//pos xyz 는 플레이어의 현재 위치
 			//key_id는 충돌한 카드키의 id값
-			session->Send_Packet(&tgk);
+			main_session->Send_Packet(&tgk);
 
 			GET_SINGLE(SceneManager)->SetKeyCardPosition(150 + 75 * haveKeycard, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130, haveKeycard);
 			haveKeycard++;
@@ -548,7 +546,7 @@ void TestCameraScript::LateUpdate()
 			tut.type = CS_TRY_USE_TMN;
 			tut.terminal_id = terminal->GetTransform()->GetObjectID();
 
-			session->Send_Packet(&tut);
+			main_session->Send_Packet(&tut);
 		}
 	}
 	
@@ -566,7 +564,7 @@ void TestCameraScript::LateUpdate()
 		lm.size = sizeof(cs_packet_reload_mag);
 		lm.type = CS_RELOAD_MAG;
 
-		session->Send_Packet(&lm);
+		main_session->Send_Packet(&lm);
 	}
 
 
@@ -704,7 +702,7 @@ void TestCameraScript::MoveUpdate()
 		packet.y = pos.y;
 		packet.z = pos.z;
 
-		session->Send_Packet(&packet);
+		main_session->Send_Packet(&packet);
 		//-------------------------------------
 	}
 
@@ -773,7 +771,7 @@ void TestCameraScript::RotationUpdate()
 		mi.y = rotation.y;
 		mi.z = 0.0f;
 
-		session->Send_Packet(&mi);
+		main_session->Send_Packet(&mi);
 		//---------------------------------
 	}
 

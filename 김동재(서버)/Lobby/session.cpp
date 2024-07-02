@@ -12,6 +12,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 {
 	auto P = players[id];
 	switch (packet[1]) {
+	case CL_START_GAME: {
+		lc_packet_set_server_info ssi;
+
+		ssi.type = LC_SET_SERVER_INFO;
+		ssi.size = sizeof(lc_packet_set_server_info);
+		strcpy_s(ssi.ip, server_ip);
+		strcpy_s(ssi.port, server_port);
+
+		Send_Packet(&ssi);
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 

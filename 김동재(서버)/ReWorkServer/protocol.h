@@ -78,6 +78,10 @@
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
 
 #define LS_PLAYER_INFO    201 //서버에 플레이어의 정보(id, 장비, 팀 등)을 전달
+
+#define LC_SET_SERVER_INFO 255 //로비가 클라이언트에 메인 서버의 ip, port 전송
+
+#define CL_START_GAME      150 //로비 씬에서 메인 씬으로 전환
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -272,4 +276,17 @@ struct ls_packet_player_info {
 	BYTE type;
 };
 
+//------------lobby to client packet-------------
+struct lc_packet_set_server_info{
+	BYTE size;
+	BYTE type;
+	char ip[16];
+	char port[6];
+};
+
+//------------client to lobby packet-------------
+struct cl_packet_start_game {
+	BYTE size;
+	BYTE type;
+};
 #pragma pack (pop)

@@ -5,6 +5,9 @@
 
 int playerID = -1;
 
+char main_server_ip[16];
+char main_server_port[6];
+
 SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
 	curr_packet_size_ = 0;
@@ -135,6 +138,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		haveKeycard++;
 		break;
 	}
+	case LC_SET_SERVER_INFO: {
+		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);
+
+		strcpy_s(main_server_ip, p->ip);
+		strcpy_s(main_server_port, p->port);
+		break;
+	}
 	default: // 지정되지 않은 패킷을 수신받았을 때
 		return;
 		break;
@@ -230,6 +240,7 @@ bool SESSION::get_moving()
 }
 
 SESSION* session;
+SESSION* main_session;
 
 void MoveSession(tcp::socket& sock)
 {
