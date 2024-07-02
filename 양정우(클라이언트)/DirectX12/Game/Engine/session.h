@@ -42,6 +42,7 @@ public:
 void MoveSession(tcp::socket& sock);
 
 extern SESSION* session;
+extern SESSION* main_session;
 
 SESSION* GetSession();
 
