@@ -56,4 +56,6 @@ private:
 
 
 	bool isMoving = false;
+
+	std::thread* serverthread_p;
 };

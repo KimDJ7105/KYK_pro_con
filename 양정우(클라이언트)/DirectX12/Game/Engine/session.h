@@ -46,4 +46,5 @@ extern SESSION* main_session;
 
 SESSION* GetSession();
 
-
+extern char main_server_ip[16];
+extern char main_server_port[6];

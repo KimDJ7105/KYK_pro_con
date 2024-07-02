@@ -13,7 +13,8 @@
 
 #include "session.h"
 
-
+char main_server_ip[16];
+char main_server_port[6];
 
 struct Quaternion {
 	float x, y, z, w;
@@ -72,6 +73,10 @@ Quaternion QuaternionFromAxisAngle(const Vec3& axis, float angle) {
 	return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos(halfAngle));
 }
 
+void worker_SM_thread(boost::asio::io_context* io_con)
+{
+	io_con->run();
+}
 
 extern int playerID;
 
@@ -79,10 +84,25 @@ TestCameraScript::TestCameraScript()
 {
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
+
+	io_context io_con;
+	tcp::resolver resolver(io_con);
+	auto endpoint = resolver.resolve(main_server_ip, main_server_port);
+
+	tcp::socket sock(io_con);
+
+	main_session = new SESSION(std::move(sock));
+
+	main_session->do_connect(endpoint);
+
+	serverthread_p = new std::thread(worker_SM_thread, &io_con);
 }
 
 TestCameraScript::~TestCameraScript()
 {
+	serverthread_p->join();
+
+	delete serverthread_p;
 }
 
 void TestCameraScript::LateUpdate()
