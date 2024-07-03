@@ -8,6 +8,8 @@ int playerID = -1;
 char main_server_ip[16];
 char main_server_port[6];
 
+io_context main_io_con;
+
 SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 {
 	curr_packet_size_ = 0;

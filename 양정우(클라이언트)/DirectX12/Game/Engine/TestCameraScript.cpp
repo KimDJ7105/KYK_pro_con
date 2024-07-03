@@ -83,17 +83,16 @@ TestCameraScript::TestCameraScript()
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
 
-	io_context io_con; //진짜칼 : 이거 지역변수라 ㅈ됨 이거 수정할것
-	tcp::resolver resolver(io_con);
+	tcp::resolver resolver(main_io_con);
 	auto endpoint = resolver.resolve(main_server_ip, main_server_port);
 
-	tcp::socket sock(io_con);
+	tcp::socket sock(main_io_con);
 
 	main_session = new SESSION(std::move(sock));
 
 	main_session->do_connect(endpoint);
 
-	serverthread_p = new std::thread(worker_SM_thread, &io_con);
+	serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
 }
 
 TestCameraScript::~TestCameraScript()
