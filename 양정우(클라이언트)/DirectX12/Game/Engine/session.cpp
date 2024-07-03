@@ -28,9 +28,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_login_info* p = reinterpret_cast<sc_packet_login_info*>(packet);
 
-		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
-		//_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
-
 		//p->bullet_amount; 플레이어 초기 총알 개수 (30개)
 		//변수 만들어서 저장 필요
 		playerID = p->id;
@@ -38,12 +35,15 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		_activeSessionScene->CreatePlayerGunObject(102, p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
 		_activeSessionScene->SetBullet(p->bullet_amount);
+
+		//std::cout << "Recv Log in info\n";
+
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
 	{
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
-		//scene->AddGameObject(_activeSessionScene->CreateBoxObject(type, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry, p->dirz));
+		
 		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		break;
 	}
@@ -94,7 +94,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 		_activeSessionScene->CreateGameObject(p->approx_num, p->obj_type, p->id);
 		//x, y, z 값은 p->approx_pos(복도 번호) 를 통해서 구하기
-		//_activeSessionScene->CreatePlayerObject(OT_KEYCARD, p->id, p->x, p->y, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+		
 		break;
 	}
 	case SC_MODIFY_BULLET :
