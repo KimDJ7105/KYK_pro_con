@@ -71,11 +71,6 @@ Quaternion QuaternionFromAxisAngle(const Vec3& axis, float angle) {
 	return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos(halfAngle));
 }
 
-void worker_SM_thread(boost::asio::io_context* io_con)
-{
-	io_con->run();
-}
-
 extern int playerID;
 
 TestCameraScript::TestCameraScript()
@@ -83,23 +78,10 @@ TestCameraScript::TestCameraScript()
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
 
-	tcp::resolver resolver(main_io_con);
-	auto endpoint = resolver.resolve(main_server_ip, main_server_port);
-
-	tcp::socket sock(main_io_con);
-
-	main_session = new SESSION(std::move(sock));
-
-	main_session->do_connect(endpoint);
-
-	serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
 }
 
 TestCameraScript::~TestCameraScript()
 {
-	serverthread_p->join();
-
-	delete serverthread_p;
 }
 
 void TestCameraScript::LateUpdate()

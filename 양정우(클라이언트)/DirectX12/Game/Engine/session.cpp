@@ -250,3 +250,5 @@ void MoveSession(tcp::socket& sock)
 }
 
 SESSION* GetSession() { return session; }
+
+std::thread* serverthread_p;
