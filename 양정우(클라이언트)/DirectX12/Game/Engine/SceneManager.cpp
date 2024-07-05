@@ -1288,6 +1288,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 
+	//서버칼(메인 씬 구성 종료지점)
+
+
+
+
+
+
+
+
 	return mainGameScene;
 }
 
