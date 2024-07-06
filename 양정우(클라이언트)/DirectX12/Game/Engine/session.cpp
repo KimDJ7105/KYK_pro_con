@@ -100,6 +100,12 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PUT_OBJECT_POS : //방에 오브젝트 생성
 	{
 		sc_packet_put_object_pos* p = reinterpret_cast<sc_packet_put_object_pos*>(packet);
+		//2024-07-06
+		//방에 오브젝트를 생성하라는 패킷
+		//p->obj_type이 오브젝트 타입
+		//p->approx_num이 방 번호를 의미
+		//방 번호에 관해서는 논의 필요
+		//클라가 할 일 : 토끼발 오브젝트를 해당 방 중앙에 생성
 		break;
 	}
 	case SC_MODIFY_BULLET :

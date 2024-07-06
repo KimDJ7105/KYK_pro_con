@@ -545,6 +545,10 @@ void TestCameraScript::LateUpdate()
 			tgr.obj_id = rabbitfoot->GetTransform()->GetObjectID();
 			
 			main_session->Send_Packet(&tgr);
+
+			//2024-07-06
+			//토끼발을 획득 시도(방식은 카드키와 동일)
+			//토끼발을 획득하면 UI적으로 표시 필요
 		}
 	}
 	
