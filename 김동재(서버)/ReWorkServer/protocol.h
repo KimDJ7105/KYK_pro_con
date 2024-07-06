@@ -52,15 +52,16 @@
 //---------------------------------------
 
 //Packet type----------------------------
-#define CS_POS_INFO      1
-#define CS_BOX_CREATE    2
-#define CS_MOUSE_INFO    3
-#define CS_PICKING_INFO  4
-#define CS_TRY_GET_KEY   5
-#define CS_TRY_USE_TMN   6
-#define CS_RELOAD_MAG    7
-#define CS_MOVE_KEY_DOWN 8
-#define CS_MOVE_KEY_UP   9
+#define CS_POS_INFO			  1
+#define CS_BOX_CREATE         2
+#define CS_MOUSE_INFO         3
+#define CS_PICKING_INFO       4
+#define CS_TRY_GET_KEY        5
+#define CS_TRY_USE_TMN        6
+#define CS_RELOAD_MAG         7
+#define CS_MOVE_KEY_DOWN      8
+#define CS_MOVE_KEY_UP        9
+#define CS_TRY_GET_RABBITFOOT 10
 
 #define SC_POS            1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER     2 //오브젝트 생성
@@ -152,6 +153,15 @@ struct cs_packet_move_key_down {
 struct cs_packet_move_key_up {
 	BYTE size;
 	BYTE type;
+};
+
+struct cs_packet_try_get_rabbitfoot {
+	BYTE size;
+	BYTE type;
+	int obj_id;
+	float x;
+	float y;
+	float z;
 };
 
 //---------Server To Client-----------------

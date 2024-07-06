@@ -263,6 +263,27 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
+	case CS_TRY_GET_RABBITFOOT: {
+		cs_packet_try_get_rabbitfoot* p = (cs_packet_try_get_rabbitfoot*)packet;
+
+		shared_ptr<OBJECT> foot = my_game->ingame_object[p->obj_id];
+		if (foot == nullptr) break;
+
+		std::cout << "Åä³¢¹ß È¹µæ ¿äÃ» ¼ö½Å\n";
+		foot->owner_id = my_id_;
+
+		sc_packet_remove_player rmp;
+		rmp.type = SC_REMOVE_PLAYER;
+		rmp.size = sizeof(sc_packet_remove_player);
+		rmp.id = foot->obj_id;
+		rmp.obj_type = OT_RABBITFOOT;
+		for (auto& p : my_game->ingame_player) {
+			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
+			player->Send_Packet(&rmp);
+		}
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 

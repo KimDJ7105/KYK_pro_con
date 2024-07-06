@@ -529,6 +529,23 @@ void TestCameraScript::LateUpdate()
 
 			main_session->Send_Packet(&tut);
 		}
+
+		shared_ptr<GameObject> rabbitfoot = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT);
+
+		if (rabbitfoot != NULL)
+		{
+			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+			cs_packet_try_get_rabbitfoot tgr;
+			tgr.size = sizeof(cs_packet_try_get_rabbitfoot);
+			tgr.type = CS_TRY_GET_RABBITFOOT;
+			tgr.x = pos.x;
+			tgr.y = pos.y;
+			tgr.z = pos.z;
+			tgr.obj_id = rabbitfoot->GetTransform()->GetObjectID();
+			
+			main_session->Send_Packet(&tgr);
+		}
 	}
 	
 	if (INPUT->GetButtonDown(KEY_TYPE::R))
