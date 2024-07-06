@@ -284,6 +284,24 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
+	case TEST_SPAWN_RBF: { //test for rabbitfoot
+		auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+
+		sc_packet_put_object_pos pop;
+		pop.size = sizeof(sc_packet_put_object_pos);
+		pop.type = SC_PUT_OBJECT_POS;
+		pop.id = rabbitfoot->obj_id;
+		pop.obj_type = rabbitfoot->obj_type;
+		pop.approx_num = rabbitfoot->spawn_num;
+
+		for (auto& p : my_game->ingame_player) {
+			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
+
+			player->Send_Packet(&pop);
+		}
+		break;
+	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
 
