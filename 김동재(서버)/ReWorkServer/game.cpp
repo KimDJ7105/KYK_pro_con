@@ -25,6 +25,27 @@ int GAME::GetNewObjectID()
 	return g_object_ID++;
 }
 
+bool GAME::IsTerminalOn()
+{
+	for (const auto& pair : ingame_object) {
+		if (pair.second->obj_type == OT_TERMINAL && pair.second->owner_id == -1) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool GAME::operator==(const GAME& other) const {
 	return game_id == other.game_id;
+}
+
+std::shared_ptr<OBJECT>& GAME::CreateObjectApprox(int obj_type)
+{
+	int o_id = GetNewObjectID();
+	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
+	ingame_object[o_id]->select_room_pos();
+	ingame_object[o_id]->show_approx_pos();
+
+	return ingame_object[o_id];
 }

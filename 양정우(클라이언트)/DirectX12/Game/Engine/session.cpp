@@ -97,6 +97,11 @@ void SESSION::Process_Packet(unsigned char* packet)
 		
 		break;
 	}
+	case SC_PUT_OBJECT_POS : //방에 오브젝트 생성
+	{
+		sc_packet_put_object_pos* p = reinterpret_cast<sc_packet_put_object_pos*>(packet);
+		break;
+	}
 	case SC_MODIFY_BULLET :
 	{
 		sc_packet_modify_bullet* p = reinterpret_cast<sc_packet_modify_bullet*>(packet);

@@ -11,6 +11,7 @@ public :
 	int spawn_num;
 
 	void select_pos();
+	void select_room_pos();
 	OBJECT(int id, int type);
 
 	void show_approx_pos();

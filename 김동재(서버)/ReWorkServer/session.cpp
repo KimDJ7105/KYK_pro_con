@@ -18,7 +18,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	int y = P->pos[1];
 	int x = P->pos[0];
 	switch (packet[1]) {
-	case CS_POS_INFO: {
+	case CS_POS_INFO: { //플레이어 이동
 		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
 
 		pos[0] = p->x;
@@ -49,7 +49,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_MOUSE_INFO: {
+	case CS_MOUSE_INFO: { //플레이어 마우스 움직임
 		cs_packet_mouse_info* p = (cs_packet_mouse_info*)packet;
 
 		view_dir[0] = p->x;
@@ -78,7 +78,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_PICKING_INFO :
+	case CS_PICKING_INFO : //플레이어 사격 시도
 	{
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
@@ -130,7 +130,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			
 		break;
 	}
-	case CS_TRY_GET_KEY :
+	case CS_TRY_GET_KEY : //카드키 획득 시도
 	{
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
 
@@ -153,7 +153,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_TRY_USE_TMN :
+	case CS_TRY_USE_TMN : //터미널 사용 시도
 	{
 		cs_packet_try_use_tmn* p = (cs_packet_try_use_tmn*)packet;
 
@@ -190,6 +190,25 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			Send_Packet(&cu);
 			Send_Packet(&sm);
+
+			//만약 모든 터미널이 활성화 되었으면 토끼발을 생성
+			if (my_game->IsTerminalOn()) {
+				auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+
+				sc_packet_put_object_pos pop;
+				pop.size = sizeof(sc_packet_put_object_pos);
+				pop.type = SC_PUT_OBJECT_POS;
+				pop.id = rabbitfoot->obj_id;
+				pop.obj_type = rabbitfoot->obj_type;
+				pop.approx_num = rabbitfoot->spawn_num;
+
+				for (auto& p : my_game->ingame_player) {
+					shared_ptr<SESSION> player = p.second;
+					if (player == nullptr) continue;
+
+					player->Send_Packet(&pop);
+				}
+			}
 		}
 		
 		else { //이미 활성화 된 터미널이면
@@ -202,7 +221,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_RELOAD_MAG: {
+	case CS_RELOAD_MAG: { //재장전
 		remain_bullet = 30;
 
 		sc_packet_modify_bullet mb;
@@ -212,7 +231,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		Send_Packet(&mb);
 		break;
 	}
-	case CS_MOVE_KEY_DOWN: {
+	case CS_MOVE_KEY_DOWN: { //이동 애니메이션 동기화를 위해 이동 키가 눌림을 수신
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);
@@ -228,7 +247,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_MOVE_KEY_UP: {
+	case CS_MOVE_KEY_UP: { //이동 키가 떨어짐
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);

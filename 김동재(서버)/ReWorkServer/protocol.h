@@ -30,6 +30,7 @@
 #define OT_TERMINAL			4
 #define OT_RESURRECTION_PAD 5
 #define OT_GRINDER          6
+#define OT_RABBITFOOT       7
 
 #define OT_WALLAABB			99
 #define OT_UI_PLAYERHAND	101
@@ -72,7 +73,7 @@
 #define SC_SHOW_MAP       9 //단말기를 통해 맵을 출력
 #define SC_SET_ANIMATION  10 //객체의 애니메이션을 세팅
 #define SC_CARD_USED      11 //카드가 사용되었음을 알림
-#define SC_PUT_OBJECT_POS 12 //오브젝트를 정확한 위치에 생성
+#define SC_PUT_OBJECT_POS 12 //오브젝트를 방에 생성
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -249,12 +250,7 @@ struct sc_packet_put_object_pos {
 	BYTE type;
 	WORD id;
 	int obj_type;
-	float x;
-	float y;
-	float z;
-	float dirx;
-	float diry;
-	float dirz;
+	int approx_num;
 };
 
 //------------server to lobby packet-------------
