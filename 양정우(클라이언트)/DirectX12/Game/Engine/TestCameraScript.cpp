@@ -235,6 +235,15 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
+	if (INPUT->GetButtonDown(KEY_TYPE::T))
+	{
+		test_packet tp;
+		tp.size = sizeof(test_packet);
+		tp.type = TEST_SPAWN_RBF;
+
+		session->Send_Packet(&tp);
+	}
+
 	if (wKeyState)
 	{
 		moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));

@@ -84,6 +84,8 @@
 #define LC_SET_SERVER_INFO 255 //로비가 클라이언트에 메인 서버의 ip, port 전송
 
 #define CL_START_GAME      150 //로비 씬에서 메인 씬으로 전환
+
+#define TEST_SPAWN_RBF 80
 //---------------------------------------
 
 //Weapon Info----------------------------
@@ -263,6 +265,10 @@ struct sc_packet_put_object_pos {
 	int approx_num;
 };
 
+struct test_packet {
+	BYTE size;
+	BYTE type;
+};
 //------------server to lobby packet-------------
 struct sl_packet_set_port {
 	BYTE size;
