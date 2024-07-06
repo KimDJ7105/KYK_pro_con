@@ -26,10 +26,7 @@
 
 #include "session.h"
 
-void worker_SM_thread(boost::asio::io_context* io_con)
-{
-	io_con->run();
-}
+
 
 shared_ptr<Scene> mainGameScene = std::make_shared<Scene>();
 
@@ -1293,18 +1290,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
-
-	//서버칼(메인 씬 구성 종료지점)
-	tcp::resolver resolver(main_io_con);
-	auto endpoint = resolver.resolve(main_server_ip, main_server_port);
-
-	tcp::socket sock(main_io_con);
-
-	main_session = new SESSION(std::move(sock));
-
-	main_session->do_connect(endpoint);
-
-	serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
 
 	return mainGameScene;
 }
