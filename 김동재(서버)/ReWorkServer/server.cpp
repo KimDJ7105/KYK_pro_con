@@ -34,6 +34,10 @@ void SERVER::do_accept()
 				}
 				do_accept();
 			}
+
+			else {
+				std::cout << "Accept ½ÇÆÐ\n";
+			}
 		});
 }
 

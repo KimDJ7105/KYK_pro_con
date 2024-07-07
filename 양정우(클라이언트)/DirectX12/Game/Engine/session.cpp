@@ -170,6 +170,7 @@ void SESSION::do_connect(tcp::resolver::results_type endpoint)
 		[this](const boost::system::error_code& ec, const tcp::endpoint& endpoint)
 		{
 			if (!ec) {
+				std::cout << "Connected\n";
 				do_read();
 			}
 

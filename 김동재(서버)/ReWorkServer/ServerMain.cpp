@@ -29,7 +29,7 @@ int main()
 	
 	Init_Server();
 
-	for (auto i = 0; i < 4; i++) worker_threads.emplace_back(worker_thread, &io_service);
+	for (auto i = 0; i < 1; i++) worker_threads.emplace_back(worker_thread, &io_service);
 	for (auto& th : worker_threads) th.join();
 }
 
