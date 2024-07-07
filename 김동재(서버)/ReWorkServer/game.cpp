@@ -18,6 +18,12 @@ GAME::GAME(int id)
 		ingame_object[t_id]->select_pos();
 		ingame_object[t_id]->show_approx_pos();
 	}
+
+	//부활패드 생성
+	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 2);
+	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 10);
+	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 14);
+	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 22);
 }
 
 int GAME::GetNewObjectID()
@@ -45,6 +51,16 @@ std::shared_ptr<OBJECT>& GAME::CreateObjectApprox(int obj_type)
 	int o_id = GetNewObjectID();
 	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
 	ingame_object[o_id]->select_room_pos();
+	ingame_object[o_id]->show_approx_pos();
+
+	return ingame_object[o_id];
+}
+
+std::shared_ptr<OBJECT>& GAME::CreateObjectApprox_nr(int obj_type, int approx_pos)
+{
+	int o_id = GetNewObjectID();
+	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
+	ingame_object[o_id]->set_pos(approx_pos);
 	ingame_object[o_id]->show_approx_pos();
 
 	return ingame_object[o_id];

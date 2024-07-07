@@ -24,6 +24,11 @@ void OBJECT::show_approx_pos()
 	std::cout << "오브젝트" << obj_id << " 위치 : " << spawn_num << std::endl;
 }
 
+void OBJECT::set_pos(int approx_pos)
+{
+	spawn_num = approx_pos;
+}
+
 void OBJECT::select_pos()
 {
 	while (spawn_num == -1) {

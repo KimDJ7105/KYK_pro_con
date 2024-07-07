@@ -10,6 +10,7 @@ public :
 
 	int spawn_num;
 
+	void set_pos(int approx_pos);
 	void select_pos();
 	void select_room_pos();
 	OBJECT(int id, int type);
