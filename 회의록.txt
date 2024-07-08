@@ -688,3 +688,45 @@
  - 7월 8일 까지 : Stage - 2 구현, 부활 코어/부활 패드, 무기 (산탄총), 팀전 (3:3:3:3), 그림자, SpotLight(맵 배치 포함), 팀원 UI (HP, 카드키), Client&Engine 합치기
 
 
+2024-07-08
+------------
+0. 임윤수 현장실습
+1. 진행상황
+ - (X) Stage - 2 구현, 
+ - (X) 부활 코어/부활 패드, 
+ - (X) 무기 (산탄총), 
+ - (X) 팀전 (3:3:3:3), 
+ - (X) 그림자, 
+ - (X) SpotLight(맵 배치 포함), 
+ - (X) 팀원 UI (HP, 카드키)
+ - (X) Client&Engine 합치기
+ - 로비 서버, 로비 UI 구현 중 => 현재 로비서버에서 게임서버로 전환할 때 Crash 
+  * Client ID가 생성되지 않았는데 PlayerGun 객체를 생성하려 하는 오류
+
+2. 최종발표일 결정 7월 29일
+ - 6월 12일 까지 :
+      ( X )레이저 절단기 
+      ( 구현중   ) 아이템(탈출키) => 서버구현 완료 클라에서 보여줘야 함,
+      ( X ) 무기(돌격소총)
+      ( O ) 복수방 구현
+      ( X ) 애니메이션의 Unity전환
+ - 6월 26일 까지 : 
+     ( X ) 분쇄기, 
+     ( X ) 무기 (권총), 
+     ( X ) 팀전 (3:3), 
+     ( X ) UI (엔딩화면)
+     ( 구현 중) 로비 구현( (X) UI 추가 필요, 방만들기, 초대/참가/시작/강퇴),
+     ( 구현 중)  파티클 (총,  총구 불꽂, 탄착점 불꽃)
+ - 7월 10일 까지 : Stage - 2 구현, 부활 코어/부활 패드, 무기 (산탄총), 팀전 (3:3:3:3), 그림자, SpotLight(맵 배치 포함), 팀원 UI (HP, 카드키), Client&Engine 합치기
+  * 클라이언트가 만들어야 하는 API : CreateObject(Object_ID, Object_Type, Location);   // OBJECT_TYPE : OBJ_CARD, OBJ_TERMINAL, OBJ_RABITFOOT, OBJ_RESURCORE, OBJ_ RESURPAD, OBJ_CRUSHER, OBJ_RASERCUTTER)
+ - 7월 22일 까지 : Sound 넣기 (BGM, 효과음.  XAudio2, FMOD나 OPENAL 라이브러리를 많이 사용) Stage - 3 구현,  
+ - 7월 29일 까지 : 디버깅, 발표 포스터 제작, 데모 준비, (Option : 벽에 탄착점)
+
+3. 다음 미팅
+ - 7월 22dlf 월요일 오후 1시 30분
+ - 밀린것들 싹 다 해오기
+ 
+
+
+
+
