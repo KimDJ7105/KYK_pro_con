@@ -174,9 +174,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			terminal->owner_id = my_id_;
 
 			//플레이어가 가진 카드키를 삭제
-			shared_ptr<OBJECT> key = my_game->ingame_object[key_id];
-			if (key == nullptr) break;
-			key->owner_id = -1;
+			auto it = my_game->ingame_object.find(key_id);
+			if (it != my_game->ingame_object.end()) {
+				my_game->ingame_object.erase(it);
+			}
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
 
@@ -190,6 +191,24 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			Send_Packet(&cu);
 			Send_Packet(&sm);
+
+			//다른 오브젝트의 위치를 전달
+			for (auto& object : my_game->ingame_object) {
+				shared_ptr<OBJECT> obj = object.second;
+				if (obj == nullptr) continue;
+				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
+				if (obj->obj_type == OT_KEYCARD && obj->owner_id != -1) continue;
+
+				sc_packet_show_object_loc sol;
+				sol.type = SC_SHOW_OBJECT_LOC;
+				sol.size = sizeof(sc_packet_show_object_loc);
+				sol.obj_type = obj->obj_type;
+				sol.approx_num = obj->spawn_num;
+				if (obj->obj_type == OT_RABBITFOOT) sol.loc_type = OT_ROOM;
+				else sol.loc_type = OT_CORRIDOR;
+
+				Send_Packet(&sol);
+			}
 
 			//만약 모든 터미널이 활성화 되었으면 토끼발을 생성
 			if (my_game->IsTerminalOn()) {
@@ -217,6 +236,24 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			sm.size = sizeof(sc_packet_show_map);
 
 			Send_Packet(&sm);
+
+			//다른 오브젝트의 위치를 전달
+			for (auto& object : my_game->ingame_object) {
+				shared_ptr<OBJECT> obj = object.second;
+				if (obj == nullptr) continue;
+				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
+				if (obj->obj_type == OT_KEYCARD && obj->owner_id != -1) continue;
+
+				sc_packet_show_object_loc sol;
+				sol.type = SC_SHOW_OBJECT_LOC;
+				sol.size = sizeof(sc_packet_show_object_loc);
+				sol.obj_type = obj->obj_type;
+				sol.approx_num = obj->spawn_num;
+				if (obj->obj_type == OT_RABBITFOOT) sol.loc_type = OT_ROOM;
+				else sol.loc_type = OT_CORRIDOR;
+
+				Send_Packet(&sol);
+			}
 		}
 
 		break;

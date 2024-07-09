@@ -151,6 +151,17 @@ void SESSION::Process_Packet(unsigned char* packet)
 		haveKeycard++;
 		break;
 	}
+	case SC_SHOW_OBJECT_LOC : 
+	{
+		sc_packet_show_object_loc* p = reinterpret_cast<sc_packet_show_object_loc*>(packet);
+		//터미널 사용시 오브젝트의 위치를 알려주는 패킷
+		//패킷 정보를 보고 화면의 알맞은 위치에 오브젝트 별 아이콘을 그려주면 된다.
+		//p->obj_type;은 오브젝트의 타입
+		//p->loc_type;은 오브젝트의 위치 기준에 대한 정보 (OT_CORRIDOR == 복도 / OT_ROOM == 방)
+		//p->approx_num;는 오브젝트의 위치 번호(방 혹은 복도 번호)
+
+		break;
+	}
 	case LC_SET_SERVER_INFO: {
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);
 

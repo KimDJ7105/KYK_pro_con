@@ -64,18 +64,19 @@
 #define CS_TRY_GET_RABBITFOOT 10
 #define CS_SET_LASER_TRAP     11
 
-#define SC_POS            1 //오브젝트 이동 & 회전
-#define SC_PUT_PLAYER     2 //오브젝트 생성
-#define SC_REMOVE_PLAYER  3 //오브젝트 제거
-#define SC_LOGIN_INFO	  4 //로그인 정보
-#define SC_APPLY_DAMAGE   5 //플레이어의 HP를 감소시킴
-#define SC_PLAYER_DEAD    6 //플레이어의 HP가 0이 될때
-#define SC_PUT_OBJECT     7 //오브젝트를 생성
-#define SC_MODIFY_BULLET  8 //총알 개수를 변경
-#define SC_SHOW_MAP       9 //단말기를 통해 맵을 출력
-#define SC_SET_ANIMATION  10 //객체의 애니메이션을 세팅
-#define SC_CARD_USED      11 //카드가 사용되었음을 알림
-#define SC_PUT_OBJECT_POS 12 //오브젝트를 방에 생성
+#define SC_POS             1 //오브젝트 이동 & 회전
+#define SC_PUT_PLAYER      2 //오브젝트 생성
+#define SC_REMOVE_PLAYER   3 //오브젝트 제거
+#define SC_LOGIN_INFO	   4 //로그인 정보
+#define SC_APPLY_DAMAGE    5 //플레이어의 HP를 감소시킴
+#define SC_PLAYER_DEAD     6 //플레이어의 HP가 0이 될때
+#define SC_PUT_OBJECT      7 //오브젝트를 생성
+#define SC_MODIFY_BULLET   8 //총알 개수를 변경
+#define SC_SHOW_MAP        9 //단말기를 통해 맵을 출력
+#define SC_SET_ANIMATION   10 //객체의 애니메이션을 세팅
+#define SC_CARD_USED       11 //카드가 사용되었음을 알림
+#define SC_PUT_OBJECT_POS  12 //오브젝트를 방에 생성
+#define SC_SHOW_OBJECT_LOC 13 //터미널 사용시 오브젝트 위치를 화면에 표시
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -269,6 +270,14 @@ struct sc_packet_put_object_pos {
 	BYTE type;
 	WORD id;
 	int obj_type;
+	int approx_num;
+};
+
+struct sc_packet_show_object_loc {
+	BYTE size;
+	BYTE type;
+	int obj_type;
+	int loc_type;
 	int approx_num;
 };
 
