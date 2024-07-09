@@ -593,7 +593,7 @@ void TestCameraScript::LateUpdate()
 		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
 
 		// playerGunObject의 위치를 플레이어의 위치로 이동
-		playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+		if(playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
 		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
 		Vec3 gunRotationOffset(-1.57f, 3.14f, 0.0f); // 총의 회전 오프셋
@@ -606,11 +606,11 @@ void TestCameraScript::LateUpdate()
 		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
 
 		// 회전을 적용
-		playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
+		if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
 
 		// 플레이어를 기준으로 한 반대 방향으로 이동
 		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-		playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+		if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(newPosition);
 	}
 
 	{
@@ -626,7 +626,7 @@ void TestCameraScript::LateUpdate()
 		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
 
 		// playerGunObject의 위치를 플레이어의 위치로 이동
-		playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+		if (playerGunObject != NULL) playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
 		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
 		Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
@@ -639,13 +639,13 @@ void TestCameraScript::LateUpdate()
 		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
 
 		// 회전을 적용
-		playerObject->GetTransform()->SetLocalRotation(gunRotation);
+		if (playerObject != NULL) playerObject->GetTransform()->SetLocalRotation(gunRotation);
 
 		// 플레이어를 기준으로 한 반대 방향으로 이동
 		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-		playerObject->GetTransform()->SetLocalPosition(newPosition);
+		if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(newPosition);
 
-		Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
+		if (playerObject != NULL) Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
 	}
 	
 
