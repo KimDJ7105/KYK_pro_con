@@ -16,7 +16,7 @@ public :
 	OBJECT(int id, int type);
 
 	void show_approx_pos();
-
+	void set_free_space();
 private:
 
 	std::array<float, 3> pos;

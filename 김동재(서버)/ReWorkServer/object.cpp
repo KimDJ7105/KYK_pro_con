@@ -24,6 +24,12 @@ void OBJECT::show_approx_pos()
 	std::cout << "오브젝트" << obj_id << " 위치 : " << spawn_num << std::endl;
 }
 
+void OBJECT::set_free_space()
+{
+	if (obj_type == OT_RABBITFOOT) room_spawn_able[spawn_num] = false;
+	else spawn_able[spawn_num] = false;
+}
+
 void OBJECT::set_pos(int approx_pos)
 {
 	spawn_num = approx_pos;

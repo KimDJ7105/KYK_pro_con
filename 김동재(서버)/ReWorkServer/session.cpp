@@ -139,6 +139,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "Ä«µåÅ° È¹µæ ¿äÃ» ¼ö½Å\n";
 		card->owner_id = my_id_;
+		card->set_free_space();
 
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
