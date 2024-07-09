@@ -13,7 +13,10 @@
 
 #define MY_SERVER_IP "127.0.0.1"
 #define MY_SERVER_PORT  "55000"
-#define MY_PORT 55000
+#define MY_PORT0 55000
+#define MY_PORT1 55001
+#define MY_PORT2 55002
+#define MY_PORT3 55003
 
 //Lobby Info-----------------------------
 #define LOBBY_IP "127.0.0.1"

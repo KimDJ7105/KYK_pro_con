@@ -20,16 +20,22 @@ void worker_thread(boost::asio::io_context* service)
 
 int main()
 {
-	boost::asio::io_context io_service;
+	std::array<boost::asio::io_context, 4> io_service;
 	vector <thread > worker_threads;
-	SERVER s(io_service, MY_PORT);
-	//server 객체를 port 번호 별로 따로 생성한 뒤에 각자의 쓰레드를 생성
-	//server 클래스 내부에 game 객체를 관리하기 위한 컨테이너 생성 필요
+	vector <std::unique_ptr<SERVER>> servers;
 
-	
+	servers.emplace_back(std::make_unique<SERVER>(io_service[0], MY_PORT0));
+	servers.emplace_back(std::make_unique<SERVER>(io_service[1], MY_PORT1));
+	servers.emplace_back(std::make_unique<SERVER>(io_service[2], MY_PORT2));
+	servers.emplace_back(std::make_unique<SERVER>(io_service[3], MY_PORT3));
+
+
 	Init_Server();
 
-	for (auto i = 0; i < 1; i++) worker_threads.emplace_back(worker_thread, &io_service);
+	for (auto i = 0; i < 4; i++) worker_threads.emplace_back(worker_thread, &io_service[i]);
 	for (auto& th : worker_threads) th.join();
+	for (auto i = 0; i < 4; i++) io_service[i].stop();
+
+	return 0;
 }
 
