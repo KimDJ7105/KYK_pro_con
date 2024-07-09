@@ -211,6 +211,7 @@ struct sc_packet_login_info {
 	float dirx;
 	float diry;
 	float dirz;
+	int team_num;
 	int bullet_amount;
 };
 

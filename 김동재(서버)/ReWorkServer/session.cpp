@@ -427,7 +427,7 @@ int SESSION::find_useable_key()
 	return -1;
 }
 
-SESSION::SESSION(tcp::socket socket, int new_id)
+SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	: socket_(std::move(socket)), my_id_(new_id)
 {
 	curr_packet_size_ = 0;
@@ -445,6 +445,8 @@ SESSION::SESSION(tcp::socket socket, int new_id)
 	team = 0;
 
 	equip_weapon = WP_SMG;
+
+	team = team_num;
 }
 
 void SESSION::start()
@@ -472,6 +474,7 @@ void SESSION::start()
 	pl.dirx = view_dir[0];
 	pl.diry = view_dir[1];
 	pl.dirz = view_dir[2];
+	pl.team_num = team;
 	pl.bullet_amount = 30; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
 	Send_Packet(&pl);
 

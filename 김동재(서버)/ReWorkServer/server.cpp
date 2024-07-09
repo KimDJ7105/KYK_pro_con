@@ -15,7 +15,7 @@ void SERVER::do_accept()
 				//if (p_id == LOBBY_ID) {
 				if(p_id == LOBBY_ID) {
 					std::cout << "Lobby server connected\n";
-					lobby = std::make_shared<SESSION>(std::move(socket_), p_id);	
+					lobby = std::make_shared<SESSION>(std::move(socket_), p_id, -1);	
 					lobby->start();
 				}
 				else {
@@ -26,7 +26,7 @@ void SERVER::do_accept()
 						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
 					}
 
-					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id);
+					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
 					games[g_game_ID]->ingame_player[p_id]->set_mygame(games[g_game_ID]);
 					games[g_game_ID]->ingame_player[p_id]->start();
 

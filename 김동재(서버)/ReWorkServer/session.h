@@ -39,7 +39,7 @@ private:
 	int find_useable_key();
 
 public:
-	SESSION(tcp::socket socket, int new_id);
+	SESSION(tcp::socket socket, int new_id, int team_num);
 
 	void start();
 

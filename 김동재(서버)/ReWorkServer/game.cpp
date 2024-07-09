@@ -4,7 +4,7 @@
 GAME::GAME(int id)
 {
 	game_id = id;
-
+	team_num = 0;
 	std::cout << game_id << "번 게임 " << "카드키, 터미널 생성 완료\n";
 
 	for (int i = 0; i < 3; i++) {
@@ -64,4 +64,12 @@ std::shared_ptr<OBJECT>& GAME::CreateObjectApprox_nr(int obj_type, int approx_po
 	ingame_object[o_id]->show_approx_pos();
 
 	return ingame_object[o_id];
+}
+
+int GAME::get_team_num()
+{
+	int curr_num = team_num;
+	team_num = (team_num + 1) % 4;
+	
+	return curr_num;
 }
