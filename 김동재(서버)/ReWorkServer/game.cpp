@@ -1,21 +1,29 @@
 #include "game.h"
 #include "session.h"
 
+static std::random_device rd;
+static std::mt19937 gen(rd());
+std::uniform_int_distribution<int> dist(0, 39);
+std::uniform_int_distribution<int> dist2(0, 24);
+
 GAME::GAME(int id)
 {
 	game_id = id;
 	team_num = 0;
 	std::cout << game_id << "번 게임 " << "카드키, 터미널 생성 완료\n";
 
+	std::fill(std::begin(spawn_able), std::end(spawn_able), false);
+	std::fill(std::begin(room_spawn_able), std::end(room_spawn_able), false);
+
 	for (int i = 0; i < 3; i++) {
 		int o_id = GetNewObjectID();
 		ingame_object[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
-		ingame_object[o_id]->select_pos();
+		ingame_object[o_id]->set_pos(select_pos());
 		ingame_object[o_id]->show_approx_pos();
 
 		int t_id = GetNewObjectID();
 		ingame_object[t_id] = std::make_shared<OBJECT>(t_id, OT_TERMINAL);
-		ingame_object[t_id]->select_pos();
+		ingame_object[t_id]->set_pos(select_pos());
 		ingame_object[t_id]->show_approx_pos();
 	}
 
@@ -50,7 +58,7 @@ std::shared_ptr<OBJECT>& GAME::CreateObjectApprox(int obj_type)
 {
 	int o_id = GetNewObjectID();
 	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
-	ingame_object[o_id]->select_room_pos();
+	ingame_object[o_id]->set_pos(select_room_pos());
 	ingame_object[o_id]->show_approx_pos();
 
 	return ingame_object[o_id];
@@ -72,4 +80,45 @@ int GAME::get_team_num()
 	team_num = (team_num + 1) % 4;
 	
 	return curr_num;
+}
+
+void GAME::set_free_space(int obj_type, int spawn_num)
+{
+	if (obj_type == OT_RABBITFOOT) room_spawn_able[spawn_num] = false;
+	else spawn_able[spawn_num] = false;
+}
+
+int GAME::select_pos()
+{
+	int spawn_num = -1;
+	while (spawn_num == -1) {
+		spawn_num = dist(gen);
+		if (spawn_able[spawn_num]) { //이미 있는경우
+			spawn_num = -1;
+		}
+
+		else { //위치 선정 성공
+			spawn_able[spawn_num] = true;
+		}
+	}
+
+	return spawn_num;
+}
+
+int GAME::select_room_pos()
+{
+	int spawn_num = -1;
+
+	while (spawn_num == -1) {
+		spawn_num = dist2(gen);
+		if (room_spawn_able[spawn_num]) { //이미 있는경우
+			spawn_num = -1;
+		}
+
+		else { //위치 선정 성공
+			room_spawn_able[spawn_num] = true;
+		}
+	}
+
+	return spawn_num;
 }

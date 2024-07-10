@@ -11,12 +11,9 @@ public :
 	int spawn_num;
 
 	void set_pos(int approx_pos);
-	void select_pos();
-	void select_room_pos();
 	OBJECT(int id, int type);
 
 	void show_approx_pos();
-	void set_free_space();
 private:
 
 	std::array<float, 3> pos;

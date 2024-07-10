@@ -17,6 +17,9 @@ private:
 	atomic_int g_object_ID = MAX_USER + 1;  //인게임 오브젝트 id
 
 	int team_num;
+
+	bool spawn_able[40];
+	bool room_spawn_able[25];
 private :
 	int GetNewObjectID();
 
@@ -29,6 +32,9 @@ public:
 
 	int get_team_num();
 
+	void set_free_space(int obj_type, int spawn_num);
+	int select_pos();
+	int select_room_pos();
 public:
 	unordered_map<int, std::shared_ptr<SESSION>> ingame_player;    //게임에 포함된 플레이어를 저장하는 컨테이너
 	unordered_map<int, std::shared_ptr<OBJECT>> ingame_object;
