@@ -139,7 +139,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "Ä«µåÅ° È¹µæ ¿äÃ» ¼ö½Å\n";
 		card->owner_id = my_id_;
-		card->set_free_space();
+		my_game->set_free_space(OT_KEYCARD,card->spawn_num);
 
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
