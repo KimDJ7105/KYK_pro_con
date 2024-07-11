@@ -579,6 +579,8 @@ void TestCameraScript::LateUpdate()
 		main_session->Send_Packet(&tp);
 	}
 	
+
+
 	{
 
 		Vec3 rotation = GetTransform()->GetLocalRotation();

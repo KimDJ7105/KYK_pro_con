@@ -60,6 +60,7 @@ public:
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
 	void ChangeObjectAnimation(int object_id, int animationID);
 	Vec3 FindAislePosition(int aisleNum);
+	Vec3 FindRoomPosition(int roomNum);
 	void CreateGameObject(int aisleNum, int object_type, int object_ID);
 
 	void CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID);
@@ -108,5 +109,6 @@ public:
 
 	void CalculateBullet(int nowBullet);
 	void SetBullet(int BulletCount);
+	void SetRabbitFootUI();
 };
 

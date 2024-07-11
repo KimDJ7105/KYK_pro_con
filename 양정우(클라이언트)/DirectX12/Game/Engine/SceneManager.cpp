@@ -852,7 +852,33 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		
 		mainGameScene->AddGameObject(sphere);
 	}
-	
+	//Rabbit Foot
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot_UI", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		sphere->GetTransform()->SetObjectType(110);
+		sphere->GetTransform()->SetObjectID(1);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
 
 #pragma endregion
 
@@ -1022,8 +1048,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"Player1");
 				gameObject->SetCheckFrustum(false);
-				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -1055,8 +1081,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"PlayerGunAnimation1");
 				gameObject->SetCheckFrustum(false);
-				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -1090,8 +1116,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"Player2");
 				gameObject->SetCheckFrustum(false);
-				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f + 10.f, 0.f, 0.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f + 10.f, 0.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -1122,8 +1148,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				gameObject->SetName(L"PlayerGunAnimation2");
 				gameObject->SetCheckFrustum(false);
-				//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-				gameObject->GetTransform()->SetLocalPosition(Vec3(5.f + 10.f, 13.f, 15.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(5.f + 10.f, 13.f, 15.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -1284,7 +1310,39 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Console");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, -OUT_OF_RENDER, -OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	{
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Object.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"RabbitFoot");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	{
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\RevivePad.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"RevivalPad");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -1952,10 +2010,30 @@ Vec3 SceneManager::FindAislePosition(int aisleNum)
 	}
 }
 
+Vec3 SceneManager::FindRoomPosition(int roomNum)
+{
+	//방 위치 확인 코드
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != OT_ROOM)
+			continue;
+
+		if (gameObject->GetTransform()->GetObjectType() == OT_ROOM)
+		{
+			if (gameObject->GetTransform()->GetObjectID() == roomNum)
+			{
+				return gameObject->GetTransform()->GetLocalPosition();
+			}
+		}
+	}
+}
+
 void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID)
 {
 	Vec3 aislePos = FindAislePosition(aisleNum);
-
+	Vec3 roomPos = FindRoomPosition(aisleNum);
 
 	if (object_type == OT_KEYCARD)
 	{
@@ -2011,6 +2089,36 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
+	else if (object_type == OT_RABBITFOOT)//토끼발 추가 코드
+	{
+
+		roomPos.y += 20.f;
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Object.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"RabbitFoot");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(roomPos);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetObjectType(object_type);
+			gameObject->GetTransform()->SetObjectID(object_ID);
+
+
+			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(roomPos);
+
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
 
 }
 
@@ -2599,3 +2707,19 @@ void SceneManager::SetBullet(int BulletCount)
 	}
 }
 
+void SceneManager::SetRabbitFootUI()
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != 110)
+			continue;
+		if (gameObject->GetTransform()->GetObjectID() == 1)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = -150;
+			pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130;//이곳에 좌표 입력
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
+}
