@@ -1212,6 +1212,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region All Map
 	int x = 0;
+	int y = 0;
 	
 	for (int i = 0; i < 5; i++)
 	{
@@ -1234,8 +1235,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			CreateMap((375 + 225) * i, 0, (375 + 225) * j, 150, OT_ROOM, x);
-			x++;
+			CreateMap((375 + 225) * i, 0, (375 + 225) * j, 150, OT_ROOM, y);
+			y++;
 		}
 	}
 	
@@ -1310,7 +1311,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Console");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -1326,13 +1327,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"RabbitFoot");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
-
+	//-----------
 	{
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\RevivePad.bin");
 
@@ -1342,7 +1343,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"RevivalPad");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -2017,9 +2018,6 @@ Vec3 SceneManager::FindRoomPosition(int roomNum)
 
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject->GetTransform()->GetObjectType() != OT_ROOM)
-			continue;
-
 		if (gameObject->GetTransform()->GetObjectType() == OT_ROOM)
 		{
 			if (gameObject->GetTransform()->GetObjectID() == roomNum)
@@ -2103,7 +2101,7 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			gameObject->SetName(L"RabbitFoot");
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(roomPos);
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_ID);
@@ -2118,7 +2116,35 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
+	else if (object_type == OT_RESURRECTION_PAD)//부활패드 추가
+	{
 
+		roomPos.y += 5.f;
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\RevivePad.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"RevivalPad");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(roomPos);
+			gameObject->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
+			gameObject->GetTransform()->SetObjectType(object_type);
+			gameObject->GetTransform()->SetObjectID(object_ID);
+
+
+			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(roomPos);
+
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
 
 }
 

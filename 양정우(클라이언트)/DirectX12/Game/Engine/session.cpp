@@ -106,6 +106,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//p->approx_num이 방 번호를 의미
 		//방 번호에 관해서는 논의 필요
 		//클라가 할 일 : 토끼발 오브젝트를 해당 방 중앙에 생성
+		_activeSessionScene->CreateGameObject(p->approx_num, p->obj_type, p->id);
 		break;
 	}
 	case SC_MODIFY_BULLET :
