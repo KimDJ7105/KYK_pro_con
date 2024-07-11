@@ -1333,6 +1333,31 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
+
+	//{
+	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Object.bin");
+
+	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+	//	for (auto& gameObject : gameObjects2)
+	//	{
+	//		gameObject->SetName(L"RabbitFoot");
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+	//		gameObject->GetTransform()->SetObjectType(OT_RABBITFOOT);
+	//		gameObject->GetTransform()->SetObjectID(106);
+
+	//		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+
+	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(0.f, 20.f, 0.f));
+
+
+	//		mainGameScene->AddGameObject(gameObject);
+	//	}
+	//}
 	//-----------
 	{
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\RevivePad.bin");
