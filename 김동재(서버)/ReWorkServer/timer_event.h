@@ -11,6 +11,9 @@ public :
 	int target_id;
 
 public:
-	constexpr bool operator < (const TIMER_EVENT& L) const;
+	constexpr bool operator < (const TIMER_EVENT& L) const
+	{
+		return (wakeup_time > L.wakeup_time);
+	}
 };
 

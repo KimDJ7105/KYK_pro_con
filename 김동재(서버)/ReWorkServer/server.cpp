@@ -48,12 +48,15 @@ int SERVER::GetNewClientID()
 
 SERVER::SERVER(boost::asio::io_context& io_service, int port)
 	: acceptor_(io_service, tcp::endpoint(tcp::v4(), port)),
-	socket_(io_service)
+	socket_(io_service),
+	timer_(io_service, boost::asio::chrono::microseconds(100))
 {	
+	timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
+
 	do_accept();
 }
 
-void SERVER::event_excuter(const boost::system::error_code& ec, boost::asio::steady_timer* timer)
+void SERVER::event_excuter(const boost::system::error_code& ec)
 {
 	if (!ec) {
 		//루프로 들어가기 이전에 필요한 이벤트 삽입
@@ -67,6 +70,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec, boost::asio::ste
 		//timer_queue.push(item_event_init);
 
 		//========================================
+		std::cout << "working\n";
 		while (true) {
 			TIMER_EVENT ev;
 			auto current_time = chrono::system_clock::now();
@@ -94,6 +98,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec, boost::asio::ste
 	}
 
 
-	timer->expires_at(timer->expiry() + boost::asio::chrono::seconds(0));
-	timer->async_wait(boost::bind(event_excuter, boost::asio::placeholders::error, timer));
+	//timer_.expires_at(timer_.expiry() + boost::asio::chrono::seconds(0));
+	timer_.expires_from_now(boost::asio::chrono::microseconds(100));
+	timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
 }

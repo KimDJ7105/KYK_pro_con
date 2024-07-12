@@ -13,6 +13,7 @@ private:
 
 	std::unordered_map<int, std::shared_ptr<GAME>> games;
 
+	boost::asio::steady_timer timer_;
 private:
 	void do_accept();
 	
@@ -24,5 +25,5 @@ public:
 public:
 	SERVER(boost::asio::io_context& io_service, int port);
 
-	void event_excuter(const boost::system::error_code& ec, boost::asio::steady_timer* timer);
+	void event_excuter(const boost::system::error_code& ec);
 };

@@ -516,14 +516,46 @@ void SESSION::start()
 		if (obj == nullptr) continue;
 		if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
 
-		sc_packet_put_object put_obj;
-		put_obj.size = sizeof(sc_packet_put_object);
-		put_obj.type = SC_PUT_OBJECT;
-		put_obj.id = obj->obj_id;
-		put_obj.obj_type = obj->obj_type;
-		put_obj.approx_num = obj->spawn_num;
+		//복도에 생성될 객체들(키카드, 터미널)
+		if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) {
+			sc_packet_put_object put_obj;
+			put_obj.size = sizeof(sc_packet_put_object);
+			put_obj.type = SC_PUT_OBJECT;
+			put_obj.id = obj->obj_id;
+			put_obj.obj_type = obj->obj_type;
+			put_obj.approx_num = obj->spawn_num;
 
-		Send_Packet(&put_obj);
+			Send_Packet(&put_obj);
+		}
+		
+		//방에 생성될 객체들(토끼발, 부활패드, 탈출구 등등)
+		if (obj->obj_type == OT_RABBITFOOT || obj->obj_type == OT_RESURRECTION_PAD || obj->obj_type == OT_EXIT) {
+			sc_packet_put_object_pos pop;
+			pop.type = SC_PUT_OBJECT_POS;
+			pop.size = sizeof(sc_packet_put_object_pos);
+			pop.obj_type = obj->obj_type;
+			pop.id = obj->obj_id;
+			pop.approx_num = obj->spawn_num;
+			
+			Send_Packet(&pop);
+		}
+
+		//좌표로 생성될 객체들(분쇄기)
+		if (obj->obj_type == OT_GRINDER) {
+			sc_packet_put_object_coor poc;
+			poc.type = SC_PUT_OBJECT_COOR;
+			poc.size = sizeof(sc_packet_put_object_coor);
+			poc.obj_type = obj->obj_type;
+			poc.obj_id = obj->obj_id;
+			poc.x = obj->pos[0];
+			poc.y = obj->pos[1];
+			poc.z = obj->pos[2];
+			poc.dirx = obj->rot[0];
+			poc.diry = obj->rot[1];
+			poc.dirz = obj->rot[2];
+
+			Send_Packet(&poc);
+		}
 	}
 
 }

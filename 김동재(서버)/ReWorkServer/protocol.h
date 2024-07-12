@@ -34,6 +34,7 @@
 #define OT_RESURRECTION_PAD 5
 #define OT_GRINDER          6
 #define OT_RABBITFOOT       7
+#define OT_EXIT				8
 
 #define OT_WALLAABB			99
 #define OT_UI_PLAYERHAND	101
@@ -81,6 +82,7 @@
 #define SC_CARD_USED       11 //카드가 사용되었음을 알림
 #define SC_PUT_OBJECT_POS  12 //오브젝트를 방에 생성
 #define SC_SHOW_OBJECT_LOC 13 //터미널 사용시 오브젝트 위치를 화면에 표시
+#define SC_PUT_OBJECT_COOR  14 //오브젝트를 특정 좌표에 생성
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -284,6 +286,19 @@ struct sc_packet_show_object_loc {
 	int obj_type;
 	int loc_type;
 	int approx_num;
+};
+
+struct sc_packet_put_object_coor {
+	BYTE size;
+	BYTE type;
+	int obj_type;
+	int obj_id;
+	float x;
+	float y;
+	float z;
+	float dirx;
+	float diry;
+	float dirz;
 };
 
 struct test_packet {
