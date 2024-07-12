@@ -16,12 +16,12 @@ GAME::GAME(int id)
 	std::fill(std::begin(room_spawn_able), std::end(room_spawn_able), false);
 
 	for (int i = 0; i < 3; i++) {
-		int o_id = GetNewObjectID(); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ Å°Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		int o_id = GetNewObjectID(); //·£´ý À§Ä¡ Å°Ä«µå »ý¼º
 		ingame_object[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
 		ingame_object[o_id]->set_pos(select_pos());
 		ingame_object[o_id]->show_approx_pos();
 
-		int t_id = GetNewObjectID(); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Í¹Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½
+		int t_id = GetNewObjectID(); //·£´ý À§Ä¡ ÅÍ¹Ì³Î »ý¼º
 		ingame_object[t_id] = std::make_shared<OBJECT>(t_id, OT_TERMINAL);
 		ingame_object[t_id]->set_pos(select_pos());
 		ingame_object[t_id]->show_approx_pos();
@@ -32,6 +32,12 @@ GAME::GAME(int id)
 	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 10);
 	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 14);
 	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 22);
+
+	//ºÐ¼â±â »ý¼º
+	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
+	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
+	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
+	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
 }
 
 int GAME::GetNewObjectID()

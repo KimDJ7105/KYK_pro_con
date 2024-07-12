@@ -109,6 +109,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->CreateGameObject(p->approx_num, p->obj_type, p->id);
 		break;
 	}
+	case SC_PUT_OBJECT_COOR : //특정 좌표에 오브젝트 생성
+	{
+		sc_packet_put_object_coor* p = reinterpret_cast<sc_packet_put_object_coor*>(packet);
+		//p->x p->y, p->z ,p->dirx, p->diry, p->dirz
+		//xyz는 위치 좌표, dirxyz는 로테이션
+		break;
+	}
 	case SC_MODIFY_BULLET :
 	{
 		sc_packet_modify_bullet* p = reinterpret_cast<sc_packet_modify_bullet*>(packet);

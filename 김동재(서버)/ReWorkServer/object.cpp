@@ -9,6 +9,10 @@ OBJECT::OBJECT(int id, int type)
 
 	spawn_num = -1;
 
+	for (int i = 0; i < 3; i++) {
+		pos[i] = 0.f;
+		rot[i] = 0.f;
+	}
 }
 
 void OBJECT::show_approx_pos()
