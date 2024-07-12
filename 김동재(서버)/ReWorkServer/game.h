@@ -35,6 +35,7 @@ public:
 	void set_free_space(int obj_type, int spawn_num);
 	int select_pos();
 	int select_room_pos();
+
 public:
 	unordered_map<int, std::shared_ptr<SESSION>> ingame_player;    //게임에 포함된 플레이어를 저장하는 컨테이너
 	unordered_map<int, std::shared_ptr<OBJECT>> ingame_object;

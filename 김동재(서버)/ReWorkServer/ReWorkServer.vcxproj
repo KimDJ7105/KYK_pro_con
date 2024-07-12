@@ -132,6 +132,7 @@
     <ClCompile Include="server.cpp" />
     <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="session.cpp" />
+    <ClCompile Include="timer_event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="server.h" />
     <ClInclude Include="session.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="timer_event.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

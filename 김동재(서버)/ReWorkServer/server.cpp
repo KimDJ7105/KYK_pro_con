@@ -52,3 +52,48 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 {	
 	do_accept();
 }
+
+void SERVER::event_excuter(const boost::system::error_code& ec, boost::asio::steady_timer* timer)
+{
+	if (!ec) {
+		//루프로 들어가기 이전에 필요한 이벤트 삽입
+		//========================================
+		/*TIMER_EVENT item_event_init;
+		item_event_init.event_id = EV_SPAWN_ITEM;
+		item_event_init.obj_id = 0;
+		item_event_init.target_id = 0;
+		item_event_init.wakeup_time = chrono::system_clock::now() + 5s;*/
+
+		//timer_queue.push(item_event_init);
+
+		//========================================
+		while (true) {
+			TIMER_EVENT ev;
+			auto current_time = chrono::system_clock::now();
+			if (true != timer_queue.empty()) {
+				ev = timer_queue.top();
+				timer_queue.pop();
+				if (ev.wakeup_time > current_time) {
+					timer_queue.push(ev);		// 최적화 필요
+					// timer_queue에 다시 넣지 않고 처리해야 한다.
+					this_thread::sleep_for(1ms);  // 실행시간이 아직 안되었으므로 잠시 대기
+					continue;
+				}
+			}
+			switch (ev.event_id) {
+			case EV_LASER_TRAP: {
+				//target_id는 방 번호
+				break;
+			}
+			case EV_MOVE_GRINDER: {
+				//target_id는 방향 (정방향 / 역방향)
+				break;
+			}
+			}
+		}
+	}
+
+
+	timer->expires_at(timer->expiry() + boost::asio::chrono::seconds(0));
+	timer->async_wait(boost::bind(event_excuter, boost::asio::placeholders::error, timer));
+}
