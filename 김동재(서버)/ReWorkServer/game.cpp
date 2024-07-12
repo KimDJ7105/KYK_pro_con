@@ -16,12 +16,12 @@ GAME::GAME(int id)
 	std::fill(std::begin(room_spawn_able), std::end(room_spawn_able), false);
 
 	for (int i = 0; i < 3; i++) {
-		int o_id = GetNewObjectID();
+		int o_id = GetNewObjectID(); //���� ��ġ Űī�� ����
 		ingame_object[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
 		ingame_object[o_id]->set_pos(select_pos());
 		ingame_object[o_id]->show_approx_pos();
 
-		int t_id = GetNewObjectID();
+		int t_id = GetNewObjectID(); //���� ��ġ �͹̳� ����
 		ingame_object[t_id] = std::make_shared<OBJECT>(t_id, OT_TERMINAL);
 		ingame_object[t_id]->set_pos(select_pos());
 		ingame_object[t_id]->show_approx_pos();
@@ -70,6 +70,22 @@ std::shared_ptr<OBJECT>& GAME::CreateObjectApprox_nr(int obj_type, int approx_po
 	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
 	ingame_object[o_id]->set_pos(approx_pos);
 	ingame_object[o_id]->show_approx_pos();
+
+	return ingame_object[o_id];
+}
+
+std::shared_ptr<OBJECT>& GAME::CreateObject(int obj_type, float x, float y, float z, float dir_x, float dir_y, float dir_z)
+{
+	int o_id = GetNewObjectID();
+	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
+	
+	ingame_object[o_id]->pos[0] = x;
+	ingame_object[o_id]->pos[1] = y;
+	ingame_object[o_id]->pos[2] = z;
+
+	ingame_object[o_id]->rot[0] = dir_x;
+	ingame_object[o_id]->rot[1] = dir_y;
+	ingame_object[o_id]->rot[2] = dir_z;
 
 	return ingame_object[o_id];
 }
