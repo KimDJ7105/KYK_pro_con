@@ -27,6 +27,7 @@ private:
 
 	std::shared_ptr<GAME> my_game;
 
+	bool using_terminal;
 private:
 	void Send_Packet(void* packet, unsigned id);
 	

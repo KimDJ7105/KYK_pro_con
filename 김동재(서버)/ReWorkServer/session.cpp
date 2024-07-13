@@ -160,6 +160,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "터미널 사용 요청 수신\n";
 
+		if (using_terminal) {
+			using_terminal = false;
+
+			sc_packet_show_map sm;
+			sm.type = SC_SHOW_MAP;
+			sm.size = sizeof(sc_packet_show_map);
+
+			Send_Packet(&sm);
+			break;
+		}
+
 		shared_ptr<SESSION> user = my_game->ingame_player[my_id_];
 		if (user == nullptr) break;
 
@@ -181,6 +192,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			}
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
+
+			using_terminal = true;
 
 			sc_packet_card_used cu;
 			cu.size = sizeof(sc_packet_card_used);
@@ -235,6 +248,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		
 		else { //이미 활성화 된 터미널이면
+			using_terminal = true;
+
 			sc_packet_show_map sm;
 			sm.type = SC_SHOW_MAP;
 			sm.size = sizeof(sc_packet_show_map);
@@ -454,6 +469,8 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	equip_weapon = WP_SMG;
 
 	team = team_num;
+
+	using_terminal = false;
 }
 
 void SESSION::start()
