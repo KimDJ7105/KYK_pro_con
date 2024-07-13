@@ -47,6 +47,8 @@ void Camera::SortGameObject()
 
 	for (auto& gameObject : gameObjects)
 	{
+		if (gameObject == nullptr)
+			continue;
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr)
 			continue;
 

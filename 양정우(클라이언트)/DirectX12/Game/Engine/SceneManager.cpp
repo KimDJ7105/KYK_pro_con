@@ -1579,17 +1579,25 @@ void SceneManager::RemoveMapUI()
 {
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
+
+	std::vector <std::shared_ptr< GameObject >> toRemove;
+
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject == nullptr)
 			continue;
 
-		if (gameObject->GetTransform()->GetObjectID() == 666
-			&& gameObject->GetTransform()->GetObjectType() == OT_UI_MAPOBJECTS)
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_MAPOBJECTS)
 		{
-			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObject);
+			toRemove.push_back(gameObject);
 		}
 	}
+
+	for (auto& gameObject : toRemove)
+	{
+		GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObject);
+	}
+
 }
 
 void SceneManager::SetMapPosition(int x, int y)
@@ -1698,63 +1706,57 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 		//복도에 배치되는 오브젝트들
 		if (object_type == OT_KEYCARD)
 		{
+			shared_ptr<GameObject> sphere = make_shared<GameObject>();
+			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+			sphere->AddComponent(make_shared<Transform>());
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+			sphere->GetTransform()->SetLocalPosition(aislePos);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
-
-				shared_ptr<GameObject> sphere = make_shared<GameObject>();
-				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-				sphere->AddComponent(make_shared<Transform>());
-				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
-				sphere->GetTransform()->SetLocalPosition(aislePos);
-				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				{
-					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-					meshRenderer->SetMesh(mesh);
-				}
-				{
-					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
-					shared_ptr<Material> material = make_shared<Material>();
-					material->SetShader(shader);
-					material->SetTexture(0, texture);
-					meshRenderer->SetMaterial(material);
-				}
-				sphere->AddComponent(meshRenderer);
-
-				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
-				sphere->GetTransform()->SetObjectID(666);
-
-				mainGameScene->AddGameObject(sphere);
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
 			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				material->SetTexture(0, texture);
+				meshRenderer->SetMaterial(material);
+			}
+			sphere->AddComponent(meshRenderer);
+
+			sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+			sphere->GetTransform()->SetObjectID(666);
+
+			mainGameScene->AddGameObject(sphere);
 		}
 		else if (object_type == OT_TERMINAL)
 		{
+			shared_ptr<GameObject> sphere = make_shared<GameObject>();
+			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+			sphere->AddComponent(make_shared<Transform>());
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.01, WINDOW_WIDTH * 0.01, 500.f));
+			sphere->GetTransform()->SetLocalPosition(aislePos);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
-
-				shared_ptr<GameObject> sphere = make_shared<GameObject>();
-				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-				sphere->AddComponent(make_shared<Transform>());
-				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.01, WINDOW_WIDTH * 0.01, 500.f));
-				sphere->GetTransform()->SetLocalPosition(aislePos);
-				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				{
-					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-					meshRenderer->SetMesh(mesh);
-				}
-				{
-					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\Console_UI.png");
-					shared_ptr<Material> material = make_shared<Material>();
-					material->SetShader(shader);
-					material->SetTexture(0, texture);
-					meshRenderer->SetMaterial(material);
-				}
-				sphere->AddComponent(meshRenderer);
-
-				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
-				sphere->GetTransform()->SetObjectID(666);
-
-				mainGameScene->AddGameObject(sphere);
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
 			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\Console_UI.png");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				material->SetTexture(0, texture);
+				meshRenderer->SetMaterial(material);
+			}
+			sphere->AddComponent(meshRenderer);
+
+			sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+			sphere->GetTransform()->SetObjectID(666);
+
+			mainGameScene->AddGameObject(sphere);
 		}
 	}
 	else if (loc_type == OT_ROOM)
@@ -1763,64 +1765,57 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 		//맵에 배치되는 오브젝트들
 		if (object_type == OT_RESURRECTION_PAD)
 		{
-			//RevivePad
+			shared_ptr<GameObject> sphere = make_shared<GameObject>();
+			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+			sphere->AddComponent(make_shared<Transform>());
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+			sphere->GetTransform()->SetLocalPosition(mapPos);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
-
-				shared_ptr<GameObject> sphere = make_shared<GameObject>();
-				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-				sphere->AddComponent(make_shared<Transform>());
-				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
-				sphere->GetTransform()->SetLocalPosition(mapPos);
-				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				{
-					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-					meshRenderer->SetMesh(mesh);
-				}
-				{
-					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\RevivePad_UI.png");
-					shared_ptr<Material> material = make_shared<Material>();
-					material->SetShader(shader);
-					material->SetTexture(0, texture);
-					meshRenderer->SetMaterial(material);
-				}
-				sphere->AddComponent(meshRenderer);
-
-				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
-				sphere->GetTransform()->SetObjectID(666);
-
-				mainGameScene->AddGameObject(sphere);
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
 			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\RevivePad_UI.png");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				material->SetTexture(0, texture);
+				meshRenderer->SetMaterial(material);
+			}
+			sphere->AddComponent(meshRenderer);
+
+			sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+			sphere->GetTransform()->SetObjectID(666);
+
+			mainGameScene->AddGameObject(sphere);
 		}
 		else if (object_type == OT_RABBITFOOT)
 		{
+			shared_ptr<GameObject> sphere = make_shared<GameObject>();
+			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+			sphere->AddComponent(make_shared<Transform>());
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+			sphere->GetTransform()->SetLocalPosition(mapPos);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
-
-				shared_ptr<GameObject> sphere = make_shared<GameObject>();
-				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-				sphere->AddComponent(make_shared<Transform>());
-				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
-				sphere->GetTransform()->SetLocalPosition(mapPos);
-				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				{
-					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-					meshRenderer->SetMesh(mesh);
-				}
-				{
-					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
-					shared_ptr<Material> material = make_shared<Material>();
-					material->SetShader(shader);
-					material->SetTexture(0, texture);
-					meshRenderer->SetMaterial(material);
-				}
-				sphere->AddComponent(meshRenderer);
-
-				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
-				sphere->GetTransform()->SetObjectID(666);
-
-				mainGameScene->AddGameObject(sphere);
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
 			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				material->SetTexture(0, texture);
+				meshRenderer->SetMaterial(material);
+			}
+			sphere->AddComponent(meshRenderer);
+
+			sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+			sphere->GetTransform()->SetObjectID(666);
+
+			mainGameScene->AddGameObject(sphere);
 		}
 	}
 }
