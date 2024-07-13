@@ -70,11 +70,11 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 		//timer_queue.push(item_event_init);
 
 		//========================================
-		std::cout << "working\n";
+		//std::cout << "working\n";
 		while (true) {
 			TIMER_EVENT ev;
 			auto current_time = chrono::system_clock::now();
-			if (true != timer_queue.empty()) {
+			if (!timer_queue.empty()) {
 				ev = timer_queue.top();
 				timer_queue.pop();
 				if (ev.wakeup_time > current_time) {
@@ -84,6 +84,12 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					continue;
 				}
 			}
+			else {
+				timer_.expires_from_now(boost::asio::chrono::microseconds(100));
+				timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
+				return;
+			}
+
 			switch (ev.event_id) {
 			case EV_LASER_TRAP: {
 				//target_id는 방 번호
