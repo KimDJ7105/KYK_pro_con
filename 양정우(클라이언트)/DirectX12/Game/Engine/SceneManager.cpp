@@ -2249,7 +2249,7 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 	else if (object_type == OT_RABBITFOOT)//토끼발 추가 코드
 	{
 
-		roomPos.y += 20.f;
+		roomPos.y += 5.f;
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Object.bin");
 
 		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
@@ -2261,7 +2261,7 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(roomPos);
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_ID);
 
