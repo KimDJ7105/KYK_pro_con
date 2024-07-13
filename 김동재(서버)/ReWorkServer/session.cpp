@@ -193,20 +193,21 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			Send_Packet(&cu);
 			Send_Packet(&sm);
 
-			//다른 오브젝트의 위치를 전달
 			for (auto& object : my_game->ingame_object) {
 				shared_ptr<OBJECT> obj = object.second;
 				if (obj == nullptr) continue;
+				if (obj->obj_type == OT_GRINDER) continue; //분쇄기는 맵에 표시 X
 				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
 				if (obj->obj_type == OT_KEYCARD && obj->owner_id != -1) continue;
+				if (obj->obj_type == OT_RABBITFOOT && obj->owner_id != -1) continue;
 
 				sc_packet_show_object_loc sol;
 				sol.type = SC_SHOW_OBJECT_LOC;
 				sol.size = sizeof(sc_packet_show_object_loc);
 				sol.obj_type = obj->obj_type;
 				sol.approx_num = obj->spawn_num;
-				if (obj->obj_type == OT_RABBITFOOT) sol.loc_type = OT_ROOM;
-				else sol.loc_type = OT_CORRIDOR;
+				if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) sol.loc_type = OT_CORRIDOR;
+				else sol.loc_type = OT_ROOM;
 
 				Send_Packet(&sol);
 			}
@@ -229,6 +230,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					player->Send_Packet(&pop);
 				}
 			}
+
+			//1분 30초 뒤에 탈출구를 개방하는 타이머 이벤트 삽입 필요
 		}
 		
 		else { //이미 활성화 된 터미널이면
@@ -239,19 +242,22 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			Send_Packet(&sm);
 
 			//다른 오브젝트의 위치를 전달
+			//현재 존재하는 오브젝트 : 키카드, 터미널, 토끼발, 부활패드, 탈출구, 분쇄기
 			for (auto& object : my_game->ingame_object) {
 				shared_ptr<OBJECT> obj = object.second;
 				if (obj == nullptr) continue;
+				if (obj->obj_type == OT_GRINDER) continue; //분쇄기는 맵에 표시 X
 				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
 				if (obj->obj_type == OT_KEYCARD && obj->owner_id != -1) continue;
+				if (obj->obj_type == OT_RABBITFOOT && obj->owner_id != -1) continue;
 
 				sc_packet_show_object_loc sol;
 				sol.type = SC_SHOW_OBJECT_LOC;
 				sol.size = sizeof(sc_packet_show_object_loc);
 				sol.obj_type = obj->obj_type;
 				sol.approx_num = obj->spawn_num;
-				if (obj->obj_type == OT_RABBITFOOT) sol.loc_type = OT_ROOM;
-				else sol.loc_type = OT_CORRIDOR;
+				if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) sol.loc_type = OT_CORRIDOR;
+				else sol.loc_type = OT_ROOM;
 
 				Send_Packet(&sol);
 			}
