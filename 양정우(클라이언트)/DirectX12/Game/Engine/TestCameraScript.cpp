@@ -582,7 +582,10 @@ void TestCameraScript::LateUpdate()
 		main_session->Send_Packet(&tp);
 	}
 	
-
+	if (INPUT->GetButtonDown(KEY_TYPE::M))
+	{
+		GET_SINGLE(SceneManager)->RemoveMapUI();
+	}
 
 	{
 

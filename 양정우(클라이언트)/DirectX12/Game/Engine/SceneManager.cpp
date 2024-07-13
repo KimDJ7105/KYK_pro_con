@@ -1577,16 +1577,17 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 
 void SceneManager::RemoveMapUI()
 {
-	auto& gameObjects = mainGameScene->GetGameObjects();
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject == nullptr)
 			continue;
 
-		if (gameObject->GetTransform()->GetObjectType() == OT_UI_MAPOBJECTS)
+		if (gameObject->GetTransform()->GetObjectID() == 666
+			&& gameObject->GetTransform()->GetObjectType() == OT_UI_MAPOBJECTS)
 		{
-			mainGameScene->RemoveGameObject(gameObject);
+			GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObject);
 		}
 	}
 }
@@ -1720,6 +1721,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 				sphere->AddComponent(meshRenderer);
 
 				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+				sphere->GetTransform()->SetObjectID(666);
 
 				mainGameScene->AddGameObject(sphere);
 			}
@@ -1749,14 +1751,11 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 				sphere->AddComponent(meshRenderer);
 
 				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+				sphere->GetTransform()->SetObjectID(666);
 
 				mainGameScene->AddGameObject(sphere);
 			}
 		}
-
-
-		/*type = OT_UI_MAPOBJECTS;
-		id = 666*/
 	}
 	else if (loc_type == OT_ROOM)
 	{
@@ -1788,6 +1787,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 				sphere->AddComponent(meshRenderer);
 
 				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+				sphere->GetTransform()->SetObjectID(666);
 
 				mainGameScene->AddGameObject(sphere);
 			}
@@ -1817,13 +1817,11 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 				sphere->AddComponent(meshRenderer);
 
 				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+				sphere->GetTransform()->SetObjectID(666);
 
 				mainGameScene->AddGameObject(sphere);
 			}
 		}
-
-		/*type = OT_UI_MAPOBJECTS;
-		id = 666*/
 	}
 }
 
