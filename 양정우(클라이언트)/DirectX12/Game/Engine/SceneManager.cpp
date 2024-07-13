@@ -161,6 +161,9 @@ shared_ptr<GameObject> SceneManager::CheckCollisionWithSceneObjects(const std::s
 
 	for (auto& gameObject : gameObjects)
 	{
+		if (gameObject == nullptr)
+			continue;
+
 		//collider컴포넌트가 없거나 자기 자신일때
 		if (gameObject->GetCollider() == nullptr || gameObject == objectToCheck)
 			continue;
@@ -392,8 +395,8 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.1, WINDOW_WIDTH * 0.1, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0.f - 172.f * 2, 30.f - 64.25f * 3, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -463,6 +466,33 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
+
+	//RabbitFoot
+	{
+
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		lobbyGameScene->AddGameObject(sphere);
+	}
+
 #pragma endregion
 
 	return lobbyGameScene;
@@ -1528,7 +1558,8 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 
 	for (auto& gameObject : gameObjects)
 	{
-
+		if (gameObject == nullptr)
+			continue;
 		//if (gameObject->GetTransform()->GetObjectID() != object_type)
 		//	continue;
 		//if (gameObject->GetTransform()->GetObjectID() != object_id)
@@ -1542,6 +1573,22 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 		}
 	}
 	
+}
+
+void SceneManager::RemoveMapUI()
+{
+	auto& gameObjects = mainGameScene->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject == nullptr)
+			continue;
+
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_MAPOBJECTS)
+		{
+			mainGameScene->RemoveGameObject(gameObject);
+		}
+	}
 }
 
 void SceneManager::SetMapPosition(int x, int y)
@@ -1572,7 +1619,212 @@ void SceneManager::SetMapPosition(int x, int y)
 			gameObject->GetTransform()->SetLocalPosition(pos);
 		}
 	}
+}
 
+Vec3 SceneManager::CalculateMapUIPosition(int loc_num)
+{
+	// 초기 좌표
+	float initial_x = -344.0f;
+	float initial_y = -227.0f;
+	float initial_z = 500.0f;
+
+	// 거리 차이
+	float x_distance = 172.0f;
+	float y_distance = 128.5f;
+
+	// 좌표 계산
+	float x = initial_x + x_distance * (loc_num / 5);
+	float y = initial_y + y_distance * (loc_num % 5 );
+	float z = initial_z;
+
+	return Vec3(x, y, z);
+}
+
+Vec3 SceneManager::CalculateAisleUIPosition(int loc_num)
+{
+	float x, y = 0.0f, z = 500.0f;
+
+	if (loc_num >= 0 && loc_num <= 3) {
+		x = -344.0f + loc_num;
+		y = -162.75f + 128.5f * loc_num;
+	}
+	else if (loc_num >= 4 && loc_num <= 8) {
+		x = -258.0f + (loc_num - 4);
+		y = -227.0f + 128.5f * (loc_num - 4);
+	}
+	else if (loc_num >= 9 && loc_num <= 12) {
+		x = -172.0f + loc_num - 9;
+		y = -162.75f + 128.5f * (loc_num - 9);
+	}
+	else if (loc_num >= 13 && loc_num <= 17) {
+		x = -86.0f + loc_num - 13;
+		y = -227.0f + 128.5f * (loc_num - 13);
+	}
+	else if (loc_num >= 18 && loc_num <= 21) {
+		x = 0.0f + loc_num - 18;
+		y = -162.75f + 128.5f * (loc_num - 18);
+	}
+	else if (loc_num >= 22 && loc_num <= 26) {
+		x = 86.0f + loc_num - 22;
+		y = -227.0f + 128.5f * (loc_num - 22);
+	}
+	else if (loc_num >= 27 && loc_num <= 30) {
+		x = 172.0f + loc_num - 27;
+		y = -162.75f + 128.5f * (loc_num - 27);
+	}
+	else if (loc_num >= 31 && loc_num <= 35) {
+		x = 258.0f + loc_num - 31;
+		y = -227.0f + 128.5f * (loc_num - 31);
+	}
+	else if (loc_num >= 36 && loc_num <= 39) {
+		x = 344.0f + loc_num - 36;
+		y = -162.75f + 128.5f * (loc_num - 36);
+	}
+	else {
+		return Vec3(0, 0, 0);
+	}
+
+	return Vec3(x, y, z);
+}
+
+
+void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num)
+{
+	if (loc_type == OT_CORRIDOR)
+	{
+		Vec3 aislePos = CalculateAisleUIPosition(loc_num);
+
+		//복도에 배치되는 오브젝트들
+		if (object_type == OT_KEYCARD)
+		{
+			{
+
+				shared_ptr<GameObject> sphere = make_shared<GameObject>();
+				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+				sphere->AddComponent(make_shared<Transform>());
+				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+				sphere->GetTransform()->SetLocalPosition(aislePos);
+				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+				{
+					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+					meshRenderer->SetMesh(mesh);
+				}
+				{
+					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
+					shared_ptr<Material> material = make_shared<Material>();
+					material->SetShader(shader);
+					material->SetTexture(0, texture);
+					meshRenderer->SetMaterial(material);
+				}
+				sphere->AddComponent(meshRenderer);
+
+				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+
+				mainGameScene->AddGameObject(sphere);
+			}
+		}
+		else if (object_type == OT_TERMINAL)
+		{
+			{
+
+				shared_ptr<GameObject> sphere = make_shared<GameObject>();
+				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+				sphere->AddComponent(make_shared<Transform>());
+				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.01, WINDOW_WIDTH * 0.01, 500.f));
+				sphere->GetTransform()->SetLocalPosition(aislePos);
+				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+				{
+					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+					meshRenderer->SetMesh(mesh);
+				}
+				{
+					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\Console_UI.png");
+					shared_ptr<Material> material = make_shared<Material>();
+					material->SetShader(shader);
+					material->SetTexture(0, texture);
+					meshRenderer->SetMaterial(material);
+				}
+				sphere->AddComponent(meshRenderer);
+
+				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+
+				mainGameScene->AddGameObject(sphere);
+			}
+		}
+
+
+		/*type = OT_UI_MAPOBJECTS;
+		id = 666*/
+	}
+	else if (loc_type == OT_ROOM)
+	{
+		Vec3 mapPos = CalculateMapUIPosition(loc_num);
+		//맵에 배치되는 오브젝트들
+		if (object_type == OT_RESURRECTION_PAD)
+		{
+			//RevivePad
+			{
+
+				shared_ptr<GameObject> sphere = make_shared<GameObject>();
+				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+				sphere->AddComponent(make_shared<Transform>());
+				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+				sphere->GetTransform()->SetLocalPosition(mapPos);
+				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+				{
+					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+					meshRenderer->SetMesh(mesh);
+				}
+				{
+					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\RevivePad_UI.png");
+					shared_ptr<Material> material = make_shared<Material>();
+					material->SetShader(shader);
+					material->SetTexture(0, texture);
+					meshRenderer->SetMaterial(material);
+				}
+				sphere->AddComponent(meshRenderer);
+
+				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+
+				mainGameScene->AddGameObject(sphere);
+			}
+		}
+		else if (object_type == OT_RABBITFOOT)
+		{
+			{
+
+				shared_ptr<GameObject> sphere = make_shared<GameObject>();
+				sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+				sphere->AddComponent(make_shared<Transform>());
+				sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+				sphere->GetTransform()->SetLocalPosition(mapPos);
+				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+				{
+					shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+					meshRenderer->SetMesh(mesh);
+				}
+				{
+					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+					shared_ptr<Material> material = make_shared<Material>();
+					material->SetShader(shader);
+					material->SetTexture(0, texture);
+					meshRenderer->SetMaterial(material);
+				}
+				sphere->AddComponent(meshRenderer);
+
+				sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+
+				mainGameScene->AddGameObject(sphere);
+			}
+		}
+
+		/*type = OT_UI_MAPOBJECTS;
+		id = 666*/
+	}
 }
 
 void SceneManager::SetKeyCardPosition(int x, int y, int keyCardNum)
@@ -2908,3 +3160,4 @@ void SceneManager::SetRabbitFootUI()
 		}
 	}
 }
+

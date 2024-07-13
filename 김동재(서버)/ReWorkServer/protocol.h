@@ -47,6 +47,7 @@
 #define OT_UI_MAXBULLET		108
 #define OT_UI_CURRENTBULLET	109
 #define OT_UI_RABBITFOOT	110
+#define OT_UI_MAPOBJECTS	111
 //---------------------------------------
 
 //Animation Type-------------------------

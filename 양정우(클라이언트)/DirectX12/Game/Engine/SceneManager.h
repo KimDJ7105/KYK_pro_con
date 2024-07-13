@@ -110,5 +110,11 @@ public:
 	void CalculateBullet(int nowBullet);
 	void SetBullet(int BulletCount);
 	void SetRabbitFootUI();
+
+	void CreateMapObjectsUI(int object_type, int loc_type, int loc_num);
+	Vec3 CalculateMapUIPosition(int loc_num);
+	Vec3 CalculateAisleUIPosition(int loc_num);
+
+	void RemoveMapUI();
 };
 

@@ -139,7 +139,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		else if (isMapOpen)
 		{
 			isMapOpen = false;
-			_activeSessionScene->SetMapPosition(111111111110, 1111111111110);
+			_activeSessionScene->SetMapPosition(OUT_OF_RENDER, OUT_OF_RENDER);
+			_activeSessionScene->RemoveMapUI();
 		}
 		break;
 	}
@@ -167,7 +168,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//p->obj_type;은 오브젝트의 타입
 		//p->loc_type;은 오브젝트의 위치 기준에 대한 정보 (OT_CORRIDOR == 복도 / OT_ROOM == 방)
 		//p->approx_num;는 오브젝트의 위치 번호(방 혹은 복도 번호)
-
+		_activeSessionScene->CreateMapObjectsUI(p->obj_type, p->loc_type, p->approx_num);
 		break;
 	}
 	case LC_SET_SERVER_INFO: {
