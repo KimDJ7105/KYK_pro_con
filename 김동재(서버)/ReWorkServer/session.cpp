@@ -454,17 +454,49 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 {
 	curr_packet_size_ = 0;
 	prev_data_size_ = 0;
-	pos[0] = 0.f;
-	pos[1] = 40.f;
-	pos[2] = 0.f;
 
-	view_dir[0] = 0.0f;
-	view_dir[1] = 0.0f;
-	view_dir[2] = 0.0f;
+	if (team_num == 0) {
+		pos[0] = 1200.f;
+		pos[1] = 40.f;
+		pos[2] = 2400.f;
+
+		view_dir[0] = 0.0f;
+		view_dir[1] = 3.14f;
+		view_dir[2] = 0.0f;
+	}
+
+	else if (team_num == 1) {
+		pos[0] = 0.f;
+		pos[1] = 40.f;
+		pos[2] = 1200.f;
+
+		view_dir[0] = 0.0f;
+		view_dir[1] = 1.57f;
+		view_dir[2] = 0.0f;
+	}
+
+	else if (team_num == 2) {
+		pos[0] = 2400.f;
+		pos[1] = 40.f;
+		pos[2] = 1200.f;
+
+		view_dir[0] = 0.0f;
+		view_dir[1] = -1.57f;
+		view_dir[2] = 0.0f;
+	}
+
+	else if (team_num == 3) {
+		pos[0] = 1200.f;
+		pos[1] = 40.f;
+		pos[2] = 0.f;
+
+		view_dir[0] = 0.0f;
+		view_dir[1] = 0.0f;
+		view_dir[2] = 0.0f;
+	}
 
 	hp = 100;
 	remain_bullet = 30;
-	team = 0;
 
 	equip_weapon = WP_SMG;
 
@@ -501,6 +533,8 @@ void SESSION::start()
 	pl.team_num = team;
 	pl.bullet_amount = 30; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
 	Send_Packet(&pl);
+
+	//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
 
 	sc_packet_put p;
 	p.id = my_id_;
