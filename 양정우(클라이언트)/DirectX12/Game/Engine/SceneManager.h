@@ -116,5 +116,9 @@ public:
 	Vec3 CalculateAisleUIPosition(int loc_num);
 
 	void RemoveMapUI();
+
+	void SetPlayerLocation(float x, float y, float z, float dirx, float diry, float dirz);
+
+	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz);
 };
 

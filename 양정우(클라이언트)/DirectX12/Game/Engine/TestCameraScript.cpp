@@ -97,219 +97,217 @@ void TestCameraScript::LateUpdate()
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
 
-
-	// 현재 위치 저장
-	previousPosition = GetTransform()->GetLocalPosition();
-
-	// 매 프레임마다 중력에 의해 수직 속도를 감소시킴
-
-	// 땅에 닿은 상태를 판별하여 isGrounded 변수에 저장
-	bool isGrounded = (GetTransform()->GetLocalPosition().y <= 0.0f);
-
-	// 땅에 닿은 상태에서만 중력에 의한 속도 감소를 적용
-	if (isGrounded)
+	if(movable)
 	{
-		verticalVelocity -= GRAVITY * DELTA_TIME;
-	}
+		// 현재 위치 저장
+		previousPosition = GetTransform()->GetLocalPosition();
 
-	// 플레이어의 현재 위치를 가져옴
-	Vec3 currentPosition = GetTransform()->GetLocalPosition();
+		// 매 프레임마다 중력에 의해 수직 속도를 감소시킴
 
-	Vec3 tempPos = currentPosition;
+		// 땅에 닿은 상태를 판별하여 isGrounded 변수에 저장
+		bool isGrounded = (GetTransform()->GetLocalPosition().y <= 0.0f);
 
-	// 플레이어의 이동 속도 및 방향 설정 (예시로 WASD 키를 이용한 이동)
-	const float moveSpeed = 200.0f;
-	Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
-
-	if (INPUT->GetButtonDown(KEY_TYPE::W))
-	{
-		wKeyState = true;
-		std::cout << "W키 눌림" << std::endl;
-		if (!isMoving) {
-			isMoving = true;
-
-			cs_packet_move_key_down mkd;
-			mkd.size = sizeof(cs_packet_move_key_down);
-			mkd.type = CS_MOVE_KEY_DOWN;
-
-			main_session->Send_Packet(&mkd);
-		}
-	}
-	else if (INPUT->GetButtonUp(KEY_TYPE::W))
-	{
-		wKeyState = false;
-		std::cout << "W키 떼짐" << std::endl;
-
-		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
-			isMoving = false;
-
-			cs_packet_move_key_up mku;
-			mku.size = sizeof(cs_packet_move_key_up);
-			mku.type = CS_MOVE_KEY_UP;
-
-			main_session->Send_Packet(&mku);
-		}
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::S))
-	{
-		sKeyState = true;
-		if (!isMoving) {
-			isMoving = true;
-
-			cs_packet_move_key_down mkd;
-			mkd.size = sizeof(cs_packet_move_key_down);
-			mkd.type = CS_MOVE_KEY_DOWN;
-
-			main_session->Send_Packet(&mkd);
-		}
-	}
-	else if (INPUT->GetButtonUp(KEY_TYPE::S))
-	{
-		sKeyState = false;
-
-		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
-			isMoving = false;
-
-			cs_packet_move_key_up mku;
-			mku.size = sizeof(cs_packet_move_key_up);
-			mku.type = CS_MOVE_KEY_UP;
-
-			main_session->Send_Packet(&mku);
-		}
-
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::A))
-	{
-		aKeyState = true;
-		if (!isMoving) {
-			isMoving = true;
-
-			cs_packet_move_key_down mkd;
-			mkd.size = sizeof(cs_packet_move_key_down);
-			mkd.type = CS_MOVE_KEY_DOWN;
-
-			main_session->Send_Packet(&mkd);
-		}
-	}
-	else if (INPUT->GetButtonUp(KEY_TYPE::A))
-	{
-		aKeyState = false;
-		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
-			isMoving = false;
-
-			cs_packet_move_key_up mku;
-			mku.size = sizeof(cs_packet_move_key_up);
-			mku.type = CS_MOVE_KEY_UP;
-
-			main_session->Send_Packet(&mku);
-		}
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::D))
-	{
-		dKeyState = true;
-		if (!isMoving) {
-			isMoving = true;
-
-			cs_packet_move_key_down mkd;
-			mkd.size = sizeof(cs_packet_move_key_down);
-			mkd.type = CS_MOVE_KEY_DOWN;
-
-			main_session->Send_Packet(&mkd);
-		}
-	}
-	else if (INPUT->GetButtonUp(KEY_TYPE::D))
-	{
-		dKeyState = false;
-
-		if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
-			isMoving = false;
-
-			cs_packet_move_key_up mku;
-			mku.size = sizeof(cs_packet_move_key_up);
-			mku.type = CS_MOVE_KEY_UP;
-
-			main_session->Send_Packet(&mku);
-		}
-	}
-
-	if (wKeyState)
-	{
-		moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
-		std::cout << "앞으로 이동중" << std::endl;
-	}
-	if (sKeyState)
-	{
-		moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
-	}
-	if (aKeyState)
-	{
-		moveDirection -= GetTransform()->GetRight();
-	}
-	if (dKeyState)
-	{
-		moveDirection += GetTransform()->GetRight();
-	}
-
-	
-
-	// 이동 방향 벡터의 길이를 1로 정규화하여 이동 속도를 일정하게 함
-	if (moveDirection.LengthSquared() > 0.0f)
-	{
-		moveDirection.Normalize();
-	}
-	// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
-	currentPosition += moveDirection * moveSpeed * DELTA_TIME;
-
-	if (playerObject != NULL)
-	{
-		shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
-		if (overlap != NULL)
+		// 땅에 닿은 상태에서만 중력에 의한 속도 감소를 적용
+		if (isGrounded)
 		{
-			isOverlap = true;
-			currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
+			verticalVelocity -= GRAVITY * DELTA_TIME;
 		}
-		else
+
+		// 플레이어의 현재 위치를 가져옴
+		Vec3 currentPosition = GetTransform()->GetLocalPosition();
+
+		Vec3 tempPos = currentPosition;
+
+		// 플레이어의 이동 속도 및 방향 설정 (예시로 WASD 키를 이용한 이동)
+		const float moveSpeed = 200.0f;
+		Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
+
+		if (INPUT->GetButtonDown(KEY_TYPE::W))
 		{
-			isOverlap = false;
+			wKeyState = true;
+
+			if (!isMoving) {
+				isMoving = true;
+
+				cs_packet_move_key_down mkd;
+				mkd.size = sizeof(cs_packet_move_key_down);
+				mkd.type = CS_MOVE_KEY_DOWN;
+
+				main_session->Send_Packet(&mkd);
+			}
 		}
+		else if (INPUT->GetButtonUp(KEY_TYPE::W))
+		{
+			wKeyState = false;
+
+			if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+				isMoving = false;
+
+				cs_packet_move_key_up mku;
+				mku.size = sizeof(cs_packet_move_key_up);
+				mku.type = CS_MOVE_KEY_UP;
+
+				main_session->Send_Packet(&mku);
+			}
+		}
+		if (INPUT->GetButtonDown(KEY_TYPE::S))
+		{
+			sKeyState = true;
+			if (!isMoving) {
+				isMoving = true;
+
+				cs_packet_move_key_down mkd;
+				mkd.size = sizeof(cs_packet_move_key_down);
+				mkd.type = CS_MOVE_KEY_DOWN;
+
+				main_session->Send_Packet(&mkd);
+			}
+		}
+		else if (INPUT->GetButtonUp(KEY_TYPE::S))
+		{
+			sKeyState = false;
+
+			if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+				isMoving = false;
+
+				cs_packet_move_key_up mku;
+				mku.size = sizeof(cs_packet_move_key_up);
+				mku.type = CS_MOVE_KEY_UP;
+
+				main_session->Send_Packet(&mku);
+			}
+
+		}
+		if (INPUT->GetButtonDown(KEY_TYPE::A))
+		{
+			aKeyState = true;
+			if (!isMoving) {
+				isMoving = true;
+
+				cs_packet_move_key_down mkd;
+				mkd.size = sizeof(cs_packet_move_key_down);
+				mkd.type = CS_MOVE_KEY_DOWN;
+
+				main_session->Send_Packet(&mkd);
+			}
+		}
+		else if (INPUT->GetButtonUp(KEY_TYPE::A))
+		{
+			aKeyState = false;
+			if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+				isMoving = false;
+
+				cs_packet_move_key_up mku;
+				mku.size = sizeof(cs_packet_move_key_up);
+				mku.type = CS_MOVE_KEY_UP;
+
+				main_session->Send_Packet(&mku);
+			}
+		}
+
+		if (INPUT->GetButtonDown(KEY_TYPE::D))
+		{
+			dKeyState = true;
+			if (!isMoving) {
+				isMoving = true;
+
+				cs_packet_move_key_down mkd;
+				mkd.size = sizeof(cs_packet_move_key_down);
+				mkd.type = CS_MOVE_KEY_DOWN;
+
+				main_session->Send_Packet(&mkd);
+			}
+		}
+		else if (INPUT->GetButtonUp(KEY_TYPE::D))
+		{
+			dKeyState = false;
+
+			if (isMoving && !wKeyState && !aKeyState && !sKeyState && !dKeyState) {
+				isMoving = false;
+
+				cs_packet_move_key_up mku;
+				mku.size = sizeof(cs_packet_move_key_up);
+				mku.type = CS_MOVE_KEY_UP;
+
+				main_session->Send_Packet(&mku);
+			}
+		}
+
+		if (wKeyState)
+		{
+			moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+		}
+		if (sKeyState)
+		{
+			moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+		}
+		if (aKeyState)
+		{
+			moveDirection -= GetTransform()->GetRight();
+		}
+		if (dKeyState)
+		{
+			moveDirection += GetTransform()->GetRight();
+		}
+
+
+
+		// 이동 방향 벡터의 길이를 1로 정규화하여 이동 속도를 일정하게 함
+		if (moveDirection.LengthSquared() > 0.0f)
+		{
+			moveDirection.Normalize();
+		}
+		// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
+		currentPosition += moveDirection * moveSpeed * DELTA_TIME;
+
+		if (playerObject != NULL)
+		{
+			shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+			if (overlap != NULL)
+			{
+				isOverlap = true;
+				currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
+			}
+			else
+			{
+				isOverlap = false;
+			}
+		}
+
+
+
+		// 플레이어가 땅 밑으로 떨어지는 것을 방지하기 위해 y 좌표를 0으로 고정
+		if (currentPosition.y < 0.0f)
+		{
+			currentPosition.y = 0.0f;
+			// 땅에 닿은 상태로 간주하여 수직 속도를 0으로 초기화
+			verticalVelocity = 0.0f;
+		}
+
+
+		//위치가 변경되었을때만 서버에 전송하도록 수정
+		if (currentPosition != tempPos)
+		{
+			//------------------------------------
+			cs_packet_pos_info packet;
+			packet.size = sizeof(cs_packet_pos_info);
+			packet.type = CS_POS_INFO;
+			packet.x = currentPosition.x;
+			packet.y = currentPosition.y;
+			packet.z = currentPosition.z;
+
+			main_session->Send_Packet(&packet);
+			//-------------------------------------
+		}
+		else if (currentPosition == tempPos)
+		{
+		}
+
+
+		// 업데이트된 위치를 플레이어에 반영
+		GetTransform()->SetLocalPosition(currentPosition);
+
 	}
-
-	
-
-	// 플레이어가 땅 밑으로 떨어지는 것을 방지하기 위해 y 좌표를 0으로 고정
-	if (currentPosition.y < 0.0f)
-	{
-		currentPosition.y = 0.0f;
-		// 땅에 닿은 상태로 간주하여 수직 속도를 0으로 초기화
-		verticalVelocity = 0.0f;
-	}
-
-
-	//위치가 변경되었을때만 서버에 전송하도록 수정
-	if (currentPosition != tempPos)
-	{
-		//------------------------------------
-		cs_packet_pos_info packet;
-		packet.size = sizeof(cs_packet_pos_info);
-		packet.type = CS_POS_INFO;
-		packet.x = currentPosition.x;
-		packet.y = currentPosition.y;
-		packet.z = currentPosition.z;
-
-		main_session->Send_Packet(&packet);
-		//-------------------------------------
-	}
-	else if (currentPosition == tempPos)
-	{
-	}
-
-
-	// 업데이트된 위치를 플레이어에 반영
-	GetTransform()->SetLocalPosition(currentPosition);
-
 
 
 	
@@ -467,22 +465,6 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
-#ifdef DEBUG_ON
-	/*if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
-	{
-		const POINT& pos = INPUT->GetMousePos();
-
-		shared_ptr<GameObject> pickedObject;
-
-		pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
-
-		if (pickedObject == pickedMovingObject)
-			pickedMovingObject = NULL;
-		else
-			pickedMovingObject = pickedObject;
-	}*/
-#endif
-
 	if (pickedMovingObject != NULL)
 		RotatingPickedObject();
 
@@ -528,6 +510,15 @@ void TestCameraScript::LateUpdate()
 			tut.terminal_id = terminal->GetTransform()->GetObjectID();
 
 			main_session->Send_Packet(&tut);
+
+			if (movable == true)
+			{
+				movable = false;
+			}
+			else if (movable == false)
+			{
+				movable = true;
+			}
 		}
 
 		shared_ptr<GameObject> rabbitfoot = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT);

@@ -32,6 +32,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//변수 만들어서 저장 필요
 		playerID = p->id;
 		_activeSessionScene->SetPlayerID(p->id);
+		_activeSessionScene->SetPlayerLocation(p->x, p->y, p->z, p->dirx, p->diry, p->dirz);
 		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		_activeSessionScene->CreatePlayerGunObject(102, p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
 		_activeSessionScene->SetBullet(p->bullet_amount);
