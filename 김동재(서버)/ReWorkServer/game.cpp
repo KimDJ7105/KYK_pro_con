@@ -34,10 +34,10 @@ GAME::GAME(int id)
 	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 22);
 
 	//ºÐ¼â±â »ý¼º
-	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
-	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
-	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
-	CreateObject(OT_GRINDER, 0, 0, 0, 0, 0, 0);
+	CreateObject(OT_GRINDER, 0.f, 0.f, 2400.0f, 0.f, 3.14f, 0.f);
+	CreateObject(OT_GRINDER, 2400.f, 0.f, 2400.f, 0.f, -1.57f, 0.f);
+	CreateObject(OT_GRINDER, 2400.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+	CreateObject(OT_GRINDER, 0.f, 0.f, 0.f, 0.f, 1.57f, 0.f);
 }
 
 int GAME::GetNewObjectID()
