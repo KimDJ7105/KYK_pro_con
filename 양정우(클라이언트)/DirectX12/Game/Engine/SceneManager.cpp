@@ -530,6 +530,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
 
+		camera->GetTransform()->SetObjectType(OT_PLAYER_CAMERA);
+
 		mainGameScene->AddGameObject(camera);
 
 		
@@ -3154,3 +3156,16 @@ void SceneManager::SetRabbitFootUI()
 	}
 }
 
+void SceneManager::SetPlayerLocation(float x, float y, float z, float dirx, float diry, float dirz)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_PLAYER_CAMERA)
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(dirx, diry, dirz));
+		}
+	}
+}
