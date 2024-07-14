@@ -71,23 +71,17 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 
 		//========================================
 		//std::cout << "working\n";
-		while (true) {
+		while (!timer_queue.empty()) {
 			TIMER_EVENT ev;
 			auto current_time = chrono::system_clock::now();
-			if (!timer_queue.empty()) {
-				ev = timer_queue.top();
-				timer_queue.pop();
-				if (ev.wakeup_time > current_time) {
-					timer_queue.push(ev);		// 최적화 필요
-					// timer_queue에 다시 넣지 않고 처리해야 한다.
-					this_thread::sleep_for(1ms);  // 실행시간이 아직 안되었으므로 잠시 대기
-					continue;
-				}
-			}
-			else {
-				timer_.expires_from_now(boost::asio::chrono::microseconds(100));
-				timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
-				return;
+			
+			ev = timer_queue.top();
+			timer_queue.pop();
+			if (ev.wakeup_time > current_time) {
+				timer_queue.push(ev);		// 최적화 필요
+				// timer_queue에 다시 넣지 않고 처리해야 한다.
+				this_thread::sleep_for(1ms);  // 실행시간이 아직 안되었으므로 잠시 대기
+				continue;
 			}
 
 			switch (ev.event_id) {
@@ -102,7 +96,6 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			}
 		}
 	}
-
 
 	//timer_.expires_at(timer_.expiry() + boost::asio::chrono::seconds(0));
 	timer_.expires_from_now(boost::asio::chrono::microseconds(100));
