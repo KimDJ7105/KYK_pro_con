@@ -1500,31 +1500,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 
-	//{
-	//	shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Object.bin");
-
-	//	vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
-
-	//	for (auto& gameObject : gameObjects2)
-	//	{
-	//		gameObject->SetName(L"RabbitFoot");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-	//		gameObject->GetTransform()->SetObjectType(OT_RABBITFOOT);
-	//		gameObject->GetTransform()->SetObjectID(106);
-
-	//		gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
-
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(0.f, 20.f, 0.f));
-
-
-	//		mainGameScene->AddGameObject(gameObject);
-	//	}
-	//}
-	//-----------
 	{
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\RevivePad.bin");
 
@@ -1537,6 +1512,24 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Crusher(Rotate).bin");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Crusher");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.0f, 40.f, 0.0f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->AddComponent(make_shared<TestDragon>());
+
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
@@ -1896,36 +1889,6 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 	vp_ObjectManager.push_back(obj);
 
-
-
-	//Old Ver.
-	//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
-	//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-	//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//for (auto& gameObject : gameObjects)
-	//{
-	//	gameObject->SetName(L"Player1");
-	//	gameObject->SetCheckFrustum(false);
-	//	gameObject->GetTransform()->SetObjectType(object_type);
-	//	gameObject->GetTransform()->SetObjectID(object_id);
-	//	gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-	//	gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//	gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
-
-	//	gameObject->AddComponent(make_shared<BoxCollider>());
-	//	std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
-	//	std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
-	//	std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-	//	//gameObject->AddComponent(make_shared<TestDragon>());
-
-	//	_otherPlayer.push_back(gameObject);
-	//	scene->AddGameObject(gameObject);
-	//	
-	//}
-
-	//------------------------------
-	//New Ver.
 	{
 		//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
@@ -3168,4 +3131,9 @@ void SceneManager::SetPlayerLocation(float x, float y, float z, float dirx, floa
 			gameObject->GetTransform()->SetLocalRotation(Vec3(dirx, diry, dirz));
 		}
 	}
+}
+
+void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz)
+{
+
 }
