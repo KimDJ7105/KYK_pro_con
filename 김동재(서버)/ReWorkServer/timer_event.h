@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-enum EVENT_TYPE { EV_LASER_TRAP,EV_MOVE_GRINDER };
+enum EVENT_TYPE { EV_LASER_TRAP, EV_MOVE_GRINDER, EV_SPAWN_EXIT };
 class TIMER_EVENT
 {
 public :

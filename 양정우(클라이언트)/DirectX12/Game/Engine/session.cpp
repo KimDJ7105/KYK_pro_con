@@ -115,6 +115,10 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_put_object_coor* p = reinterpret_cast<sc_packet_put_object_coor*>(packet);
 		//p->x p->y, p->z ,p->dirx, p->diry, p->dirz
 		//xyz는 위치 좌표, dirxyz는 로테이션
+
+
+		_activeSessionScene->CreateCrusher(p->x, p->y, p->z, p->dirx - 1.57f, p->diry, p->dirz);
+
 		break;
 	}
 	case SC_MODIFY_BULLET :
@@ -272,6 +276,11 @@ void SESSION::set_moving(bool mv)
 bool SESSION::get_moving()
 {
 	return moving;
+}
+
+bool SESSION::get_isMapOpen()
+{
+	return isMapOpen;
 }
 
 SESSION* session;

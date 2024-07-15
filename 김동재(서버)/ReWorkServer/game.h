@@ -13,10 +13,11 @@ class GAME
 {
 private:
 	//int game_state;						//현재 게임의 진행 상태 (대기, 진행, 종료 등)
-	int game_id;					    //게임 인스턴스의 id
 	atomic_int g_object_ID = MAX_USER + 1;  //인게임 오브젝트 id
 
 	int team_num;
+
+	int game_id;
 
 	bool spawn_able[40];
 	bool room_spawn_able[25];
@@ -37,7 +38,10 @@ public:
 	int select_pos();
 	int select_room_pos();
 
+	int get_game_id();
+
 public:
+
 	unordered_map<int, std::shared_ptr<SESSION>> ingame_player;    //게임에 포함된 플레이어를 저장하는 컨테이너
 	unordered_map<int, std::shared_ptr<OBJECT>> ingame_object;
 };

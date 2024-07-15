@@ -1,8 +1,10 @@
 #pragma once
 #include "stdafx.h"
 #include "object.h"
+#include "timer_event.h"
 
 class GAME;
+class SERVER;
 
 class SESSION
 	: public std::enable_shared_from_this<SESSION>
@@ -26,6 +28,7 @@ private:
 	array<float, 3> view_dir;
 
 	std::shared_ptr<GAME> my_game;
+	SERVER* my_server;
 
 	bool using_terminal;
 private:
@@ -47,6 +50,7 @@ public:
 	void Send_Packet(void* packet);
 
 	void set_mygame(std::shared_ptr<GAME> p);
+	void set_myserver(SERVER* p);
 };
 
 extern shared_ptr<SESSION> lobby; //만일 이게 여러 쓰레드에서 호출되면 락을 걸어야 함.... 현재 상태는 그럼

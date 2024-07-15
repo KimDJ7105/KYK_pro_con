@@ -144,3 +144,8 @@ int GAME::select_room_pos()
 
 	return spawn_num;
 }
+
+int GAME::get_game_id()
+{
+	return game_id;
+}

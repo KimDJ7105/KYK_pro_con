@@ -13,63 +13,8 @@
 
 #include "session.h"
 
+#include "Quaternion.h"
 
-struct Quaternion {
-	float x, y, z, w;
-
-	Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
-
-	// 쿼터니언 곱셈 연산
-	Quaternion operator*(const Quaternion& q) const {
-		return Quaternion(
-			w * q.x + x * q.w + y * q.z - z * q.y,
-			w * q.y - x * q.z + y * q.w + z * q.x,
-			w * q.z + x * q.y - y * q.x + z * q.w,
-			w * q.w - x * q.x - y * q.y - z * q.z
-		);
-	}
-
-
-	// 쿼터니언의 회전 변환
-	Vec3 Rotate(const Vec3& v) const {
-		Vec3 quatVec(x, y, z);
-		Vec3 uv = quatVec.Cross(v);
-		Vec3 uuv = quatVec.Cross(uv);
-		uv *= (2.0f * w);
-		uuv *= 2.0f;
-		return v + uv + uuv;
-	}
-
-
-	Vec3 ToEulerAngles() const {
-		// roll (x-axis rotation)
-		float sinr_cosp = 2 * (w * x + y * z);
-		float cosr_cosp = 1 - 2 * (x * x + y * y);
-		float roll = atan2(sinr_cosp, cosr_cosp);
-
-		// pitch (y-axis rotation)
-		float sinp = 2 * (w * y - z * x);
-		float pitch;
-		if (fabs(sinp) >= 1)
-			pitch = copysign(3.141592 / 2, sinp); // use 90 degrees if out of range
-		else
-			pitch = asin(sinp);
-
-		// yaw (z-axis rotation)
-		float siny_cosp = 2 * (w * z + x * y);
-		float cosy_cosp = 1 - 2 * (y * y + z * z);
-		float yaw = atan2(siny_cosp, cosy_cosp);
-
-		return Vec3(roll, pitch, yaw);
-	}
-
-};
-
-Quaternion QuaternionFromAxisAngle(const Vec3& axis, float angle) {
-	float halfAngle = angle * 0.5f;
-	float s = sin(halfAngle);
-	return Quaternion(axis.x * s, axis.y * s, axis.z * s, cos(halfAngle));
-}
 
 extern int playerID;
 
@@ -97,7 +42,7 @@ void TestCameraScript::LateUpdate()
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
 
-	if(movable)
+	
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -233,24 +178,25 @@ void TestCameraScript::LateUpdate()
 			}
 		}
 
-		if (wKeyState)
+		if (main_session->get_isMapOpen() == false)
 		{
-			moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+			if (wKeyState)
+			{
+				moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+			}
+			if (sKeyState)
+			{
+				moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+			}
+			if (aKeyState)
+			{
+				moveDirection -= GetTransform()->GetRight();
+			}
+			if (dKeyState)
+			{
+				moveDirection += GetTransform()->GetRight();
+			}
 		}
-		if (sKeyState)
-		{
-			moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
-		}
-		if (aKeyState)
-		{
-			moveDirection -= GetTransform()->GetRight();
-		}
-		if (dKeyState)
-		{
-			moveDirection += GetTransform()->GetRight();
-		}
-
-
 
 		// 이동 방향 벡터의 길이를 1로 정규화하여 이동 속도를 일정하게 함
 		if (moveDirection.LengthSquared() > 0.0f)
@@ -510,15 +456,6 @@ void TestCameraScript::LateUpdate()
 			tut.terminal_id = terminal->GetTransform()->GetObjectID();
 
 			main_session->Send_Packet(&tut);
-
-			if (movable == true)
-			{
-				movable = false;
-			}
-			else if (movable == false)
-			{
-				movable = true;
-			}
 		}
 
 		shared_ptr<GameObject> rabbitfoot = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT);

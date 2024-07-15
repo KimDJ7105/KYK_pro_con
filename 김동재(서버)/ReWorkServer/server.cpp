@@ -29,6 +29,7 @@ void SERVER::do_accept()
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
 					games[g_game_ID]->ingame_player[p_id]->set_mygame(games[g_game_ID]);
 					games[g_game_ID]->ingame_player[p_id]->start();
+					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
 
 					if (games[g_game_ID]->ingame_player.size() > MAX_USER) g_game_ID++;
 				}
@@ -59,29 +60,19 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 void SERVER::event_excuter(const boost::system::error_code& ec)
 {
 	if (!ec) {
-		//루프로 들어가기 이전에 필요한 이벤트 삽입
-		//========================================
-		/*TIMER_EVENT item_event_init;
-		item_event_init.event_id = EV_SPAWN_ITEM;
-		item_event_init.obj_id = 0;
-		item_event_init.target_id = 0;
-		item_event_init.wakeup_time = chrono::system_clock::now() + 5s;*/
-
-		//timer_queue.push(item_event_init);
-
-		//========================================
 		//std::cout << "working\n";
-		while (!timer_queue.empty()) {
+		if (!timer_queue.empty()) {
 			TIMER_EVENT ev;
 			auto current_time = chrono::system_clock::now();
 			
 			ev = timer_queue.top();
 			timer_queue.pop();
 			if (ev.wakeup_time > current_time) {
-				timer_queue.push(ev);		// 최적화 필요
-				// timer_queue에 다시 넣지 않고 처리해야 한다.
-				this_thread::sleep_for(1ms);  // 실행시간이 아직 안되었으므로 잠시 대기
-				continue;
+				timer_queue.push(ev);
+
+				timer_.expires_from_now(boost::asio::chrono::microseconds(100));
+				timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
+				return;
 			}
 
 			switch (ev.event_id) {
@@ -91,6 +82,25 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			}
 			case EV_MOVE_GRINDER: {
 				//target_id는 방향 (정방향 / 역방향)
+				break;
+			}
+			case EV_SPAWN_EXIT: {
+				for (int i = 0; i < 3; i++) {
+					auto& exit = games[ev.game_id]->CreateObjectApprox(OT_EXIT);
+
+					sc_packet_put_object_pos pop;
+					pop.type = SC_PUT_OBJECT_POS;
+					pop.size = sizeof(sc_packet_put_object_pos);
+					pop.obj_type = exit->obj_type;
+					pop.id = exit->obj_id;
+					pop.approx_num = exit->spawn_num;
+
+					for (auto& player : games[ev.game_id]->ingame_player) {
+						player.second->Send_Packet(&pop);
+					}
+				}
+
+				std::cout << "Exit Spawned\n";
 				break;
 			}
 			}
