@@ -42,7 +42,7 @@ void TestCameraScript::LateUpdate()
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
 
-	if(movable)
+	
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -178,24 +178,25 @@ void TestCameraScript::LateUpdate()
 			}
 		}
 
-		if (wKeyState)
+		if (main_session->get_isMapOpen() == false)
 		{
-			moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+			if (wKeyState)
+			{
+				moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+			}
+			if (sKeyState)
+			{
+				moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+			}
+			if (aKeyState)
+			{
+				moveDirection -= GetTransform()->GetRight();
+			}
+			if (dKeyState)
+			{
+				moveDirection += GetTransform()->GetRight();
+			}
 		}
-		if (sKeyState)
-		{
-			moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
-		}
-		if (aKeyState)
-		{
-			moveDirection -= GetTransform()->GetRight();
-		}
-		if (dKeyState)
-		{
-			moveDirection += GetTransform()->GetRight();
-		}
-
-
 
 		// 이동 방향 벡터의 길이를 1로 정규화하여 이동 속도를 일정하게 함
 		if (moveDirection.LengthSquared() > 0.0f)
@@ -455,15 +456,6 @@ void TestCameraScript::LateUpdate()
 			tut.terminal_id = terminal->GetTransform()->GetObjectID();
 
 			main_session->Send_Packet(&tut);
-
-			if (movable == true)
-			{
-				movable = false;
-			}
-			else if (movable == false)
-			{
-				movable = true;
-			}
 		}
 
 		shared_ptr<GameObject> rabbitfoot = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT);

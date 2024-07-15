@@ -56,6 +56,4 @@ private:
 
 
 	bool isMoving = false;
-
-	bool movable = true;
 };

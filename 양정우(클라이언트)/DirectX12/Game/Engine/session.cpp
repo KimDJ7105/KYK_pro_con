@@ -278,6 +278,11 @@ bool SESSION::get_moving()
 	return moving;
 }
 
+bool SESSION::get_isMapOpen()
+{
+	return isMapOpen;
+}
+
 SESSION* session;
 SESSION* main_session;
 

@@ -37,6 +37,8 @@ public:
 
 	bool get_moving();
 
+	bool get_isMapOpen();
+
 };
 
 void MoveSession(tcp::socket& sock);

@@ -36,7 +36,6 @@ shared_ptr<Scene> lobbyGameScene = std::make_shared<Scene>();
 
 std::vector<MyGameObject> vp_ObjectManager;
 
-
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
