@@ -1,6 +1,7 @@
 #pragma once
 #include "session.h"
 #include "game.h"
+#include "server.h"
 
 int WP_DMG[5]{ 6,0,0,0,0 };
 
@@ -171,6 +172,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			break;
 		}
 
+		//test
+		TIMER_EVENT tm;
+		tm.event_id = EV_SPAWN_EXIT;
+		tm.game_id = my_game->get_game_id();
+		tm.target_id = -1;
+		tm.wakeup_time = chrono::system_clock::now() + 5s;
+
+		my_server->timer_queue.emplace(tm);
+
 		shared_ptr<SESSION> user = my_game->ingame_player[my_id_];
 		if (user == nullptr) break;
 
@@ -242,9 +252,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 					player->Send_Packet(&pop);
 				}
+
+				TIMER_EVENT tm_exit;
+				tm_exit.event_id = EV_SPAWN_EXIT;
+				tm_exit.game_id = my_game->get_game_id();
+				tm_exit.target_id = -1;
+				tm_exit.wakeup_time = chrono::system_clock::now() + 90s;
+
+				my_server->timer_queue.emplace(tm_exit);
 			}
 
-			//1분 30초 뒤에 탈출구를 개방하는 타이머 이벤트 삽입 필요
+			
 		}
 		
 		else { //이미 활성화 된 터미널이면
@@ -628,4 +646,9 @@ void SESSION::Send_Packet(void* packet)
 void SESSION::set_mygame(std::shared_ptr<GAME> p)
 {
 	my_game = p;
+}
+
+void SESSION::set_myserver(SERVER* p)
+{
+	my_server = p;
 }
