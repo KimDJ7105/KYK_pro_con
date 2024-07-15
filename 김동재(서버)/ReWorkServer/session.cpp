@@ -172,15 +172,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			break;
 		}
 
-		//test
-		TIMER_EVENT tm;
-		tm.event_id = EV_SPAWN_EXIT;
-		tm.game_id = my_game->get_game_id();
-		tm.target_id = -1;
-		tm.wakeup_time = chrono::system_clock::now() + 5s;
-
-		my_server->timer_queue.emplace(tm);
-
 		shared_ptr<SESSION> user = my_game->ingame_player[my_id_];
 		if (user == nullptr) break;
 

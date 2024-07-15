@@ -85,7 +85,22 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				break;
 			}
 			case EV_SPAWN_EXIT: {
-				std::cout << "타이머 작동함\n";
+				for (int i = 0; i < 3; i++) {
+					auto& exit = games[ev.game_id]->CreateObjectApprox(OT_EXIT);
+
+					sc_packet_put_object_pos pop;
+					pop.type = SC_PUT_OBJECT_POS;
+					pop.size = sizeof(sc_packet_put_object_pos);
+					pop.obj_type = exit->obj_type;
+					pop.id = exit->obj_id;
+					pop.approx_num = exit->spawn_num;
+
+					for (auto& player : games[ev.game_id]->ingame_player) {
+						player.second->Send_Packet(&pop);
+					}
+				}
+
+				std::cout << "Exit Spawned\n";
 				break;
 			}
 			}
