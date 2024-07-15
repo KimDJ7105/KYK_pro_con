@@ -178,6 +178,15 @@
     <ClCompile Include="LobbyCameraScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
+    <ClCompile Include="BladeRotateScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="CrusherScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -324,6 +333,15 @@
     <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="LobbyCameraScript.h">
       <Filter>Object\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="BladeRotateScript.h">
+      <Filter>Object\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="CrusherScript.h">
+      <Filter>Object\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

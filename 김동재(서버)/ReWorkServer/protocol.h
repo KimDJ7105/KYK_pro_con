@@ -49,6 +49,8 @@
 #define OT_UI_RABBITFOOT	110
 #define OT_UI_MAPOBJECTS	111
 #define OT_PLAYER_CAMERA	112
+#define OT_CRUSHER			113
+#define OT_CRUSHER_BLADE	114
 //---------------------------------------
 
 //Animation Type-------------------------

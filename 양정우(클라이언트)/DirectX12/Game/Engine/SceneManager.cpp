@@ -21,6 +21,8 @@
 #include "MeshData.h"
 #include "TestDragon.h"
 #include "Animator.h"
+#include "BladeRotateScript.h"
+#include "CrusherScript.h"
 
 #include "ObjectManager.h"
 
@@ -1516,25 +1518,38 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 
+	return mainGameScene;
+}
+
+
+void SceneManager::CreateCrusherBlade(int object_ID, float object_size, int blade_num, Vec3 crusherPos)
+{
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Crusher(Rotate).bin");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CrusherBlade01.bin");
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Crusher");
+			gameObject->SetName(L"Crusher_Blade");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.0f, 40.f, 0.0f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(crusherPos.x, crusherPos.y - (object_size / 2), crusherPos.z + ((object_size * blade_num * 2) / 5)));
+			gameObject->GetTransform()->SetLocalScale(Vec3(object_size, object_size, object_size));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-			gameObject->AddComponent(make_shared<TestDragon>());
+
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+
+			gameObject->GetTransform()->SetObjectType(OT_CRUSHER_BLADE);
+			gameObject->GetTransform()->SetObjectID(object_ID);
 
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
-
-	return mainGameScene;
 }
 
 void SceneManager::CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
@@ -2024,8 +2039,6 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 	}
 }
 
-
-
 void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 {
 	if (animationID != -1)
@@ -2051,8 +2064,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 	}
 	
 }
-
-
 
 void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID)
 {
@@ -3135,5 +3146,35 @@ void SceneManager::SetPlayerLocation(float x, float y, float z, float dirx, floa
 
 void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz)
 {
+	float crusherSize = 50.f;
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Crusher_No_Blade.bin");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Crusher");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+			gameObject->GetTransform()->SetLocalScale(Vec3(crusherSize, crusherSize, crusherSize));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(dirx, diry, dirz));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+
+			gameObject->GetTransform()->SetObjectType(OT_CRUSHER);
+			gameObject->GetTransform()->SetObjectID(crusher_id);
+
+			gameObject->AddComponent(make_shared<CrusherScript>());
+
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	crusher_id += 100;
 }
