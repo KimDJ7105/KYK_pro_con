@@ -101,4 +101,11 @@ Vec3 BoxCollider::GetMaxPoint()
 	return maxPoint;
 }
 
+void BoxCollider::LateUpdate()
+{
+
+	
+
+}
+
 

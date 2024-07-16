@@ -256,7 +256,26 @@ void TestCameraScript::LateUpdate()
 	}
 
 
-	
+	shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
+	if (overlap_blade != NULL)
+	{
+		isCrushed = true;
+		std::cout << "You Died!" << std::endl;
+	}
+	else
+	{
+		isCrushed = false;
+
+		std::cout << "---------" << std::endl;
+	}
+
+
+
+
+
+
+
+
 	if (INPUT->GetButton(KEY_TYPE::P))
 	{
 		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));

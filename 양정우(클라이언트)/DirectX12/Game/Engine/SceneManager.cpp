@@ -1547,6 +1547,13 @@ void SceneManager::CreateCrusherBlade(int object_ID, float object_size, int blad
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
 
+
+			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3((meshData->GetAABBExtents().x * object_size), (meshData->GetAABBExtents().y * object_size), (meshData->GetAABBExtents().z * object_size)));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(crusherPos.x, crusherPos.y - (object_size / 2), crusherPos.z + ((object_size * blade_num * 2) / 5)));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
+
+
 			gameObject->GetTransform()->SetObjectType(OT_CRUSHER_BLADE);
 			gameObject->GetTransform()->SetObjectID(object_ID);
 

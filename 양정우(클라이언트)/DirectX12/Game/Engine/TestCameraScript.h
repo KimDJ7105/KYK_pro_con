@@ -56,4 +56,9 @@ private:
 
 
 	bool isMoving = false;
+
+
+
+
+	bool isCrushed = false;
 };
