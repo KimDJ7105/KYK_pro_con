@@ -6,7 +6,7 @@ OBJECT::OBJECT(int id, int type)
 	obj_type = type;
 
 	owner_id = -1;
-
+	way = -1;
 	spawn_num = -1;
 
 	for (int i = 0; i < 3; i++) {

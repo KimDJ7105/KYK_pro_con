@@ -81,7 +81,66 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				break;
 			}
 			case EV_MOVE_GRINDER: {
-				//target_id는 방향 (정방향 / 역방향)
+				for (auto& object : games[ev.game_id]->ingame_object) {
+					auto& obj = object.second;
+					if (obj->obj_type != OT_GRINDER) continue;
+
+					switch (obj->way) {
+					case WAY_UP :
+						obj->pos[2] += 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						if (obj->pos[2] >= 2400.0f) {
+							obj->way = WAY_DOWN;
+							obj->rot[1] = 3.14f;
+						}
+						break;
+					case WAY_DOWN:
+						obj->pos[2] -= 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						if (obj->pos[2] <= 0.0f) {
+							obj->way = WAY_UP;
+							obj->rot[1] = 0.0f;
+						}
+						break;
+					case WAY_LEFT:
+						obj->pos[0] -= 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						if (obj->pos[0] <= 0.0f) {
+							obj->way = WAY_RIGHT;
+							obj->rot[1] = 1.57f;
+						}
+						break;
+					case WAY_RIGHT:
+						obj->pos[0] += 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						if (obj->pos[0] >= 2400.0f) {
+							obj->way = WAY_LEFT;
+							obj->rot[1] = -1.57f;
+						}
+						break;
+					}
+					
+					sc_packet_pos grinder_pos;
+					grinder_pos.size = sizeof(sc_packet_pos);
+					grinder_pos.type = SC_POS;
+					grinder_pos.id = obj->obj_id;
+					grinder_pos.x = obj->pos[0];
+					grinder_pos.y = obj->pos[1];
+					grinder_pos.z = obj->pos[2];
+					grinder_pos.dirx = obj->rot[0];
+					grinder_pos.diry = obj->rot[1];
+					grinder_pos.dirz = obj->rot[2];
+					grinder_pos.animation_id = -1;
+
+					for (auto& players : games[ev.game_id]->ingame_player) {
+						players.second->Send_Packet(&grinder_pos);
+					}
+				}
+
+				TIMER_EVENT tm_grind;
+				tm_grind.event_id = EV_MOVE_GRINDER;
+				tm_grind.game_id = ev.game_id;
+				tm_grind.target_id = -1;
+				tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+
+				timer_queue.emplace(tm_grind);
+
 				break;
 			}
 			case EV_SPAWN_EXIT: {
