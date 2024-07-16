@@ -362,6 +362,29 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
+	case CS_HIT_BY_GRINDER :
+	{
+		sc_packet_remove_player rp;
+		rp.size = sizeof(sc_packet_remove_player);
+		rp.type = SC_REMOVE_PLAYER;
+		rp.id = my_id_;
+		rp.obj_type = OT_PLAYER;
+
+		for (auto& p : my_game->ingame_player) {
+			auto& player = p.second;
+			if (player->my_id_ == my_id_) continue;
+
+			player->Send_Packet(&rp);
+		}
+
+		sc_packet_player_lose pl;
+		pl.size = sizeof(sc_packet_player_lose);
+		pl.type = SC_PLAYER_LOSE;
+
+		Send_Packet(&pl);
+
+		break;
+	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
 		TIMER_EVENT tm_grind;
