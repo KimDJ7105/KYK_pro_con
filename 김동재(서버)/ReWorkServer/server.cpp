@@ -87,28 +87,28 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 
 					switch (obj->way) {
 					case WAY_UP :
-						obj->pos[2] += 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						obj->pos[2] += 10.0f;
 						if (obj->pos[2] >= 2400.0f) {
 							obj->way = WAY_DOWN;
 							obj->rot[1] = 3.14f;
 						}
 						break;
 					case WAY_DOWN:
-						obj->pos[2] -= 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						obj->pos[2] -= 10.0f;
 						if (obj->pos[2] <= 0.0f) {
 							obj->way = WAY_UP;
 							obj->rot[1] = 0.0f;
 						}
 						break;
 					case WAY_LEFT:
-						obj->pos[0] -= 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						obj->pos[0] -= 10.0f;
 						if (obj->pos[0] <= 0.0f) {
 							obj->way = WAY_RIGHT;
 							obj->rot[1] = 1.57f;
 						}
 						break;
 					case WAY_RIGHT:
-						obj->pos[0] += 0.078f * (10 * (1 + 0.1 * (games[ev.game_id]->grind_core)));
+						obj->pos[0] += 10.0f;
 						if (obj->pos[0] >= 2400.0f) {
 							obj->way = WAY_LEFT;
 							obj->rot[1] = -1.57f;
@@ -137,7 +137,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				tm_grind.event_id = EV_MOVE_GRINDER;
 				tm_grind.game_id = ev.game_id;
 				tm_grind.target_id = -1;
-				tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+				tm_grind.wakeup_time = chrono::system_clock::now() + 50ms;
 
 				timer_queue.emplace(tm_grind);
 
