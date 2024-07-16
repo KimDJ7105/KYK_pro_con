@@ -2037,7 +2037,7 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
 			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-			otherPlayer->GetTransform()->SetLocalRotation(Vec3(0.f, dirY, dirZ));
+			otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 		}
 	}
 }
