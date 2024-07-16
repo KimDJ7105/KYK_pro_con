@@ -371,6 +371,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
 
 		my_server->timer_queue.emplace(tm_grind);
+		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}

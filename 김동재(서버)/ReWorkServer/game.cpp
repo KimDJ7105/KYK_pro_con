@@ -35,10 +35,10 @@ GAME::GAME(int id)
 	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 22);
 
 	//분쇄기 생성
-	CreateObject(OT_GRINDER, 0.f, 0.f, 2400.0f, 0.f, 3.14f, 0.f, WAY_DOWN);
-	CreateObject(OT_GRINDER, 2400.f, 0.f, 2400.f, 0.f, -1.57f, 0.f, WAY_LEFT);
-	CreateObject(OT_GRINDER, 2400.f, 0.f, 0.f, 0.f, 0.f, 0.f, WAY_UP);
-	CreateObject(OT_GRINDER, 0.f, 0.f, 0.f, 0.f, 1.57f, 0.f, WAY_RIGHT);
+	CreateObject(OT_GRINDER, 0.f, 0.f, 2400.0f, -1.57f, 3.14f, 0.f, WAY_DOWN);
+	CreateObject(OT_GRINDER, 2400.f, 0.f, 2400.f, -1.57f, -1.57f, 0.f, WAY_LEFT);
+	CreateObject(OT_GRINDER, 2400.f, 0.f, 0.f, -1.57f, 0.f, 0.f, WAY_UP);
+	CreateObject(OT_GRINDER, 0.f, 0.f, 0.f, -1.57f, 1.57f, 0.f, WAY_RIGHT);
 
 	std::cout << game_id << "번 게임 " << "초기 오브젝트 생성완료\n";
 }
