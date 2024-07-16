@@ -35,6 +35,8 @@ shared_ptr<Scene> mainGameScene = std::make_shared<Scene>();
 
 shared_ptr<Scene> lobbyGameScene = std::make_shared<Scene>();
 
+shared_ptr<Scene> endingGameScene = std::make_shared<Scene>();
+
 std::vector<MyGameObject> vp_ObjectManager;
 
 void SceneManager::Update()
@@ -71,6 +73,17 @@ void SceneManager::LoadLobbyScene(std::wstring sceneName)
 	// TODO : 파일에서 Scene 정보 로드
 
 	_activeScene = LoadLobbyScene();
+
+	_activeScene->Awake();
+	_activeScene->Start();
+}
+
+void SceneManager::LoadEndingGameScene(std::wstring sceneName)
+{
+	// TODO : 기존 Scene 정리
+	// TODO : 파일에서 Scene 정보 로드
+
+	_activeScene = LoadEndingScene();
 
 	_activeScene->Awake();
 	_activeScene->Start();
@@ -228,6 +241,114 @@ shared_ptr<GameObject> SceneManager::GetPlayerGun(int ID)
 	return 0;
 }
 
+shared_ptr<Scene> SceneManager::LoadEndingScene()
+{
+#pragma region LayerMask
+	SetLayerName(0, L"Default");
+	SetLayerName(1, L"UI");
+	//...
+	//...
+	//...
+#pragma endregion
+
+#pragma region Camera
+	{
+		shared_ptr<GameObject> camera = make_shared<GameObject>();
+		camera->SetName(L"Main_Camera");
+		camera->AddComponent(make_shared<Transform>());
+		camera->AddComponent(make_shared<Camera>());		// N = 1, F = 1000, FOV = 45
+
+		camera->GetCamera()->SetFar(10000.f);
+		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+
+		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
+		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
+
+		endingGameScene->AddGameObject(camera);
+	}
+#pragma endregion
+
+#pragma region UI_Camera
+	{
+		shared_ptr<GameObject> camera = make_shared<GameObject>();
+		camera->SetName(L"Orthographic_Camera");
+		camera->AddComponent(make_shared<Transform>());
+		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, 800*600
+		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		camera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
+		camera->GetCamera()->SetCullingMaskAll(); // 다 끄고
+		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI만 찍음
+		endingGameScene->AddGameObject(camera);
+	}
+#pragma endregion
+
+#pragma region Deferred_Rendering_Info
+
+	for (int32 i = 0; i < 6; i++)
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));			// 1에서 1000사이 아무 값
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+
+			shared_ptr<Texture> texture;
+			if (i < 3)
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
+			else if (i < 5)
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
+			else
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
+			//texture = GET_SINGLE(Resources)->Get<Texture>(L"UAVTexture");//compute shader
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		obj->AddComponent(meshRenderer);
+		//endingGameScene->AddGameObject(obj);
+	}
+#pragma endregion
+
+#pragma region SkyBox
+	{
+		shared_ptr<GameObject> skybox = make_shared<GameObject>();
+		skybox->AddComponent(make_shared<Transform>());
+		skybox->SetCheckFrustum(false);
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+			meshRenderer->SetMesh(sphereMesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\Space.jpg");
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		skybox->AddComponent(meshRenderer);
+		endingGameScene->AddGameObject(skybox);
+	}
+#pragma endregion
+
+
+	return endingGameScene;
+
+}
+
 shared_ptr<Scene> SceneManager::LoadLobbyScene()
 {
 #pragma region LayerMask
@@ -253,8 +374,6 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 
 		lobbyGameScene->AddGameObject(camera);
-
-
 	}
 #pragma endregion
 
@@ -1592,7 +1711,18 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 			break;
 		}
 	}
-	
+}
+
+void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
+{
+	auto& gameObjects = scene_erase->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject == nullptr)
+			continue;
+		scene_erase->RemoveGameObject(gameObject);
+	}
 }
 
 void SceneManager::RemoveMapUI()

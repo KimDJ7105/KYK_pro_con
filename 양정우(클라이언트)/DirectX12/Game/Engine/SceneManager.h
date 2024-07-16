@@ -25,6 +25,8 @@ public:
 
 	void LoadLobbyScene(std::wstring sceneName);
 
+	void LoadEndingGameScene(std::wstring sceneName);
+
 	void SetLayerName(uint8 index, const wstring& name);
 	const wstring& IndexToLayerName(uint8 index) { return _layerNames[index]; }
 	uint8 LayerNameToIndex(const wstring& name);
@@ -39,6 +41,8 @@ private:
 	shared_ptr<Scene> LoadTestScene();
 
 	shared_ptr<Scene> LoadLobbyScene();
+
+	shared_ptr<Scene> LoadEndingScene();
 
 private:
 	shared_ptr<Scene> _activeScene;
@@ -122,5 +126,8 @@ public:
 	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz, int crusher_id);
 
 	void CreateCrusherBlade(int object_ID, float object_size, int blade_num, Vec3 crusherPos);
+
+
+	void RemoveSceneObject(shared_ptr<Scene> scene_erase);
 };
 
