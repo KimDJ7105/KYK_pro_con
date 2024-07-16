@@ -362,20 +362,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
-	case TEST_SPAWN_RBF: { //test for rabbitfoot
-		auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+	case TEST_SPAWN_RBF: { //test
+		//-------------Test
+		TIMER_EVENT tm_grind;
+		tm_grind.event_id = EV_MOVE_GRINDER;
+		tm_grind.game_id = my_game->get_game_id();
+		tm_grind.target_id = -1;
+		tm_grind.wakeup_time = chrono::system_clock::now() + 5s;
 
-		sc_packet_put_object_pos pop;
-		pop.size = sizeof(sc_packet_put_object_pos);
-		pop.type = SC_PUT_OBJECT_POS;
-		pop.id = rabbitfoot->obj_id;
-		pop.obj_type = rabbitfoot->obj_type;
-		pop.approx_num = rabbitfoot->spawn_num;
-
-		for (auto& p : my_game->ingame_player) {
-			p.second->Send_Packet(&pop);
-		}
-		break;
+		my_server->timer_queue.emplace(tm_grind);
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
 	}
@@ -616,14 +611,7 @@ void SESSION::start()
 		}
 	}
 
-	//-------------Test
-	TIMER_EVENT tm_grind;
-	tm_grind.event_id = EV_MOVE_GRINDER;
-	tm_grind.game_id = my_game->get_game_id();
-	tm_grind.target_id = -1;
-	tm_grind.wakeup_time = chrono::system_clock::now() + 5s;
-
-	my_server->timer_queue.emplace(tm_grind);
+	
 }
 
 void SESSION::Send_Packet(void* packet)
