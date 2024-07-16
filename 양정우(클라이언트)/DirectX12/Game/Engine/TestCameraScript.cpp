@@ -483,7 +483,11 @@ void TestCameraScript::LateUpdate()
 		{
 			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
 
-			
+			cs_packet_try_escape te;
+			te.size = sizeof(cs_packet_try_escape);
+			te.type = CS_TRY_ESCAPE;
+
+			main_session->Send_Packet(&te);
 		}
 	}
 	
