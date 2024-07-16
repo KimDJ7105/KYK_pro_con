@@ -3168,7 +3168,7 @@ void SceneManager::SetPlayerLocation(float x, float y, float z, float dirx, floa
 	}
 }
 
-void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz)
+void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz, int crusher_id)
 {
 	float crusherSize = 50.f;
 	{
@@ -3191,14 +3191,15 @@ void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float di
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
 
-			gameObject->GetTransform()->SetObjectType(OT_CRUSHER);
+			gameObject->GetTransform()->SetObjectType(OT_GRINDER);
 			gameObject->GetTransform()->SetObjectID(crusher_id);
 
 			gameObject->AddComponent(make_shared<CrusherScript>());
 
+			_otherPlayer.push_back(gameObject);
+
+
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
-
-	crusher_id += 100;
 }

@@ -26,8 +26,8 @@ void CrusherScript::LateUpdate()
 		Vec3 crusherPos = GetTransform()->GetLocalPosition();
 
 		GET_SINGLE(SceneManager)->CreateCrusherBlade(crusherID, crusherScale, 1, crusherPos);
-		GET_SINGLE(SceneManager)->CreateCrusherBlade(crusherID + 1, crusherScale, 2, crusherPos);
-		GET_SINGLE(SceneManager)->CreateCrusherBlade(crusherID + 2, crusherScale, 3, crusherPos);
+		GET_SINGLE(SceneManager)->CreateCrusherBlade(crusherID + 100, crusherScale, 2, crusherPos);
+		GET_SINGLE(SceneManager)->CreateCrusherBlade(crusherID + 200, crusherScale, 3, crusherPos);
 
 		isStart = true;
 
@@ -41,11 +41,11 @@ void CrusherScript::LateUpdate()
 				{
 					blade_bottom = gameObject;
 				}
-				else if (gameObject->GetTransform()->GetObjectID() == crusherID + 1)
+				else if (gameObject->GetTransform()->GetObjectID() == crusherID + 100)
 				{
 					blade_middle = gameObject;
 				}
-				else if (gameObject->GetTransform()->GetObjectID() == crusherID + 2)
+				else if (gameObject->GetTransform()->GetObjectID() == crusherID + 200)
 				{
 					blade_upper = gameObject;
 				}

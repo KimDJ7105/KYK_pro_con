@@ -119,11 +119,8 @@ public:
 
 	void SetPlayerLocation(float x, float y, float z, float dirx, float diry, float dirz);
 
-	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz);
+	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz, int crusher_id);
 
 	void CreateCrusherBlade(int object_ID, float object_size, int blade_num, Vec3 crusherPos);
-
-private:
-	int crusher_id = 1;
 };
 
