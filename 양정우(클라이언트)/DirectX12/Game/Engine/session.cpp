@@ -101,7 +101,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PUT_OBJECT_COOR : //특정 좌표에 오브젝트 생성
 	{
 		sc_packet_put_object_coor* p = reinterpret_cast<sc_packet_put_object_coor*>(packet);
-		_activeSessionScene->CreateCrusher(p->x, p->y, p->z, p->dirx - 1.57f, p->diry, p->dirz, p->obj_id);
+		_activeSessionScene->CreateCrusher(p->x, p->y, p->z, p->dirx, p->diry, p->dirz, p->obj_id);
 
 		break;
 	}
