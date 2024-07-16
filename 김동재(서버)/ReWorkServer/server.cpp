@@ -28,8 +28,8 @@ void SERVER::do_accept()
 
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
 					games[g_game_ID]->ingame_player[p_id]->set_mygame(games[g_game_ID]);
-					games[g_game_ID]->ingame_player[p_id]->start();
 					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
+					games[g_game_ID]->ingame_player[p_id]->start();
 
 					if (games[g_game_ID]->ingame_player.size() > MAX_USER) g_game_ID++;
 				}
