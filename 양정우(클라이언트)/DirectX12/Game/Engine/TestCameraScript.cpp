@@ -259,14 +259,14 @@ void TestCameraScript::LateUpdate()
 	shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
 	if (overlap_blade != NULL)
 	{
-		isCrushed = true;
-		std::cout << "You Died!" << std::endl;
+		//isCrushed = true;
+		// 
+		// ºÐ¼â±âÄ®
 	}
 	else
 	{
-		isCrushed = false;
+		//isCrushed = false;
 
-		std::cout << "---------" << std::endl;
 	}
 
 
