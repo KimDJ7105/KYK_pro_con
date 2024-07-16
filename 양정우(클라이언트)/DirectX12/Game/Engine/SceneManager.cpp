@@ -23,6 +23,7 @@
 #include "Animator.h"
 #include "BladeRotateScript.h"
 #include "CrusherScript.h"
+#include "ButtonScript.h"
 
 #include "ObjectManager.h"
 
@@ -464,6 +465,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
+		sphere->AddComponent(make_shared<ButtonScript>());
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
@@ -474,7 +476,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_HEIGHT * 0.05, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -490,6 +492,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
+		//sphere->AddComponent(make_shared<ButtonScript>());
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
@@ -1357,23 +1360,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			}
 		}
 
-
-		//{
-		//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player_Gun1\\test01.fbx");
-		//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetName(L"Player_Gun");
-		//		gameObject->SetCheckFrustum(false);
-		//		gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
-		//		gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
-		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 1.57f, 0.f));
-		//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-		//		scene->AddGameObject(gameObject);
-		//		//gameObject->AddComponent(make_shared<TestDragon>());
-		//	}
-		//}
 	}
 #pragma endregion
 
@@ -1516,6 +1502,24 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
+
+
+	{
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Exit.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"Exit");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
 
 	return mainGameScene;
 }
@@ -2524,7 +2528,28 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
+	else if (object_type == OT_EXIT)
+	{
+		roomPos.y += 5.f;
 
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Exit.bin");
+
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"Exit");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(roomPos));
+			gameObject->GetTransform()->SetLocalScale(Vec3(50.f, 50.f, 50.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
+
+			gameObject->GetTransform()->SetObjectType(object_type);
+			gameObject->GetTransform()->SetObjectID(object_ID);
+
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
 }
 
 void SceneManager::CreateMap(float mapX, float mapY, float mapZ, float aisleScale, int type, int ID)
