@@ -260,8 +260,11 @@ void TestCameraScript::LateUpdate()
 	if (overlap_blade != NULL)
 	{
 		//isCrushed = true;
-		// 
-		// ºĞ¼â±âÄ®
+		cs_packet_hit_by_grinder hbg;
+		hbg.type = CS_HIT_BY_GRINDER;
+		hbg.size = sizeof(cs_packet_hit_by_grinder);
+
+		main_session->Send_Packet(&hbg);
 	}
 	else
 	{
