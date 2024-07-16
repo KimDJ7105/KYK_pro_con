@@ -21,6 +21,9 @@ private:
 
 	bool spawn_able[40];
 	bool room_spawn_able[25];
+
+	int rabbitfoot_owner_id;
+
 private :
 	int GetNewObjectID();
 
@@ -40,6 +43,8 @@ public:
 
 	int get_game_id();
 
+	void set_rabbitfoot_owner(int id);
+	int get_rabbitfoot_owner();
 public:
 
 	unordered_map<int, std::shared_ptr<SESSION>> ingame_player;    //게임에 포함된 플레이어를 저장하는 컨테이너

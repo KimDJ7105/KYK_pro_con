@@ -72,6 +72,7 @@
 #define CS_MOVE_KEY_UP        9
 #define CS_TRY_GET_RABBITFOOT 10
 #define CS_SET_LASER_TRAP     11
+#define CS_TRY_ESCAPE		  12
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -182,6 +183,11 @@ struct cs_packet_set_laser_trap {
 	BYTE size;
 	BYTE type;
 	int room_num;
+};
+
+struct cs_packet_try_escape {
+	BYTE size;
+	BYTE type;
 };
 
 //---------Server To Client-----------------

@@ -10,7 +10,7 @@ GAME::GAME(int id)
 {
 	game_id = id;
 	team_num = 0;
-	std::cout << game_id << "번 게임 " << "카드키, 터미널 생성 완료\n";
+	rabbitfoot_owner_id = -1;
 
 	std::fill(std::begin(spawn_able), std::end(spawn_able), false);
 	std::fill(std::begin(room_spawn_able), std::end(room_spawn_able), false);
@@ -38,6 +38,8 @@ GAME::GAME(int id)
 	CreateObject(OT_GRINDER, 2400.f, 0.f, 2400.f, 0.f, -1.57f, 0.f);
 	CreateObject(OT_GRINDER, 2400.f, 0.f, 0.f, 0.f, 0.f, 0.f);
 	CreateObject(OT_GRINDER, 0.f, 0.f, 0.f, 0.f, 1.57f, 0.f);
+
+	std::cout << game_id << "번 게임 " << "초기 오브젝트 생성완료\n";
 }
 
 int GAME::GetNewObjectID()
@@ -148,4 +150,14 @@ int GAME::select_room_pos()
 int GAME::get_game_id()
 {
 	return game_id;
+}
+
+void GAME::set_rabbitfoot_owner(int id)
+{
+	rabbitfoot_owner_id = id;
+}
+
+int GAME::get_rabbitfoot_owner()
+{
+	return rabbitfoot_owner_id;
 }

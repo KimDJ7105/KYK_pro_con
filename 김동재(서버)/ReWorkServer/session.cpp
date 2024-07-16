@@ -326,6 +326,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "Åä³¢¹ß È¹µæ ¿äÃ» ¼ö½Å\n";
 		foot->owner_id = my_id_;
+		my_game->set_rabbitfoot_owner(my_id_);
 
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
@@ -335,6 +336,12 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			p.second->Send_Packet(&rmp);
+		}
+		break;
+	}
+	case CS_TRY_ESCAPE: {
+		if (my_game->get_rabbitfoot_owner() == my_id_) {
+			//Å»Ãâ ¼º°ø
 		}
 		break;
 	}
