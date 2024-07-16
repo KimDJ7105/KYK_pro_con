@@ -239,7 +239,7 @@ void TestCameraScript::LateUpdate()
 			packet.size = sizeof(cs_packet_pos_info);
 			packet.type = CS_POS_INFO;
 			packet.x = currentPosition.x;
-			packet.y = currentPosition.y;
+			packet.y = currentPosition.y - 40.f;
 			packet.z = currentPosition.z;
 
 			main_session->Send_Packet(&packet);
@@ -722,7 +722,7 @@ void TestCameraScript::RotationUpdate()
 		mi.size = sizeof(cs_packet_mouse_info);
 		mi.type = CS_MOUSE_INFO;
 		mi.x = rotation.x;
-		mi.y = rotation.y;
+		mi.y = rotation.y + 3.14f;
 		mi.z = 0.0f;
 
 		main_session->Send_Packet(&mi);

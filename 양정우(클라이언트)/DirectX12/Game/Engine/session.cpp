@@ -51,7 +51,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
-		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz, p->animation_id);
+		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y, p->z, p->dirx, p->diry, p->dirz, p->animation_id);
 
 		_activeSessionScene->ChangeObjectAnimation(p->id, p->animation_id);
 		break;
