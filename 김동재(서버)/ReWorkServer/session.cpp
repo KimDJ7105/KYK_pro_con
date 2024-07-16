@@ -377,6 +377,12 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			player->Send_Packet(&rp);
 		}
 
+		if (my_id_ == my_game->get_rabbitfoot_owner()) {
+			//Åä³¢¹ßÀ» °¡ÁøÃ¤ Á×À¸¸é Åä³¢¹ßÀ» ¶³±Å¾ß ÇÔ
+			//±Ùµ¥ ÁÂÇ¥·Î ¶³±Åµµ ±¦ÂúÀºÁö Å¬¶ó¶û ´ëÈ­ ÇÊ¿ä
+			my_game->set_rabbitfoot_owner(-1);
+		}
+
 		sc_packet_player_lose pl;
 		pl.size = sizeof(sc_packet_player_lose);
 		pl.type = SC_PLAYER_LOSE;
