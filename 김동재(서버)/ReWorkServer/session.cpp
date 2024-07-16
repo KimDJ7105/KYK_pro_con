@@ -342,6 +342,23 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case CS_TRY_ESCAPE: {
 		if (my_game->get_rabbitfoot_owner() == my_id_) {
 			//Å»Ãâ ¼º°ø
+
+			sc_packet_player_win pw;
+			pw.size = sizeof(sc_packet_player_win);
+			pw.type = SC_PLAYER_WIN;
+
+			sc_packet_player_lose pl;
+			pl.size = sizeof(sc_packet_player_lose);
+			pl.type = SC_PLAYER_LOSE;
+
+			for (auto& p : my_game->ingame_player) {
+				auto& player = p.second;
+				if (player->team == team) {
+					player->Send_Packet(&pw);
+				}
+
+				else player->Send_Packet(&pl);
+			}
 		}
 		break;
 	}
