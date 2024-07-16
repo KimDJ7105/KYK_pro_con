@@ -616,6 +616,14 @@ void SESSION::start()
 		}
 	}
 
+	//-------------Test
+	TIMER_EVENT tm_grind;
+	tm_grind.event_id = EV_MOVE_GRINDER;
+	tm_grind.game_id = my_game->get_game_id();
+	tm_grind.target_id = -1;
+	tm_grind.wakeup_time = chrono::system_clock::now() + 5s;
+
+	my_server->timer_queue.emplace(tm_grind);
 }
 
 void SESSION::Send_Packet(void* packet)
