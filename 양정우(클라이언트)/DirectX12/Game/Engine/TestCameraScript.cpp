@@ -473,13 +473,17 @@ void TestCameraScript::LateUpdate()
 			tgr.obj_id = rabbitfoot->GetTransform()->GetObjectID();
 			
 			main_session->Send_Packet(&tgr);
-
-			//2024-07-06
-			//Åä³¢¹ßÀ» È¹µæ ½Ãµµ(¹æ½ÄÀº Ä«µåÅ°¿Í µ¿ÀÏ)
-			//Åä³¢¹ßÀ» È¹µæÇÏ¸é UIÀûÀ¸·Î Ç¥½Ã ÇÊ¿ä
-
+			
 			GET_SINGLE(SceneManager)->SetRabbitFootUI();
+		}
 
+		shared_ptr<GameObject> exit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_EXIT);
+
+		if (exit != NULL)
+		{
+			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+			
 		}
 	}
 	
