@@ -169,6 +169,7 @@
     <ClInclude Include="BinaryMeshData.h" />
     <ClInclude Include="BladeRotateScript.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="ButtonScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Component.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="BinaryMeshData.cpp" />
     <ClCompile Include="BladeRotateScript.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="ButtonScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="Component.cpp" />

@@ -23,6 +23,7 @@
 #include "Animator.h"
 #include "BladeRotateScript.h"
 #include "CrusherScript.h"
+#include "ButtonScript.h"
 
 #include "ObjectManager.h"
 
@@ -464,6 +465,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
+		sphere->AddComponent(make_shared<ButtonScript>());
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
@@ -474,7 +476,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_HEIGHT * 0.05, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -490,6 +492,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
+		//sphere->AddComponent(make_shared<ButtonScript>());
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
