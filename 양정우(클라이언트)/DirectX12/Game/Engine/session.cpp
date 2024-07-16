@@ -149,6 +149,12 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->CreateMapObjectsUI(p->obj_type, p->loc_type, p->approx_num);
 		break;
 	}
+	case SC_PLAYER_WIN: {
+		break;
+	}
+	case SC_PLAYER_LOSE: {
+		break;
+	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
 	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);
