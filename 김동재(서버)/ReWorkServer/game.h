@@ -45,6 +45,9 @@ public:
 
 	void set_rabbitfoot_owner(int id);
 	int get_rabbitfoot_owner();
+
+	bool is_free_room(int room_num);
+	void set_room_unable(int room_num);
 public:
 	int grind_core;
 
