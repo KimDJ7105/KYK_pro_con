@@ -1,4 +1,5 @@
 #pragma once
+#include "Scene.h"
 
 using std::shared_ptr;
 using std::wstring;
@@ -43,6 +44,12 @@ private:
 	shared_ptr<Scene> LoadLobbyScene();
 
 	shared_ptr<Scene> LoadEndingScene();
+
+	shared_ptr<Scene> mainGameScene = std::make_shared<Scene>();
+
+	shared_ptr<Scene> lobbyGameScene = std::make_shared<Scene>();
+
+	shared_ptr<Scene> endingGameScene = std::make_shared<Scene>();
 
 private:
 	shared_ptr<Scene> _activeScene;
@@ -129,5 +136,12 @@ public:
 
 
 	void RemoveSceneObject(shared_ptr<Scene> scene_erase);
+
+
+	shared_ptr<Scene> GetMainScene() { return mainGameScene; }
+
+	shared_ptr<Scene> GetLobbyScene() { return lobbyGameScene; }
+
+	shared_ptr<Scene> GetEndingScene() { return endingGameScene; }
 };
 

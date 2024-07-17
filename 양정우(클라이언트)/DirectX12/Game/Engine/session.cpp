@@ -150,9 +150,19 @@ void SESSION::Process_Packet(unsigned char* packet)
 		break;
 	}
 	case SC_PLAYER_WIN: {
+		//엔딩 씬을 불러오고
+		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+
+		//메인게임 씬의 오브젝트들을 제거한다
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 		break;
 	}
 	case SC_PLAYER_LOSE: {
+		//엔딩 씬을 불러오고
+		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+
+		//메인게임 씬의 오브젝트들을 제거한다
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 		break;
 	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기

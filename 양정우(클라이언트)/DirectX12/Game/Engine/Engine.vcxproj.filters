@@ -190,6 +190,9 @@
     <ClCompile Include="ButtonScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
+    <ClCompile Include="EndingCameraScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -347,6 +350,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="ButtonScript.h">
+      <Filter>Object\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="EndingCameraScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
   </ItemGroup>

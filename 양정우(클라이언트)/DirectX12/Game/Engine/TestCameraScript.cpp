@@ -42,7 +42,6 @@ void TestCameraScript::LateUpdate()
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
 
-	
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();

@@ -43,5 +43,7 @@ void LobbyCameraScript::LateUpdate()
 		main_session->do_connect(endpoint);
 
 		serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
+
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
 	}
 }

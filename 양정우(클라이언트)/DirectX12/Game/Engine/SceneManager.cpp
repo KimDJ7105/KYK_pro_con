@@ -24,6 +24,7 @@
 #include "BladeRotateScript.h"
 #include "CrusherScript.h"
 #include "ButtonScript.h"
+#include "EndingCameraScript.h"
 
 #include "ObjectManager.h"
 
@@ -31,11 +32,6 @@
 
 
 
-shared_ptr<Scene> mainGameScene = std::make_shared<Scene>();
-
-shared_ptr<Scene> lobbyGameScene = std::make_shared<Scene>();
-
-shared_ptr<Scene> endingGameScene = std::make_shared<Scene>();
 
 std::vector<MyGameObject> vp_ObjectManager;
 
@@ -263,6 +259,8 @@ shared_ptr<Scene> SceneManager::LoadEndingScene()
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+
+		camera->AddComponent(make_shared<EndingCameraScript>());
 
 		endingGameScene->AddGameObject(camera);
 	}
