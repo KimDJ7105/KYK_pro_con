@@ -42,7 +42,6 @@ void TestCameraScript::LateUpdate()
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
 
-	
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -239,7 +238,7 @@ void TestCameraScript::LateUpdate()
 			packet.size = sizeof(cs_packet_pos_info);
 			packet.type = CS_POS_INFO;
 			packet.x = currentPosition.x;
-			packet.y = currentPosition.y;
+			packet.y = currentPosition.y - 40.f;
 			packet.z = currentPosition.z;
 
 			main_session->Send_Packet(&packet);
@@ -256,7 +255,29 @@ void TestCameraScript::LateUpdate()
 	}
 
 
-	
+	shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
+	if (overlap_blade != NULL)
+	{
+		//isCrushed = true;
+		cs_packet_hit_by_grinder hbg;
+		hbg.type = CS_HIT_BY_GRINDER;
+		hbg.size = sizeof(cs_packet_hit_by_grinder);
+
+		main_session->Send_Packet(&hbg);
+	}
+	else
+	{
+		//isCrushed = false;
+
+	}
+
+
+
+
+
+
+
+
 	if (INPUT->GetButton(KEY_TYPE::P))
 	{
 		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
@@ -473,13 +494,21 @@ void TestCameraScript::LateUpdate()
 			tgr.obj_id = rabbitfoot->GetTransform()->GetObjectID();
 			
 			main_session->Send_Packet(&tgr);
-
-			//2024-07-06
-			//토끼발을 획득 시도(방식은 카드키와 동일)
-			//토끼발을 획득하면 UI적으로 표시 필요
-
+			
 			GET_SINGLE(SceneManager)->SetRabbitFootUI();
+		}
 
+		shared_ptr<GameObject> exit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_EXIT);
+
+		if (exit != NULL)
+		{
+			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+			cs_packet_try_escape te;
+			te.size = sizeof(cs_packet_try_escape);
+			te.type = CS_TRY_ESCAPE;
+
+			main_session->Send_Packet(&te);
 		}
 	}
 	
@@ -502,12 +531,20 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::T))
 	{
-		std::cout << "test go on\n";
+		/*std::cout << "test go on\n";
 		test_packet tp;
 		tp.size = sizeof(test_packet);
 		tp.type = TEST_SPAWN_RBF;
 
-		main_session->Send_Packet(&tp);
+		main_session->Send_Packet(&tp);*/
+
+		main_session->close_socket();
+
+		//엔딩 씬을 불러오고
+		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+
+		//메인게임 씬의 오브젝트들을 제거한다
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 	}
 	
 	if (INPUT->GetButtonDown(KEY_TYPE::M))
@@ -714,7 +751,7 @@ void TestCameraScript::RotationUpdate()
 		mi.size = sizeof(cs_packet_mouse_info);
 		mi.type = CS_MOUSE_INFO;
 		mi.x = rotation.x;
-		mi.y = rotation.y;
+		mi.y = rotation.y + 3.14f;
 		mi.z = 0.0f;
 
 		main_session->Send_Packet(&mi);

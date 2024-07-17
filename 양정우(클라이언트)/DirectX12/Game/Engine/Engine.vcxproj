@@ -169,6 +169,7 @@
     <ClInclude Include="BinaryMeshData.h" />
     <ClInclude Include="BladeRotateScript.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="ButtonScript.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Component.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="CrusherScript.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="Device.h" />
+    <ClInclude Include="EndingCameraScript.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="FBXLoader.h" />
@@ -223,12 +225,14 @@
     <ClCompile Include="BinaryMeshData.cpp" />
     <ClCompile Include="BladeRotateScript.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="ButtonScript.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="CrusherScript.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="EndingCameraScript.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="FBXLoader.cpp" />

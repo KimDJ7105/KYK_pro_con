@@ -28,8 +28,8 @@ void SERVER::do_accept()
 
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
 					games[g_game_ID]->ingame_player[p_id]->set_mygame(games[g_game_ID]);
-					games[g_game_ID]->ingame_player[p_id]->start();
 					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
+					games[g_game_ID]->ingame_player[p_id]->start();
 
 					if (games[g_game_ID]->ingame_player.size() > MAX_USER) g_game_ID++;
 				}
@@ -76,28 +76,85 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			}
 
 			switch (ev.event_id) {
-			case EV_LASER_TRAP: {
+			case EV_LASER_TRAP_ON: {
 				//target_id는 방 번호
 				break;
 			}
 			case EV_MOVE_GRINDER: {
-				//target_id는 방향 (정방향 / 역방향)
+				for (auto& object : games[ev.game_id]->ingame_object) {
+					auto& obj = object.second;
+					if (obj->obj_type != OT_GRINDER) continue;
+
+					switch (obj->way) {
+					case WAY_UP :
+						obj->pos[2] += 10.0f;
+						if (obj->pos[2] >= 2400.0f) {
+							obj->way = WAY_DOWN;
+							obj->rot[1] = 3.14f;
+						}
+						break;
+					case WAY_DOWN:
+						obj->pos[2] -= 10.0f;
+						if (obj->pos[2] <= 0.0f) {
+							obj->way = WAY_UP;
+							obj->rot[1] = 0.0f;
+						}
+						break;
+					case WAY_LEFT:
+						obj->pos[0] -= 10.0f;
+						if (obj->pos[0] <= 0.0f) {
+							obj->way = WAY_RIGHT;
+							obj->rot[1] = 1.57f;
+						}
+						break;
+					case WAY_RIGHT:
+						obj->pos[0] += 10.0f;
+						if (obj->pos[0] >= 2400.0f) {
+							obj->way = WAY_LEFT;
+							obj->rot[1] = -1.57f;
+						}
+						break;
+					}
+					
+					sc_packet_pos grinder_pos;
+					grinder_pos.size = sizeof(sc_packet_pos);
+					grinder_pos.type = SC_POS;
+					grinder_pos.id = obj->obj_id;
+					grinder_pos.x = obj->pos[0];
+					grinder_pos.y = obj->pos[1];
+					grinder_pos.z = obj->pos[2];
+					grinder_pos.dirx = obj->rot[0];
+					grinder_pos.diry = obj->rot[1];
+					grinder_pos.dirz = obj->rot[2];
+					grinder_pos.animation_id = -1;
+
+					for (auto& players : games[ev.game_id]->ingame_player) {
+						players.second->Send_Packet(&grinder_pos);
+					}
+				}
+
+				TIMER_EVENT tm_grind;
+				tm_grind.event_id = EV_MOVE_GRINDER;
+				tm_grind.game_id = ev.game_id;
+				tm_grind.target_id = -1;
+				tm_grind.wakeup_time = chrono::system_clock::now() + 50ms;
+
+				timer_queue.emplace(tm_grind);
+
 				break;
 			}
 			case EV_SPAWN_EXIT: {
-				for (int i = 0; i < 3; i++) {
-					auto& exit = games[ev.game_id]->CreateObjectApprox(OT_EXIT);
+				auto& exit = games[ev.game_id]->CreateObjectApprox(OT_EXIT);
 
-					sc_packet_put_object_pos pop;
-					pop.type = SC_PUT_OBJECT_POS;
-					pop.size = sizeof(sc_packet_put_object_pos);
-					pop.obj_type = exit->obj_type;
-					pop.id = exit->obj_id;
-					pop.approx_num = exit->spawn_num;
+				sc_packet_put_object_pos pop;
+				pop.type = SC_PUT_OBJECT_POS;
+				pop.size = sizeof(sc_packet_put_object_pos);
+				pop.obj_type = exit->obj_type;
+				pop.id = exit->obj_id;
+				pop.approx_num = exit->spawn_num;
 
-					for (auto& player : games[ev.game_id]->ingame_player) {
-						player.second->Send_Packet(&pop);
-					}
+				for (auto& player : games[ev.game_id]->ingame_player) {
+					player.second->Send_Packet(&pop);
 				}
 
 				std::cout << "Exit Spawned\n";

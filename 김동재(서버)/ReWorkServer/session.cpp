@@ -233,6 +233,14 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					p.second->Send_Packet(&pop);
 				}
 
+				TIMER_EVENT tm_grind;
+				tm_grind.event_id = EV_MOVE_GRINDER;
+				tm_grind.game_id = my_game->get_game_id();
+				tm_grind.target_id = -1;
+				tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+
+				my_server->timer_queue.emplace(tm_grind);
+
 				TIMER_EVENT tm_exit;
 				tm_exit.event_id = EV_SPAWN_EXIT;
 				tm_exit.game_id = my_game->get_game_id();
@@ -326,6 +334,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "Åä³¢¹ß È¹µæ ¿äÃ» ¼ö½Å\n";
 		foot->owner_id = my_id_;
+		my_game->set_rabbitfoot_owner(my_id_);
 
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
@@ -338,19 +347,82 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
-	case TEST_SPAWN_RBF: { //test for rabbitfoot
-		auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+	case CS_TRY_ESCAPE: {
+		if (my_game->get_rabbitfoot_owner() == my_id_) {
+			//Å»Ãâ ¼º°ø
 
-		sc_packet_put_object_pos pop;
-		pop.size = sizeof(sc_packet_put_object_pos);
-		pop.type = SC_PUT_OBJECT_POS;
-		pop.id = rabbitfoot->obj_id;
-		pop.obj_type = rabbitfoot->obj_type;
-		pop.approx_num = rabbitfoot->spawn_num;
+			sc_packet_player_win pw;
+			pw.size = sizeof(sc_packet_player_win);
+			pw.type = SC_PLAYER_WIN;
+
+			sc_packet_player_lose pl;
+			pl.size = sizeof(sc_packet_player_lose);
+			pl.type = SC_PLAYER_LOSE;
+
+			for (auto& p : my_game->ingame_player) {
+				auto& player = p.second;
+				if (player->team == team) {
+					player->Send_Packet(&pw);
+				}
+
+				else player->Send_Packet(&pl);
+			}
+		}
+		break;
+	}
+	case CS_HIT_BY_GRINDER :
+	{
+		sc_packet_remove_player rp;
+		rp.size = sizeof(sc_packet_remove_player);
+		rp.type = SC_REMOVE_PLAYER;
+		rp.id = my_id_;
+		rp.obj_type = OT_PLAYER;
 
 		for (auto& p : my_game->ingame_player) {
-			p.second->Send_Packet(&pop);
+			auto& player = p.second;
+			if (player->my_id_ == my_id_) continue;
+
+			player->Send_Packet(&rp);
 		}
+
+		if (my_id_ == my_game->get_rabbitfoot_owner()) {
+			//Åä³¢¹ßÀ» °¡ÁøÃ¤ Á×À¸¸é Åä³¢¹ßÀ» ¶³±Å¾ß ÇÔ
+			//±Ùµ¥ ÁÂÇ¥·Î ¶³±Åµµ ±¦ÂúÀºÁö Å¬¶ó¶û ´ëÈ­ ÇÊ¿ä
+			my_game->set_rabbitfoot_owner(-1);
+		}
+
+		sc_packet_player_lose pl;
+		pl.size = sizeof(sc_packet_player_lose);
+		pl.type = SC_PLAYER_LOSE;
+
+		Send_Packet(&pl);
+
+		break;
+	}
+	case CS_TRIGGER_LASER: {
+		cs_packet_trigger_laser* p = (cs_packet_trigger_laser*)packet;
+
+		if (my_game->is_free_room(p->room_num)) {
+			my_game->set_room_unable(p->room_num);
+
+			TIMER_EVENT tm_laser;
+			tm_laser.event_id = EV_LASER_TRAP_ON;
+			tm_laser.game_id = my_game->get_game_id();
+			tm_laser.target_id = p->room_num;
+			tm_laser.wakeup_time = chrono::system_clock::now() + 3ms;
+
+			my_server->timer_queue.emplace(tm_laser);
+		}
+	}
+	case TEST_SPAWN_RBF: { //test
+		//-------------Test
+		TIMER_EVENT tm_grind;
+		tm_grind.event_id = EV_MOVE_GRINDER;
+		tm_grind.game_id = my_game->get_game_id();
+		tm_grind.target_id = -1;
+		tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+
+		my_server->timer_queue.emplace(tm_grind);
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
@@ -592,6 +664,7 @@ void SESSION::start()
 		}
 	}
 
+	
 }
 
 void SESSION::Send_Packet(void* packet)

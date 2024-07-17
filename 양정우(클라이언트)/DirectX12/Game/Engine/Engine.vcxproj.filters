@@ -187,6 +187,12 @@
     <ClCompile Include="Quaternion.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="ButtonScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="EndingCameraScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -342,6 +348,12 @@
     </ClInclude>
     <ClInclude Include="Quaternion.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonScript.h">
+      <Filter>Object\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="EndingCameraScript.h">
+      <Filter>Object\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

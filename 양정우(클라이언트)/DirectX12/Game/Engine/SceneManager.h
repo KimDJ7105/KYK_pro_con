@@ -1,4 +1,5 @@
 #pragma once
+#include "Scene.h"
 
 using std::shared_ptr;
 using std::wstring;
@@ -25,6 +26,8 @@ public:
 
 	void LoadLobbyScene(std::wstring sceneName);
 
+	void LoadEndingGameScene(std::wstring sceneName);
+
 	void SetLayerName(uint8 index, const wstring& name);
 	const wstring& IndexToLayerName(uint8 index) { return _layerNames[index]; }
 	uint8 LayerNameToIndex(const wstring& name);
@@ -39,6 +42,14 @@ private:
 	shared_ptr<Scene> LoadTestScene();
 
 	shared_ptr<Scene> LoadLobbyScene();
+
+	shared_ptr<Scene> LoadEndingScene();
+
+	shared_ptr<Scene> mainGameScene = std::make_shared<Scene>();
+
+	shared_ptr<Scene> lobbyGameScene = std::make_shared<Scene>();
+
+	shared_ptr<Scene> endingGameScene = std::make_shared<Scene>();
 
 private:
 	shared_ptr<Scene> _activeScene;
@@ -119,11 +130,27 @@ public:
 
 	void SetPlayerLocation(float x, float y, float z, float dirx, float diry, float dirz);
 
-	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz);
+	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz, int crusher_id);
 
 	void CreateCrusherBlade(int object_ID, float object_size, int blade_num, Vec3 crusherPos);
 
+
+	void RemoveSceneObject(shared_ptr<Scene> scene_erase);
+
+
+	shared_ptr<Scene> GetMainScene() { return mainGameScene; }
+
+	shared_ptr<Scene> GetLobbyScene() { return lobbyGameScene; }
+
+	shared_ptr<Scene> GetEndingScene() { return endingGameScene; }
+
 private:
-	int crusher_id = 1;
+	int button_type = -1;
+	int button_id = -1;
+
+public:
+	void SetButton(int btn_type, int btn_id);
+	int GetButtonType() { return button_type; }
+	int GetButtonID() { return button_id; }
 };
 

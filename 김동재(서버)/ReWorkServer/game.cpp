@@ -10,7 +10,8 @@ GAME::GAME(int id)
 {
 	game_id = id;
 	team_num = 0;
-	std::cout << game_id << "번 게임 " << "카드키, 터미널 생성 완료\n";
+	rabbitfoot_owner_id = -1;
+	grind_core = 0;
 
 	std::fill(std::begin(spawn_able), std::end(spawn_able), false);
 	std::fill(std::begin(room_spawn_able), std::end(room_spawn_able), false);
@@ -34,10 +35,12 @@ GAME::GAME(int id)
 	CreateObjectApprox_nr(OT_RESURRECTION_PAD, 22);
 
 	//분쇄기 생성
-	CreateObject(OT_GRINDER, 0.f, 0.f, 2400.0f, 0.f, 3.14f, 0.f);
-	CreateObject(OT_GRINDER, 2400.f, 0.f, 2400.f, 0.f, -1.57f, 0.f);
-	CreateObject(OT_GRINDER, 2400.f, 0.f, 0.f, 0.f, 0.f, 0.f);
-	CreateObject(OT_GRINDER, 0.f, 0.f, 0.f, 0.f, 1.57f, 0.f);
+	CreateObject(OT_GRINDER, 0.f, 0.f, 2400.0f, -1.57f, 3.14f, 0.f, WAY_DOWN);
+	CreateObject(OT_GRINDER, 2400.f, 0.f, 2400.f, -1.57f, -1.57f, 0.f, WAY_LEFT);
+	CreateObject(OT_GRINDER, 2400.f, 0.f, 0.f, -1.57f, 0.f, 0.f, WAY_UP);
+	CreateObject(OT_GRINDER, 0.f, 0.f, 0.f, -1.57f, 1.57f, 0.f, WAY_RIGHT);
+
+	std::cout << game_id << "번 게임 " << "초기 오브젝트 생성완료\n";
 }
 
 int GAME::GetNewObjectID()
@@ -80,7 +83,7 @@ std::shared_ptr<OBJECT>& GAME::CreateObjectApprox_nr(int obj_type, int approx_po
 	return ingame_object[o_id];
 }
 
-std::shared_ptr<OBJECT>& GAME::CreateObject(int obj_type, float x, float y, float z, float dir_x, float dir_y, float dir_z)
+std::shared_ptr<OBJECT>& GAME::CreateObject(int obj_type, float x, float y, float z, float dir_x, float dir_y, float dir_z, int way)
 {
 	int o_id = GetNewObjectID();
 	ingame_object[o_id] = std::make_shared<OBJECT>(o_id, obj_type);
@@ -92,6 +95,8 @@ std::shared_ptr<OBJECT>& GAME::CreateObject(int obj_type, float x, float y, floa
 	ingame_object[o_id]->rot[0] = dir_x;
 	ingame_object[o_id]->rot[1] = dir_y;
 	ingame_object[o_id]->rot[2] = dir_z;
+
+	ingame_object[o_id]->way = way;
 
 	return ingame_object[o_id];
 }
@@ -148,4 +153,24 @@ int GAME::select_room_pos()
 int GAME::get_game_id()
 {
 	return game_id;
+}
+
+void GAME::set_rabbitfoot_owner(int id)
+{
+	rabbitfoot_owner_id = id;
+}
+
+int GAME::get_rabbitfoot_owner()
+{
+	return rabbitfoot_owner_id;
+}
+
+bool GAME::is_free_room(int room_num)
+{
+	return room_spawn_able[room_num];
+}
+
+void GAME::set_room_unable(int room_num)
+{
+	room_spawn_able[room_num] = true;
 }

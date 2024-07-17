@@ -23,6 +23,9 @@ public:
 	virtual Vec3 GetMinPoint();
 	virtual Vec3 GetMaxPoint();
 
+
+	virtual void LateUpdate() override;
+
 private:
 	// Local ±‚¡ÿ
 	Vec3		_center = Vec3(0, 0, 0);

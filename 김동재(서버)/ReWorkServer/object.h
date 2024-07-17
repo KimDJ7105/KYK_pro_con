@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
+enum{WAY_UP, WAY_DOWN, WAY_LEFT, WAY_RIGHT};
 class OBJECT
 {
 public :
@@ -9,6 +10,8 @@ public :
 	int owner_id;
 
 	int spawn_num;
+
+	int way;
 
 	std::array<float, 3> pos;
 	std::array<float, 3> rot;

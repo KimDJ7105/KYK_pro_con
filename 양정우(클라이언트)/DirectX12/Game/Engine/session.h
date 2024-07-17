@@ -39,6 +39,8 @@ public:
 
 	bool get_isMapOpen();
 
+	void close_socket();
+
 };
 
 void MoveSession(tcp::socket& sock);

@@ -51,32 +51,27 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전
 	{
 		sc_packet_pos* p = reinterpret_cast<sc_packet_pos*>(packet);
-		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y - 40.f, p->z, p->dirx, p->diry + 3.14f, p->dirz, p->animation_id);
-		//p->animation_id 로 애니메이션 설정 가능
-
-		//마우스이동을 할때는 -1값이다.
-		//움직임이 감지되었을때는 p->animation_id로 셋해주면 된다.
+		_activeSessionScene->ChangeObjectMovement(p->id, p->x, p->y, p->z, p->dirx, p->diry, p->dirz, p->animation_id);
 
 		_activeSessionScene->ChangeObjectAnimation(p->id, p->animation_id);
 		break;
 	}
-	case SC_REMOVE_PLAYER :
+	case SC_REMOVE_PLAYER : //p->id 와 같은 id를 가진 물체 삭제 (플레이어, 오브젝트)
 	{
 		sc_packet_remove_player* p = reinterpret_cast<sc_packet_remove_player*>(packet);
-		//p->id 와 같은 id를 가진 물체 삭제 (플레이어, 오브젝트)
+		
 		_activeSessionScene->RemoveObject(p->obj_type, p->id);
 		break;
 	}
-	case SC_APPLY_DAMAGE :
+	case SC_APPLY_DAMAGE : //데미지를 자신한테 적용하는 패킷
 	{		
 		sc_packet_apply_damage* p = reinterpret_cast<sc_packet_apply_damage*>(packet);
-		//데미지를 자신한테 적용하는 패킷
-
+		
 		_activeSessionScene->CalculateHP(p->hp);
 
 		break;
 	}
-	case SC_PLAYER_DEAD :
+	case SC_PLAYER_DEAD : //플레이어 사망
 	{
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
 
@@ -89,53 +84,38 @@ void SESSION::Process_Packet(unsigned char* packet)
 		}
 		break;
 	}
-	case SC_PUT_OBJECT :
+	case SC_PUT_OBJECT ://오브젝트를 복도에 생성
 	{
 		sc_packet_put_object* p = reinterpret_cast<sc_packet_put_object*>(packet);
 
 		_activeSessionScene->CreateGameObject(p->approx_num, p->obj_type, p->id);
-		//x, y, z 값은 p->approx_pos(복도 번호) 를 통해서 구하기
-		
 		break;
 	}
 	case SC_PUT_OBJECT_POS : //방에 오브젝트 생성
 	{
 		sc_packet_put_object_pos* p = reinterpret_cast<sc_packet_put_object_pos*>(packet);
-		//2024-07-06
-		//방에 오브젝트를 생성하라는 패킷
-		//p->obj_type이 오브젝트 타입
-		//p->approx_num이 방 번호를 의미
-		//방 번호에 관해서는 논의 필요
-		//클라가 할 일 : 토끼발 오브젝트를 해당 방 중앙에 생성
+		
 		_activeSessionScene->CreateGameObject(p->approx_num, p->obj_type, p->id);
 		break;
 	}
 	case SC_PUT_OBJECT_COOR : //특정 좌표에 오브젝트 생성
 	{
 		sc_packet_put_object_coor* p = reinterpret_cast<sc_packet_put_object_coor*>(packet);
-		//p->x p->y, p->z ,p->dirx, p->diry, p->dirz
-		//xyz는 위치 좌표, dirxyz는 로테이션
-
-
-		_activeSessionScene->CreateCrusher(p->x, p->y, p->z, p->dirx - 1.57f, p->diry, p->dirz);
+		_activeSessionScene->CreateCrusher(p->x, p->y, p->z, p->dirx, p->diry, p->dirz, p->obj_id);
 
 		break;
 	}
-	case SC_MODIFY_BULLET :
+	case SC_MODIFY_BULLET : //총알 개수 편집
 	{
 		sc_packet_modify_bullet* p = reinterpret_cast<sc_packet_modify_bullet*>(packet);
-		//총알 개수를 바꾸는 패킷임.
-		//ui 최신화
 
 		_activeSessionScene->CalculateBullet(p->amount);
 		break;
 	}
-	case SC_SHOW_MAP :
+	case SC_SHOW_MAP : //맵 출력 or 맵 끄기
 	{
 		sc_packet_show_map* p = reinterpret_cast<sc_packet_show_map*>(packet);
-		//map ui를  띄우면 됨
-		//if(맵이 안떠있으면) 맵 띄우기
-		//else 맵 지우기
+		
 		if (!isMapOpen)
 		{
 			isMapOpen = true;
@@ -149,34 +129,48 @@ void SESSION::Process_Packet(unsigned char* packet)
 		}
 		break;
 	}
-	case SC_SET_ANIMATION :
+	case SC_SET_ANIMATION : // 애니메이션 설정
 	{
 		sc_packet_set_animation* p = reinterpret_cast<sc_packet_set_animation*>(packet);
-		//p->obj_id / p->animation_id
-		//obj_id 오브젝트의 animation 설정
-
+		
 		_activeSessionScene->ChangeObjectAnimation(p->obj_id, p->animation_id);
 		break;
 	}
-	case SC_CARD_USED :
+	case SC_CARD_USED : //카드 하나 사용
 	{
-		//여기서 카드 UI 하나 지우면 됨
 		_activeSessionScene->SetKeyCardPosition(-1111111111111, -111111111111111, haveKeycard);
 		haveKeycard++;
 		break;
 	}
-	case SC_SHOW_OBJECT_LOC : 
+	case SC_SHOW_OBJECT_LOC :  //맵에 오브젝트 위치 표시
 	{
 		sc_packet_show_object_loc* p = reinterpret_cast<sc_packet_show_object_loc*>(packet);
-		//터미널 사용시 오브젝트의 위치를 알려주는 패킷
-		//패킷 정보를 보고 화면의 알맞은 위치에 오브젝트 별 아이콘을 그려주면 된다.
-		//p->obj_type;은 오브젝트의 타입
-		//p->loc_type;은 오브젝트의 위치 기준에 대한 정보 (OT_CORRIDOR == 복도 / OT_ROOM == 방)
-		//p->approx_num;는 오브젝트의 위치 번호(방 혹은 복도 번호)
+		
 		_activeSessionScene->CreateMapObjectsUI(p->obj_type, p->loc_type, p->approx_num);
 		break;
 	}
-	case LC_SET_SERVER_INFO: {
+	case SC_PLAYER_WIN: {
+		main_session->close_socket();
+
+		//엔딩 씬을 불러오고
+		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+
+		//메인게임 씬의 오브젝트들을 제거한다
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
+		break;
+	}
+	case SC_PLAYER_LOSE: {
+		main_session->close_socket();
+		
+		//엔딩 씬을 불러오고
+		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+
+		//메인게임 씬의 오브젝트들을 제거한다
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
+		break;
+	}
+	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
+	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);
 
 		strcpy_s(main_server_ip, p->ip);
@@ -281,6 +275,11 @@ bool SESSION::get_moving()
 bool SESSION::get_isMapOpen()
 {
 	return isMapOpen;
+}
+
+void SESSION::close_socket()
+{
+	sock.close();
 }
 
 SESSION* session;
