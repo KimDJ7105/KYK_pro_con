@@ -50,4 +50,14 @@ void LobbyCameraScript::LateUpdate()
 
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
 	}
+
+	if(INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
+	{
+
+		std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
+		std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
+
+		
+	}
+
 }

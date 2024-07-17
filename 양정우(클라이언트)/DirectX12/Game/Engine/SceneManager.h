@@ -143,5 +143,14 @@ public:
 	shared_ptr<Scene> GetLobbyScene() { return lobbyGameScene; }
 
 	shared_ptr<Scene> GetEndingScene() { return endingGameScene; }
+
+private:
+	int button_type = -1;
+	int button_id = -1;
+
+public:
+	void SetButton(int btn_type, int btn_id);
+	int GetButtonType() { return button_type; }
+	int GetButtonID() { return button_id; }
 };
 

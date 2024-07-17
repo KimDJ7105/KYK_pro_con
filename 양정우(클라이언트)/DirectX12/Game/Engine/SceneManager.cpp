@@ -582,6 +582,10 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(8282);
+		sphere->GetTransform()->SetObjectID(6974);
+
 		sphere->AddComponent(make_shared<ButtonScript>());
 
 		lobbyGameScene->AddGameObject(sphere);
@@ -1721,6 +1725,12 @@ void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
 			continue;
 		scene_erase->RemoveGameObject(gameObject);
 	}
+}
+
+void SceneManager::SetButton(int btn_type, int btn_id)
+{
+	button_type = btn_type;
+	button_id = btn_id;
 }
 
 void SceneManager::RemoveMapUI()

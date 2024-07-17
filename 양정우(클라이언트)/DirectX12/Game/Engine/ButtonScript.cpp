@@ -41,21 +41,23 @@ void ButtonScript::LateUpdate()
     // Print mouse click position
     if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
     {
-        std::cout << "마우스 클릭의 X좌표 : " << nowMousePos.x << std::endl;
+        /*std::cout << "마우스 클릭의 X좌표 : " << nowMousePos.x << std::endl;
         std::cout << "마우스 클릭의 Y좌표 : " << nowMousePos.y << std::endl;
 
         std::cout << "버튼의 스크린 X좌표 : " << screenPos.x << std::endl;
-        std::cout << "버튼의 스크린 Y좌표 : " << screenPos.y << std::endl;
+        std::cout << "버튼의 스크린 Y좌표 : " << screenPos.y << std::endl;*/
 
         // Check if the mouse click is within the button boundaries
         if (nowMousePos.x >= left && nowMousePos.x <= right &&
             nowMousePos.y >= top && nowMousePos.y <= bottom)
         {
-            std::cout << "Button Clicked!" << std::endl;
+            //std::cout << "Button Clicked!" << std::endl;
+
+            GET_SINGLE(SceneManager)->SetButton(GetTransform()->GetObjectType(), GetTransform()->GetObjectID());
         }
         else
         {
-            std::cout << "Button not clicked!" << std::endl;
+            GET_SINGLE(SceneManager)->SetButton(-1, -1);
         }
     }
 }
