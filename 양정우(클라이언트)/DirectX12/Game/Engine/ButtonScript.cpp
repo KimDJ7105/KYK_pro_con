@@ -36,7 +36,7 @@ void ButtonScript::LateUpdate()
     float top = screenPos.y - halfHeight;
     float bottom = screenPos.y + halfHeight;
 
-    nowMousePos.y += 100;
+    nowMousePos.y = nowMousePos.y * 1.1;
 
     // Print mouse click position
     if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
@@ -57,7 +57,7 @@ void ButtonScript::LateUpdate()
         }
         else
         {
-            GET_SINGLE(SceneManager)->SetButton(-1, -1);
+            //GET_SINGLE(SceneManager)->SetButton(-1, -1);
         }
     }
 }

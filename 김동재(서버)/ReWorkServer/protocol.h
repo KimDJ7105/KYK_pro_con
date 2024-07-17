@@ -51,6 +51,7 @@
 #define OT_PLAYER_CAMERA	112
 #define OT_CRUSHER			113
 #define OT_CRUSHER_BLADE	114
+#define OT_UI_MAP_BUTTON	115
 //---------------------------------------
 
 //Animation Type-------------------------

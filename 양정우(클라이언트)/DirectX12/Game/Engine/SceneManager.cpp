@@ -514,7 +514,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.02, WINDOW_WIDTH * 0.02, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0.f - 172.f * 2, 30.f - 64.25f * 3, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -523,7 +523,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_Keycard_MapICON.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -540,7 +540,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.01, WINDOW_WIDTH * 0.01, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.02, WINDOW_WIDTH * 0.02, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f + 64.25f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -549,7 +549,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\Console_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\PR_Console_MapICON.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -566,7 +566,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.04, WINDOW_WIDTH * 0.04, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(-344.f, - 227.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -575,7 +575,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\RevivePad_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\PR_RevivePad_MapICON.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -583,10 +583,10 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		sphere->AddComponent(meshRenderer);
 
-		sphere->GetTransform()->SetObjectType(8282);
+		/*sphere->GetTransform()->SetObjectType(8282);
 		sphere->GetTransform()->SetObjectID(6974);
 
-		sphere->AddComponent(make_shared<ButtonScript>());
+		sphere->AddComponent(make_shared<ButtonScript>());*/
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
@@ -597,7 +597,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_HEIGHT * 0.05, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.04, WINDOW_HEIGHT * 0.04, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -606,14 +606,46 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\PR_RabbitFoot_MapICON.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
-		//sphere->AddComponent(make_shared<ButtonScript>());
+		
+
+		lobbyGameScene->AddGameObject(sphere);
+	}
+
+
+
+	//Red_Square
+	for(int i = 0; i < 25; i++)
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.06, WINDOW_HEIGHT * 0.06, 500.f));
+		sphere->GetTransform()->SetLocalPosition(/*Vec3(0.f, 30.f, 500.f)*/CalculateMapUIPosition(i));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Red_Square", L"..\\Resources\\Texture\\Red_Square.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_MAP_BUTTON);
+		sphere->GetTransform()->SetObjectID(i);
+		sphere->AddComponent(make_shared<ButtonScript>());
 
 		lobbyGameScene->AddGameObject(sphere);
 	}
@@ -897,7 +929,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.05, WINDOW_HEIGHT * 0.05, 500.f));
 		sphere->GetTransform()->SetLocalPosition(Vec3(11111111111111111, 11111111111111111, 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -1157,7 +1189,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot_UI", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot_UI", L"..\\Resources\\Texture\\PR_Rabbitfoot_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -1867,7 +1899,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			shared_ptr<GameObject> sphere = make_shared<GameObject>();
 			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 			sphere->AddComponent(make_shared<Transform>());
-			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.02, WINDOW_WIDTH * 0.02, 500.f));
 			sphere->GetTransform()->SetLocalPosition(aislePos);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1876,7 +1908,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			}
 			{
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard", L"..\\Resources\\Texture\\PR_Keycard_MapICON.png");
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
 				material->SetTexture(0, texture);
@@ -1894,7 +1926,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			shared_ptr<GameObject> sphere = make_shared<GameObject>();
 			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 			sphere->AddComponent(make_shared<Transform>());
-			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.01, WINDOW_WIDTH * 0.01, 500.f));
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.02, WINDOW_WIDTH * 0.02, 500.f));
 			sphere->GetTransform()->SetLocalPosition(aislePos);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1903,7 +1935,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			}
 			{
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\Console_UI.png");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Console", L"..\\Resources\\Texture\\PR_Console_MapICON.png");
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
 				material->SetTexture(0, texture);
@@ -1926,7 +1958,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			shared_ptr<GameObject> sphere = make_shared<GameObject>();
 			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 			sphere->AddComponent(make_shared<Transform>());
-			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.04, WINDOW_WIDTH * 0.04, 500.f));
 			sphere->GetTransform()->SetLocalPosition(mapPos);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1935,7 +1967,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			}
 			{
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\RevivePad_UI.png");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RevivePad", L"..\\Resources\\Texture\\PR_RevivePad_MapICON.png");
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
 				material->SetTexture(0, texture);
@@ -1953,7 +1985,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			shared_ptr<GameObject> sphere = make_shared<GameObject>();
 			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 			sphere->AddComponent(make_shared<Transform>());
-			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.05, WINDOW_WIDTH * 0.05, 500.f));
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.04, WINDOW_WIDTH * 0.04, 500.f));
 			sphere->GetTransform()->SetLocalPosition(mapPos);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1962,7 +1994,7 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 			}
 			{
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\Rabbit_Foot_UI.png");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"RabbitFoot", L"..\\Resources\\Texture\\PR_RabbitFoot_MapICON.png");
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
 				material->SetTexture(0, texture);
