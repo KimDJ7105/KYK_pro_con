@@ -9,5 +9,8 @@ public:
 	virtual ~LobbyCameraScript();
 
 	virtual void LateUpdate() override;
+
+private:
+	shared_ptr<GameObject> cursor;
 };
 

@@ -3,6 +3,8 @@
 #include "SceneManager.h"
 #include "Input.h"
 #include "Timer.h"
+#include "GameObject.h"
+#include "Transform.h"
 
 #include "session.h"
 
@@ -26,6 +28,20 @@ LobbyCameraScript::~LobbyCameraScript()
 
 void LobbyCameraScript::LateUpdate()
 {
+	if (cursor == nullptr)
+	{
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (auto& gameObject : gameObjects)
+		{
+			if (gameObject->GetTransform()->GetObjectType() == OT_CURSOR)
+			{
+				cursor = gameObject;
+			}
+		}
+	}
+
+
+
 	if (INPUT->GetButtonDown(KEY_TYPE::SPACEBAR))
 	{
 		cl_packet_start_game sg;
@@ -48,7 +64,7 @@ void LobbyCameraScript::LateUpdate()
 
 		serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
 
-		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
+		//GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
 	}
 
 	if(INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
@@ -59,5 +75,23 @@ void LobbyCameraScript::LateUpdate()
 
 		
 	}
+
+	POINT nowMousePos;
+	::GetCursorPos(&nowMousePos);
+	ScreenToClient(GetActiveWindow(), &nowMousePos);
+
+	int screenWidth = WINDOW_WIDTH;  // Example screen width
+	int screenHeight = WINDOW_HEIGHT; // Example screen height
+
+	// Assuming the screen origin (0,0) is at the top-left corner
+	Vec2 uiPos;
+	uiPos.x = nowMousePos.x - (screenWidth / 2.0f);
+	uiPos.y = (screenHeight / 2.0f) - nowMousePos.y;
+
+	if (cursor != nullptr)
+	{
+		cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
+	}
+	
 
 }

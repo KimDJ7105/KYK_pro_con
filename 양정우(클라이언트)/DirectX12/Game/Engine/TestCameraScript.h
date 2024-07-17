@@ -58,4 +58,8 @@ private:
 	bool isMoving = false;
 
 	bool isCrushed = false;
+
+
+private:
+	shared_ptr<GameObject> cursor;
 };

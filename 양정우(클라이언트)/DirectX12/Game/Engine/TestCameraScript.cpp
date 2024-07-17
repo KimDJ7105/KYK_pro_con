@@ -42,6 +42,18 @@ void TestCameraScript::LateUpdate()
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
 
+	if (cursor == nullptr)
+	{
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (auto& gameObject : gameObjects)
+		{
+			if (gameObject->GetTransform()->GetObjectType() == OT_CURSOR)
+			{
+				cursor = gameObject;
+			}
+		}
+	}
+
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -287,10 +299,26 @@ void TestCameraScript::LateUpdate()
 	if (isMouseMod)
 	{
 		RotationUpdate();
+		cursor->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 	}
 	else if (!isMouseMod)
 	{
+		POINT nowMousePos;
+		::GetCursorPos(&nowMousePos);
+		ScreenToClient(GetActiveWindow(), &nowMousePos);
 
+		int screenWidth = WINDOW_WIDTH;  // Example screen width
+		int screenHeight = WINDOW_HEIGHT; // Example screen height
+
+		// Assuming the screen origin (0,0) is at the top-left corner
+		Vec2 uiPos;
+		uiPos.x = nowMousePos.x - (screenWidth / 2.0f);
+		uiPos.y = (screenHeight / 2.0f) - nowMousePos.y;
+
+		if (cursor != nullptr)
+		{
+			cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
+		}
 	}
 
 
@@ -316,16 +344,18 @@ void TestCameraScript::LateUpdate()
 	{
 		if (isMouseMod == false)
 		{
-			::ShowCursor(false);
 			isMouseMod = true;
+			std::cout << "마우스 모드 true 348" << std::endl;
+
+
 			isWindowCapture = true;
 			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
 			//std::cout << "윈도우의 상태 체크모드가 발동중" << std::endl;
 		}
 		else if (isMouseMod == true)
 		{
-			::ShowCursor(true);
 			isMouseMod = false;
+			std::cout << "마우스 모드 false 358" << std::endl;
 			isWindowCapture = false;
 			//std::cout << "윈도우의 상태 체크모드가 해제됨" << std::endl;
 		}
@@ -353,6 +383,7 @@ void TestCameraScript::LateUpdate()
 
 				//현재 활성화된 화면이 게임화면이라면
 				isMouseMod = true;
+				std::cout << "마우스 모드 true 386" << std::endl;
 				::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
 			}
 			else {
@@ -361,6 +392,7 @@ void TestCameraScript::LateUpdate()
 
 				//현재 활성화된 화면이 게임이 아니라면
 				isMouseMod = false;
+				std::cout << "마우스 모드 false 395" << std::endl;
 			}
 
 			delete[] buffer;
@@ -375,38 +407,55 @@ void TestCameraScript::LateUpdate()
 		
 	}
 
-
-
-	//Picking 입력을 확인
-	if (INPUT->GetButton(KEY_TYPE::RBUTTON))
+	if (main_session->get_isMapOpen() == false)
 	{
-#ifdef DEBUG_ON
-		std::cout << "COOLTIME" << std::endl;
-#endif
-		if (clickCooldown <= timeElapse)
+		if (isMouseMod == false)
+		{
+			isMouseMod = true;
+			std::cout << "마우스 모드 true 415" << std::endl;
+		}
+		
+
+		//Picking 입력을 확인
+		if (INPUT->GetButton(KEY_TYPE::LBUTTON))
 		{
 #ifdef DEBUG_ON
-			std::cout << "FIRE" << std::endl;
+			std::cout << "COOLTIME" << std::endl;
 #endif
-			const POINT& pos = INPUT->GetMousePos();
-
-			shared_ptr<GameObject> pickedObject;
-
-			pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
-			if (pickedObject != NULL)
+			if (clickCooldown <= timeElapse)
 			{
-				int a = pickedObject->GetTransform()->GetObjectType();
+#ifdef DEBUG_ON
+				std::cout << "FIRE" << std::endl;
+#endif
+				const POINT& pos = INPUT->GetMousePos();
 
-				//여기서 타입이 플레이어일때만
-				//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
-				if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+				shared_ptr<GameObject> pickedObject;
+
+				pickedObject = GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
+				if (pickedObject != NULL)
 				{
-					cs_packet_picking_info ppi;
-					ppi.size = sizeof(cs_packet_picking_info);
-					ppi.type = CS_PICKING_INFO;
-					ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+					int a = pickedObject->GetTransform()->GetObjectType();
 
-					main_session->Send_Packet(&ppi);
+					//여기서 타입이 플레이어일때만
+					//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
+					if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+					{
+						cs_packet_picking_info ppi;
+						ppi.size = sizeof(cs_packet_picking_info);
+						ppi.type = CS_PICKING_INFO;
+						ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+
+						main_session->Send_Packet(&ppi);
+					}
+
+					else {
+						cs_packet_picking_info ppi;
+						ppi.size = sizeof(cs_packet_picking_info);
+						ppi.type = CS_PICKING_INFO;
+						ppi.target_id = -1;
+
+						main_session->Send_Packet(&ppi);
+					}
 				}
 
 				else {
@@ -417,20 +466,28 @@ void TestCameraScript::LateUpdate()
 
 					main_session->Send_Packet(&ppi);
 				}
+
+				timeElapse = 0.f;
 			}
-
-			else {
-				cs_packet_picking_info ppi;
-				ppi.size = sizeof(cs_packet_picking_info);
-				ppi.type = CS_PICKING_INFO;
-				ppi.target_id = -1;
-
-				main_session->Send_Packet(&ppi);
-			}
-
-			timeElapse = 0.f;
 		}
 	}
+	else if (main_session->get_isMapOpen() == true)
+	{
+		isMouseMod = false;
+		std::cout << "마우스 모드 false 477" << std::endl;
+
+		if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
+		{
+
+			std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
+			std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
+
+			// 방번호칼
+
+		}
+	}
+
+	
 
 	if (pickedMovingObject != NULL)
 		RotatingPickedObject();
