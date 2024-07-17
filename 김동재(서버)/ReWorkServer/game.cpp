@@ -164,3 +164,13 @@ int GAME::get_rabbitfoot_owner()
 {
 	return rabbitfoot_owner_id;
 }
+
+bool GAME::is_free_room(int room_num)
+{
+	return room_spawn_able[room_num];
+}
+
+void GAME::set_room_unable(int room_num)
+{
+	room_spawn_able[room_num] = true;
+}

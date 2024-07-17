@@ -233,6 +233,14 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					p.second->Send_Packet(&pop);
 				}
 
+				TIMER_EVENT tm_grind;
+				tm_grind.event_id = EV_MOVE_GRINDER;
+				tm_grind.game_id = my_game->get_game_id();
+				tm_grind.target_id = -1;
+				tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+
+				my_server->timer_queue.emplace(tm_grind);
+
 				TIMER_EVENT tm_exit;
 				tm_exit.event_id = EV_SPAWN_EXIT;
 				tm_exit.game_id = my_game->get_game_id();
@@ -390,6 +398,21 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		Send_Packet(&pl);
 
 		break;
+	}
+	case CS_TRIGGER_LASER: {
+		cs_packet_trigger_laser* p = (cs_packet_trigger_laser*)packet;
+
+		if (my_game->is_free_room(p->room_num)) {
+			my_game->set_room_unable(p->room_num);
+
+			TIMER_EVENT tm_laser;
+			tm_laser.event_id = EV_LASER_TRAP_ON;
+			tm_laser.game_id = my_game->get_game_id();
+			tm_laser.target_id = p->room_num;
+			tm_laser.wakeup_time = chrono::system_clock::now() + 3ms;
+
+			my_server->timer_queue.emplace(tm_laser);
+		}
 	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test

@@ -74,6 +74,7 @@
 #define CS_SET_LASER_TRAP     11
 #define CS_TRY_ESCAPE		  12
 #define CS_HIT_BY_GRINDER	  13
+#define CS_TRIGGER_LASER	  14
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -196,6 +197,12 @@ struct cs_packet_try_escape {
 struct cs_packet_hit_by_grinder {
 	BYTE size;
 	BYTE type;
+};
+
+struct cs_packet_trigger_laser {
+	BYTE size;
+	BYTE type;
+	int room_num;
 };
 
 //---------Server To Client-----------------

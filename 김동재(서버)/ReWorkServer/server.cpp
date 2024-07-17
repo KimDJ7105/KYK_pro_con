@@ -76,7 +76,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			}
 
 			switch (ev.event_id) {
-			case EV_LASER_TRAP: {
+			case EV_LASER_TRAP_ON: {
 				//target_id는 방 번호
 				break;
 			}
