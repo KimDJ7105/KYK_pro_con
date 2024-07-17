@@ -150,6 +150,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		break;
 	}
 	case SC_PLAYER_WIN: {
+		main_session->close_socket();
+
 		//엔딩 씬을 불러오고
 		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
 
@@ -158,6 +160,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		break;
 	}
 	case SC_PLAYER_LOSE: {
+		main_session->close_socket();
+		
 		//엔딩 씬을 불러오고
 		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
 
@@ -271,6 +275,11 @@ bool SESSION::get_moving()
 bool SESSION::get_isMapOpen()
 {
 	return isMapOpen;
+}
+
+void SESSION::close_socket()
+{
+	sock.close();
 }
 
 SESSION* session;

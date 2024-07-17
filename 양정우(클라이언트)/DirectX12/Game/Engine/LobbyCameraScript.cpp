@@ -9,6 +9,10 @@
 void worker_SM_thread(boost::asio::io_context* io_con)
 {
 	io_con->run();
+
+	delete main_session;
+
+	std::cout << "메인 서버 쓰레드 종료\n";
 }
 
 LobbyCameraScript::LobbyCameraScript()

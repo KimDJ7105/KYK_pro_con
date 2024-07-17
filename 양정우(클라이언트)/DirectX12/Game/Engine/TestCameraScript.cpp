@@ -531,12 +531,20 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::T))
 	{
-		std::cout << "test go on\n";
+		/*std::cout << "test go on\n";
 		test_packet tp;
 		tp.size = sizeof(test_packet);
 		tp.type = TEST_SPAWN_RBF;
 
-		main_session->Send_Packet(&tp);
+		main_session->Send_Packet(&tp);*/
+
+		main_session->close_socket();
+
+		//엔딩 씬을 불러오고
+		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+
+		//메인게임 씬의 오브젝트들을 제거한다
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 	}
 	
 	if (INPUT->GetButtonDown(KEY_TYPE::M))

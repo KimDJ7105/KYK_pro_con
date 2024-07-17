@@ -20,7 +20,6 @@ void EndingCameraScript::LateUpdate()
 	{
 		//엔딩스크립트
 
-
 		// 로비 씬을 불러오고
 		GET_SINGLE(SceneManager)->LoadLobbyScene(L"LobbyScene");
 
