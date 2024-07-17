@@ -78,6 +78,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			switch (ev.event_id) {
 			case EV_LASER_TRAP_ON: {
 				//target_id는 방 번호
+				std::cout << "레이저 함정 작동 시작, 방 번호 : " << ev.target_id << std::endl;
 				break;
 			}
 			case EV_MOVE_GRINDER: {

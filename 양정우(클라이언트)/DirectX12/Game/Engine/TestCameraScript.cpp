@@ -474,7 +474,7 @@ void TestCameraScript::LateUpdate()
 	else if (main_session->get_isMapOpen() == true)
 	{
 		isMouseMod = false;
-		std::cout << "마우스 모드 false 477" << std::endl;
+		//std::cout << "마우스 모드 false 477" << std::endl;
 
 		if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
 		{
@@ -483,6 +483,12 @@ void TestCameraScript::LateUpdate()
 			std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
 
 			// 방번호칼
+			cs_packet_trigger_laser tl;
+			tl.size = sizeof(cs_packet_trigger_laser);
+			tl.type = CS_TRIGGER_LASER;
+			tl.room_num = GET_SINGLE(SceneManager)->GetButtonID();
+
+			main_session->Send_Packet(&tl);
 
 		}
 	}

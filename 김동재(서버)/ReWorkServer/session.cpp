@@ -413,6 +413,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			my_server->timer_queue.emplace(tm_laser);
 		}
+		break;
 	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test

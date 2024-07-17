@@ -80,6 +80,8 @@ std::shared_ptr<OBJECT>& GAME::CreateObjectApprox_nr(int obj_type, int approx_po
 	ingame_object[o_id]->set_pos(approx_pos);
 	ingame_object[o_id]->show_approx_pos();
 
+	set_room_unable(approx_pos);
+
 	return ingame_object[o_id];
 }
 
@@ -167,7 +169,7 @@ int GAME::get_rabbitfoot_owner()
 
 bool GAME::is_free_room(int room_num)
 {
-	return room_spawn_able[room_num];
+	return !room_spawn_able[room_num];
 }
 
 void GAME::set_room_unable(int room_num)
