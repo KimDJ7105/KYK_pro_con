@@ -16,6 +16,8 @@ public :
 	std::array<float, 3> pos;
 	std::array<float, 3> rot;
 
+	float end_pos;
+
 public:
 	void set_pos(int approx_pos);
 	OBJECT(int id, int type);

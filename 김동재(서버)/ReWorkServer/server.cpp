@@ -78,7 +78,86 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			switch (ev.event_id) {
 			case EV_LASER_TRAP_ON: {
 				//target_id는 방 번호
-				std::cout << "레이저 함정 작동 시작, 방 번호 : " << ev.target_id << std::endl;
+				std::cout << "Laser on Evnet Called\n";
+				auto& laser = games[ev.game_id]->CreateObject(OT_LASER, ev.x, ev.y, ev.z, -1.57f, 1.57f, 0.f, WAY_RIGHT);
+				laser->end_pos = ev.x + 300.f;
+
+				sc_packet_put_object_coor poc;
+				poc.size = sizeof(sc_packet_put_object_coor);
+				poc.type = SC_PUT_OBJECT_COOR;
+				poc.obj_id = laser->obj_id;
+				poc.obj_type = OT_LASER;
+				poc.x = ev.x;
+				poc.y = ev.y;
+				poc.z = ev.z;
+				poc.dirx = -1.57f;
+				poc.diry = 1.57f;
+				poc.dirz = 0.f;
+
+				for (auto& player : games[ev.game_id]->ingame_player) {
+					player.second->Send_Packet(&poc);
+				}
+
+				if (!games[ev.game_id]->is_laser_on) {
+					games[ev.game_id]->is_laser_on = true;
+					TIMER_EVENT tm_move_laser;
+
+					tm_move_laser.game_id = ev.game_id;
+					tm_move_laser.event_id = EV_MOVE_LASER_TRAP;
+					tm_move_laser.target_id = -1;
+					tm_move_laser.wakeup_time = chrono::system_clock::now() + 50ms;
+					
+					timer_queue.emplace(tm_move_laser);
+				}
+				break;
+			}
+			case EV_MOVE_LASER_TRAP: {
+				std::cout << "Laser moving\n";
+				for (auto& obj : games[ev.game_id]->ingame_object) {
+					auto& laser = obj.second;
+					if (laser->obj_type != OT_LASER) continue;
+
+					if (laser->way == WAY_RIGHT) {
+						laser->pos[0] += 10.0f;
+						if (laser->pos[0] >= laser->end_pos) {
+							laser->way = WAY_LEFT;
+							laser->end_pos -= 300.0f;
+						}
+					}
+
+					else if (laser->way == WAY_LEFT) {
+						laser->pos[0] -= 10.0f;
+						if (laser->pos[0] <= laser->end_pos) {
+							laser->way = WAY_RIGHT;
+							laser->end_pos += 300.0f;
+						}
+					}
+
+					sc_packet_pos laser_pos;
+					laser_pos.size = sizeof(laser_pos);
+					laser_pos.type = SC_POS;
+					laser_pos.id = laser->obj_id;
+					laser_pos.x = laser->pos[0];
+					laser_pos.y = laser->pos[1];
+					laser_pos.z = laser->pos[2];
+					laser_pos.dirx = laser->rot[0];
+					laser_pos.diry = laser->rot[1];
+					laser_pos.dirz = laser->rot[2];
+					laser_pos.animation_id = -1;
+
+					for (auto& player : games[ev.game_id]->ingame_player) {
+						player.second->Send_Packet(&laser_pos);
+					}
+				}
+
+				TIMER_EVENT tm_move_laser;
+
+				tm_move_laser.game_id = ev.game_id;
+				tm_move_laser.event_id = EV_MOVE_LASER_TRAP;
+				tm_move_laser.target_id = -1;
+				tm_move_laser.wakeup_time = chrono::system_clock::now() + 30ms;
+
+				timer_queue.emplace(tm_move_laser);
 				break;
 			}
 			case EV_MOVE_GRINDER: {

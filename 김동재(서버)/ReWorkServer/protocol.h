@@ -206,6 +206,9 @@ struct cs_packet_trigger_laser {
 	BYTE size;
 	BYTE type;
 	int room_num;
+	float x;
+	float y;
+	float z;
 };
 
 //---------Server To Client-----------------

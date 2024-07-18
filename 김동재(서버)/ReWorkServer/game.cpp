@@ -12,6 +12,7 @@ GAME::GAME(int id)
 	team_num = 0;
 	rabbitfoot_owner_id = -1;
 	grind_core = 0;
+	is_laser_on = false;
 
 	std::fill(std::begin(spawn_able), std::end(spawn_able), false);
 	std::fill(std::begin(room_spawn_able), std::end(room_spawn_able), false);

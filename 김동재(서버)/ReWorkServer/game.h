@@ -50,6 +50,7 @@ public:
 	void set_room_unable(int room_num);
 public:
 	int grind_core;
+	bool is_laser_on;
 
 	unordered_map<int, std::shared_ptr<SESSION>> ingame_player;    //게임에 포함된 플레이어를 저장하는 컨테이너
 	unordered_map<int, std::shared_ptr<OBJECT>> ingame_object;

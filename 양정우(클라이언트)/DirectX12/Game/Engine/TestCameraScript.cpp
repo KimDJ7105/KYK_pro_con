@@ -489,23 +489,26 @@ void TestCameraScript::LateUpdate()
 			Vec3 laser_pos = GET_SINGLE(SceneManager)->GetLaserPosition(GET_SINGLE(SceneManager)->GetButtonID());
 
 
-			float laser_start = laser_pos.x - 150.f;
-			float laser_end = laser_pos.x + 150.f;
+			/*float laser_start = laser_pos.x - 150.f;
+			float laser_end = laser_pos.x + 150.f;*/
 
 			Vec3 laser_dir = Vec3(-1.57f, 1.57f, 0.f);
 
-			std::cout << "Trap pos X : " << laser_pos.x << std::endl;
+			/*std::cout << "Trap pos X : " << laser_pos.x << std::endl;
 			std::cout << "Trap pos Y : " << laser_pos.y << std::endl;
 			std::cout << "Trap pos Z : " << laser_pos.z << std::endl;
 
 			std::cout << "Trap Start pos X : " << laser_start << std::endl;
-			std::cout << "Trap End pos X : " << laser_end << std::endl;
+			std::cout << "Trap End pos X : " << laser_end << std::endl;*/
 
 			// ¹æ¹øÈ£Ä®
 			cs_packet_trigger_laser tl;
 			tl.size = sizeof(cs_packet_trigger_laser);
 			tl.type = CS_TRIGGER_LASER;
 			tl.room_num = GET_SINGLE(SceneManager)->GetButtonID();
+			tl.x = laser_pos.x;
+			tl.y = laser_pos.y;
+			tl.z = laser_pos.z;
 
 			main_session->Send_Packet(&tl);
 

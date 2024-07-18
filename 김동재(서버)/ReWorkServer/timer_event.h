@@ -10,6 +10,10 @@ public :
 	EVENT_TYPE event_id;
 	int target_id;
 
+	float x;
+	float y;
+	float z;
+
 public:
 	constexpr bool operator < (const TIMER_EVENT& L) const
 	{
