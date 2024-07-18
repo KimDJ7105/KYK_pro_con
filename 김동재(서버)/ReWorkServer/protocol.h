@@ -97,6 +97,7 @@
 #define SC_PUT_OBJECT_COOR 14 //오브젝트를 특정 좌표에 생성
 #define SC_PLAYER_WIN	   15 //플레이어 팀이 토끼발 들고 탈출
 #define SC_PLAYER_LOSE     16 //플레이어 패배
+#define SC_RESURRECTION	   17 //플레이어 코어 상태에서 부활
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -350,6 +351,11 @@ struct sc_packet_player_win {
 };
 
 struct sc_packet_player_lose {
+	BYTE size;
+	BYTE type;
+};
+
+struct sc_packet_resurrection {
 	BYTE size;
 	BYTE type;
 };

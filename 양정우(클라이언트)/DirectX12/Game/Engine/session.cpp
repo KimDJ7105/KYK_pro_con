@@ -172,6 +172,11 @@ void SESSION::Process_Packet(unsigned char* packet)
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 		break;
 	}
+	case SC_RESURRECTION:
+	{
+		//플레이어 체력을 100으로, 탄창을 꽉 채우고 코어 상태에서 다시 플레이어로 전환
+		break;
+	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
 	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);

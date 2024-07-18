@@ -425,6 +425,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_USE_RESURRECTION: {
+		if (is_core_state) {
+			hp = 100;
+			remain_bullet = 30;
+			sc_packet_resurrection res;
+			res.size = sizeof(sc_packet_resurrection);
+			res.type = SC_RESURRECTION;
+
+			Send_Packet(&res);
+		}
 		break;
 	}
 	case TEST_SPAWN_RBF: { //test

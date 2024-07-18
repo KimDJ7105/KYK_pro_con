@@ -597,6 +597,19 @@ void TestCameraScript::LateUpdate()
 
 			main_session->Send_Packet(&te);
 		}
+
+		shared_ptr<GameObject> pad = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RESURRECTION_PAD);
+
+		if (pad != NULL)
+		{
+			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+			cs_packet_use_resurrection ur;
+			ur.size = sizeof(cs_packet_use_resurrection);
+			ur.type = CS_USE_RESURRECTION;
+
+			main_session->Send_Packet(&ur);
+		}
 	}
 	
 	if (INPUT->GetButtonDown(KEY_TYPE::R))
