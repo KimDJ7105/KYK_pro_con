@@ -248,8 +248,12 @@ void TestCameraScript::LateUpdate()
 			shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
 			if (overlap_Laser != NULL)
 			{
-
 				//·¹ÀÌÀúÄ®
+				cs_packet_hit_by_laser hbl;
+				hbl.size = sizeof(cs_packet_hit_by_laser);
+				hbl.type = CS_HIT_BY_LASER;
+
+				main_session->Send_Packet(&hbl);
 			}
 			else
 			{

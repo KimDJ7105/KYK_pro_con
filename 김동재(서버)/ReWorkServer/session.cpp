@@ -420,6 +420,13 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
+	case CS_HIT_BY_LASER: {
+		//레이저에 맞으면 어케되나요
+		break;
+	}
+	case CS_USE_RESURRECTION: {
+		break;
+	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
 		TIMER_EVENT tm_grind;
@@ -561,6 +568,7 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	team = team_num;
 
 	using_terminal = false;
+	is_core_state = false;
 }
 
 void SESSION::start()

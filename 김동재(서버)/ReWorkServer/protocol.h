@@ -78,6 +78,8 @@
 #define CS_TRY_ESCAPE		  12
 #define CS_HIT_BY_GRINDER	  13
 #define CS_TRIGGER_LASER	  14
+#define CS_HIT_BY_LASER		  15
+#define CS_USE_RESURRECTION	  16
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -209,6 +211,16 @@ struct cs_packet_trigger_laser {
 	float x;
 	float y;
 	float z;
+};
+
+struct cs_packet_hit_by_laser {
+	BYTE size;
+	BYTE type;
+};
+
+struct cs_packet_use_resurrection {
+	BYTE size;
+	BYTE type;
 };
 
 //---------Server To Client-----------------

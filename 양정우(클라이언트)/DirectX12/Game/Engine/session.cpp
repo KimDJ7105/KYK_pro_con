@@ -73,6 +73,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_PLAYER_DEAD : //플레이어 사망
 	{
+		//이제 플레이어 캐릭터를 삭제하는게 아니라 코어로 바꿔야 한다.
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
 
 		if (playerID != p->id) {
