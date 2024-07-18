@@ -1848,8 +1848,8 @@ void SceneManager::SetButton(int btn_type, int btn_id)
 
 Vec3 SceneManager::GetLaserPosition(int room_num)
 {
-	int row = room_num / 5;
-	int col = room_num % 5;
+	int col = room_num / 5;
+	int row = room_num % 5;
 
 	// Calculate the center position of the room
 	float x = col * 600.f;
