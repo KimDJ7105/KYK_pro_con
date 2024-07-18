@@ -248,13 +248,11 @@ void TestCameraScript::LateUpdate()
 			shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
 			if (overlap_Laser != NULL)
 			{
-				std::cout << "Laser Hit" << std::endl;
 
 				//·¹ÀÌÀúÄ®
 			}
 			else
 			{
-				std::cout << "----------" << std::endl;
 			}
 
 		}
