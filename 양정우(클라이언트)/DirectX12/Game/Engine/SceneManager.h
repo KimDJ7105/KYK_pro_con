@@ -130,7 +130,7 @@ public:
 
 	void SetPlayerLocation(float x, float y, float z, float dirx, float diry, float dirz);
 
-	void CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz, int crusher_id);
+	void CreateMovingObject(float x, float y, float z, float dirx, float diry, float dirz, int obj_id, int obj_type);
 
 	void CreateCrusherBlade(int object_ID, float object_size, int blade_num, Vec3 crusherPos);
 
@@ -152,5 +152,7 @@ public:
 	void SetButton(int btn_type, int btn_id);
 	int GetButtonType() { return button_type; }
 	int GetButtonID() { return button_id; }
+
+	Vec3 GetLaserPosition(int room_num);
 };
 

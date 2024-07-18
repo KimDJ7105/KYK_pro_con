@@ -229,6 +229,34 @@ void TestCameraScript::LateUpdate()
 			{
 				isOverlap = false;
 			}
+			shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
+			if (overlap_blade != NULL)
+			{
+				//isCrushed = true;
+				cs_packet_hit_by_grinder hbg;
+				hbg.type = CS_HIT_BY_GRINDER;
+				hbg.size = sizeof(cs_packet_hit_by_grinder);
+
+				main_session->Send_Packet(&hbg);
+			}
+			else
+			{
+				//isCrushed = false;
+
+			}
+
+			shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
+			if (overlap_Laser != NULL)
+			{
+				std::cout << "Laser Hit" << std::endl;
+
+				//·¹ÀÌÀúÄ®
+			}
+			else
+			{
+				std::cout << "----------" << std::endl;
+			}
+
 		}
 
 
@@ -265,30 +293,6 @@ void TestCameraScript::LateUpdate()
 		GetTransform()->SetLocalPosition(currentPosition);
 
 	}
-
-
-	shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
-	if (overlap_blade != NULL)
-	{
-		//isCrushed = true;
-		cs_packet_hit_by_grinder hbg;
-		hbg.type = CS_HIT_BY_GRINDER;
-		hbg.size = sizeof(cs_packet_hit_by_grinder);
-
-		main_session->Send_Packet(&hbg);
-	}
-	else
-	{
-		//isCrushed = false;
-
-	}
-
-
-
-
-
-
-
 
 	if (INPUT->GetButton(KEY_TYPE::P))
 	{
@@ -481,6 +485,21 @@ void TestCameraScript::LateUpdate()
 
 			std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
 			std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
+
+			Vec3 laser_pos = GET_SINGLE(SceneManager)->GetLaserPosition(GET_SINGLE(SceneManager)->GetButtonID());
+
+
+			float laser_start = laser_pos.x - 150.f;
+			float laser_end = laser_pos.x + 150.f;
+
+			Vec3 laser_dir = Vec3(-1.57f, 1.57f, 0.f);
+
+			std::cout << "Trap pos X : " << laser_pos.x << std::endl;
+			std::cout << "Trap pos Y : " << laser_pos.y << std::endl;
+			std::cout << "Trap pos Z : " << laser_pos.z << std::endl;
+
+			std::cout << "Trap Start pos X : " << laser_start << std::endl;
+			std::cout << "Trap End pos X : " << laser_end << std::endl;
 
 			// ¹æ¹øÈ£Ä®
 			cs_packet_trigger_laser tl;

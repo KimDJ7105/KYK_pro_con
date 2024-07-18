@@ -1753,6 +1753,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		mainGameScene->AddGameObject(sphere);
 	}
 
+
+
 	return mainGameScene;
 }
 
@@ -1842,6 +1844,19 @@ void SceneManager::SetButton(int btn_type, int btn_id)
 {
 	button_type = btn_type;
 	button_id = btn_id;
+}
+
+Vec3 SceneManager::GetLaserPosition(int room_num)
+{
+	int row = room_num / 5;
+	int col = room_num % 5;
+
+	// Calculate the center position of the room
+	float x = col * 600.f;
+	float z = row * 600.f;
+	float y = 0.0f; // Assuming y is always 0 based on the problem description
+
+	return Vec3(x, y, z);
 }
 
 void SceneManager::RemoveMapUI()
@@ -3434,9 +3449,11 @@ void SceneManager::SetPlayerLocation(float x, float y, float z, float dirx, floa
 	}
 }
 
-void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float diry, float dirz, int crusher_id)
+void SceneManager::CreateMovingObject(float x, float y, float z, float dirx, float diry, float dirz, int obj_id, int obj_type)
 {
-	float crusherSize = 50.f;
+	float obj_Size = 50.f;
+
+	if(obj_type == OT_GRINDER)
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Crusher_No_Blade.bin");
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
@@ -3446,7 +3463,7 @@ void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float di
 			gameObject->SetName(L"Crusher");
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-			gameObject->GetTransform()->SetLocalScale(Vec3(crusherSize, crusherSize, crusherSize));
+			gameObject->GetTransform()->SetLocalScale(Vec3(obj_Size, obj_Size, obj_Size));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(dirx, diry, dirz));
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 
@@ -3458,9 +3475,44 @@ void SceneManager::CreateCrusher(float x, float y, float z, float dirx, float di
 			}
 
 			gameObject->GetTransform()->SetObjectType(OT_GRINDER);
-			gameObject->GetTransform()->SetObjectID(crusher_id);
+			gameObject->GetTransform()->SetObjectID(obj_id);
 
 			gameObject->AddComponent(make_shared<CrusherScript>());
+
+			_otherPlayer.push_back(gameObject);
+
+
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+	else if (obj_type == OT_LASER)
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Laser.bin");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Laser");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+			gameObject->GetTransform()->SetLocalScale(Vec3(obj_Size, obj_Size, obj_Size));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(dirx, diry, dirz));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+
+			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(50.f, (meshData->GetAABBExtents().y * obj_Size), (meshData->GetAABBExtents().z * obj_Size)));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y, z));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
+
+			gameObject->GetTransform()->SetObjectType(OT_LASER);
+			gameObject->GetTransform()->SetObjectID(obj_id);
 
 			_otherPlayer.push_back(gameObject);
 

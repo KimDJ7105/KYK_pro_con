@@ -35,6 +35,7 @@
 #define OT_GRINDER          6
 #define OT_RABBITFOOT       7
 #define OT_EXIT				8
+#define OT_LASER			9
 
 #define OT_WALLAABB			99
 #define OT_UI_PLAYERHAND	101
