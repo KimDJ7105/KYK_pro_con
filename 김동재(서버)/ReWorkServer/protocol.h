@@ -57,6 +57,7 @@
 #define OT_CRUSHER_BLADE	114
 #define OT_UI_MAP_BUTTON	115
 #define OT_CURSOR			116
+#define OT_HEADCORE			117
 //---------------------------------------
 
 //Animation Type-------------------------

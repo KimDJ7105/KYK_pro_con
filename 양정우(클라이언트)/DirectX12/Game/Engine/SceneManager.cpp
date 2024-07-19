@@ -1790,7 +1790,22 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 
+	{
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\HeadCore_Blue.bin");
 
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
+
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"HeadCore_Blue");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 5.f, 1200.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
+
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
 
 	return mainGameScene;
 }
@@ -1875,6 +1890,9 @@ void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
 			continue;
 		scene_erase->RemoveGameObject(gameObject);
 	}
+
+	//개선 필요
+
 }
 
 void SceneManager::SetButton(int btn_type, int btn_id)
@@ -2259,36 +2277,48 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 		}
 	}
-	//{
-	//	//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadGunAnimation(L"..\\Resources\\FBX\\Player_Gun2\\test01.fbx");
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+}
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"PlayerGunAnimation");
-	//		gameObject->SetCheckFrustum(false);
-	//		//gameObject->GetTransform()->SetLocalPosition(Vec3(5.f, 13.f, 15.f));
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(5 + x, 13 + y, 15 + z));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
-	//		gameObject->GetTransform()->SetObjectType(object_type);
-	//		gameObject->GetTransform()->SetObjectID(object_id);
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+void SceneManager::CreateHeadCoreObject(int object_id)
+{
+	vector<shared_ptr<GameObject>> gameObjects = _otherPlayer;
 
-	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
-	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
-	//		{
-	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
-	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
-	//		}
+	Vec3 pos;
 
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectID() == object_id)
+		{
+			pos = gameObject->GetTransform()->GetLocalPosition();
+		}
+	}
 
-	//		scene->AddGameObject(gameObject);
+	{
+		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\HeadCore_Blue.bin");
 
-	//	}
-	//}
+		vector<shared_ptr<GameObject>> gameObjects2 = meshData2->Instantiate();
 
+		for (auto& gameObject : gameObjects2)
+		{
+			gameObject->SetName(L"HeadCore_Blue");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(pos);
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
+			gameObject->GetTransform()->SetObjectType(OT_HEADCORE);
+			gameObject->GetTransform()->SetObjectID(object_id);
+
+			//히트박스
+			gameObject->AddComponent(make_shared<BoxCollider>());
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(meshData2->GetAABBExtents().x, meshData2->GetAABBExtents().y, meshData2->GetAABBExtents().z));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(pos);
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
+
+			_otherPlayer.push_back(gameObject);
+
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
 }
 
 void SceneManager::CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
@@ -2368,17 +2398,20 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 		{
 			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 			{
-				if (animationID == AT_IDLE)
+				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE)
 				{
-					otherPlayer->GetAnimator()->Play(0);
-				}
-				if (animationID == AT_WALKING)
-				{
-					otherPlayer->GetAnimator()->Play(1);
-				}
-				if (animationID == AT_SHOOTING)
-				{
-					otherPlayer->GetAnimator()->Play(2);
+					if (animationID == AT_IDLE)
+					{
+						otherPlayer->GetAnimator()->Play(0);
+					}
+					if (animationID == AT_WALKING)
+					{
+						otherPlayer->GetAnimator()->Play(1);
+					}
+					if (animationID == AT_SHOOTING)
+					{
+						otherPlayer->GetAnimator()->Play(2);
+					}
 				}
 			}
 		}

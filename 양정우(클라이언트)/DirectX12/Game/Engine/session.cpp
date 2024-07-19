@@ -79,6 +79,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		// 타 플레이어를 죽였을 때
 		if (playerID != p->id) {
 			// 죽인 플레이어 오브잭트를 제거
+
+			_activeSessionScene->CreateHeadCoreObject(p->id);
 			_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
 
 			// 죽인 플레이어 오브젝트의 아이디와 같은 두뇌코어 오브젝트를 생성
@@ -87,6 +89,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		else {
 			std::cout << "I'm Dead\n";
 			//나의 두뇌코어 오브젝트를 생성
+			_activeSessionScene->SetPlayerDead(true);
 		}
 		break;
 	}

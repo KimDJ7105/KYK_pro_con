@@ -275,12 +275,22 @@ void TestCameraScript::LateUpdate()
 		//위치가 변경되었을때만 서버에 전송하도록 수정
 		if (currentPosition != tempPos)
 		{
+
+			float addedPos_Y;
+			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+			{
+				addedPos_Y = -40.f;
+			}
+			else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+			{
+				addedPos_Y = -35.f;
+			}
 			//------------------------------------
 			cs_packet_pos_info packet;
 			packet.size = sizeof(cs_packet_pos_info);
 			packet.type = CS_POS_INFO;
 			packet.x = currentPosition.x;
-			packet.y = currentPosition.y - 40.f;
+			packet.y = currentPosition.y + addedPos_Y;
 			packet.z = currentPosition.z;
 
 			main_session->Send_Packet(&packet);
@@ -859,18 +869,39 @@ void TestCameraScript::RotationUpdate()
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
-		
-		//---------------------------------
-		// 이곳에서 rotation정보를 server에 넘겨주면 된다.
-		cs_packet_mouse_info mi;
-		mi.size = sizeof(cs_packet_mouse_info);
-		mi.type = CS_MOUSE_INFO;
-		mi.x = rotation.x;
-		mi.y = rotation.y + 3.14f;
-		mi.z = 0.0f;
 
-		main_session->Send_Packet(&mi);
-		//---------------------------------
+		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+		{
+			//---------------------------------
+			// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+			cs_packet_mouse_info mi;
+			mi.size = sizeof(cs_packet_mouse_info);
+			mi.type = CS_MOUSE_INFO;
+			//mi.x = rotation.x;
+			mi.x = 0.f;
+			mi.y = rotation.y + 3.14f;
+			mi.z = 0.0f;
+
+			main_session->Send_Packet(&mi);
+			//---------------------------------
+		}
+		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+		{
+			//---------------------------------
+			// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+			cs_packet_mouse_info mi;
+			mi.size = sizeof(cs_packet_mouse_info);
+			mi.type = CS_MOUSE_INFO;
+			//mi.x = rotation.x;
+			mi.x = -1.57f;
+			mi.y = rotation.y;
+			mi.z = 0.0f;
+
+			main_session->Send_Packet(&mi);
+			//---------------------------------
+		}
+		
+		
 	}
 
 

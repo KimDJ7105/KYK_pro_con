@@ -68,8 +68,12 @@ public:
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
 	void ChangeObjectAnimation(int object_id, int animationID);
+	
+	void CreateHeadCoreObject(int object_id);
+	
 	Vec3 FindAislePosition(int aisleNum);
 	Vec3 FindRoomPosition(int roomNum);
 	void CreateGameObject(int aisleNum, int object_type, int object_ID);
@@ -154,5 +158,12 @@ public:
 	int GetButtonID() { return button_id; }
 
 	Vec3 GetLaserPosition(int room_num);
+
+private:
+	bool isPlayerDead = false;
+
+public:
+	void SetPlayerDead(bool isdead) { isPlayerDead = isdead; }
+	bool GetPlayerDead() { return isPlayerDead; }
 };
 
