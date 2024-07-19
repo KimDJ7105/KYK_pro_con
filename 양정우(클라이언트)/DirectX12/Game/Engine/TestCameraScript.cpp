@@ -610,6 +610,21 @@ void TestCameraScript::LateUpdate()
 
 			main_session->Send_Packet(&ur);
 		}
+
+		shared_ptr<GameObject> mediKit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_MEDIKIT);
+
+		if (mediKit != NULL)
+		{
+			//¸ÞµðÅ¶Ä®
+		}
+
+		shared_ptr<GameObject> ammobox = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_AMMOBOX);
+
+		if (ammobox != NULL)
+		{
+			//¾Æ¸ð¹Ú½ºÄ®
+		}
+
 	}
 	
 	if (INPUT->GetButtonDown(KEY_TYPE::R))

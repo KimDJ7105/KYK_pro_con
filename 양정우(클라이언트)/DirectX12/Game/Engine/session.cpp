@@ -76,12 +76,17 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//이제 플레이어 캐릭터를 삭제하는게 아니라 코어로 바꿔야 한다.
 		sc_packet_player_dead* p = reinterpret_cast<sc_packet_player_dead*>(packet);
 
+		// 타 플레이어를 죽였을 때
 		if (playerID != p->id) {
+			// 죽인 플레이어 오브잭트를 제거
 			_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
-		}
 
+			// 죽인 플레이어 오브젝트의 아이디와 같은 두뇌코어 오브젝트를 생성
+		}
+		// 내가 죽었을 때
 		else {
 			std::cout << "I'm Dead\n";
+			//나의 두뇌코어 오브젝트를 생성
 		}
 		break;
 	}

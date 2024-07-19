@@ -37,6 +37,8 @@
 #define OT_RABBITFOOT       7
 #define OT_EXIT				8
 #define OT_LASER			9
+#define OT_AMMOBOX			10
+#define OT_MEDIKIT			11
 
 #define OT_WALLAABB			99
 #define OT_UI_PLAYERHAND	101
