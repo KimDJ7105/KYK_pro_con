@@ -431,8 +431,11 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			sc_packet_resurrection res;
 			res.size = sizeof(sc_packet_resurrection);
 			res.type = SC_RESURRECTION;
+			res.id = my_id_;
 
-			Send_Packet(&res);
+			for (auto& p : my_game->ingame_player) {
+				p.second->Send_Packet(&res);
+			}
 		}
 		break;
 	}
