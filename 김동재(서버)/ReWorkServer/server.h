@@ -8,12 +8,13 @@ class SERVER
 private:
 	tcp::acceptor acceptor_;
 	tcp::socket socket_;
-	atomic_int g_user_ID;
 	atomic_int g_game_ID;
 
 	std::unordered_map<int, std::shared_ptr<GAME>> games;
 
 	boost::asio::steady_timer timer_;
+
+	int next_port;
 private:
 	void do_accept();
 	

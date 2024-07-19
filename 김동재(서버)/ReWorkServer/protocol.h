@@ -10,6 +10,7 @@
 #define BOARD_HEIGHT  30
 
 #define MAX_USER 12
+#define MAX_GAME 3
 
 #define MY_SERVER_IP "127.0.0.1"
 #define MY_SERVER_PORT  "55000"

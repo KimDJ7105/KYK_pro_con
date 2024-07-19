@@ -3,6 +3,8 @@
 
 std::shared_ptr<SESSION> lobby;
 
+atomic_int g_user_ID;
+
 void SERVER::do_accept()
 {
 	acceptor_.async_accept(socket_,
@@ -32,6 +34,14 @@ void SERVER::do_accept()
 					games[g_game_ID]->ingame_player[p_id]->start();
 
 					if (games[g_game_ID]->ingame_player.size() > MAX_USER) g_game_ID++;
+					if (games.size() == MAX_GAME) {
+						sl_packet_set_port set_port;
+						set_port.size = sizeof(sl_packet_set_port);
+						set_port.type = SL_SET_PORT;
+						strcpy_s(set_port.port, std::to_string(next_port).c_str());
+
+						lobby->Send_Packet(&set_port);
+					}
 				}
 				do_accept();
 			}
@@ -52,6 +62,9 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port)
 	socket_(io_service),
 	timer_(io_service, boost::asio::chrono::microseconds(100))
 {	
+	if (port == MY_PORT3) next_port = MY_PORT0;
+	else next_port = port + 1;
+
 	timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
 
 	do_accept();
