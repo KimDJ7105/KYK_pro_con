@@ -35,6 +35,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->SetPlayerLocation(p->x, p->y, p->z, p->dirx, p->diry, p->dirz);
 		_activeSessionScene->CreatePlayerHandObject(101, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		_activeSessionScene->CreatePlayerGunObject(102, p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
+		_activeSessionScene->CreatePlayerHeadCoreObject(OT_HEADCORE, p->id, OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER, -1, -1.57f, 0.f, 0.f);
 		_activeSessionScene->SetBullet(p->bullet_amount);
 
 		//std::cout << "Recv Log in info\n";

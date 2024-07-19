@@ -41,6 +41,7 @@ private:
 
 	shared_ptr<GameObject> playerObject;
 	shared_ptr<GameObject> playerGunObject;
+	shared_ptr<GameObject> playerHeadCoreObject;
 
 	double timeElapse = 0.0;
 	const double clickCooldown = 0.067;
@@ -58,6 +59,8 @@ private:
 	bool isMoving = false;
 
 	bool isCrushed = false;
+
+	float moveSpeed = 200.f;
 
 
 private:

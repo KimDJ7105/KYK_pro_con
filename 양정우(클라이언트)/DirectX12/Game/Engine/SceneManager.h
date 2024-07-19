@@ -68,6 +68,7 @@ public:
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerHeadCoreObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
 	void ChangeObjectAnimation(int object_id, int animationID);
@@ -105,6 +106,8 @@ public:
 	shared_ptr<GameObject> GetPlayer(int ID);	//101
 
 	shared_ptr<GameObject> GetPlayerGun(int ID);	//102
+
+	shared_ptr<GameObject> GetPlayerHeadCoreQbject(int ID);
 
 
 	void RemoveObject(int object_type, int object_id);

@@ -41,6 +41,11 @@ void TestCameraScript::LateUpdate()
 	{
 		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
 	}
+	if (playerHeadCoreObject == NULL)
+	{
+		playerHeadCoreObject = GET_SINGLE(SceneManager)->GetPlayerHeadCoreQbject(playerID);
+	}
+
 
 	if (cursor == nullptr)
 	{
@@ -52,6 +57,15 @@ void TestCameraScript::LateUpdate()
 				cursor = gameObject;
 			}
 		}
+	}
+
+	if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+	{
+		moveSpeed = 200.f;
+	}
+	else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+	{
+		moveSpeed = 100.f;
 	}
 
 	{
@@ -75,7 +89,6 @@ void TestCameraScript::LateUpdate()
 		Vec3 tempPos = currentPosition;
 
 		// 플레이어의 이동 속도 및 방향 설정 (예시로 WASD 키를 이용한 이동)
-		const float moveSpeed = 200.0f;
 		Vec3 moveDirection = Vec3(0.0f, 0.0f, 0.0f);
 
 		if (INPUT->GetButtonDown(KEY_TYPE::W))
@@ -535,9 +548,6 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
-
-		
-
 		//플레이어 ID를 탐색
 		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 		shared_ptr<GameObject> keyCard;
@@ -677,74 +687,103 @@ void TestCameraScript::LateUpdate()
 		GET_SINGLE(SceneManager)->RemoveMapUI();
 	}
 
+
+
+
+	if (playerObject != nullptr && playerGunObject != nullptr && playerHeadCoreObject != nullptr)
 	{
+		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+		{
+			playerHeadCoreObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			{
 
-		Vec3 rotation = GetTransform()->GetLocalRotation();
+				Vec3 rotation = GetTransform()->GetLocalRotation();
 
-		Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+				Vec3 gunOffset(5.0f, -5.0f, 15.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
 
-		// 플레이어의 회전값을 쿼터니언으로 변환
-		Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+				// 플레이어의 회전값을 쿼터니언으로 변환
+				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
 
-		// gunOffset을 회전시킴
-		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+				// gunOffset을 회전시킴
+				Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
 
-		// playerGunObject의 위치를 플레이어의 위치로 이동
-		if(playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+				// playerGunObject의 위치를 플레이어의 위치로 이동
+				if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
-		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-		Vec3 gunRotationOffset(-1.57f, 3.14f, 0.0f); // 총의 회전 오프셋
-		Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
-			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+				Vec3 gunRotationOffset(-1.57f, 3.14f, 0.0f); // 총의 회전 오프셋
+				Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
 
-		// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
-		Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+				// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+				Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
 
-		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+				Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
 
-		// 회전을 적용
-		if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
+				// 회전을 적용
+				if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
 
-		// 플레이어를 기준으로 한 반대 방향으로 이동
-		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-		if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+				// 플레이어를 기준으로 한 반대 방향으로 이동
+				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+				if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+			}
+			{
+				Vec3 rotation = GetTransform()->GetLocalRotation();
+
+				Vec3 gunOffset(0.0f, -40.0f, 10.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+				// 플레이어의 회전값을 쿼터니언으로 변환
+				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+				// gunOffset을 회전시킴
+				Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+				// playerGunObject의 위치를 플레이어의 위치로 이동
+				if (playerGunObject != NULL) playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+				Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
+				Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+				// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+				Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+				Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+				// 회전을 적용
+				if (playerObject != NULL) playerObject->GetTransform()->SetLocalRotation(gunRotation);
+
+				// 플레이어를 기준으로 한 반대 방향으로 이동
+				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+				if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(newPosition);
+
+				if (playerObject != NULL) Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
+			}
+		}
+		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+		{
+			playerGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			playerObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+
+			{
+				playerHeadCoreObject->GetTransform()->SetLocalPosition(Vec3(
+					GetTransform()->GetLocalPosition().x,
+					GetTransform()->GetLocalPosition().y - 35.f,
+					GetTransform()->GetLocalPosition().z)
+				);
+				Vec3 rot = playerHeadCoreObject->GetTransform()->GetLocalRotation();
+				rot.y = GetTransform()->GetLocalRotation().y;
+				playerHeadCoreObject->GetTransform()->SetLocalRotation(rot);
+			}
+		}
 	}
 
-	{
-		Vec3 rotation = GetTransform()->GetLocalRotation();
+	
 
-		Vec3 gunOffset(0.0f, -40.0f, 10.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
-
-		// 플레이어의 회전값을 쿼터니언으로 변환
-		Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
-
-		// gunOffset을 회전시킴
-		Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
-
-		// playerGunObject의 위치를 플레이어의 위치로 이동
-		if (playerGunObject != NULL) playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-		// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-		Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
-		Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
-			QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
-
-		// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
-		Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
-
-		Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
-
-		// 회전을 적용
-		if (playerObject != NULL) playerObject->GetTransform()->SetLocalRotation(gunRotation);
-
-		// 플레이어를 기준으로 한 반대 방향으로 이동
-		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-		if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(newPosition);
-
-		if (playerObject != NULL) Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
-	}
+	
 	
 
 	wcscpy_s(previousTitle, windowTitle);
