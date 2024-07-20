@@ -1900,15 +1900,19 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
 {
 	auto& gameObjects = scene_erase->GetGameObjects();
+	std::vector<std::shared_ptr<GameObject>> objectsToRemove;
 
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject == nullptr)
 			continue;
-		scene_erase->RemoveGameObject(gameObject);
+		objectsToRemove.push_back(gameObject);
 	}
 
-	//개선 필요
+	for (auto& gameObject : objectsToRemove)
+	{
+		scene_erase->RemoveGameObject(gameObject);
+	}
 
 }
 
