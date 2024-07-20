@@ -114,6 +114,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		target->Send_Packet(&pad);
 
 		if (target->hp <= 0) { //플레이어 체력이 0보다 낮아지면 모든 플레이어에게 사망을 전달한다.
+			is_core_state = true;
 			sc_packet_player_dead pd;
 			pd.type = SC_PLAYER_DEAD;
 			pd.size = sizeof(sc_packet_player_dead);
@@ -421,7 +422,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_HIT_BY_LASER: {
-		//레이저에 맞으면 어케되나요
+		is_core_state = true;
+		sc_packet_player_dead pd;
+		pd.type = SC_PLAYER_DEAD;
+		pd.size = sizeof(sc_packet_player_dead);
+		pd.id = my_id_;
+
+		for (auto& pl : my_game->ingame_player) {
+			pl.second->Send_Packet(&pd);
+		}
 		break;
 	}
 	case CS_USE_RESURRECTION: {

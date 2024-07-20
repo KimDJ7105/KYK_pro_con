@@ -183,7 +183,6 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_RESURRECTION:
 	{
-		//없어서 내가 일단 내가 임의로 작성해본 코드
 		sc_packet_resurrection* p = reinterpret_cast<sc_packet_resurrection*>(packet);
 
 		// 타 플레이어가 살아났을때
