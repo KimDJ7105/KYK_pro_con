@@ -362,6 +362,7 @@ struct sc_packet_player_lose {
 struct sc_packet_resurrection {
 	BYTE size;
 	BYTE type;
+	int id;
 };
 
 struct test_packet {
