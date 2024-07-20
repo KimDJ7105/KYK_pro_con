@@ -2338,6 +2338,58 @@ void SceneManager::CreateHeadCoreObject(int object_id)
 	}
 }
 
+void SceneManager::RevivePlayerObject(int object_id)
+{
+	vector<shared_ptr<GameObject>> gameObjects = _otherPlayer;
+
+	Vec3 pos;
+	Vec3 dir;
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectID() == object_id)
+		{
+			pos = gameObject->GetTransform()->GetLocalPosition();
+			dir = gameObject->GetTransform()->GetLocalRotation();
+		}
+	}
+
+	{
+		//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Player");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(pos);
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, dir.y - 3.14f, 0.f));
+			gameObject->GetTransform()->SetObjectType(OT_PLAYER);
+			gameObject->GetTransform()->SetObjectID(object_id);
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+
+			//히트박스
+			gameObject->AddComponent(make_shared<BoxCollider>());
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(pos.x, pos.y + 40.f, pos.z));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
+
+			_otherPlayer.push_back(gameObject);
+			mainGameScene->AddGameObject(gameObject);
+
+		}
+	}
+}
+
 void SceneManager::CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
 {
 	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player6\\dddd.fbx");
@@ -2404,7 +2456,7 @@ void SceneManager::CreatePlayerGunObject(int object_type, int object_id, float x
 
 			gameObject->AddComponent(make_shared<BoxCollider>());
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 20.f, 5.f));
-			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y, z));
 			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
 
 			mainGameScene->AddGameObject(gameObject);

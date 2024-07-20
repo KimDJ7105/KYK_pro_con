@@ -183,7 +183,22 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_RESURRECTION:
 	{
-		//플레이어 체력을 100으로, 탄창을 꽉 채우고 코어 상태에서 다시 플레이어로 전환
+		//없어서 내가 일단 내가 임의로 작성해본 코드
+		sc_packet_resurrection* p = reinterpret_cast<sc_packet_resurrection*>(packet);
+
+		// 타 플레이어가 살아났을때
+		if (playerID != p->id) {
+
+			_activeSessionScene->RevivePlayerObject(p->id);
+			_activeSessionScene->RemoveObject(OT_HEADCORE, p->id);
+		}
+		// 내가 살아났을때
+		else if (playerID == p->id) {
+			//플레이어 체력을 100으로, 탄창을 꽉 채우고 코어 상태에서 다시 플레이어로 전환
+			_activeSessionScene->SetPlayerDead(false);
+			_activeSessionScene->SetBullet(30);
+			_activeSessionScene->CalculateHP(100);
+		}
 		break;
 	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기

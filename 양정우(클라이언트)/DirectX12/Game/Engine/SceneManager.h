@@ -74,6 +74,7 @@ public:
 	void ChangeObjectAnimation(int object_id, int animationID);
 	
 	void CreateHeadCoreObject(int object_id);
+	void RevivePlayerObject(int object_id);
 	
 	Vec3 FindAislePosition(int aisleNum);
 	Vec3 FindRoomPosition(int roomNum);
@@ -163,7 +164,7 @@ public:
 	Vec3 GetLaserPosition(int room_num);
 
 private:
-	bool isPlayerDead = false;
+	bool isPlayerDead = true;
 
 public:
 	void SetPlayerDead(bool isdead) { isPlayerDead = isdead; }

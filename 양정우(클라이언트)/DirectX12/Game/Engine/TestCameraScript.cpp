@@ -68,6 +68,8 @@ void TestCameraScript::LateUpdate()
 		moveSpeed = 100.f;
 	}
 
+
+
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -230,48 +232,88 @@ void TestCameraScript::LateUpdate()
 		// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
 		currentPosition += moveDirection * moveSpeed * DELTA_TIME;
 
-		if (playerObject != NULL)
+		
+
+		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
 		{
-			shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
-			if (overlap != NULL)
+			if (playerObject != NULL)
 			{
-				isOverlap = true;
-				currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
-			}
-			else
-			{
-				isOverlap = false;
-			}
-			shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
-			if (overlap_blade != NULL)
-			{
-				//isCrushed = true;
-				cs_packet_hit_by_grinder hbg;
-				hbg.type = CS_HIT_BY_GRINDER;
-				hbg.size = sizeof(cs_packet_hit_by_grinder);
+				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+				if (overlap != NULL)
+				{
+					isOverlap = true;
+					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
+				}
+				else
+				{
+					isOverlap = false;
+				}
+				shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
+				if (overlap_blade != NULL)
+				{
+					//isCrushed = true;
+					cs_packet_hit_by_grinder hbg;
+					hbg.type = CS_HIT_BY_GRINDER;
+					hbg.size = sizeof(cs_packet_hit_by_grinder);
 
-				main_session->Send_Packet(&hbg);
+					main_session->Send_Packet(&hbg);
+				}
+				else
+				{
+					//isCrushed = false;
+
+				}
+
+				shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
+				if (overlap_Laser != NULL)
+				{
+					//레이저칼
+					cs_packet_hit_by_laser hbl;
+					hbl.size = sizeof(cs_packet_hit_by_laser);
+					hbl.type = CS_HIT_BY_LASER;
+
+					main_session->Send_Packet(&hbl);
+				}
+				else
+				{
+				}
+
 			}
-			else
+		}
+		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+		{
+			if (playerHeadCoreObject != NULL)
 			{
-				//isCrushed = false;
+				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, 99);
+				if (overlap != NULL)
+				{
+					isOverlap = true;
+					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
+				}
+				else
+				{
+					isOverlap = false;
+				}
+				shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_CRUSHER_BLADE);
+				if (overlap_blade != NULL)
+				{
+					// 두뇌코어 상태일때 분쇄기에 닿았을떄
+				}
+				else
+				{
+					
+				}
+
+				shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_LASER);
+				if (overlap_Laser != NULL)
+				{
+					// 두뇌코어 상태일떄 레이저에 닿았을떄
+				}
+				else
+				{
+				}
 
 			}
-
-			shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
-			if (overlap_Laser != NULL)
-			{
-				//레이저칼
-				cs_packet_hit_by_laser hbl;
-				hbl.size = sizeof(cs_packet_hit_by_laser);
-				hbl.type = CS_HIT_BY_LASER;
-
-				main_session->Send_Packet(&hbl);
-			}
-			else
-			{
-			}
-
 		}
 
 
@@ -548,101 +590,109 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
-		//플레이어 ID를 탐색
-		shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
-		shared_ptr<GameObject> keyCard;
-
-		//playerObject와 OT_KEYCARD타입간의 충돌이 일어났는지를 확인
-		keyCard = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_KEYCARD);
-
-		if (keyCard != NULL)
+		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
 		{
-			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+			//플레이어 ID를 탐색
+			shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
 
-			cs_packet_try_get_key tgk;
-			tgk.size = sizeof(cs_packet_try_get_key);
-			tgk.type = CS_TRY_GET_KEY;
-			tgk.x = pos.x;
-			tgk.y = pos.y;
-			tgk.z = pos.z;
-			tgk.key_id = keyCard->GetTransform()->GetObjectID();
-			//pos xyz 는 플레이어의 현재 위치
-			//key_id는 충돌한 카드키의 id값
-			main_session->Send_Packet(&tgk);
+			//playerObject와 OT_KEYCARD타입간의 충돌이 일어났는지를 확인
+			shared_ptr<GameObject> keyCard = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_KEYCARD);
 
-			GET_SINGLE(SceneManager)->SetKeyCardPosition(150 + 75 * haveKeycard, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130, haveKeycard);
-			haveKeycard++;
+			if (keyCard != NULL)
+			{
+				Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+				cs_packet_try_get_key tgk;
+				tgk.size = sizeof(cs_packet_try_get_key);
+				tgk.type = CS_TRY_GET_KEY;
+				tgk.x = pos.x;
+				tgk.y = pos.y;
+				tgk.z = pos.z;
+				tgk.key_id = keyCard->GetTransform()->GetObjectID();
+				//pos xyz 는 플레이어의 현재 위치
+				//key_id는 충돌한 카드키의 id값
+				main_session->Send_Packet(&tgk);
+
+				GET_SINGLE(SceneManager)->SetKeyCardPosition(150 + 75 * haveKeycard, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130, haveKeycard);
+				haveKeycard++;
+			}
+
+			shared_ptr<GameObject> terminal = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_TERMINAL);
+
+			if (terminal != NULL)
+			{
+				cs_packet_try_use_tmn tut;
+				tut.size = sizeof(cs_packet_try_use_tmn);
+				tut.type = CS_TRY_USE_TMN;
+				tut.terminal_id = terminal->GetTransform()->GetObjectID();
+
+				main_session->Send_Packet(&tut);
+			}
+
+			shared_ptr<GameObject> rabbitfoot = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT);
+
+			if (rabbitfoot != NULL)
+			{
+				Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+				cs_packet_try_get_rabbitfoot tgr;
+				tgr.size = sizeof(cs_packet_try_get_rabbitfoot);
+				tgr.type = CS_TRY_GET_RABBITFOOT;
+				tgr.x = pos.x;
+				tgr.y = pos.y;
+				tgr.z = pos.z;
+				tgr.obj_id = rabbitfoot->GetTransform()->GetObjectID();
+
+				main_session->Send_Packet(&tgr);
+
+				GET_SINGLE(SceneManager)->SetRabbitFootUI();
+			}
+
+			shared_ptr<GameObject> exit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_EXIT);
+
+			if (exit != NULL)
+			{
+				Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+
+				cs_packet_try_escape te;
+				te.size = sizeof(cs_packet_try_escape);
+				te.type = CS_TRY_ESCAPE;
+
+				main_session->Send_Packet(&te);
+			}
+
+			shared_ptr<GameObject> mediKit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_MEDIKIT);
+
+			if (mediKit != NULL)
+			{
+				//메디킷칼
+			}
+
+			shared_ptr<GameObject> ammobox = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_AMMOBOX);
+
+			if (ammobox != NULL)
+			{
+				//아모박스칼
+			}
 		}
-
-		shared_ptr<GameObject> terminal = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_TERMINAL);
-
-		if (terminal != NULL)
+		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
 		{
-			cs_packet_try_use_tmn tut;
-			tut.size = sizeof(cs_packet_try_use_tmn);
-			tut.type = CS_TRY_USE_TMN;
-			tut.terminal_id = terminal->GetTransform()->GetObjectID();
+			//두뇌코어가 된 플레이어의 ID를 탐색
+			shared_ptr<GameObject> playerObject = GET_SINGLE(SceneManager)->GetPlayerHeadCoreQbject(playerID);
 
-			main_session->Send_Packet(&tut);
-		}
 
-		shared_ptr<GameObject> rabbitfoot = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT);
+			shared_ptr<GameObject> pad = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RESURRECTION_PAD);
 
-		if (rabbitfoot != NULL)
-		{
-			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
+			if (pad != NULL)
+			{
+				Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
 
-			cs_packet_try_get_rabbitfoot tgr;
-			tgr.size = sizeof(cs_packet_try_get_rabbitfoot);
-			tgr.type = CS_TRY_GET_RABBITFOOT;
-			tgr.x = pos.x;
-			tgr.y = pos.y;
-			tgr.z = pos.z;
-			tgr.obj_id = rabbitfoot->GetTransform()->GetObjectID();
-			
-			main_session->Send_Packet(&tgr);
-			
-			GET_SINGLE(SceneManager)->SetRabbitFootUI();
-		}
+				cs_packet_use_resurrection ur;
+				ur.size = sizeof(cs_packet_use_resurrection);
+				ur.type = CS_USE_RESURRECTION;
 
-		shared_ptr<GameObject> exit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_EXIT);
-
-		if (exit != NULL)
-		{
-			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
-
-			cs_packet_try_escape te;
-			te.size = sizeof(cs_packet_try_escape);
-			te.type = CS_TRY_ESCAPE;
-
-			main_session->Send_Packet(&te);
-		}
-
-		shared_ptr<GameObject> pad = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RESURRECTION_PAD);
-
-		if (pad != NULL)
-		{
-			Vec3 pos = playerObject->GetTransform()->GetLocalPosition();
-
-			cs_packet_use_resurrection ur;
-			ur.size = sizeof(cs_packet_use_resurrection);
-			ur.type = CS_USE_RESURRECTION;
-
-			main_session->Send_Packet(&ur);
-		}
-
-		shared_ptr<GameObject> mediKit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_MEDIKIT);
-
-		if (mediKit != NULL)
-		{
-			//메디킷칼
-		}
-
-		shared_ptr<GameObject> ammobox = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_AMMOBOX);
-
-		if (ammobox != NULL)
-		{
-			//아모박스칼
+				main_session->Send_Packet(&ur);
+			}
 		}
 
 	}
