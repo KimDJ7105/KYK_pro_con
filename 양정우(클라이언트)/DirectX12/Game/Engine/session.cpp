@@ -165,7 +165,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		main_session->close_socket();
 
 		//엔딩 씬을 불러오고
-		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+		GET_SINGLE(SceneManager)->LoadGoodEndingGameScene(L"GoodEndingScene");
 
 		//메인게임 씬의 오브젝트들을 제거한다
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
@@ -175,7 +175,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		main_session->close_socket();
 		
 		//엔딩 씬을 불러오고
-		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+		GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
 
 		//메인게임 씬의 오브젝트들을 제거한다
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());

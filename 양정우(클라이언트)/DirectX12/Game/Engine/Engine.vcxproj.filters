@@ -193,6 +193,9 @@
     <ClCompile Include="EndingCameraScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
+    <ClCompile Include="GoodEndingCameraScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -353,6 +356,9 @@
       <Filter>Object\Test</Filter>
     </ClInclude>
     <ClInclude Include="EndingCameraScript.h">
+      <Filter>Object\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="GoodEndingCameraScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
   </ItemGroup>

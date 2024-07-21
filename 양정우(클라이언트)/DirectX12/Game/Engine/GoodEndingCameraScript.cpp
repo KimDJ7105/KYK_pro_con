@@ -1,20 +1,20 @@
 #include "pch.h"
-#include "EndingCameraScript.h"
+#include "GoodEndingCameraScript.h"
 #include "SceneManager.h"
 #include "Input.h"
 #include "Timer.h"
 
 #include "session.h"
 
-EndingCameraScript::EndingCameraScript()
+GoodEndingCameraScript::GoodEndingCameraScript()
 {
 }
 
-EndingCameraScript::~EndingCameraScript()
+GoodEndingCameraScript::~GoodEndingCameraScript()
 {
 }
 
-void EndingCameraScript::LateUpdate()
+void GoodEndingCameraScript::LateUpdate()
 {
 	if (INPUT->GetButtonDown(KEY_TYPE::SPACEBAR))
 	{
@@ -24,7 +24,7 @@ void EndingCameraScript::LateUpdate()
 		GET_SINGLE(SceneManager)->LoadLobbyScene(L"LobbyScene");
 
 		//엔딩 씬에 있던 오브젝트들을 제거
-		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetBadEndingScene());
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetGoodEndingScene());
 	}
 
 

@@ -22,11 +22,11 @@ class SceneManager
 public:
 	void Update();
 	void Render();
+
 	void LoadMainScene(std::wstring sceneName);
-
 	void LoadLobbyScene(std::wstring sceneName);
-
-	void LoadEndingGameScene(std::wstring sceneName);
+	void LoadBadEndingGameScene(std::wstring sceneName);
+	void LoadGoodEndingGameScene(std::wstring sceneName);
 
 	void SetLayerName(uint8 index, const wstring& name);
 	const wstring& IndexToLayerName(uint8 index) { return _layerNames[index]; }
@@ -43,13 +43,17 @@ private:
 
 	shared_ptr<Scene> LoadLobbyScene();
 
-	shared_ptr<Scene> LoadEndingScene();
+	shared_ptr<Scene> LoadBadEndingScene();
+
+	shared_ptr<Scene> LoadGoodEndingScene();
 
 	shared_ptr<Scene> mainGameScene = std::make_shared<Scene>();
 
 	shared_ptr<Scene> lobbyGameScene = std::make_shared<Scene>();
 
-	shared_ptr<Scene> endingGameScene = std::make_shared<Scene>();
+	shared_ptr<Scene> badEndingGameScene = std::make_shared<Scene>();
+
+	shared_ptr<Scene> goodEndingGameScene = std::make_shared<Scene>();
 
 private:
 	shared_ptr<Scene> _activeScene;
@@ -150,7 +154,9 @@ public:
 
 	shared_ptr<Scene> GetLobbyScene() { return lobbyGameScene; }
 
-	shared_ptr<Scene> GetEndingScene() { return endingGameScene; }
+	shared_ptr<Scene> GetBadEndingScene() { return badEndingGameScene; }
+
+	shared_ptr<Scene> GetGoodEndingScene() { return badEndingGameScene; }
 
 private:
 	int button_type = -1;

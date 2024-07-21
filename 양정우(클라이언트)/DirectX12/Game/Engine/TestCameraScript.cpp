@@ -726,20 +726,12 @@ void TestCameraScript::LateUpdate()
 		main_session->close_socket();
 
 		//엔딩 씬을 불러오고
-		GET_SINGLE(SceneManager)->LoadEndingGameScene(L"EndingScene");
+		GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
 
 		//메인게임 씬의 오브젝트들을 제거한다
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 	}
 	
-	if (INPUT->GetButtonDown(KEY_TYPE::M))
-	{
-		GET_SINGLE(SceneManager)->RemoveMapUI();
-	}
-
-
-
-
 	if (playerObject != nullptr && playerGunObject != nullptr && playerHeadCoreObject != nullptr)
 	{
 		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
