@@ -12,5 +12,8 @@ public:
 
 private:
 	shared_ptr<GameObject> cursor;
+
+public:
+	void GetWeaponSelectUI();
 };
 

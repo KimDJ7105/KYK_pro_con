@@ -56,38 +56,120 @@ void LobbyCameraScript::LateUpdate()
 		cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
 	}
 
-
-	if (INPUT->GetButtonDown(KEY_TYPE::SPACEBAR))
-	{
-		cl_packet_start_game sg;
-		sg.type = CL_START_GAME;
-		sg.size = sizeof(cl_packet_start_game);
-
-		session->Send_Packet(&sg);
-
-		GET_SINGLE(SceneManager)->LoadMainScene(L"TestScene");
-
-		//¼­¹öÄ®(¸ÞÀÎ ¾À ±¸¼º Á¾·áÁöÁ¡)
-		tcp::resolver resolver(main_io_con);
-		auto endpoint = resolver.resolve(main_server_ip, main_server_port);
-
-		tcp::socket sock(main_io_con);
-
-		main_session = new SESSION(std::move(sock));
-
-		main_session->do_connect(endpoint);
-
-		serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
-
-		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
-	}
-
 	if(INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
 	{
 
 		std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
 		std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
 
-		
+		if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_START_BTN)
+		{
+			cl_packet_start_game sg;
+			sg.type = CL_START_GAME;
+			sg.size = sizeof(cl_packet_start_game);
+
+			session->Send_Packet(&sg);
+
+			GET_SINGLE(SceneManager)->LoadMainScene(L"TestScene");
+
+			//¼­¹öÄ®(¸ÞÀÎ ¾À ±¸¼º Á¾·áÁöÁ¡)
+			tcp::resolver resolver(main_io_con);
+			auto endpoint = resolver.resolve(main_server_ip, main_server_port);
+
+			tcp::socket sock(main_io_con);
+
+			main_session = new SESSION(std::move(sock));
+
+			main_session->do_connect(endpoint);
+
+			serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
+
+			GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
+		}
+		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_BTN)
+		{
+			GetWeaponSelectUI();
+		}
+		else if(GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_EXIT_BTN)
+		{
+
+		}
+		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_CHANGE)
+		{
+			auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+			for (auto& gameObject : gameObjects)
+			{
+				if (gameObject->GetTransform()->GetObjectType() == OT_UI_WEAPON_SELECT)
+				{
+					if (gameObject->GetTransform()->GetObjectID() == GET_SINGLE(SceneManager)->GetButtonID())
+					{
+						gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f, 350.f, 500.f));
+
+						// ÃÑ¼±ÅÃÄ®
+						gameObject->GetTransform()->GetObjectID();
+						//GET_SINGLE(SceneManager)->GetButtonID()ÀÇ °ªÀÌ
+						//0ÀÌ¸é ±â°ü´ÜÃÑ	(GT_SM				0)
+						//1ÀÌ¸é »êÅºÃÑ		(GT_SG				1)
+						//2ÀÌ¸é µ¹°Ý¼ÒÃÑ	(GT_AR				2)
+						//3ÀÌ¸é Àú°Ý¼ÒÃÑ	(GT_SR				3)
+					}
+					else
+					{
+						gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+					}
+				}
+			}
+		}
+	}
+}
+
+void LobbyCameraScript::GetWeaponSelectUI()
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_TITLE)
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		}
+		else if (gameObject->GetTransform()->GetObjectType() == OT_UI_WEAPON_CHANGE)
+		{
+			if (gameObject->GetTransform()->GetObjectID() == 0)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-350.f, -350.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 1)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-350.f, -200.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 2)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-90.f, -350.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 3)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-90.f, -200.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 4)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f, 100.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 5)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f, -100.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 6)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f - 150.f, 350.f + 75.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 7)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f - 150.f, 100.f + 75.f, 500.f));
+			}
+			else if (gameObject->GetTransform()->GetObjectID() == 8)
+			{
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f, 350.f, 500.f));
+			}
+		}
 	}
 }

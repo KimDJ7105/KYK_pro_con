@@ -58,7 +58,21 @@
 #define OT_UI_MAP_BUTTON	115
 #define OT_CURSOR			116
 #define OT_HEADCORE			117
+#define OT_UI_START_BTN		118
+#define OT_UI_WEAPON_BTN	119
+#define OT_UI_EXIT_BTN		120
+#define OT_UI_TITLE			121
+#define OT_UI_WEAPON_CHANGE	122
+#define OT_UI_WEAPON_SELECT	123
 //---------------------------------------
+
+//Gun Type-------------------------------
+#define GT_SM				0
+#define GT_SG				1
+#define GT_AR				2
+#define GT_SR				3
+//---------------------------------------
+
 
 //Animation Type-------------------------
 #define AT_IDLE 0
