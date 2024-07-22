@@ -3,7 +3,9 @@
 #include "game.h"
 #include "server.h"
 
-int WP_DMG[5]{ 6,0,0,0,0 };
+int WP_DMG[5]{ 8,80,70,20,10 };
+int WP_MAG[5]{ 30,8,5,25,15 };
+float WP_COOLTIME[5]{ 0.1f, 1.f, 1.f, 0.125f, 0.333f };
 
 void SESSION::Send_Packet(void* packet, unsigned id)
 {
@@ -453,6 +455,29 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		gun_type = p->gun_type;
 		break;
 	}
+	case CS_CHANGE_GUN: {
+		cs_packet_change_gun* p = (cs_packet_change_gun*)packet;
+		if (p->pressed_key == 1) {
+			if (equip_weapon == gun_type) break;
+			equip_weapon = gun_type;
+		}
+
+		else if (p->pressed_key == 2) {
+			if (equip_weapon == GT_PT) break;
+			equip_weapon = GT_PT;
+		}
+
+		sc_packet_set_player_gun spg;
+		spg.size = sizeof(sc_packet_set_player_gun);
+		spg.type = SC_SET_PLAYER_GUN;
+		spg.id = my_id_;
+		spg.gun_type = equip_weapon;
+
+		for (auto& p : my_game->ingame_player) {
+			p.second->Send_Packet(&spg);
+		}
+		break;
+	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
 		TIMER_EVENT tm_grind;
@@ -589,7 +614,7 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	hp = 100;
 	remain_bullet = 30;
 
-	equip_weapon = WP_SMG;
+	equip_weapon = GT_PT;
 
 	team = team_num;
 

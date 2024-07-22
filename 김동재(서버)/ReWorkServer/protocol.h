@@ -100,6 +100,7 @@
 #define CS_HIT_BY_LASER		  15
 #define CS_USE_RESURRECTION	  16
 #define CS_SEND_GUNTYPE		  17
+#define CS_CHANGE_GUN		  18
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -130,14 +131,6 @@
 #define CL_START_GAME      150 //로비 씬에서 메인 씬으로 전환
 
 #define TEST_SPAWN_RBF 80
-//---------------------------------------
-
-//Weapon Info----------------------------
-#define WP_SMG 0
-#define WP_RIFLE 1
-#define WP_SHOTGUN 2
-#define WP_HANDGUN 3
-#define WP_HAMMER 4
 //---------------------------------------
 
 #pragma pack (push, 1)
@@ -249,6 +242,12 @@ struct cs_packet_send_guntype {
 	BYTE size;
 	BYTE type;
 	int gun_type;
+};
+
+struct cs_packet_change_gun {
+	BYTE size;
+	BYTE type;
+	int pressed_key;
 };
 
 //---------Server To Client-----------------
