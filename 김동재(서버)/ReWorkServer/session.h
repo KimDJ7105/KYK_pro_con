@@ -32,6 +32,8 @@ private:
 
 	bool using_terminal;
 	bool is_core_state;
+
+	int gun_type;
 private:
 	void Send_Packet(void* packet, unsigned id);
 	

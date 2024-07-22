@@ -19,6 +19,7 @@ private:
 	bool isMapOpen;
 	int haveKeycard;
 
+	int guntype;
 public:
 
 	SESSION(tcp::socket socket_);
@@ -41,9 +42,13 @@ public:
 
 	void close_socket();
 
+	void set_guntype(int gt);
+
+	int get_guntype();
 };
 
 void MoveSession(tcp::socket& sock);
+void MoveGuntype();
 
 extern SESSION* session;
 extern SESSION* main_session;

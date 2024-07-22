@@ -80,6 +80,8 @@ void LobbyCameraScript::LateUpdate()
 
 			main_session = new SESSION(std::move(sock));
 
+			MoveGuntype();
+			
 			main_session->do_connect(endpoint);
 
 			serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
@@ -106,7 +108,8 @@ void LobbyCameraScript::LateUpdate()
 						gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f, 350.f, 500.f));
 
 						// 총선택칼
-						gameObject->GetTransform()->GetObjectID();
+						session->set_guntype(gameObject->GetTransform()->GetObjectID());
+						
 						//GET_SINGLE(SceneManager)->GetButtonID()의 값이
 						//0이면 기관단총	(GT_SM				0)
 						//1이면 산탄총		(GT_SG				1)

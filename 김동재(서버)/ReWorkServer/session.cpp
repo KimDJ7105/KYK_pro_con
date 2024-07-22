@@ -448,6 +448,11 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
+	case CS_SEND_GUNTYPE: {
+		cs_packet_send_guntype* p = (cs_packet_send_guntype*)packet;
+		gun_type = p->gun_type;
+		break;
+	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
 		TIMER_EVENT tm_grind;

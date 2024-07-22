@@ -71,6 +71,7 @@
 #define GT_SG				1
 #define GT_AR				2
 #define GT_SR				3
+#define GT_PT		        4
 //---------------------------------------
 
 
@@ -98,6 +99,7 @@
 #define CS_TRIGGER_LASER	  14
 #define CS_HIT_BY_LASER		  15
 #define CS_USE_RESURRECTION	  16
+#define CS_SEND_GUNTYPE		  17
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -116,6 +118,7 @@
 #define SC_PLAYER_WIN	   15 //플레이어 팀이 토끼발 들고 탈출
 #define SC_PLAYER_LOSE     16 //플레이어 패배
 #define SC_RESURRECTION	   17 //플레이어 코어 상태에서 부활
+#define SC_SET_PLAYER_GUN  18 //플레이어 총 설정
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -240,6 +243,12 @@ struct cs_packet_hit_by_laser {
 struct cs_packet_use_resurrection {
 	BYTE size;
 	BYTE type;
+};
+
+struct cs_packet_send_guntype {
+	BYTE size;
+	BYTE type;
+	int gun_type;
 };
 
 //---------Server To Client-----------------
@@ -377,6 +386,13 @@ struct sc_packet_resurrection {
 	BYTE size;
 	BYTE type;
 	int id;
+};
+
+struct sc_packet_set_player_gun {
+	BYTE size;
+	BYTE type;
+	int id;
+	int gun_type;
 };
 
 struct test_packet {

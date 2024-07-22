@@ -40,6 +40,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 		//std::cout << "Recv Log in info\n";
 
+		cs_packet_send_guntype sgt;
+		sgt.size = sizeof(cs_packet_send_guntype);
+		sgt.type = CS_SEND_GUNTYPE;
+		sgt.gun_type = guntype;
+
+		Send_Packet(&sgt);
+
 		break;
 	}
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
@@ -313,12 +320,27 @@ void SESSION::close_socket()
 	sock.close();
 }
 
+void SESSION::set_guntype(int gt)
+{
+	guntype = gt;
+}
+
+int SESSION::get_guntype()
+{
+	return guntype;
+}
+
 SESSION* session;
 SESSION* main_session;
 
 void MoveSession(tcp::socket& sock)
 {
 	session = new SESSION(std::move(sock));
+}
+
+void MoveGuntype()
+{
+	main_session->set_guntype(session->get_guntype());
 }
 
 SESSION* GetSession() { return session; }
