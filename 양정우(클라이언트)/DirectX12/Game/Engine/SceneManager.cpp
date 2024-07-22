@@ -1007,7 +1007,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->AddComponent(make_shared<TestCameraScript>());
 
 		camera->GetCamera()->SetFar(10000.f);
-		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
+		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 3.f, 0.f));
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
@@ -1171,281 +1171,281 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region UI
 
-	//CrossHair
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.05, WINDOW_HEIGHT * 0.05, 50.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Crosshair", L"..\\Resources\\Texture\\PR_CROSSHAIR01_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		mainGameScene->AddGameObject(sphere);
-	}
+	////CrossHair
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.05, WINDOW_HEIGHT * 0.05, 50.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Crosshair", L"..\\Resources\\Texture\\PR_CROSSHAIR01_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
-	//HP틀
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.8, WINDOW_WIDTH * 0.8, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(0, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"HP_Main", L"..\\Resources\\Texture\\PR_HP_BAR_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		mainGameScene->AddGameObject(sphere);
-	}
+	////HP틀
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.8, WINDOW_WIDTH * 0.8, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(0, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"HP_Main", L"..\\Resources\\Texture\\PR_HP_BAR_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
-	//HP 노드
-	for(int i = 0; i < 10; i++)
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH * 0.7) * 0.1, (WINDOW_WIDTH * 0.7) * 0.1, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(-(WINDOW_WIDTH / 2) + 510 + 65 * i, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"HP_Sub", L"..\\Resources\\Texture\\PR_HP_SQUARE_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
+	////HP 노드
+	//for(int i = 0; i < 10; i++)
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH * 0.7) * 0.1, (WINDOW_WIDTH * 0.7) * 0.1, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(-(WINDOW_WIDTH / 2) + 510 + 65 * i, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"HP_Sub", L"..\\Resources\\Texture\\PR_HP_SQUARE_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
 
-		sphere->GetTransform()->SetObjectType(104);
-		sphere->GetTransform()->SetObjectID(i);
+	//	sphere->GetTransform()->SetObjectType(104);
+	//	sphere->GetTransform()->SetObjectID(i);
 
-		mainGameScene->AddGameObject(sphere);
-	}
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
-	//KeyCard
-	for(int i = 0; i < 3; i++)
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.1, WINDOW_HEIGHT * 0.1, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(11111111111111111, 11111111111111111, 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard_Item", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(105);
-		sphere->GetTransform()->SetObjectID(i);
+	////KeyCard
+	//for(int i = 0; i < 3; i++)
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.1, WINDOW_HEIGHT * 0.1, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(11111111111111111, 11111111111111111, 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"KeyCard_Item", L"..\\Resources\\Texture\\PR_KEYCARD_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(105);
+	//	sphere->GetTransform()->SetObjectID(i);
 
-		mainGameScene->AddGameObject(sphere);
-	}
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
-	//slash
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(0, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SlashUI", L"..\\Resources\\Texture\\Number\\PR_SLASH_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(107);
-		sphere->GetTransform()->SetObjectID(1);
+	////slash
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(0, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SlashUI", L"..\\Resources\\Texture\\Number\\PR_SLASH_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(107);
+	//	sphere->GetTransform()->SetObjectID(1);
 
-		mainGameScene->AddGameObject(sphere);
-	}
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
-	//MaxBullet
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(30, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(108);
-		sphere->GetTransform()->SetObjectID(1);
+	////MaxBullet
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(30, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(108);
+	//	sphere->GetTransform()->SetObjectID(1);
 
-		mainGameScene->AddGameObject(sphere);
-	}
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(60, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(108);
-		sphere->GetTransform()->SetObjectID(1);
+	//	mainGameScene->AddGameObject(sphere);
+	//}
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(60, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(108);
+	//	sphere->GetTransform()->SetObjectID(1);
 
-		mainGameScene->AddGameObject(sphere);
-	}
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
-	//NowBullet
-	for (int i = 0; i < 10; i++)
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	////NowBullet
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
-			wstring fileName = L"PR_NUM" + std::to_wstring(i) + L"_UI";
-			wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
+	//		wstring fileName = L"PR_NUM" + std::to_wstring(i) + L"_UI";
+	//		wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
 
-			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(109);
-		sphere->GetTransform()->SetObjectID(i);
+	//		//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(109);
+	//	sphere->GetTransform()->SetObjectID(i);
 
-		mainGameScene->AddGameObject(sphere);
-	}
-	for (int i = 10; i < 20; i++)
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//	mainGameScene->AddGameObject(sphere);
+	//}
+	//for (int i = 10; i < 20; i++)
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.3, WINDOW_HEIGHT * 0.3, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
-			wstring fileName = L"PR_NUM" + std::to_wstring(i - 10) + L"_UI";
-			wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
+	//		wstring fileName = L"PR_NUM" + std::to_wstring(i - 10) + L"_UI";
+	//		wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
 
-			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(109);
-		sphere->GetTransform()->SetObjectID(i);
+	//		//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(109);
+	//	sphere->GetTransform()->SetObjectID(i);
 
-		mainGameScene->AddGameObject(sphere);
-	}
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
 
-	//Gun UI
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(0, 150 -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"GunUI", L"..\\Resources\\Texture\\PR_SMG01_UI.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(106);
-		sphere->GetTransform()->SetObjectID(1);
+	////Gun UI
+	//{
+	//	shared_ptr<GameObject> sphere = make_shared<GameObject>();
+	//	sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	//	sphere->AddComponent(make_shared<Transform>());
+	//	sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
+	//	sphere->GetTransform()->SetLocalPosition(Vec3(0, 150 -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"GunUI", L"..\\Resources\\Texture\\PR_SMG01_UI.png");
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	sphere->AddComponent(meshRenderer);
+	//	sphere->GetTransform()->SetObjectType(106);
+	//	sphere->GetTransform()->SetObjectID(1);
 
-		mainGameScene->AddGameObject(sphere);
-	}
+	//	mainGameScene->AddGameObject(sphere);
+	//}
 
 
 	//Map 틀
@@ -1602,7 +1602,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0.f, -1.f, 1.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));		// WHITE
+		light->GetLight()->SetDiffuse(Vec3(0.01f, 0.01f, 0.01f));		// WHITE
 		light->GetLight()->SetAmbient(Vec3(0.f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
 
@@ -1611,37 +1611,55 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Point Light
+	//{
+	//	shared_ptr<GameObject> light = make_shared<GameObject>();
+	//	light->AddComponent(make_shared<Transform>());
+	//	light->GetTransform()->SetLocalPosition(Vec3(1200.f, 374.f, 1200.f));
+	//	light->AddComponent(make_shared<Light>());
+	//	//light->GetLight()->SetLightDirection(Vec3(-1.f, -1.f, 0.f));
+	//	light->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
+	//	light->GetLight()->SetDiffuse(Vec3(1.f, 1.0f, 1.f));		// GREEN
+	//	light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
+	//	light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
+	//	light->GetLight()->SetLightRange(400.f);
+	//	//light->GetLight()->SetLightAngle(XM_PI / 4);
+	//	mainGameScene->AddGameObject(light);
+	//}
+	for (int j = 0; j < 5; j++)
 	{
-		//shared_ptr<GameObject> light = make_shared<GameObject>();
-		//light->AddComponent(make_shared<Transform>());
-		//light->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 150.f));
-		//light->AddComponent(make_shared<Light>());
-		////light->GetLight()->SetLightDirection(Vec3(-1.f, -1.f, 0.f));
-		//light->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
-		//light->GetLight()->SetDiffuse(Vec3(0.f, 0.5f, 0.f));		// GREEN
-		//light->GetLight()->SetAmbient(Vec3(0.f, 0.3f, 0.f));
-		//light->GetLight()->SetSpecular(Vec3(0.0f, 0.3f, 0.f));
-		//light->GetLight()->SetLightRange(200.f);
-		////light->GetLight()->SetLightAngle(XM_PI / 4);
-		//scene->AddGameObject(light);
+		for (int i = 0; i < 5; i++)
+		{
+			shared_ptr<GameObject> light = make_shared<GameObject>();
+			light->AddComponent(make_shared<Transform>());
+			light->GetTransform()->SetLocalPosition(Vec3(i * 600.f, 374.f, j * 600.f));
+			light->AddComponent(make_shared<Light>());
+			//light->GetLight()->SetLightDirection(Vec3(-1.f, -1.f, 0.f));
+			light->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
+			light->GetLight()->SetDiffuse(Vec3(1.f, 1.0f, 1.f));		// GREEN
+			light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
+			light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
+			light->GetLight()->SetLightRange(400.f);
+			//light->GetLight()->SetLightAngle(XM_PI / 4);
+			mainGameScene->AddGameObject(light);
+		}
 	}
 #pragma endregion
 
 #pragma region Spot Light
-	{
-		//shared_ptr<GameObject> light = make_shared<GameObject>();
-		//light->AddComponent(make_shared<Transform>());
-		//light->GetTransform()->SetLocalPosition(Vec3(75.f, 0.f, 150.f));
-		//light->AddComponent(make_shared<Light>());
-		//light->GetLight()->SetLightDirection(Vec3(-1.f, 0.f, 0.f));
-		//light->GetLight()->SetLightType(LIGHT_TYPE::SPOT_LIGHT);
-		//light->GetLight()->SetDiffuse(Vec3(0.0f, 0.f, 0.5f));		// Blue
-		//light->GetLight()->SetAmbient(Vec3(0.f, 0.f, 0.1f));
-		//light->GetLight()->SetSpecular(Vec3(0.f, 0.f, 0.1f));
-		//light->GetLight()->SetLightRange(200.f);
-		//light->GetLight()->SetLightAngle(XM_PI / 4);
-		//scene->AddGameObject(light);
-	}
+	//{
+	//	shared_ptr<GameObject> light = make_shared<GameObject>();
+	//	light->AddComponent(make_shared<Transform>());
+	//	light->GetTransform()->SetLocalPosition(Vec3(1200.f, 374.f, 1200.f));
+	//	light->AddComponent(make_shared<Light>());
+	//	light->GetLight()->SetLightDirection(Vec3(0.f, -1.f, 0.f));
+	//	light->GetLight()->SetLightType(LIGHT_TYPE::SPOT_LIGHT);
+	//	light->GetLight()->SetDiffuse(Vec3(1.0f, 1.f, 1.0f));		// Color
+	//	light->GetLight()->SetAmbient(Vec3(0.f, 0.f, 0.1f));
+	//	light->GetLight()->SetSpecular(Vec3(0.f, 0.f, 0.1f));
+	//	light->GetLight()->SetLightRange(400.f);
+	//	light->GetLight()->SetLightAngle(XM_PI / 4);
+	//	mainGameScene->AddGameObject(light);
+	//}
 #pragma endregion
 
 #pragma region ParticleSystem

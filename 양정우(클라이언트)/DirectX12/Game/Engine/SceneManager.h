@@ -170,7 +170,7 @@ public:
 	Vec3 GetLaserPosition(int room_num);
 
 private:
-	bool isPlayerDead = false;
+	bool isPlayerDead = true;
 
 public:
 	void SetPlayerDead(bool isdead) { isPlayerDead = isdead; }
