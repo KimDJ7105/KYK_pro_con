@@ -2239,10 +2239,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 	
-#pragma Guns
-
+#pragma region Guns
 	//ÃÑ ¼ÒÈ¯ ÄÚµå
-	/*
+	
 	//µ¹°Ý¼ÒÃÑ
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_GunModel(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_2\\AR01_Player_Single_IShoot.fbx");
@@ -2368,7 +2367,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 
-	*/
+	
 #pragma endregion
 
 #pragma region All Map
