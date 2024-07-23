@@ -50,4 +50,10 @@ private:
 	shared_ptr<Mesh> m_Mesh;
 	vector<shared_ptr<Material>>	m_Materials;
 	vector<MeshRenderInfo> m_MeshRenderers;
+
+public:
+	static shared_ptr<MeshData> LoadBlueTeamModel(const wstring& keyname);
+	static shared_ptr<MeshData> LoadGreenTeamModel(const wstring& keyname);
+	static shared_ptr<MeshData> LoadPurpleTeamModel(const wstring& keyname);
+	static shared_ptr<MeshData> LoadRedTeamModel(const wstring& keyname);
 };

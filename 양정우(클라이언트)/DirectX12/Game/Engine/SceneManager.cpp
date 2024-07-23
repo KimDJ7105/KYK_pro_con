@@ -2132,7 +2132,129 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			}
 		}
 
+
+		//플레이어들 소환 코드
+		/*
+		// Blue
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBlueTeamModel(L"..\\Resources\\FBX\\PlayerBlue\\IDLE_2\\Blue_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Player99");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 0.f, 1200.f));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+				mainGameScene->AddGameObject(gameObject);
+				gameObject->AddComponent(make_shared<TestDragon>());
+			}
+		}
+
+		// Green
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadGreenTeamModel(L"..\\Resources\\FBX\\PlayerBlue\\IDLE_2\\Green_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Player100");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1250.f, 0.f, 1200.f));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+				mainGameScene->AddGameObject(gameObject);
+				gameObject->AddComponent(make_shared<TestDragon>());
+			}
+		}
+
+		// Red
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadRedTeamModel(L"..\\Resources\\FBX\\PlayerRed\\IDLE_2\\Red_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Player101");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1150.f, 0.f, 1200.f));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+				mainGameScene->AddGameObject(gameObject);
+				gameObject->AddComponent(make_shared<TestDragon>());
+			}
+		}
+
+		// Purple
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPurpleTeamModel(L"..\\Resources\\FBX\\PlayerPurple\\IDLE_2\\Purple_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Player102");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 0.f, 1150.f));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+				mainGameScene->AddGameObject(gameObject);
+				gameObject->AddComponent(make_shared<TestDragon>());
+			}
+		}
+
+		*/
 	}
+#pragma endregion
+	
+	//권총
+
+	//기관단총
+
+	//샷건
+
+	//돌격소총
+
+	//스나이퍼
+
+
+#pragma Guns
+
+
+
+
 #pragma endregion
 
 #pragma region All Map
@@ -2194,23 +2316,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			mainGameScene->AddGameObject(gameObject);
 		}
-	}
-	{
-		//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-		////shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\Player_Walk.bin");
-
-		//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		//for (auto& gameObject : gameObjects)
-		//{
-		//	gameObject->SetName(L"Player_dummy");
-		//	gameObject->SetCheckFrustum(false);
-		//	gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));		//0.f, 45.f, 100.f
-		//	gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-		//	gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-
-		//	scene->AddGameObject(gameObject);
-		//}
 	}
 	{
 		shared_ptr<MeshData> meshData2 = GET_SINGLE(Resources)->LoadBinaryModel(L"..\\Resources\\Binary\\CardKey.bin");
@@ -3052,7 +3157,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 			}
 		}
 	}
-	
 }
 
 void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID)

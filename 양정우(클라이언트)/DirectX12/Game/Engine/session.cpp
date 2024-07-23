@@ -207,6 +207,14 @@ void SESSION::Process_Packet(unsigned char* packet)
 		}
 		break;
 	}
+	case SC_SET_PLAYER_GUN : 
+	{
+		sc_packet_set_player_gun* p = reinterpret_cast<sc_packet_set_player_gun*>(packet);
+		//플레이어 총 세팅
+		//id와 총 타입이 전송됨
+		//본인의 경우 무기 변경, 타인의 경우에 무기 동기화 하면 됨
+		break;
+	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
 	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);

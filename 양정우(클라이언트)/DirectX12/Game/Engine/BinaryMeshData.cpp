@@ -78,38 +78,38 @@ void BinaryMeshData::AddMeshData()
 	if (m_pvec4BoneWeights)
 	{
 		// 뼈 가중치 추가
-		for (int i = 0; i < m_nVertices; i++) {
-			meshInfo.vertices[i].weights = m_pvec4BoneWeights[i]; // <BoneWeights>:
-		}
+		//for (int i = 0; i < m_nVertices; i++) {
+		//	meshInfo.vertices[i].weights = m_pvec4BoneWeights[i]; // <BoneWeights>:
+		//}
 	}
 
 	if (m_pvec4BoneIndices)
 	{
 		// 뼈 인덱스 추가
-		for (int i = 0; i < m_nVertices; i++) {
-			meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
-		}
+		//for (int i = 0; i < m_nVertices; i++) {
+		//	meshInfo.vertices[i].indices = m_pvec4BoneIndices[i]; // <BoneIndices>:
+		//}
 	}
 
 	if (m_pvec4BoneWeights && m_pvec4BoneIndices)
 	{
 		//boneWeights 계산하는곳
-		for (int i = 0; i < m_nVertices; i++) {
-			// BoneWeight 객체 생성
-			BoneWeight bone_weight;
+		//for (int i = 0; i < m_nVertices; i++) {
+		//	// BoneWeight 객체 생성
+		//	BoneWeight bone_weight;
 
-			// 가중치 추가
-			bone_weight.AddWeights(meshInfo.vertices[i].indices.x, meshInfo.vertices[i].weights.x);
-			bone_weight.AddWeights(meshInfo.vertices[i].indices.y, meshInfo.vertices[i].weights.y);
-			bone_weight.AddWeights(meshInfo.vertices[i].indices.z, meshInfo.vertices[i].weights.z);
-			bone_weight.AddWeights(meshInfo.vertices[i].indices.w, meshInfo.vertices[i].weights.w);
+		//	// 가중치 추가
+		//	bone_weight.AddWeights(meshInfo.vertices[i].indices.x, meshInfo.vertices[i].weights.x);
+		//	bone_weight.AddWeights(meshInfo.vertices[i].indices.y, meshInfo.vertices[i].weights.y);
+		//	bone_weight.AddWeights(meshInfo.vertices[i].indices.z, meshInfo.vertices[i].weights.z);
+		//	bone_weight.AddWeights(meshInfo.vertices[i].indices.w, meshInfo.vertices[i].weights.w);
 
-			// 가중치 보정
-			bone_weight.Normalize();
+		//	// 가중치 보정
+		//	bone_weight.Normalize();
 
-			// FbxMeshInfo에 BoneWeight 추가
-			meshInfo.boneWeights.push_back(bone_weight);
-		}
+		//	// FbxMeshInfo에 BoneWeight 추가
+		//	meshInfo.boneWeights.push_back(bone_weight);
+		//}
 	}
 
 
