@@ -56,4 +56,13 @@ public:
 	static shared_ptr<MeshData> LoadGreenTeamModel(const wstring& keyname);
 	static shared_ptr<MeshData> LoadPurpleTeamModel(const wstring& keyname);
 	static shared_ptr<MeshData> LoadRedTeamModel(const wstring& keyname);
+
+
+	static shared_ptr<MeshData> Load_AR_GunModel(const wstring& keyname);
+	static shared_ptr<MeshData> Load_PO_GunModel(const wstring& keyname);
+	static shared_ptr<MeshData> Load_SG_GunModel(const wstring& keyname);
+	static shared_ptr<MeshData> Load_SMG_GunModel(const wstring& keyname);
+	static shared_ptr<MeshData> Load_SR_GunModel(const wstring& keyname);
+
+
 };

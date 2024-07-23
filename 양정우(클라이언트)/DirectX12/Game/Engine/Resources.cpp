@@ -370,6 +370,7 @@ shared_ptr<MeshData> Resources::LoadPlayerModel(const wstring& Keyname)
 	return meshData;
 }
 //========================================================================
+//Team Player 
 shared_ptr<MeshData> Resources::LoadBlueTeamModel(const wstring& Keyname)
 {
 	wstring key = Keyname;
@@ -430,9 +431,88 @@ shared_ptr<MeshData> Resources::LoadRedTeamModel(const wstring& Keyname)
 
 	return meshData;
 }
-
 //========================================================================
+//AR
+shared_ptr<MeshData> Resources::Load_AR_GunModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
 
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_AR_GunModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+//PO
+shared_ptr<MeshData> Resources::Load_PO_GunModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_PO_GunModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+//SG
+shared_ptr<MeshData> Resources::Load_SG_GunModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_SG_GunModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+//SMG
+shared_ptr<MeshData> Resources::Load_SMG_GunModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_SMG_GunModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+//SR
+shared_ptr<MeshData> Resources::Load_SR_GunModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_SR_GunModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+//========================================================================
 shared_ptr<MeshData> Resources::LoadGunAnimation(const wstring& Keyname)
 {
 	wstring key = Keyname;

@@ -95,6 +95,7 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 	return meshData;
 }
 //===============================================================================
+//Team Player 
 shared_ptr<MeshData> MeshData::LoadBlueTeamModel(const wstring& keyname)
 {
 	// IDLE
@@ -718,6 +719,792 @@ shared_ptr<MeshData> MeshData::LoadRedTeamModel(const wstring& keyname)
 
 	return meshData;
 }
+//===============================================================================
+//AR
+shared_ptr<MeshData> MeshData::Load_AR_GunModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_1\\AR01_Player_Single_IShoot.fbx");
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_2\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Change_IDLE\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Reload_IDLE\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Single_Shoot_IDLE\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// WALK
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Walk_1\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Walk_2\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Change_Walk\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Reload_Walk\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Single_Shoot_Walk\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Run
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Run_1\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Run_2\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Change_Run\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Reload_Run\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Single_Shoot_Run\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Death
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_AR\\Death\\AR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+//PO
+shared_ptr<MeshData> MeshData::Load_PO_GunModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\IDLE_1\\P01_Player_Single_IShoot.fbx");
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\IDLE_2\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Change_IDLE\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Reload_IDLE\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Single_Shoot_IDLE\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// WALK
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Walk_1\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Walk_2\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Change_Walk\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Reload_Walk\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Single_Shoot_Walk\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Run
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Run_1\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Run_2\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Change_Run\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Reload_Run\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Single_Shoot_Run\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Death
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_PO\\Death\\P01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+//SG
+shared_ptr<MeshData> MeshData::Load_SG_GunModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\IDLE_1\\SG01_Player_Single_IShoot.fbx");
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\IDLE_2\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Change_IDLE\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Reload_IDLE\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Single_Shoot_IDLE\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// WALK
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Walk_1\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Walk_2\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Change_Walk\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Reload_Walk\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Single_Shoot_Walk\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Run
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Run_1\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Run_2\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Change_Run\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Reload_Run\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Single_Shoot_Run\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Death
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SG\\Death\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+//SMG
+shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_1\\SMG01_Player_Single_IShoot.fbx");
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// WALK
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_1\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_2\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Walk\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Walk\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Walk\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Run
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_1\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_2\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Run\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Run\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Run\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Death
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Death\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+//SR
+shared_ptr<MeshData> MeshData::Load_SR_GunModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\IDLE_1\\SR01_Player_Single_IShoot.fbx");
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\IDLE_2\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Change_IDLE\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Reload_IDLE\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Single_Shoot_IDLE\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
+		for (const auto& clip : shootAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// WALK
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Walk_1\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Walk_2\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Change_Walk\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Reload_Walk\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Single_Shoot_Walk\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Run
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Run_1\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Run_2\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Change_Run\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Reload_Run\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Single_Shoot_Run\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Death
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SR\\Death\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
 //===============================================================================
 shared_ptr<MeshData> MeshData::LoadGunModel(const wstring& keyname)
 {
