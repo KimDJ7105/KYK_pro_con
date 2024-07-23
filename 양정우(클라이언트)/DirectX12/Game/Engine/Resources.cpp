@@ -369,6 +369,69 @@ shared_ptr<MeshData> Resources::LoadPlayerModel(const wstring& Keyname)
 
 	return meshData;
 }
+//========================================================================
+shared_ptr<MeshData> Resources::LoadBlueTeamModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadBlueTeamModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+shared_ptr<MeshData> Resources::LoadGreenTeamModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadGreenTeamModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+shared_ptr<MeshData> Resources::LoadPurpleTeamModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadPurpleTeamModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+shared_ptr<MeshData> Resources::LoadRedTeamModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadRedTeamModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+//========================================================================
 
 shared_ptr<MeshData> Resources::LoadGunAnimation(const wstring& Keyname)
 {

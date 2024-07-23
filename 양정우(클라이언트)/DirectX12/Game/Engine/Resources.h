@@ -45,7 +45,6 @@ public:
 	shared_ptr<class MeshData> LoadPlayerModel(const wstring& Keyname);
 	shared_ptr<class MeshData> LoadGunAnimation(const wstring& Keyname);
 
-
 private:
 	void CreateDefaultShader();
 	void CreateDefaultMaterial();
@@ -53,6 +52,13 @@ private:
 private:
 	using KeyObjMap = std::map<wstring/*key*/, shared_ptr<Object>>;
 	array<KeyObjMap, OBJECT_TYPE_COUNT> _resources;
+
+
+public:
+	shared_ptr<class MeshData> LoadBlueTeamModel(const wstring& Keyname);
+	shared_ptr<class MeshData> LoadGreenTeamModel(const wstring& Keyname);
+	shared_ptr<class MeshData> LoadPurpleTeamModel(const wstring& Keyname);
+	shared_ptr<class MeshData> LoadRedTeamModel(const wstring& Keyname);
 };
 
 template<typename T>
