@@ -1197,10 +1197,10 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 {
 	// IDLE
 	FBXLoader loader;
-	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_1\\SMG01_Player_Single_IShoot.fbx");
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_1\\SMG02_Run_Reload.fbx");
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1208,7 +1208,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_IDLE\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);
@@ -1216,7 +1216,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_IDLE\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);
@@ -1224,7 +1224,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_IDLE\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);
@@ -1233,7 +1233,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	// WALK
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_1\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_1\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1241,7 +1241,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_2\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_2\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1249,7 +1249,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Walk\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Walk\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1257,7 +1257,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Walk\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Walk\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1265,7 +1265,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Walk\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Walk\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1274,7 +1274,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	// Run
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_1\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_1\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1282,7 +1282,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_2\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_2\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1290,7 +1290,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Run\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Run\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1298,7 +1298,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Run\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Run\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1306,7 +1306,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Run\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Run\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1315,7 +1315,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	// Death
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Death\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Death\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1953,12 +1953,12 @@ shared_ptr<MeshData> MeshData::Load_SMG_FPS(const wstring& keyname)
 {
 	// IDLE
 	FBXLoader loader;
-	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\IDLE\\SMG01_FP_Shoot.fbx");
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\IDLE\\SMG02_Hand_IDLE.fbx");
 
 	// Shoot
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Shoot\\SMG01_FP_Shoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Shoot\\SMG02_Hand_IDLE.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1967,7 +1967,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_FPS(const wstring& keyname)
 	// Reload
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Reload\\SMG01_FP_Shoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Reload\\SMG02_Hand_IDLE.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1976,7 +1976,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_FPS(const wstring& keyname)
 	// Change
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Change\\SMG01_FP_Shoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Change\\SMG02_Hand_IDLE.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
