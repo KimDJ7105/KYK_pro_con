@@ -513,6 +513,156 @@ shared_ptr<MeshData> Resources::Load_SR_GunModel(const wstring& Keyname)
 	return meshData;
 }
 //========================================================================
+// Player Hands
+shared_ptr<MeshData> Resources::LoadBlueHandModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadBlueHandModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+shared_ptr<MeshData> Resources::LoadGreenHandModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadGreenHandModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+shared_ptr<MeshData> Resources::LoadPurpleHandModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadPurpleHandModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+shared_ptr<MeshData> Resources::LoadRedHandModel(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::LoadRedHandModel(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+//========================================================================
+// Player Guns
+// AR
+shared_ptr<MeshData> Resources::Load_AR_FPS(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_AR_FPS(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+// PO
+shared_ptr<MeshData> Resources::Load_PO_FPS(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_PO_FPS(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+// SG
+shared_ptr<MeshData> Resources::Load_SG_FPS(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_SG_FPS(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+// SMG
+shared_ptr<MeshData> Resources::Load_SMG_FPS(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_SMG_FPS(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+// SR
+shared_ptr<MeshData> Resources::Load_SR_FPS(const wstring& Keyname)
+{
+	wstring key = Keyname;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	meshData = MeshData::Load_SR_FPS(Keyname);
+
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
+//========================================================================
 shared_ptr<MeshData> Resources::LoadGunAnimation(const wstring& Keyname)
 {
 	wstring key = Keyname;

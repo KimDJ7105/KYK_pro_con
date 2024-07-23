@@ -6,16 +6,15 @@
 #include "Mesh.h"
 #include "MeshRenderer.h"
 #include "StructuredBuffer.h"
-
-//실질적으로 애니메이션을 틀어준다.
+#include <algorithm>
 
 using std::min;
 using std::max;
 
 Animator::Animator() : Component(COMPONENT_TYPE::ANIMATOR)
 {
-	_computeMaterial = GET_SINGLE(Resources)->Get<Material>(L"ComputeAnimation");
-	_boneFinalMatrix = make_shared<StructuredBuffer>();
+    _computeMaterial = GET_SINGLE(Resources)->Get<Material>(L"ComputeAnimation");
+    _boneFinalMatrix = make_shared<StructuredBuffer>();
 }
 
 Animator::~Animator()
@@ -24,55 +23,114 @@ Animator::~Animator()
 
 void Animator::FinalUpdate()
 {
-	_updateTime += DELTA_TIME;
+    _updateTime += DELTA_TIME;
 
-	const AnimClipInfo& animClip = _animClips->at(_clipIndex);
-	if (_updateTime >= animClip.duration)
-		_updateTime = 0.f;
+    const AnimClipInfo& animClip = _animClips->at(_clipIndex);
+    if (_updateTime >= animClip.duration)
+    {
+        _updateTime = 0.f;
+        if (_isPlayingSequence)
+        {
+            if (!_sequenceQueue.empty())
+            {
+                _clipIndex = _sequenceQueue.front();
+                _sequenceQueue.pop();
+            }
+            else
+            {
+                _clipIndex = _lastClipIndex; // 마지막 클립 인덱스 재생
+            }
+        }
+    }
 
-	const int32 ratio = static_cast<int32>(animClip.frameCount / animClip.duration);
-	_frame = static_cast<int32>(_updateTime * ratio);
-	_frame = min(_frame, animClip.frameCount - 1);
-	_nextFrame = min(_frame + 1, animClip.frameCount - 1);
-	_frameRatio = static_cast<float>(_frame - _frame);
+    const int32 ratio = static_cast<int32>(animClip.frameCount / animClip.duration);
+    _frame = static_cast<int32>(_updateTime * ratio);
+    _frame = min(_frame, animClip.frameCount - 1);
+    _nextFrame = min(_frame + 1, animClip.frameCount - 1);
+    _frameRatio = (_updateTime * ratio) - _frame; // _frameRatio 계산 수정
+
+    PushData();
 }
 
 void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
 {
-	_animClips = animClips;
+    _animClips = animClips;
 }
 
 void Animator::PushData()
 {
-	uint32 boneCount = static_cast<uint32>(_bones->size());
-	if (_boneFinalMatrix->GetElementCount() < boneCount)
-		_boneFinalMatrix->Init(sizeof(Matrix), boneCount);
+    uint32 boneCount = static_cast<uint32>(_bones->size());
+    if (_boneFinalMatrix->GetElementCount() < boneCount)
+        _boneFinalMatrix->Init(sizeof(Matrix), boneCount);
 
-	// Compute Shader
-	shared_ptr<Mesh> mesh = GetGameObject()->GetMeshRenderer()->GetMesh();
-	mesh->GetBoneFrameDataBuffer(_clipIndex)->PushComputeSRVData(SRV_REGISTER::t8);
-	mesh->GetBoneOffsetBuffer()->PushComputeSRVData(SRV_REGISTER::t9);
+    shared_ptr<Mesh> mesh = GetGameObject()->GetMeshRenderer()->GetMesh();
+    mesh->GetBoneFrameDataBuffer(_clipIndex)->PushComputeSRVData(SRV_REGISTER::t8);
+    mesh->GetBoneOffsetBuffer()->PushComputeSRVData(SRV_REGISTER::t9);
 
-	_boneFinalMatrix->PushComputeUAVData(UAV_REGISTER::u0);
+    _boneFinalMatrix->PushComputeUAVData(UAV_REGISTER::u0);
 
-	_computeMaterial->SetInt(0, boneCount);
-	_computeMaterial->SetInt(1, _frame);
-	_computeMaterial->SetInt(2, _nextFrame);
-	_computeMaterial->SetFloat(0, _frameRatio);
+    _computeMaterial->SetInt(0, boneCount);
+    _computeMaterial->SetInt(1, _frame);
+    _computeMaterial->SetInt(2, _nextFrame);
+    _computeMaterial->SetFloat(0, _frameRatio);
 
-	uint32 groupCount = (boneCount / 256) + 1;
-	_computeMaterial->Dispatch(groupCount, 1, 1);
+    uint32 groupCount = (boneCount / 256) + 1;
+    _computeMaterial->Dispatch(groupCount, 1, 1);
 
-	// Graphics Shader
-	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
+    _boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
 }
 
 void Animator::Play(uint32 idx)
 {
-	if (idx != _clipIndex)
-	{
-		assert(idx < _animClips->size());
-		_clipIndex = idx;
-		_updateTime = 0.f;
-	}
+    if (idx != _clipIndex)
+    {
+        assert(idx < _animClips->size());
+        _clipIndex = idx;
+        _updateTime = 0.f;
+        _lastClipIndex = idx; // 마지막 실행한 클립 인덱스 업데이트
+        _isPlayingSequence = false;
+        ClearSequence(); // 큐를 비움
+    }
+}
+
+void Animator::PlaySequence(const vector<uint32>& sequence)
+{
+    assert(!sequence.empty());
+
+    ClearSequence(); // 큐를 비움
+
+    for (uint32 idx : sequence)
+    {
+        assert(idx < _animClips->size());
+        _sequenceQueue.push(idx);
+    }
+
+    _clipIndex = _sequenceQueue.front();
+    _sequenceQueue.pop();
+    _updateTime = 0.f;
+    _isPlayingSequence = true;
+}
+
+void Animator::AddToSequence(uint32 idx)
+{
+    assert(idx < _animClips->size());
+    _sequenceQueue.push(idx);
+
+    // 만약 마지막 애니메이션이 반복 중이고 큐가 비어있었다면, 새 애니메이션을 바로 시작
+    if (!_isPlayingSequence && _sequenceQueue.size() == 1)
+    {
+        _clipIndex = _sequenceQueue.front();
+        _sequenceQueue.pop();
+        _updateTime = 0.f;
+        _isPlayingSequence = true;
+    }
+}
+
+void Animator::ClearSequence()
+{
+    while (!_sequenceQueue.empty())
+    {
+        _sequenceQueue.pop();
+    }
+    _isPlayingSequence = false;
 }

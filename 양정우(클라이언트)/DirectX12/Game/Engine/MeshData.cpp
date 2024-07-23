@@ -95,7 +95,7 @@ shared_ptr<MeshData> MeshData::LoadPlayerModel(const wstring& keyname)
 	return meshData;
 }
 //===============================================================================
-//Team Player 
+// Team Player 
 shared_ptr<MeshData> MeshData::LoadBlueTeamModel(const wstring& keyname)
 {
 	// IDLE
@@ -720,6 +720,7 @@ shared_ptr<MeshData> MeshData::LoadRedTeamModel(const wstring& keyname)
 	return meshData;
 }
 //===============================================================================
+// Guns
 //AR
 shared_ptr<MeshData> MeshData::Load_AR_GunModel(const wstring& keyname)
 {
@@ -1196,10 +1197,10 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 {
 	// IDLE
 	FBXLoader loader;
-	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_1\\SMG01_Player_Single_IShoot.fbx");
+	loader.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_1\\SMG02_Run_Reload.fbx");
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1207,7 +1208,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_IDLE\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);
@@ -1215,7 +1216,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_IDLE\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);
@@ -1223,7 +1224,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_IDLE\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_IDLE\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> shootAnim = loader1.GetAnimClip();
 		for (const auto& clip : shootAnim) {
 			loader.AddAnimClip(clip);
@@ -1232,7 +1233,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	// WALK
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_1\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_1\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1240,7 +1241,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_2\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Walk_2\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1248,7 +1249,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Walk\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Walk\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1256,7 +1257,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Walk\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Walk\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1264,7 +1265,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Walk\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Walk\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1273,7 +1274,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	// Run
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_1\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_1\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1281,7 +1282,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_2\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Run_2\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1289,7 +1290,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Run\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Change_Run\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1297,7 +1298,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Run\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Reload_Run\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1305,7 +1306,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	}
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Run\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Single_Shoot_Run\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1314,7 +1315,7 @@ shared_ptr<MeshData> MeshData::Load_SMG_GunModel(const wstring& keyname)
 	// Death
 	{
 		FBXLoader loader1;
-		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Death\\SMG01_Player_Single_IShoot.fbx");
+		loader1.LoadFbx(L"..\\Resources\\FBX\\PlayerGun_SM\\Death\\SMG02_Run_Reload.fbx");
 		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
 		for (const auto& clip : runAnim) {
 			loader.AddAnimClip(clip);
@@ -1477,6 +1478,574 @@ shared_ptr<MeshData> MeshData::Load_SR_GunModel(const wstring& keyname)
 			loader.AddAnimClip(clip);
 		}
 	}
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+//===============================================================================
+// Player Hands
+
+shared_ptr<MeshData> MeshData::LoadBlueHandModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Blue\\IDLE\\Blue_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Blue\\Shoot\\Blue_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Blue\\Reload\\Blue_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Blue\\Change\\Blue_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+shared_ptr<MeshData> MeshData::LoadGreenHandModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Green\\IDLE\\Green_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Green\\Shoot\\Green_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Green\\Reload\\Green_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Green\\Change\\Green_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+shared_ptr<MeshData> MeshData::LoadPurpleHandModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Purple\\IDLE\\Purple_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Purple\\Shoot\\Purple_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Purple\\Reload\\Purple_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Purple\\Change\\Purple_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+shared_ptr<MeshData> MeshData::LoadRedHandModel(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Red\\IDLE\\Red_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Red\\Shoot\\Red_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Red\\Reload\\Red_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_Red\\Change\\Red_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+//===============================================================================
+// Player Guns
+// AR
+shared_ptr<MeshData> MeshData::Load_AR_FPS(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_AR\\IDLE\\AR01_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_AR\\Shoot\\AR01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_AR\\Reload\\AR01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_AR\\Change\\AR01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+// PO
+shared_ptr<MeshData> MeshData::Load_PO_FPS(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_PO\\IDLE\\P01_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_PO\\Shoot\\P01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_PO\\Reload\\P01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_PO\\Change\\P01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+// SG
+shared_ptr<MeshData> MeshData::Load_SG_FPS(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SG\\IDLE\\SG01_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SG\\Shoot\\SG01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SG\\Reload\\SG01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SG\\Change\\SG01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+// SMG
+shared_ptr<MeshData> MeshData::Load_SMG_FPS(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\IDLE\\SMG02_Hand_IDLE.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Shoot\\SMG02_Hand_IDLE.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Reload\\SMG02_Hand_IDLE.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SMG\\Change\\SMG02_Hand_IDLE.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
+
+	//계속해서 모델을 추가.......
+
+	shared_ptr<MeshData> meshData = make_shared<MeshData>();
+
+	for (int32 i = 0; i < loader.GetMeshCount(); i++)
+	{
+		shared_ptr<Mesh> mesh = Mesh::CreateFromFBX(&loader.GetMesh(i), loader, keyname);
+
+		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
+
+		// Material 찾아서 연동
+		vector<shared_ptr<Material>> materials;
+		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			materials.push_back(material);
+		}
+
+		MeshRenderInfo info = {};
+		info.mesh = mesh;
+		info.materials = materials;
+		meshData->_meshRenders.push_back(info);
+	}
+
+	return meshData;
+}
+
+// SR
+shared_ptr<MeshData> MeshData::Load_SR_FPS(const wstring& keyname)
+{
+	// IDLE
+	FBXLoader loader;
+	loader.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SR\\IDLE\\SR01_FP_Shoot.fbx");
+
+	// Shoot
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SR\\Shoot\\SR01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Reload
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SR\\Reload\\SR01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+	// Change
+	{
+		FBXLoader loader1;
+		loader1.LoadFbx(L"..\\Resources\\FBX\\Player_Hand_GUN_SR\\Change\\SR01_FP_Shoot.fbx");
+		vector<shared_ptr<FbxAnimClipInfo>> runAnim = loader1.GetAnimClip();
+		for (const auto& clip : runAnim) {
+			loader.AddAnimClip(clip);
+		}
+	}
+
 
 	//계속해서 모델을 추가.......
 

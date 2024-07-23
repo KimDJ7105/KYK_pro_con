@@ -22,6 +22,7 @@ enum class KEY_TYPE
 	P = 'P',
 	T = 'T',
 	M = 'M',
+	N = 'N',
 
 	ESC = 27,
 
