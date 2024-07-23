@@ -76,10 +76,13 @@
 
 
 //Animation Type-------------------------
-#define AT_IDLE 0
-#define AT_WALKING 1
-#define AT_RUNNING 2
-#define AT_SHOOTING 3
+#define AT_IDLE				0
+#define AT_WALKING			1
+#define AT_RUNNING			2
+
+#define AT_SHOOTING			3
+#define AT_RELOADING		4
+#define AT_CHANGE			5
 //---------------------------------------
 
 //Packet type----------------------------

@@ -115,6 +115,7 @@ void Animator::AddToSequence(uint32 idx)
 {
     assert(idx < _animClips->size());
     _sequenceQueue.push(idx);
+    _lastAddedClipIndex = idx; // 마지막 추가된 클립 인덱스 업데이트
 
     // 만약 마지막 애니메이션이 반복 중이고 큐가 비어있었다면, 새 애니메이션을 바로 시작
     if (!_isPlayingSequence && _sequenceQueue.size() == 1)
@@ -133,4 +134,9 @@ void Animator::ClearSequence()
         _sequenceQueue.pop();
     }
     _isPlayingSequence = false;
+}
+
+uint32 Animator::GetLastAddedAnimationType() const
+{
+    return _lastAddedClipIndex;
 }

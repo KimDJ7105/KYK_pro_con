@@ -25,6 +25,7 @@ public:
 	void PlaySequence(const std::vector<uint32>& sequence);
 	void AddToSequence(uint32 idx);
 	void ClearSequence(); // 큐를 비우는 함수
+	uint32 GetLastAddedAnimationType() const; // 마지막 추가된 애니메이션의 종류를 리턴하는 함수
 
 public:
 	virtual void FinalUpdate() override;
@@ -46,4 +47,5 @@ private:
 	std::queue<uint32>               _sequenceQueue;     // 애니메이션 시퀀스 큐
 	bool							_isPlayingSequence = false;
 	uint32							_lastClipIndex = 0;		// 마지막 실행한 클립 인덱스
+	uint32							_lastAddedClipIndex = 0; // 마지막 추가된 클립 인덱스
 };

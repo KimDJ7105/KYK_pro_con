@@ -360,7 +360,7 @@ shared_ptr<Scene> SceneManager::LoadGoodEndingScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Lobby_Main_UI", L"..\\Resources\\Texture\\Ending_UI\\Good_Ending_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Good_Ending_UI", L"..\\Resources\\Texture\\Ending_UI\\Good_Ending_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -471,7 +471,7 @@ shared_ptr<Scene> SceneManager::LoadBadEndingScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Lobby_Main_UI", L"..\\Resources\\Texture\\Ending_UI\\Bad_Ending_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Bad_Ending_UI", L"..\\Resources\\Texture\\Ending_UI\\Bad_Ending_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -3511,6 +3511,104 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 			}
 		}
 	}
+
+
+#pragma region New_Animation_State
+	
+	if (animationID != -1)
+	{
+		for (auto& otherPlayer : _otherPlayer)
+		{
+			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
+			{
+				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE)
+				{
+					if (animationID == AT_IDLE)
+					{
+						
+					}
+					if (animationID == AT_WALKING)
+					{
+						
+					}
+					if (animationID == AT_RUNNING)
+					{
+						
+					}
+					if (animationID == AT_CHANGE)
+					{
+						uint32 state = otherPlayer->GetAnimator()->GetLastAddedAnimationType();
+						
+						if (state == AT_IDLE)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+						else if (state == AT_WALKING)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+						else if(state == AT_RUNNING)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+					}
+					if (animationID == AT_RELOADING)
+					{
+						uint32 state = otherPlayer->GetAnimator()->GetLastAddedAnimationType();
+
+						if (state == AT_IDLE)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+						else if (state == AT_WALKING)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+						else if (state == AT_RUNNING)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+					}
+					if (animationID == AT_SHOOTING)
+					{
+						uint32 state = otherPlayer->GetAnimator()->GetLastAddedAnimationType();
+
+						if (state == AT_IDLE)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+						else if (state == AT_WALKING)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+						else if (state == AT_RUNNING)
+						{
+							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(2);
+							otherPlayer->GetAnimator()->AddToSequence(0);*/
+						}
+					}
+				}
+			}
+		}
+	}
+#pragma endregion
 }
 
 void SceneManager::CreateAisle(float aisleX, float aisleY, float aisleZ, float aisleScale, int type, int ID)
