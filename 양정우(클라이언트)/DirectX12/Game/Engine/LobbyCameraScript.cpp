@@ -94,7 +94,7 @@ void LobbyCameraScript::LateUpdate()
 		}
 		else if(GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_EXIT_BTN)
 		{
-
+			PostQuitMessage(0);
 		}
 		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_CHANGE)
 		{

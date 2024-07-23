@@ -9,11 +9,9 @@ public:
 
 	virtual void LateUpdate() override;
 
-	void MoveUpdate();
+	void SetObjects();
 
 	void RotationUpdate();
-
-	void RotatingPickedObject();
 
 private:
 	float		_speed = 300.f;
@@ -26,8 +24,6 @@ private:
 	bool isWindowCapture = true;
 
 	wchar_t previousTitle[256] = { 0 };
-
-	shared_ptr<GameObject> pickedMovingObject;
 
 	bool isOverlap = false;
 

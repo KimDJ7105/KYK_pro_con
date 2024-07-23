@@ -66,6 +66,19 @@ public:
 	shared_ptr<class MeshData> Load_SG_GunModel(const wstring& Keyname);
 	shared_ptr<class MeshData> Load_SMG_GunModel(const wstring& Keyname);
 	shared_ptr<class MeshData> Load_SR_GunModel(const wstring& Keyname);
+
+public:
+	shared_ptr<class MeshData> LoadBlueHandModel(const wstring& Keyname);
+	shared_ptr<class MeshData> LoadGreenHandModel(const wstring& Keyname);
+	shared_ptr<class MeshData> LoadPurpleHandModel(const wstring& Keyname);
+	shared_ptr<class MeshData> LoadRedHandModel(const wstring& Keyname);
+
+public:
+	shared_ptr<class MeshData> Load_AR_FPS(const wstring& Keyname);
+	shared_ptr<class MeshData> Load_PO_FPS(const wstring& Keyname);
+	shared_ptr<class MeshData> Load_SG_FPS(const wstring& Keyname);
+	shared_ptr<class MeshData> Load_SMG_FPS(const wstring& Keyname);
+	shared_ptr<class MeshData> Load_SR_FPS(const wstring& Keyname);
 };
 
 template<typename T>
