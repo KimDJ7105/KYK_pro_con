@@ -451,6 +451,8 @@ void TestCameraScript::LateUpdate()
 			{
 #ifdef DEBUG_ON
 				std::cout << "FIRE" << std::endl;
+				playerGunObject->GetAnimator()->ClearSequence();
+				playerObject->GetAnimator()->ClearSequence();
 #endif
 				const POINT& pos = INPUT->GetMousePos();
 
@@ -493,6 +495,12 @@ void TestCameraScript::LateUpdate()
 				}
 
 				timeElapse = 0.f;
+
+				playerGunObject->GetAnimator()->AddToSequence(1);
+				//playerGunObject->GetAnimator()->AddToSequence(0);
+
+				playerObject->GetAnimator()->AddToSequence(1);
+				//playerObject->GetAnimator()->AddToSequence(0);
 			}
 		}
 	}
@@ -641,8 +649,15 @@ void TestCameraScript::LateUpdate()
 
 		main_session->Send_Packet(&lm);
 
-		/*playerGunObject->GetAnimator()->Play(2);
-		playerObject->GetAnimator()->Play(2);*/
+		playerGunObject->GetAnimator()->ClearSequence();
+		playerObject->GetAnimator()->ClearSequence();
+
+		// 플레이어 총과 플레이어의 애니메이터에 애니메이션 시퀀스를 추가
+		playerGunObject->GetAnimator()->AddToSequence(2);
+		playerGunObject->GetAnimator()->AddToSequence(0);
+
+		playerObject->GetAnimator()->AddToSequence(2);
+		playerObject->GetAnimator()->AddToSequence(0);
 	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::T))
