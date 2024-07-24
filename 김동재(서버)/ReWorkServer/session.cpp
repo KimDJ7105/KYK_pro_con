@@ -300,6 +300,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_MOVE_KEY_DOWN: { //이동 애니메이션 동기화를 위해 이동 키가 눌림을 수신
+		is_moving = true;
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);
@@ -316,6 +317,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_MOVE_KEY_UP: { //이동 키가 떨어짐
+		is_moving = false;
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);
@@ -334,6 +336,20 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		std::cout << "달리기 키 눌림\n";
 
 		is_running = true;
+
+		if (is_moving) {
+			sc_packet_set_animation set_anima;
+			set_anima.type = SC_SET_ANIMATION;
+			set_anima.size = sizeof(sc_packet_set_animation);
+			set_anima.obj_id = my_id_;
+			set_anima.animation_id = AT_RUNNING;
+
+			for (auto& p : my_game->ingame_player) {
+				shared_ptr<SESSION> player = p.second;
+				if (player->my_id_ == my_id_) continue;
+				player->Send_Packet(&set_anima);
+			}
+		}
 		break;
 	}
 	case CS_RUN_KEY_UP: {
