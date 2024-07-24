@@ -293,6 +293,7 @@ struct sc_packet_put {
 	float dirx;
 	float diry;
 	float dirz;
+	int gun_type;
 };
 
 struct sc_packet_login_info {
