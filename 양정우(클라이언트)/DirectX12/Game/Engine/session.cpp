@@ -18,6 +18,7 @@ SESSION::SESSION(tcp::socket socket_) : sock(std::move(socket_))
 	_activeSessionScene = GET_SINGLE(SceneManager);
 	isMapOpen = false;
 	haveKeycard = 0;
+	guntype = GT_AR;
 }
 
 void SESSION::Process_Packet(unsigned char* packet)
