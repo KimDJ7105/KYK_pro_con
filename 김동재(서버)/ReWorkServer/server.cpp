@@ -33,7 +33,7 @@ void SERVER::do_accept()
 					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
 					games[g_game_ID]->ingame_player[p_id]->start();
 
-					if (games[g_game_ID]->ingame_player.size() > MAX_USER) g_game_ID++;
+					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1) g_game_ID++;
 					if (games.size() == MAX_GAME) {
 						sl_packet_set_port set_port;
 						set_port.size = sizeof(sl_packet_set_port);
