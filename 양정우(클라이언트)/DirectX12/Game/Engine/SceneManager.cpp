@@ -3884,31 +3884,6 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 
 void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 {
-	if (animationID != -1)
-	{
-		for (auto& otherPlayer : _otherPlayer)
-		{
-			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
-			{
-				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE)
-				{
-					if (animationID == AT_IDLE)
-					{
-						otherPlayer->GetAnimator()->Play(0);
-					}
-					if (animationID == AT_WALKING)
-					{
-						otherPlayer->GetAnimator()->Play(1);
-					}
-					if (animationID == AT_SHOOTING)
-					{
-						otherPlayer->GetAnimator()->Play(2);
-					}
-				}
-			}
-		}
-	}
-
 
 #pragma region New_Animation_State
 	
@@ -3924,18 +3899,21 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 				{
 					if (animationID == AT_IDLE)
 					{
-						otherPlayer->GetAnimator()->ClearSequence();
-						otherPlayer->GetAnimator()->AddToSequence(0);
+						
+						otherPlayer->GetAnimator()->Play(0);
 						//otherPlayer->GetAnimator()->AddToSequence(1);
 					}
 					if (animationID == AT_WALKING)
 					{
-						otherPlayer->GetAnimator()->ClearSequence();
-						otherPlayer->GetAnimator()->AddToSequence(5);
+						
+						otherPlayer->GetAnimator()->Play(5);
+						//otherPlayer->GetAnimator()->AddToSequence(6);
 					}
 					if (animationID == AT_RUNNING)
 					{
 						
+						otherPlayer->GetAnimator()->Play(10);
+						//otherPlayer->GetAnimator()->AddToSequence(11);
 					}
 					if (animationID == AT_CHANGE)
 					{

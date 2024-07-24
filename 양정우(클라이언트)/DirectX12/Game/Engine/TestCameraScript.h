@@ -61,6 +61,8 @@ private:
 
 	float moveSpeed = 200.f;
 
+	bool isDash = false;
+
 
 private:
 	shared_ptr<GameObject> cursor;

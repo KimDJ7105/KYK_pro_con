@@ -57,7 +57,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 
 		//p->gun_type이 필요...
-		//_activeSessionScene->CreateOtherPlayerGunObject(p->gun_type ,p->id);
+		_activeSessionScene->CreateOtherPlayerGunObject(GT_AR ,p->id);
 		break;
 	}
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전

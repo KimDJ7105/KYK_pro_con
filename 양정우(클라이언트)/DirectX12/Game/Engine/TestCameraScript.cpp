@@ -47,31 +47,26 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::SHIFT))
 	{
-		if(GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-		{
-			moveSpeed = 300.f;
+		isDash = true;
 
-			if (isMoving) {
-				cs_packet_run_key_down rkd;
-				rkd.size = sizeof(cs_packet_run_key_down);
-				rkd.type = CS_RUN_KEY_DOWN;
-				
-				main_session->Send_Packet(&rkd);
-			}
+
+		if (isMoving) {
+			cs_packet_run_key_down rkd;
+			rkd.size = sizeof(cs_packet_run_key_down);
+			rkd.type = CS_RUN_KEY_DOWN;
+
+			main_session->Send_Packet(&rkd);
 		}
 	}
 	else if (INPUT->GetButtonUp(KEY_TYPE::SHIFT))
 	{
-		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-		{
-			moveSpeed = 200.f;
+		cs_packet_run_key_up rku;
+		rku.size = sizeof(cs_packet_move_key_up);
+		rku.type = CS_RUN_KEY_UP;
+		rku.is_moving = isMoving;
+		main_session->Send_Packet(&rku);
 
-			cs_packet_run_key_up rku;
-			rku.size = sizeof(cs_packet_move_key_up);
-			rku.type = CS_RUN_KEY_UP;
-			rku.is_moving = isMoving; 
-			main_session->Send_Packet(&rku);
-		}
+		isDash = false;
 	}
 
 
@@ -225,8 +220,22 @@ void TestCameraScript::LateUpdate()
 		{
 			moveDirection.Normalize();
 		}
-		// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
-		currentPosition += moveDirection * moveSpeed * DELTA_TIME;
+		
+
+		if (isDash == false)
+		{
+			// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
+			currentPosition += moveDirection * moveSpeed * DELTA_TIME;
+			
+		}
+		else if (isDash == true)
+		{
+			// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
+			currentPosition += moveDirection * moveSpeed * 2 * DELTA_TIME;
+
+			
+		}
+
 
 		
 

@@ -29,14 +29,19 @@ void OtherPlayerScript::LateUpdate()
 		|| state == 7
 		|| state == 12)
 	{
-		//무기를 변경한다.
-		if (nowGunObject == playerSubGunObject)
+		if (nowGunObject != nullptr
+			&& playerSubGunObject != nullptr
+			&& playerMainGunObject != nullptr)
 		{
-			nowGunObject = playerMainGunObject;
-		}
-		else if (nowGunObject == playerMainGunObject)
-		{
-			nowGunObject = playerSubGunObject;
+			//무기를 변경한다.
+			if (nowGunObject == playerSubGunObject)
+			{
+				nowGunObject = playerMainGunObject;
+			}
+			else if (nowGunObject == playerMainGunObject)
+			{
+				nowGunObject = playerSubGunObject;
+			}
 		}
 	}
 
