@@ -330,6 +330,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RUN_KEY_DOWN: {
+		std::cout << "달리기 키 눌림\n";
+
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);
@@ -344,6 +346,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RUN_KEY_UP: {
+		std::cout << "달리기 키 떨어짐\n";
+
 		cs_packet_run_key_up* p = (cs_packet_run_key_up*)packet;
 
 		sc_packet_set_animation set_anima;
