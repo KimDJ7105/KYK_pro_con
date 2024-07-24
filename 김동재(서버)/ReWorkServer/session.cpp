@@ -514,7 +514,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);
 		set_anima.obj_id = my_id_;
-		set_anima.animation_id = AT_RELOADING;
+		set_anima.animation_id = AT_CHANGE;
 		
 
 		for (auto& p : my_game->ingame_player) {
