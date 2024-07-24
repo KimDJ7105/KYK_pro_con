@@ -9,5 +9,14 @@ public:
 	virtual ~OtherPlayerScript();
 
 	virtual void LateUpdate() override;
+
+	void GetPlayerGuns();
+
+private:
+	shared_ptr<GameObject> playerSubGunObject;
+	shared_ptr<GameObject> playerMainGunObject;
+
+	shared_ptr<GameObject> nowGunObject;
+
 };
 

@@ -71,6 +71,9 @@ public:
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreateOtherPlayerGunObject(int object_type, int object_id);
+
+	shared_ptr<GameObject> GetOtherPlayerMainGun(int id);
+	shared_ptr<GameObject> GetOtherPlayerSubGun(int id);
 	
 	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerGunObject(int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);

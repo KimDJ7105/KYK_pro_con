@@ -21,4 +21,49 @@ OtherPlayerScript::~OtherPlayerScript()
 
 void OtherPlayerScript::LateUpdate()
 {
+	GetPlayerGuns();
+
+
+	if (nowGunObject != nullptr)
+	{
+		// 플레이어의 현재 회전값을 가져온다
+		Quaternion playerRotation = Quaternion::FromEulerAngles(GetTransform()->GetLocalRotation());
+
+		// 총과 플레이어의 상대적 위치
+		Vec3 gunOffset = Vec3(5.f, 25.f, 13.f);
+
+		shared_ptr<GameObject> gun = nowGunObject;
+
+		// 총을 플레이어의 중심으로 이동한다.
+		gun->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+		// 총의 회전을 180도 회전시키기 위한 쿼터니언
+		Quaternion additionalRotation = Quaternion::FromEulerAngles(Vec3(0, 3.14f, 0));
+
+		// 총의 회전을 플레이어의 회전 + 추가 회전으로 설정
+		Quaternion finalRotation = playerRotation * additionalRotation;
+		gun->GetTransform()->SetLocalRotation(finalRotation.ToEulerAngles());
+
+		// 오프셋을 회전된 방향으로 이동
+		Vec3 rotatedOffset = finalRotation.Rotate(gunOffset);
+		Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+		gun->GetTransform()->SetLocalPosition(newPosition);
+
+	}
+}
+
+void OtherPlayerScript::GetPlayerGuns()
+{
+	if (playerSubGunObject == nullptr)
+	{
+		playerSubGunObject = GET_SINGLE(SceneManager)->GetOtherPlayerSubGun(GetTransform()->GetObjectID());
+	}
+	if (playerMainGunObject == nullptr)
+	{
+		playerMainGunObject = GET_SINGLE(SceneManager)->GetOtherPlayerMainGun(GetTransform()->GetObjectID());
+	}
+	if (playerSubGunObject != nullptr)
+	{
+		nowGunObject = playerSubGunObject;
+	}
 }
