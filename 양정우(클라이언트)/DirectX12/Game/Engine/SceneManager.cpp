@@ -3336,7 +3336,7 @@ void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
 			gameObject->GetTransform()->SetObjectID(object_id);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			// 각 게임 오브젝트에 독립적인 머티리얼 설정
@@ -3368,7 +3368,7 @@ void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
 				gameObject->GetTransform()->SetObjectID(object_id);
 				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				// 각 게임 오브젝트에 독립적인 머티리얼 설정
@@ -3398,7 +3398,7 @@ void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
 				gameObject->GetTransform()->SetObjectID(object_id);
 				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				// 각 게임 오브젝트에 독립적인 머티리얼 설정
@@ -3429,7 +3429,7 @@ void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
 				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				//gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
 				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				// 각 게임 오브젝트에 독립적인 머티리얼 설정
@@ -3460,7 +3460,7 @@ void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
 				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				//gameObject->GetTransform()->SetLocalPosition(Vec3(1250.f, 40.f, 1200.f));
 				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				// 각 게임 오브젝트에 독립적인 머티리얼 설정
@@ -3893,9 +3893,7 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 		{
 			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 			{
-				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE
-					&& otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_MAIN
-					&& otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_SUB)
+				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE)
 				{
 					if (animationID == AT_IDLE)
 					{

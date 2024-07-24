@@ -355,27 +355,47 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
-		//무기 변경
 
-		nowGunObject->GetAnimator()->ClearSequence();
-		playerObject->GetAnimator()->ClearSequence();
-
-		if (nowGunObject == playerSubGunObject)
+		if (nowGunObject != playerMainGunObject)
 		{
-			nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-			nowGunObject = playerMainGunObject;
-		}
-		else if (nowGunObject == playerMainGunObject)
-		{
-			nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-			nowGunObject = playerSubGunObject;
-		}
+			nowGunObject->GetAnimator()->ClearSequence();
+			playerObject->GetAnimator()->ClearSequence();
 
-		nowGunObject->GetAnimator()->AddToSequence(3);
-		nowGunObject->GetAnimator()->AddToSequence(0);
-		playerObject->GetAnimator()->AddToSequence(3);
-		playerObject->GetAnimator()->AddToSequence(0);
+			if (nowGunObject == playerSubGunObject)
+			{
+				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				nowGunObject = playerMainGunObject;
+			}
+
+			nowGunObject->GetAnimator()->AddToSequence(3);
+			nowGunObject->GetAnimator()->AddToSequence(0);
+			playerObject->GetAnimator()->AddToSequence(3);
+			playerObject->GetAnimator()->AddToSequence(0);
+		}
 	}
+	else if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
+	{
+		if (nowGunObject != playerSubGunObject)
+		{
+			nowGunObject->GetAnimator()->ClearSequence();
+			playerObject->GetAnimator()->ClearSequence();
+
+
+			if (nowGunObject == playerMainGunObject)
+			{
+				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				nowGunObject = playerSubGunObject;
+			}
+
+			nowGunObject->GetAnimator()->AddToSequence(3);
+			nowGunObject->GetAnimator()->AddToSequence(0);
+			playerObject->GetAnimator()->AddToSequence(3);
+			playerObject->GetAnimator()->AddToSequence(0);
+		}
+	}
+
+
+
 
 	if (isMouseMod)
 	{
