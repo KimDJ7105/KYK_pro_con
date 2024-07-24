@@ -24,6 +24,23 @@ void OtherPlayerScript::LateUpdate()
 	GetPlayerGuns();
 
 
+	uint32 state = GetAnimator()->GetCurrentClipIndex();
+	if (state == 2
+		|| state == 7
+		|| state == 12)
+	{
+		//무기를 변경한다.
+		if (nowGunObject == playerSubGunObject)
+		{
+			nowGunObject = playerMainGunObject;
+		}
+		else if (nowGunObject == playerMainGunObject)
+		{
+			nowGunObject = playerSubGunObject;
+		}
+	}
+
+
 	if (nowGunObject != nullptr)
 	{
 		// 플레이어의 현재 회전값을 가져온다

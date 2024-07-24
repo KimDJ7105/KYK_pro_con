@@ -3924,11 +3924,14 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 				{
 					if (animationID == AT_IDLE)
 					{
-						
+						otherPlayer->GetAnimator()->ClearSequence();
+						otherPlayer->GetAnimator()->AddToSequence(0);
+						//otherPlayer->GetAnimator()->AddToSequence(1);
 					}
 					if (animationID == AT_WALKING)
 					{
-						
+						otherPlayer->GetAnimator()->ClearSequence();
+						otherPlayer->GetAnimator()->AddToSequence(5);
 					}
 					if (animationID == AT_RUNNING)
 					{

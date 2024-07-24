@@ -45,6 +45,24 @@ void TestCameraScript::LateUpdate()
 
 
 
+	if (INPUT->GetButtonDown(KEY_TYPE::SHIFT))
+	{
+		if(GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+		{
+			moveSpeed = 300.f;
+		}
+	}
+	else if (INPUT->GetButtonUp(KEY_TYPE::SHIFT))
+	{
+		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+		{
+			moveSpeed = 200.f;
+		}
+	}
+
+
+
+
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
