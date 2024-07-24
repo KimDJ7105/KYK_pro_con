@@ -372,6 +372,13 @@ void TestCameraScript::LateUpdate()
 			playerObject->GetAnimator()->AddToSequence(3);
 			playerObject->GetAnimator()->AddToSequence(0);
 		}
+
+		cs_packet_change_gun cg;
+		cg.size = sizeof(cs_packet_change_gun);
+		cg.type = CS_CHANGE_GUN;
+		cg.pressed_key = 1;
+
+		main_session->Send_Packet(&cg);
 	}
 	else if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
 	{
@@ -392,6 +399,13 @@ void TestCameraScript::LateUpdate()
 			playerObject->GetAnimator()->AddToSequence(3);
 			playerObject->GetAnimator()->AddToSequence(0);
 		}
+
+		cs_packet_change_gun cg;
+		cg.size = sizeof(cs_packet_change_gun);
+		cg.type = CS_CHANGE_GUN;
+		cg.pressed_key = 2;
+
+		main_session->Send_Packet(&cg);
 	}
 
 

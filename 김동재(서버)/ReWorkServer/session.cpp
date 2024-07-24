@@ -313,6 +313,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case CS_MOVE_KEY_DOWN: { //이동 애니메이션 동기화를 위해 이동 키가 눌림을 수신
 		is_moving = true;
+
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
 		set_anima.size = sizeof(sc_packet_set_animation);
@@ -498,6 +499,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case CS_CHANGE_GUN: {
 		cs_packet_change_gun* p = (cs_packet_change_gun*)packet;
+
 		if (p->pressed_key == 1) {
 			if (equip_weapon == gun_type) break;
 			equip_weapon = gun_type;
@@ -508,6 +510,19 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			equip_weapon = GT_PT;
 		}
 
+		sc_packet_set_animation set_anima;
+		set_anima.type = SC_SET_ANIMATION;
+		set_anima.size = sizeof(sc_packet_set_animation);
+		set_anima.obj_id = my_id_;
+		set_anima.animation_id = AT_RELOADING;
+		
+
+		for (auto& p : my_game->ingame_player) {
+			shared_ptr<SESSION> player = p.second;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&set_anima);
+		}
+
 		sc_packet_set_player_gun spg;
 		spg.size = sizeof(sc_packet_set_player_gun);
 		spg.type = SC_SET_PLAYER_GUN;
@@ -515,8 +530,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		spg.gun_type = equip_weapon;
 
 		for (auto& p : my_game->ingame_player) {
+			if (p.second->my_id_ == my_id_) continue;
 			p.second->Send_Packet(&spg);
 		}
+
 		break;
 	}
 	case TEST_SPAWN_RBF: { //test
