@@ -793,8 +793,8 @@ void TestCameraScript::SetObjects()
 	if (playerObject == NULL)
 	{
 		playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
-		playerObject->GetAnimator()->AddToSequence(3);
-		playerObject->GetAnimator()->AddToSequence(0);
+		/*playerObject->GetAnimator()->AddToSequence(3);
+		playerObject->GetAnimator()->AddToSequence(0);*/
 	}
 	if (playerSubGunObject == NULL)
 	{
@@ -802,8 +802,8 @@ void TestCameraScript::SetObjects()
 
 		nowGunObject = playerSubGunObject;
 
-		nowGunObject->GetAnimator()->AddToSequence(3);
-		nowGunObject->GetAnimator()->AddToSequence(0);
+		/*nowGunObject->GetAnimator()->AddToSequence(3);
+		nowGunObject->GetAnimator()->AddToSequence(0);*/
 	}
 	if (playerMainGunObject == NULL)
 	{

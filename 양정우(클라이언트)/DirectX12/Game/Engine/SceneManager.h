@@ -182,7 +182,7 @@ private:
 	uint32 mainWeapon_Type = -1;
 
 public:
-	void SetMainWeapon_Type(uint32 type) { mainWeapon_Type = type };
+	void SetMainWeapon_Type(uint32 type) { mainWeapon_Type = type; }
 	uint32 GetMainWeapon_type() { return mainWeapon_Type; }
 };
 
