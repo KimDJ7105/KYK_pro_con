@@ -56,7 +56,6 @@ void TestCameraScript::LateUpdate()
 
 		main_session->Send_Packet(&rkd);
 	}
-
 	else if (INPUT->GetButtonUp(KEY_TYPE::SHIFT))
 	{
 		cs_packet_run_key_up rku;
