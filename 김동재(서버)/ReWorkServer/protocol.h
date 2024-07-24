@@ -210,7 +210,6 @@ struct cs_packet_run_key_down {
 struct cs_packet_run_key_up {
 	BYTE size;
 	BYTE type;
-	bool is_moving;
 };
 
 struct cs_packet_try_get_rabbitfoot {

@@ -50,20 +50,18 @@ void TestCameraScript::LateUpdate()
 		isDash = true;
 
 
-		if (isMoving) {
-			cs_packet_run_key_down rkd;
-			rkd.size = sizeof(cs_packet_run_key_down);
-			rkd.type = CS_RUN_KEY_DOWN;
+		cs_packet_run_key_down rkd;
+		rkd.size = sizeof(cs_packet_run_key_down);
+		rkd.type = CS_RUN_KEY_DOWN;
 
-			main_session->Send_Packet(&rkd);
-		}
+		main_session->Send_Packet(&rkd);
 	}
+
 	else if (INPUT->GetButtonUp(KEY_TYPE::SHIFT))
 	{
 		cs_packet_run_key_up rku;
 		rku.size = sizeof(cs_packet_move_key_up);
 		rku.type = CS_RUN_KEY_UP;
-		rku.is_moving = isMoving;
 		main_session->Send_Packet(&rku);
 
 		isDash = false;
