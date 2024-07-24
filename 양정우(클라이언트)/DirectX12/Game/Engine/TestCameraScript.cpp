@@ -541,10 +541,11 @@ void TestCameraScript::LateUpdate()
 			{
 #ifdef DEBUG_ON
 				std::cout << "FIRE" << std::endl;
+#endif
 
 				nowGunObject->GetAnimator()->ClearSequence();
 				playerObject->GetAnimator()->ClearSequence();
-#endif
+
 				const POINT& pos = INPUT->GetMousePos();
 
 				shared_ptr<GameObject> pickedObject;

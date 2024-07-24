@@ -3919,21 +3919,21 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 						
 						if (state == AT_IDLE)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->AddToSequence(0);
 						}
 						else if (state == AT_WALKING)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(7);
+							otherPlayer->GetAnimator()->AddToSequence(5);
 						}
 						else if(state == AT_RUNNING)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(12);
+							otherPlayer->GetAnimator()->AddToSequence(10);
 						}
 					}
 					if (animationID == AT_RELOADING)
@@ -3965,21 +3965,21 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 
 						if (state == AT_IDLE)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(4);
+							otherPlayer->GetAnimator()->AddToSequence(0);
 						}
 						else if (state == AT_WALKING)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(9);
+							otherPlayer->GetAnimator()->AddToSequence(5);
 						}
 						else if (state == AT_RUNNING)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(14);
+							otherPlayer->GetAnimator()->AddToSequence(10);
 						}
 					}
 				}
