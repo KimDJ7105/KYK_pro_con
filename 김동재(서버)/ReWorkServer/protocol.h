@@ -107,6 +107,8 @@
 #define CS_USE_RESURRECTION	  16
 #define CS_SEND_GUNTYPE		  17
 #define CS_CHANGE_GUN		  18
+#define CS_RUN_KEY_DOWN	      19
+#define CS_RUN_KEY_UP		  20
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -198,6 +200,17 @@ struct cs_packet_move_key_down {
 struct cs_packet_move_key_up {
 	BYTE size;
 	BYTE type;
+};
+
+struct cs_packet_run_key_down {
+	BYTE size;
+	BYTE type;
+};
+
+struct cs_packet_run_key_up {
+	BYTE size;
+	BYTE type;
+	bool is_moving;
 };
 
 struct cs_packet_try_get_rabbitfoot {

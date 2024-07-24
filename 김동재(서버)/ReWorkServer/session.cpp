@@ -329,6 +329,37 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
+	case CS_RUN_KEY_DOWN: {
+		sc_packet_set_animation set_anima;
+		set_anima.type = SC_SET_ANIMATION;
+		set_anima.size = sizeof(sc_packet_set_animation);
+		set_anima.obj_id = my_id_;
+		set_anima.animation_id = AT_RUNNING;
+
+		for (auto& p : my_game->ingame_player) {
+			shared_ptr<SESSION> player = p.second;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&set_anima);
+		}
+		break;
+	}
+	case CS_RUN_KEY_UP: {
+		cs_packet_run_key_up* p = (cs_packet_run_key_up*)packet;
+
+		sc_packet_set_animation set_anima;
+		set_anima.type = SC_SET_ANIMATION;
+		set_anima.size = sizeof(sc_packet_set_animation);
+		set_anima.obj_id = my_id_;
+		if (p->is_moving) set_anima.animation_id = AT_WALKING;
+		else set_anima.animation_id = AT_IDLE;
+
+		for (auto& p : my_game->ingame_player) {
+			shared_ptr<SESSION> player = p.second;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&set_anima);
+		}
+		break;
+	}
 	case CS_TRY_GET_RABBITFOOT: {
 		cs_packet_try_get_rabbitfoot* p = (cs_packet_try_get_rabbitfoot*)packet;
 
