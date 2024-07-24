@@ -289,12 +289,24 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RELOAD_MAG: { //ÀçÀåÀü
-		remain_bullet = 30;
+		remain_bullet = WP_MAG[equip_weapon];
+
+		sc_packet_set_animation set_anima;
+		set_anima.type = SC_SET_ANIMATION;
+		set_anima.size = sizeof(sc_packet_set_animation);
+		set_anima.obj_id = my_id_;
+		set_anima.animation_id = AT_RELOADING;
+
+		for (auto& p : my_game->ingame_player) {
+			shared_ptr<SESSION> player = p.second;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&set_anima);
+		}
 
 		sc_packet_modify_bullet mb;
 		mb.type = SC_MODIFY_BULLET;
 		mb.size = sizeof(sc_packet_modify_bullet);
-		mb.amount = 30;
+		mb.amount = WP_MAG[equip_weapon];
 
 		Send_Packet(&mb);
 		break;
