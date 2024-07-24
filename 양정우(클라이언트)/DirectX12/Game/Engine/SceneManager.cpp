@@ -3944,21 +3944,21 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 
 						if (state == AT_IDLE)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(3);
+							otherPlayer->GetAnimator()->AddToSequence(0);
 						}
 						else if (state == AT_WALKING)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(8);
+							otherPlayer->GetAnimator()->AddToSequence(5);
 						}
 						else if (state == AT_RUNNING)
 						{
-							/*otherPlayer->GetAnimator()->ClearSequence();
-							otherPlayer->GetAnimator()->AddToSequence(2);
-							otherPlayer->GetAnimator()->AddToSequence(0);*/
+							otherPlayer->GetAnimator()->ClearSequence();
+							otherPlayer->GetAnimator()->AddToSequence(13);
+							otherPlayer->GetAnimator()->AddToSequence(10);
 						}
 					}
 					if (animationID == AT_SHOOTING)
