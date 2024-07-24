@@ -71,7 +71,7 @@ public:
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
-	void CreatePlayerGunObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerGunObject(int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHeadCoreObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	
 	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
@@ -108,9 +108,11 @@ private:
 	//충돌박스의 타입넘버는 99이다
 
 public:
-	shared_ptr<GameObject> GetPlayer(int ID);	//101
+	shared_ptr<GameObject> GetPlayer(int ID);	//OT_UI_PLAYERHAND
 
-	shared_ptr<GameObject> GetPlayerGun(int ID);	//102
+	shared_ptr<GameObject> GetPlayerSubGun(int ID);	//OT_UI_SUB_WEAPON_3D
+
+	shared_ptr<GameObject> GetPlayerMainGun(int ID);	//OT_UI_MAIN_WEAPON_3D
 
 	shared_ptr<GameObject> GetPlayerHeadCoreQbject(int ID);
 
@@ -175,5 +177,12 @@ private:
 public:
 	void SetPlayerDead(bool isdead) { isPlayerDead = isdead; }
 	bool GetPlayerDead() { return isPlayerDead; }
+
+private:
+	uint32 mainWeapon_Type = -1;
+
+public:
+	void SetMainWeapon_Type(uint32 type) { mainWeapon_Type = type };
+	uint32 GetMainWeapon_type() { return mainWeapon_Type; }
 };
 

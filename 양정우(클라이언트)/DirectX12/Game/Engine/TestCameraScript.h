@@ -36,8 +36,11 @@ private:
 	Vec3 previousPosition;
 
 	shared_ptr<GameObject> playerObject;
-	shared_ptr<GameObject> playerGunObject;
+	shared_ptr<GameObject> playerSubGunObject;
+	shared_ptr<GameObject> playerMainGunObject;
 	shared_ptr<GameObject> playerHeadCoreObject;
+
+	shared_ptr<GameObject> nowGunObject;
 
 	double timeElapse = 0.0;
 	const double clickCooldown = 0.067;

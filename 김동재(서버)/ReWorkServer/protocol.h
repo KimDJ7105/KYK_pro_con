@@ -40,30 +40,31 @@
 #define OT_AMMOBOX			10
 #define OT_MEDIKIT			11
 
-#define OT_WALLAABB			99
-#define OT_UI_PLAYERHAND	101
-#define OT_UI_SMG_3D		102
-#define OT_UI_MAP			103
-#define OT_UI_HP			104
-#define OT_UI_KEYCARD		105
-#define OT_UI_SMG			106
-#define OT_UI_SLASH			107
-#define OT_UI_MAXBULLET		108
-#define OT_UI_CURRENTBULLET	109
-#define OT_UI_RABBITFOOT	110
-#define OT_UI_MAPOBJECTS	111
-#define OT_PLAYER_CAMERA	112
-#define OT_CRUSHER			113
-#define OT_CRUSHER_BLADE	114
-#define OT_UI_MAP_BUTTON	115
-#define OT_CURSOR			116
-#define OT_HEADCORE			117
-#define OT_UI_START_BTN		118
-#define OT_UI_WEAPON_BTN	119
-#define OT_UI_EXIT_BTN		120
-#define OT_UI_TITLE			121
-#define OT_UI_WEAPON_CHANGE	122
-#define OT_UI_WEAPON_SELECT	123
+#define OT_WALLAABB				99
+#define OT_UI_MAIN_WEAPON_3D	100
+#define OT_UI_PLAYERHAND		101
+#define OT_UI_SUB_WEAPON_3D		102
+#define OT_UI_MAP				103
+#define OT_UI_HP				104
+#define OT_UI_KEYCARD			105
+#define OT_UI_SMG				106
+#define OT_UI_SLASH				107
+#define OT_UI_MAXBULLET			108
+#define OT_UI_CURRENTBULLET		109
+#define OT_UI_RABBITFOOT		110
+#define OT_UI_MAPOBJECTS		111
+#define OT_PLAYER_CAMERA		112
+#define OT_CRUSHER				113
+#define OT_CRUSHER_BLADE		114
+#define OT_UI_MAP_BUTTON		115
+#define OT_CURSOR				116
+#define OT_HEADCORE				117
+#define OT_UI_START_BTN			118
+#define OT_UI_WEAPON_BTN		119
+#define OT_UI_EXIT_BTN			120
+#define OT_UI_TITLE				121
+#define OT_UI_WEAPON_CHANGE		122
+#define OT_UI_WEAPON_SELECT		123
 //---------------------------------------
 
 //Gun Type-------------------------------

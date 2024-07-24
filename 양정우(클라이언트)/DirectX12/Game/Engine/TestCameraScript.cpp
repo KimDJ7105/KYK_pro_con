@@ -202,7 +202,7 @@ void TestCameraScript::LateUpdate()
 		{
 			if (playerObject != NULL)
 			{
-				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, 99);
+				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_WALLAABB);
 				if (overlap != NULL)
 				{
 					isOverlap = true;
@@ -248,7 +248,7 @@ void TestCameraScript::LateUpdate()
 		{
 			if (playerHeadCoreObject != NULL)
 			{
-				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, 99);
+				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_WALLAABB);
 				if (overlap != NULL)
 				{
 					isOverlap = true;
@@ -315,11 +315,29 @@ void TestCameraScript::LateUpdate()
 
 	}
 
-	if (INPUT->GetButton(KEY_TYPE::P))
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
-		GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
-	}
+		//무기 변경
 
+		nowGunObject->GetAnimator()->ClearSequence();
+		playerObject->GetAnimator()->ClearSequence();
+
+		if (nowGunObject == playerSubGunObject)
+		{
+			nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			nowGunObject = playerMainGunObject;
+		}
+		else if (nowGunObject == playerMainGunObject)
+		{
+			nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			nowGunObject = playerSubGunObject;
+		}
+
+		nowGunObject->GetAnimator()->AddToSequence(3);
+		nowGunObject->GetAnimator()->AddToSequence(0);
+		playerObject->GetAnimator()->AddToSequence(3);
+		playerObject->GetAnimator()->AddToSequence(0);
+	}
 
 	if (isMouseMod)
 	{
@@ -451,7 +469,8 @@ void TestCameraScript::LateUpdate()
 			{
 #ifdef DEBUG_ON
 				std::cout << "FIRE" << std::endl;
-				playerGunObject->GetAnimator()->ClearSequence();
+
+				nowGunObject->GetAnimator()->ClearSequence();
 				playerObject->GetAnimator()->ClearSequence();
 #endif
 				const POINT& pos = INPUT->GetMousePos();
@@ -496,11 +515,11 @@ void TestCameraScript::LateUpdate()
 
 				timeElapse = 0.f;
 
-				playerGunObject->GetAnimator()->AddToSequence(1);
-				//playerGunObject->GetAnimator()->AddToSequence(0);
+				nowGunObject->GetAnimator()->AddToSequence(1);
+				nowGunObject->GetAnimator()->AddToSequence(0);
 
 				playerObject->GetAnimator()->AddToSequence(1);
-				//playerObject->GetAnimator()->AddToSequence(0);
+				playerObject->GetAnimator()->AddToSequence(0);
 			}
 		}
 	}
@@ -649,12 +668,12 @@ void TestCameraScript::LateUpdate()
 
 		main_session->Send_Packet(&lm);
 
-		playerGunObject->GetAnimator()->ClearSequence();
+		nowGunObject->GetAnimator()->ClearSequence();
 		playerObject->GetAnimator()->ClearSequence();
 
 		// 플레이어 총과 플레이어의 애니메이터에 애니메이션 시퀀스를 추가
-		playerGunObject->GetAnimator()->AddToSequence(2);
-		playerGunObject->GetAnimator()->AddToSequence(0);
+		nowGunObject->GetAnimator()->AddToSequence(2);
+		nowGunObject->GetAnimator()->AddToSequence(0);
 
 		playerObject->GetAnimator()->AddToSequence(2);
 		playerObject->GetAnimator()->AddToSequence(0);
@@ -671,7 +690,7 @@ void TestCameraScript::LateUpdate()
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 	}
 	
-	if (playerObject != nullptr && playerGunObject != nullptr && playerHeadCoreObject != nullptr)
+	if (playerObject != nullptr && nowGunObject != nullptr && playerHeadCoreObject != nullptr)
 	{
 		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
 		{
@@ -690,7 +709,7 @@ void TestCameraScript::LateUpdate()
 				Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
 
 				// playerGunObject의 위치를 플레이어의 위치로 이동
-				if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
 				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
 				Vec3 gunRotationOffset(0.f, 0.f, 0.0f); // 총의 회전 오프셋
@@ -703,11 +722,11 @@ void TestCameraScript::LateUpdate()
 				Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
 
 				// 회전을 적용
-				if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalRotation(gunRotation);
+				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalRotation(gunRotation);
 
 				// 플레이어를 기준으로 한 반대 방향으로 이동
 				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-				if (playerGunObject != NULL) playerGunObject->GetTransform()->SetLocalPosition(newPosition);
+				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(newPosition);
 			}
 			{
 				Vec3 rotation = GetTransform()->GetLocalRotation();
@@ -746,7 +765,7 @@ void TestCameraScript::LateUpdate()
 		}
 		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
 		{
-			playerGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			playerObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 
 			{
@@ -774,10 +793,21 @@ void TestCameraScript::SetObjects()
 	if (playerObject == NULL)
 	{
 		playerObject = GET_SINGLE(SceneManager)->GetPlayer(playerID);
+		playerObject->GetAnimator()->AddToSequence(3);
+		playerObject->GetAnimator()->AddToSequence(0);
 	}
-	if (playerGunObject == NULL)
+	if (playerSubGunObject == NULL)
 	{
-		playerGunObject = GET_SINGLE(SceneManager)->GetPlayerGun(playerID);
+		playerSubGunObject = GET_SINGLE(SceneManager)->GetPlayerSubGun(playerID);
+
+		nowGunObject = playerSubGunObject;
+
+		nowGunObject->GetAnimator()->AddToSequence(3);
+		nowGunObject->GetAnimator()->AddToSequence(0);
+	}
+	if (playerMainGunObject == NULL)
+	{
+		playerMainGunObject = GET_SINGLE(SceneManager)->GetPlayerMainGun(playerID);
 	}
 	if (playerHeadCoreObject == NULL)
 	{

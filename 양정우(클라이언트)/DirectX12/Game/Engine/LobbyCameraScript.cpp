@@ -115,6 +115,7 @@ void LobbyCameraScript::LateUpdate()
 						//1ÀÌ¸é »êÅºÃÑ		(GT_SG				1)
 						//2ÀÌ¸é µ¹°Ý¼ÒÃÑ	(GT_AR				2)
 						//3ÀÌ¸é Àú°Ý¼ÒÃÑ	(GT_SR				3)
+						GET_SINGLE(SceneManager)->SetMainWeapon_Type(gameObject->GetTransform()->GetObjectID());
 					}
 					else
 					{
