@@ -32,6 +32,7 @@ private:
 
 	bool using_terminal;
 	bool is_core_state;
+	bool is_running;
 
 	int gun_type;
 private:
