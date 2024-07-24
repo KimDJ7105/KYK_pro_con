@@ -65,6 +65,8 @@
 #define OT_UI_TITLE				121
 #define OT_UI_WEAPON_CHANGE		122
 #define OT_UI_WEAPON_SELECT		123
+#define OT_OTHER_PLAYER_SUB		124
+#define OT_OTHER_PLAYER_MAIN	125
 //---------------------------------------
 
 //Gun Type-------------------------------

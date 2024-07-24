@@ -54,6 +54,10 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
 		
 		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+
+
+		//p->gun_type이 필요...
+		//_activeSessionScene->CreateOtherPlayerGunObject(p->gun_type ,p->id);
 		break;
 	}
 	case SC_POS: //생성되어있는 오브젝트, 다른 캐릭터를 이동 회전

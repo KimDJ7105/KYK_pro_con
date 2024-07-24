@@ -2116,29 +2116,31 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma region Team_Player
 	//플레이어들 소환 코드
 	//y = 0.f
-	//// Blue
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBlueTeamModel(L"..\\Resources\\FBX\\PlayerBlue\\IDLE_2\\Blue_Player_Single_IShoot.fbx");
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+	// Blue
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBlueTeamModel(L"..\\Resources\\FBX\\PlayerBlue\\IDLE_2\\Blue_Player_Single_IShoot.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"Player99");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-	//		//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
-	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
-	//		{
-	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
-	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
-	//		}
-	//		mainGameScene->AddGameObject(gameObject);
-	//	}
-	//}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Player99");
+			gameObject->SetCheckFrustum(false);
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 0.f, 1200.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 3.14f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+			gameObject->AddComponent(make_shared<TestDragon>());
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
 
 	//// Green
 	//{
@@ -2218,90 +2220,19 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 	//y = 40.f
 	
-	////돌격소총
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_GunModel(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_2\\AR01_Player_Single_IShoot.fbx");
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"AR");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-	//		//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
-	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
-	//		{
-	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
-	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
-	//		}
-	//		mainGameScene->AddGameObject(gameObject);
-	//	}
-	//}
-
-	////권총
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_PO_GunModel(L"..\\Resources\\FBX\\PlayerGun_PO\\IDLE_2\\PO01_Player_Single_IShoot.fbx");
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"PO");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-	//		//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
-	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
-	//		{
-	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
-	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
-	//		}
-	//		mainGameScene->AddGameObject(gameObject);
-	//	}
-	//}
-
-	////샷건
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SG_GunModel(L"..\\Resources\\FBX\\PlayerGun_SG\\IDLE_2\\SG01_Player_Single_IShoot.fbx");
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"SG");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-	//		//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
-	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
-	//		{
-	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
-	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
-	//		}
-	//		mainGameScene->AddGameObject(gameObject);
-	//	}
-	//}
-
-	//기관단총
+	//돌격소총
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SMG_GunModel(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG01_Player_Single_IShoot.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_GunModel(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_2\\AR01_Player_Single_IShoot.fbx");
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"SMG");
+			gameObject->SetName(L"AR");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f + 5, 25.f, 1200.f + 13));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 			// 각 게임 오브젝트에 독립적인 머티리얼 설정
@@ -2315,16 +2246,16 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	}
 
-	////스나이퍼
+	//권총
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SR_GunModel(L"..\\Resources\\FBX\\PlayerGun_SR\\IDLE_2\\SR01_Player_Single_IShoot.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_PO_GunModel(L"..\\Resources\\FBX\\PlayerGun_PO\\IDLE_2\\PO01_Player_Single_IShoot.fbx");
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"SR");
+			gameObject->SetName(L"PO");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(1250.f, 40.f, 1200.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
@@ -2335,7 +2266,82 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
-			gameObject->AddComponent(make_shared<TestDragon>());
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	//샷건
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SG_GunModel(L"..\\Resources\\FBX\\PlayerGun_SG\\IDLE_2\\SG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"SG");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	//기관단총
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SMG_GunModel(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"SMG");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+			//gameObject->AddComponent(make_shared<TestDragon>());
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	//스나이퍼
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SR_GunModel(L"..\\Resources\\FBX\\PlayerGun_SR\\IDLE_2\\SR01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"SR");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(1250.f, 40.f, 1200.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+			//gameObject->AddComponent(make_shared<TestDragon>());
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
@@ -3268,6 +3274,162 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 	}
 }
 
+void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
+{
+	//PO소환
+	//오브젝트 타입은 OT_OTHER_PLAYER_SUB으로
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_PO_GunModel(L"..\\Resources\\FBX\\PlayerGun_PO\\IDLE_2\\PO01_Player_Single_IShoot.fbx");
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"PO");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetObjectType(OT_OTHER_PLAYER_SUB);
+			gameObject->GetTransform()->SetObjectID(object_id);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			// 각 게임 오브젝트에 독립적인 머티리얼 설정
+			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+			{
+				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+			}
+
+			_otherPlayer.push_back(gameObject);
+			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+
+	if (GunType_type == GT_AR)
+	{
+		//오브젝트 타입은 OT_OTHER_PLAYER_MAIN으로
+
+		//돌격소총
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_GunModel(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_2\\AR01_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AR");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetObjectType(OT_OTHER_PLAYER_MAIN);
+				gameObject->GetTransform()->SetObjectID(object_id);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+
+				_otherPlayer.push_back(gameObject);
+				mainGameScene->AddGameObject(gameObject);
+			}
+		}
+	}
+	else if (GunType_type == GT_SG)
+	{
+		//샷건
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SG_GunModel(L"..\\Resources\\FBX\\PlayerGun_SG\\IDLE_2\\SG01_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"SG");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetObjectType(OT_OTHER_PLAYER_MAIN);
+				gameObject->GetTransform()->SetObjectID(object_id);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+
+				_otherPlayer.push_back(gameObject);
+				mainGameScene->AddGameObject(gameObject);
+			}
+		}
+	}
+	else if (GunType_type == GT_SM)
+	{
+		//기관단총
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SMG_GunModel(L"..\\Resources\\FBX\\PlayerGun_SM\\IDLE_2\\SMG01_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"SMG");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetObjectType(OT_OTHER_PLAYER_MAIN);
+				gameObject->GetTransform()->SetObjectID(object_id);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+				
+				_otherPlayer.push_back(gameObject);
+				mainGameScene->AddGameObject(gameObject);
+			}
+		}
+	}
+	else if (GunType_type == GT_SR)
+	{
+		//스나이퍼
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_SR_GunModel(L"..\\Resources\\FBX\\PlayerGun_SR\\IDLE_2\\SR01_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"SR");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetObjectType(OT_OTHER_PLAYER_MAIN);
+				gameObject->GetTransform()->SetObjectID(object_id);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalPosition(Vec3(1250.f, 40.f, 1200.f));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+				_otherPlayer.push_back(gameObject);
+				mainGameScene->AddGameObject(gameObject);
+			}
+		}
+	}
+}
+
 void SceneManager::CreateHeadCoreObject(int object_id)
 {
 	vector<shared_ptr<GameObject>> gameObjects = _otherPlayer;
@@ -3631,8 +3793,13 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 	{
 		if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 		{
-			otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-			otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+			if (otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_MAIN
+				&& otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_SUB)
+			{
+
+				otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
+				otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
+			}
 		}
 	}
 }
@@ -3673,7 +3840,9 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 		{
 			if (otherPlayer->GetTransform()->GetObjectID() == object_id)
 			{
-				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE)
+				if (otherPlayer->GetTransform()->GetObjectType() != OT_HEADCORE
+					&& otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_MAIN
+					&& otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_SUB)
 				{
 					if (animationID == AT_IDLE)
 					{

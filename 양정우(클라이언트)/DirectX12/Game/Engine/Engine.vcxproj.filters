@@ -196,6 +196,7 @@
     <ClCompile Include="GoodEndingCameraScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
+    <ClCompile Include="OtherPlayerScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -361,6 +362,7 @@
     <ClInclude Include="GoodEndingCameraScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
+    <ClInclude Include="OtherPlayerScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
