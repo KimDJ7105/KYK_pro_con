@@ -83,7 +83,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
-		if(remain_bullet <= 0) break;
+		if(remain_bullet[select_gun] <= 0) break;
 
 		remain_bullet[select_gun] -= 1;
 
