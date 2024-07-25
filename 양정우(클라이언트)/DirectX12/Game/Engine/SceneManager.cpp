@@ -1886,7 +1886,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH /2, WINDOW_HEIGHT / 2, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(111111111110, 11111111111111130, 500.f));	//0, 30, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));	//0, 30, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -2783,7 +2783,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"MeGun");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));		//0.f, 45.f, 100.f
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER * OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));		//0.f, 45.f, 100.f
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
@@ -2799,7 +2799,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"CardKey");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -2814,7 +2814,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Console");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -2829,7 +2829,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"RabbitFoot");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER * OUT_OF_RENDER, OUT_OF_RENDER * OUT_OF_RENDER, OUT_OF_RENDER * OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -2845,7 +2845,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"RevivalPad");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -2862,7 +2862,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Exit");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			mainGameScene->AddGameObject(gameObject);
@@ -2904,7 +2904,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"AmmoBox");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 
@@ -2922,7 +2922,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Medkit");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 
@@ -2940,7 +2940,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"HeadCore_Blue");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER, OUT_OF_RENDER* OUT_OF_RENDER));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
 
