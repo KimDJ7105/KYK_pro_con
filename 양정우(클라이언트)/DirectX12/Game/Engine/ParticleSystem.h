@@ -41,7 +41,7 @@ public:
 private:
 	shared_ptr<StructuredBuffer>	_particleBuffer;
 	shared_ptr<StructuredBuffer>	_computeSharedBuffer;
-	uint32							_maxParticle = 1000;
+	uint32							_maxParticle = 10;
 
 	shared_ptr<Material>		_computeMaterial;
 	shared_ptr<Material>		_material;
@@ -50,10 +50,10 @@ private:
 	float				_createInterval = 0.005f;
 	float				_accTime = 0.f;
 
-	float				_minLifeTime = 0.5f;
-	float				_maxLifeTime = 1.f;
-	float				_minSpeed = 100;
-	float				_maxSpeed = 50;
-	float				_startScale = 10.f;
-	float				_endScale = 5.f;
+	float				_minLifeTime = 0.1f;
+	float				_maxLifeTime = 0.5f;
+	float				_minSpeed = 10;
+	float				_maxSpeed = 1;
+	float				_startScale = 1.f;
+	float				_endScale = 0.1f;
 };

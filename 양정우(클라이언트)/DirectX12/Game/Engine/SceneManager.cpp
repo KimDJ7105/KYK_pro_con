@@ -1412,8 +1412,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	/*{
 		shared_ptr<GameObject> cube = make_shared<GameObject>();
 		cube->AddComponent(make_shared<Transform>());
-		cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 30.f));
+		cube->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		cube->GetTransform()->SetLocalPosition(Vec3(1200.f, 20.f, 1200.f));
+		cube->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
@@ -1430,9 +1431,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			meshRenderer->SetMaterial(material);
 		}
 		cube->AddComponent(meshRenderer);
-		scene->AddGameObject(cube);
-
-		_otherPlayer.push_back(cube);
+		mainGameScene->AddGameObject(cube);
 	}*/
 #pragma endregion
 
@@ -1940,14 +1939,17 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region ParticleSystem
-	/*{
+	{
 		shared_ptr<GameObject> particle = make_shared<GameObject>();
 		particle->AddComponent(make_shared<Transform>());
 		particle->AddComponent(make_shared<ParticleSystem>());
 		particle->SetCheckFrustum(false);
-		particle->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
-		scene->AddGameObject(particle);
-	}*/
+		//particle->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
+		particle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		particle->GetTransform()->SetObjectType(9876);
+		particle->GetTransform()->SetObjectID(5432);
+		mainGameScene->AddGameObject(particle);
+	}
 #pragma endregion
 
 #pragma region Tessellation Test

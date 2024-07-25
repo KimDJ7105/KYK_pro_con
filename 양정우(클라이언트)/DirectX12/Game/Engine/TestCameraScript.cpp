@@ -67,8 +67,6 @@ void TestCameraScript::LateUpdate()
 	}
 
 
-
-
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -391,22 +389,22 @@ void TestCameraScript::LateUpdate()
 
 		if (type == 0)//기관
 		{
-			clickCooldown = 0.067;
+			clickCooldown = 0.1;
 			GET_SINGLE(SceneManager)->SetMaxBullet(30);
 		}
 		else if (type == 1)//산탄
 		{
-			clickCooldown = 0.967;
+			clickCooldown = 1;
 			GET_SINGLE(SceneManager)->SetMaxBullet(8);
 		}
 		else if (type == 3)//저격
 		{
-			clickCooldown = 0.967;
+			clickCooldown = 1;
 			GET_SINGLE(SceneManager)->SetMaxBullet(5);
 		}
 		else //돌격
 		{
-			clickCooldown = 0.092;
+			clickCooldown = 0.125;
 			GET_SINGLE(SceneManager)->SetMaxBullet(25);
 		}
 	}
@@ -442,7 +440,7 @@ void TestCameraScript::LateUpdate()
 
 
 
-		clickCooldown = 0.3f;
+		clickCooldown = 0.333;
 		GET_SINGLE(SceneManager)->SetMaxBullet(15);
 	}
 
@@ -561,6 +559,7 @@ void TestCameraScript::LateUpdate()
 				}
 
 				fireTimeElapse = 0.f;
+				flameTimeElapse = 0.f;
 
 				nowGunObject->GetAnimator()->AddToSequence(1);
 				nowGunObject->GetAnimator()->AddToSequence(0);
@@ -853,9 +852,54 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
+	if (flameParticle != nullptr)
+	{
+		if(flameTimeElapse < flameDuration)
+		{
+			Vec3 rotation = GetTransform()->GetLocalRotation();
+
+			Vec3 particle(2.5f, -24 + 22, 15.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+			// 플레이어의 회전값을 쿼터니언으로 변환
+			Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+				QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+			// gunOffset을 회전시킴
+			Vec3 rotatedOffset = playerRotationQuat.Rotate(particle);
+
+			// playerGunObject의 위치를 플레이어의 위치로 이동
+			if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+			// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+			Vec3 particleRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+			Quaternion particleRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), particleRotationOffset.y) *
+				QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), particleRotationOffset.x);
+
+			// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+			Quaternion finalParticleRotationQuat = playerRotationQuat * particleRotationQuat;
+
+			Vec3 particleRotation = finalParticleRotationQuat.ToEulerAngles();
+
+			// 회전을 적용
+			if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalRotation(particleRotation);
+
+			// 플레이어를 기준으로 한 반대 방향으로 이동
+			Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+			if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(newPosition);
+		}
+		else
+		{
+			flameParticle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		}
+	}
+
+
 	wcscpy_s(previousTitle, windowTitle);
 
 	fireTimeElapse += DELTA_TIME;
+
+	flameTimeElapse += DELTA_TIME;
 
 	if (weaponChanging == true)
 	{
@@ -896,6 +940,18 @@ void TestCameraScript::SetObjects()
 			if (gameObject->GetTransform()->GetObjectType() == OT_CURSOR)
 			{
 				cursor = gameObject;
+			}
+		}
+	}
+
+	if (flameParticle == nullptr)
+	{
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (auto& gameObject : gameObjects)
+		{
+			if (gameObject->GetTransform()->GetObjectType() == 9876)
+			{
+				flameParticle = gameObject;
 			}
 		}
 	}
