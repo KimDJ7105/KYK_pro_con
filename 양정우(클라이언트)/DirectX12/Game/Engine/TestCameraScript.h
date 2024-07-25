@@ -41,9 +41,13 @@ private:
 
 	shared_ptr<GameObject> nowGunObject;
 
-	double timeElapse = 0.0;
-	const double clickCooldown = 0.067;
+	double fireTimeElapse = 0.0;
+	double clickCooldown = 0.333;
 
+	double weaponTimeElapse = 0.0;
+
+	float weaponChangetime = -1;
+	bool weaponChanging = false;
 
 	int haveKeycard = 0;
 
@@ -65,4 +69,7 @@ private:
 
 private:
 	shared_ptr<GameObject> cursor;
+	shared_ptr<GameObject> flameParticle;
+	double flameDuration = 0.125;
+	double flameTimeElapse = 1;
 };

@@ -83,9 +83,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	{
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
-		if(remain_bullet <= 0) break;
+		if(remain_bullet[select_gun] <= 0) break;
 
-		remain_bullet -= 1;
+		remain_bullet[select_gun] -= 1;
 
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
@@ -102,7 +102,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		sc_packet_modify_bullet mb;
 		mb.type = SC_MODIFY_BULLET;
 		mb.size = sizeof(sc_packet_modify_bullet);
-		mb.amount = remain_bullet;
+		mb.amount = remain_bullet[select_gun];
 		Send_Packet(&mb);
 		
 		if (p->target_id == -1) break;
@@ -301,7 +301,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RELOAD_MAG: { //재장전
-		remain_bullet = WP_MAG[equip_weapon];
+		remain_bullet[select_gun] = WP_MAG[equip_weapon];
 
 		sc_packet_set_animation set_anima;
 		set_anima.type = SC_SET_ANIMATION;
@@ -491,8 +491,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case CS_USE_RESURRECTION: {
 		if (is_core_state) {
+			is_core_state = false;
+
 			hp = 100;
-			remain_bullet = 30;
 			sc_packet_resurrection res;
 			res.size = sizeof(sc_packet_resurrection);
 			res.type = SC_RESURRECTION;
@@ -507,6 +508,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case CS_SEND_GUNTYPE: {
 		cs_packet_send_guntype* p = (cs_packet_send_guntype*)packet;
 		gun_type = p->gun_type;
+		remain_bullet[0] = WP_MAG[gun_type];
 		break;
 	}
 	case CS_CHANGE_GUN: {
@@ -515,11 +517,13 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		if (p->pressed_key == 1) {
 			if (equip_weapon == gun_type) break;
 			equip_weapon = gun_type;
+			select_gun = 0;
 		}
 
 		else if (p->pressed_key == 2) {
 			if (equip_weapon == GT_PT) break;
 			equip_weapon = GT_PT;
+			select_gun = 1;
 		}
 
 		sc_packet_set_animation set_anima;
@@ -542,7 +546,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		spg.gun_type = equip_weapon;
 
 		for (auto& p : my_game->ingame_player) {
-			if (p.second->my_id_ == my_id_) continue;
+			if (p.second->my_id_ == my_id_) {
+				sc_packet_modify_bullet mb;
+				mb.type = SC_MODIFY_BULLET;
+				mb.size = sizeof(sc_packet_modify_bullet);
+				mb.amount = remain_bullet[select_gun];
+
+				p.second->Send_Packet(&mb);
+				continue;
+			}
 			p.second->Send_Packet(&spg);
 		}
 
@@ -682,7 +694,10 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	}
 
 	hp = 100;
-	remain_bullet = 30;
+	remain_bullet[0] = WP_MAG[0];
+	remain_bullet[1] = WP_MAG[GT_PT];
+
+	select_gun = 1;
 
 	equip_weapon = GT_PT;
 
@@ -719,7 +734,7 @@ void SESSION::start()
 	pl.diry = view_dir[1];
 	pl.dirz = view_dir[2];
 	pl.team_num = team;
-	pl.bullet_amount = 30; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
+	pl.bullet_amount = WP_MAG[GT_PT]; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
 	Send_Packet(&pl);
 
 	//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
@@ -735,6 +750,7 @@ void SESSION::start()
 	p.diry = view_dir[1];
 	p.dirz = view_dir[2];
 	p.gun_type = gun_type;
+	p.team = team;
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
 	for (auto& pl : my_game->ingame_player) {
@@ -750,6 +766,7 @@ void SESSION::start()
 			p.id = player->my_id_;
 			p.x = player->pos[0];
 			p.y = player->pos[1];
+			p.team = player->team;
 			p.gun_type = player->gun_type;
 			Send_Packet(&p);
 		}

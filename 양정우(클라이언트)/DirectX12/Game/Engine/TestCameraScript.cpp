@@ -67,8 +67,6 @@ void TestCameraScript::LateUpdate()
 	}
 
 
-
-
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -353,9 +351,11 @@ void TestCameraScript::LateUpdate()
 
 	}
 
+
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
-
+		weaponChanging = true;
+		weaponTimeElapse = 0.0;
 		if (nowGunObject != playerMainGunObject)
 		{
 			nowGunObject->GetAnimator()->ClearSequence();
@@ -366,7 +366,6 @@ void TestCameraScript::LateUpdate()
 				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				nowGunObject = playerMainGunObject;
 			}
-
 			nowGunObject->GetAnimator()->AddToSequence(3);
 			nowGunObject->GetAnimator()->AddToSequence(0);
 			playerObject->GetAnimator()->AddToSequence(3);
@@ -379,9 +378,40 @@ void TestCameraScript::LateUpdate()
 		cg.pressed_key = 1;
 
 		main_session->Send_Packet(&cg);
+
+
+		//0이면 기관단총	(GT_SM				0)
+		//1이면 산탄총		(GT_SG				1)
+		//2이면 돌격소총	(GT_AR				2)
+		//3이면 저격소총	(GT_SR				3)
+
+		int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
+
+		if (type == 0)//기관
+		{
+			clickCooldown = 0.1;
+			GET_SINGLE(SceneManager)->SetMaxBullet(30);
+		}
+		else if (type == 1)//산탄
+		{
+			clickCooldown = 1;
+			GET_SINGLE(SceneManager)->SetMaxBullet(8);
+		}
+		else if (type == 3)//저격
+		{
+			clickCooldown = 1;
+			GET_SINGLE(SceneManager)->SetMaxBullet(5);
+		}
+		else //돌격
+		{
+			clickCooldown = 0.125;
+			GET_SINGLE(SceneManager)->SetMaxBullet(25);
+		}
 	}
 	else if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
 	{
+		weaponChanging = true;
+		weaponTimeElapse = 0.0;
 		if (nowGunObject != playerSubGunObject)
 		{
 			nowGunObject->GetAnimator()->ClearSequence();
@@ -406,6 +436,12 @@ void TestCameraScript::LateUpdate()
 		cg.pressed_key = 2;
 
 		main_session->Send_Packet(&cg);
+
+
+
+
+		clickCooldown = 0.333;
+		GET_SINGLE(SceneManager)->SetMaxBullet(15);
 	}
 
 
@@ -473,7 +509,7 @@ void TestCameraScript::LateUpdate()
 #ifdef DEBUG_ON
 			std::cout << "COOLTIME" << std::endl;
 #endif
-			if (clickCooldown <= timeElapse)
+			if (clickCooldown <= fireTimeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
 			{
 #ifdef DEBUG_ON
 				std::cout << "FIRE" << std::endl;
@@ -522,7 +558,8 @@ void TestCameraScript::LateUpdate()
 					main_session->Send_Packet(&ppi);
 				}
 
-				timeElapse = 0.f;
+				fireTimeElapse = 0.f;
+				flameTimeElapse = 0.f;
 
 				nowGunObject->GetAnimator()->AddToSequence(1);
 				nowGunObject->GetAnimator()->AddToSequence(0);
@@ -713,6 +750,13 @@ void TestCameraScript::LateUpdate()
 		//메인게임 씬의 오브젝트들을 제거한다
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 	}
+
+	if (weaponTimeElapse > weaponChangetime && weaponChanging == true)
+	{
+		weaponChanging = false;
+	}
+		
+
 	
 	if (playerObject != nullptr && nowGunObject != nullptr && playerHeadCoreObject != nullptr)
 	{
@@ -736,7 +780,10 @@ void TestCameraScript::LateUpdate()
 				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
 				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-				Vec3 gunRotationOffset(0.f, 0.f, 0.0f); // 총의 회전 오프셋
+				Vec3 gunRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+				if (weaponChanging == true)
+					gunRotationOffset.x = gunRotationOffset.x - 1.57f;
 				Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
 					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
 
@@ -805,11 +852,60 @@ void TestCameraScript::LateUpdate()
 		}
 	}
 
+	if (flameParticle != nullptr)
+	{
+		if(flameTimeElapse < flameDuration)
+		{
+			Vec3 rotation = GetTransform()->GetLocalRotation();
+
+			Vec3 particle(2.5f, -24 + 22, 15.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+			// 플레이어의 회전값을 쿼터니언으로 변환
+			Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+				QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+			// gunOffset을 회전시킴
+			Vec3 rotatedOffset = playerRotationQuat.Rotate(particle);
+
+			// playerGunObject의 위치를 플레이어의 위치로 이동
+			if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+			// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+			Vec3 particleRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+			Quaternion particleRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), particleRotationOffset.y) *
+				QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), particleRotationOffset.x);
+
+			// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+			Quaternion finalParticleRotationQuat = playerRotationQuat * particleRotationQuat;
+
+			Vec3 particleRotation = finalParticleRotationQuat.ToEulerAngles();
+
+			// 회전을 적용
+			if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalRotation(particleRotation);
+
+			// 플레이어를 기준으로 한 반대 방향으로 이동
+			Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+			if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(newPosition);
+		}
+		else
+		{
+			flameParticle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		}
+	}
+
+
 	wcscpy_s(previousTitle, windowTitle);
 
-	timeElapse += DELTA_TIME;
+	fireTimeElapse += DELTA_TIME;
 
+	flameTimeElapse += DELTA_TIME;
 
+	if (weaponChanging == true)
+	{
+		weaponTimeElapse += DELTA_TIME;
+	}
+	
 }
 
 void TestCameraScript::SetObjects()
@@ -825,7 +921,6 @@ void TestCameraScript::SetObjects()
 		playerSubGunObject = GET_SINGLE(SceneManager)->GetPlayerSubGun(playerID);
 
 		nowGunObject = playerSubGunObject;
-
 		/*nowGunObject->GetAnimator()->AddToSequence(3);
 		nowGunObject->GetAnimator()->AddToSequence(0);*/
 	}
@@ -847,6 +942,23 @@ void TestCameraScript::SetObjects()
 				cursor = gameObject;
 			}
 		}
+	}
+
+	if (flameParticle == nullptr)
+	{
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (auto& gameObject : gameObjects)
+		{
+			if (gameObject->GetTransform()->GetObjectType() == 9876)
+			{
+				flameParticle = gameObject;
+			}
+		}
+	}
+
+	if (nowGunObject != nullptr)
+	{
+		weaponChangetime = nowGunObject->GetAnimator()->GetAnimationEndTime(3);
 	}
 }
 

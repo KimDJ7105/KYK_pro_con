@@ -26,6 +26,14 @@ void SERVER::do_accept()
 					if (it == games.end())
 					{
 						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
+
+						TIMER_EVENT ev_item;
+						ev_item.event_id = EV_SPAWN_ITEM;
+						ev_item.game_id = g_game_ID;
+						ev_item.target_id = -1;
+						ev_item.wakeup_time = chrono::system_clock::now() + 60s;
+
+						timer_queue.push(ev_item);
 					}
 
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
@@ -125,7 +133,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				break;
 			}
 			case EV_MOVE_LASER_TRAP: {
-				std::cout << "Laser moving\n";
+				//std::cout << "Laser moving\n";
 				for (auto& obj : games[ev.game_id]->ingame_object) {
 					auto& laser = obj.second;
 					if (laser->obj_type != OT_LASER) continue;
@@ -251,6 +259,32 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				}
 
 				std::cout << "Exit Spawned\n";
+				break;
+			}
+			case EV_SPAWN_ITEM: {
+				for (int i = 0; i < 4; i++) {
+					auto& p = games[ev.game_id]->CreateObjectApprox(OT_MEDIKIT);
+
+					sc_packet_put_object_pos pop;
+					pop.type = SC_PUT_OBJECT_POS;
+					pop.size = sizeof(sc_packet_put_object_pos);
+					pop.obj_type = p->obj_type;
+					pop.id = p->obj_id;
+					pop.approx_num = p->spawn_num;
+
+					for (auto& player : games[ev.game_id]->ingame_player) {
+						player.second->Send_Packet(&pop);
+					}
+				}
+
+				TIMER_EVENT ev_item;
+				ev_item.event_id = EV_SPAWN_ITEM;
+				ev_item.game_id = g_game_ID;
+				ev_item.target_id = -1;
+				ev_item.wakeup_time = chrono::system_clock::now() + 120s;
+
+				timer_queue.push(ev_item);
+
 				break;
 			}
 			}

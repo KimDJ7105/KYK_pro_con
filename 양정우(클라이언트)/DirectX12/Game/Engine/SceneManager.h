@@ -135,10 +135,14 @@ private:
 	int bullet = 30;
 
 public:
+
+	int GetBullet() { return bullet; }
 	void CalculateHP(int damagedHP);
 
 	void CalculateBullet(int nowBullet);
 	void SetBullet(int BulletCount);
+	void SetMaxBullet(int magazin);
+
 	void SetRabbitFootUI();
 
 	void CreateMapObjectsUI(int object_type, int loc_type, int loc_num);

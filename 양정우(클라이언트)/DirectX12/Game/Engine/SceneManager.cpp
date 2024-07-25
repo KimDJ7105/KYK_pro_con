@@ -1412,8 +1412,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	/*{
 		shared_ptr<GameObject> cube = make_shared<GameObject>();
 		cube->AddComponent(make_shared<Transform>());
-		cube->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		cube->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 30.f));
+		cube->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		cube->GetTransform()->SetLocalPosition(Vec3(1200.f, 20.f, 1200.f));
+		cube->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
@@ -1430,9 +1431,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			meshRenderer->SetMaterial(material);
 		}
 		cube->AddComponent(meshRenderer);
-		scene->AddGameObject(cube);
-
-		_otherPlayer.push_back(cube);
+		mainGameScene->AddGameObject(cube);
 	}*/
 #pragma endregion
 
@@ -1940,14 +1939,17 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region ParticleSystem
-	/*{
+	{
 		shared_ptr<GameObject> particle = make_shared<GameObject>();
 		particle->AddComponent(make_shared<Transform>());
 		particle->AddComponent(make_shared<ParticleSystem>());
 		particle->SetCheckFrustum(false);
-		particle->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
-		scene->AddGameObject(particle);
-	}*/
+		//particle->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
+		particle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		particle->GetTransform()->SetObjectType(9876);
+		particle->GetTransform()->SetObjectID(5432);
+		mainGameScene->AddGameObject(particle);
+	}
 #pragma endregion
 
 #pragma region Tessellation Test
@@ -2521,7 +2523,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
-			gameObject->AddComponent(make_shared<TestDragon>());
+			//gameObject->AddComponent(make_shared<TestDragon>());
 
 			mainGameScene->AddGameObject(gameObject);
 		}
@@ -2560,7 +2562,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"SMG_FPS");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(1150.f, 40.f, 1200.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(1150.f, 40.f, 1200.f));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
@@ -2571,7 +2574,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
-			gameObject->AddComponent(make_shared<TestDragon>());
+			//gameObject->AddComponent(make_shared<TestDragon>());
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
@@ -2585,7 +2588,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"SR_FPS");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(1100.f, 40.f, 1200.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(1100.f, 40.f, 1200.f));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
@@ -2596,7 +2600,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
-			gameObject->AddComponent(make_shared<TestDragon>());
+			//gameObject->AddComponent(make_shared<TestDragon>());
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
@@ -3700,7 +3704,7 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 	//1이면 산탄총		(GT_SG				1)
 	//2이면 돌격소총	(GT_AR				2)
 	//3이면 저격소총	(GT_SR				3)
-	if (GetMainWeapon_type() == 0)
+	if (GetMainWeapon_type() == 2)
 	{
 		//AR_FPS
 		{
@@ -3755,7 +3759,7 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 			}
 		}
 	}
-	else if (GetMainWeapon_type() == 2)
+	else if (GetMainWeapon_type() == 0)
 	{
 		//SMG_FPS
 		{
@@ -3779,7 +3783,6 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 				}
-				gameObject->AddComponent(make_shared<TestDragon>());
 				mainGameScene->AddGameObject(gameObject);
 			}
 		}
@@ -3810,7 +3813,6 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 				}
-				gameObject->AddComponent(make_shared<TestDragon>());
 				mainGameScene->AddGameObject(gameObject);
 			}
 		}
@@ -3818,7 +3820,7 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 	else
 	{
 		//아무것도 고르지 않았다면 디폴트로 AR을 소환하도록 한다.
-		SetMainWeapon_Type(0);
+		SetMainWeapon_Type(2);
 		//AR_FPS
 		{
 			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_FPS(L"..\\Resources\\FBX\\Player_Hand_GUN_AR\\IDLE\\AR01_FP_Shoot.fbx");
@@ -4478,6 +4480,11 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_ID);
+
+			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(roomPos);
 
 			mainGameScene->AddGameObject(gameObject);
 		}
@@ -5140,9 +5147,41 @@ void SceneManager::SetBullet(int BulletCount)
 			gameObject->GetTransform()->SetLocalPosition(pos);
 		}
 	}
+}
 
-
-
+void SceneManager::SetMaxBullet(int magazin)
+{
+	//현재 총알의 십의자리수
+	int tensPlaceBulletCount = (magazin / 10) % 10;
+	//현재 총알의 일의자리수
+	int onesPlaceBulletCount = magazin - tensPlaceBulletCount * 10;
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != OT_UI_MAXBULLET)
+			continue;
+		if (gameObject->GetTransform()->GetObjectID() == onesPlaceBulletCount)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = 60;
+			pos.y = -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+		else if (gameObject->GetTransform()->GetObjectID() == tensPlaceBulletCount + 10)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = 30;
+			pos.y = -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+		else
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = OUT_OF_RENDER;
+			pos.y = OUT_OF_RENDER;
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
 }
 
 void SceneManager::SetRabbitFootUI()

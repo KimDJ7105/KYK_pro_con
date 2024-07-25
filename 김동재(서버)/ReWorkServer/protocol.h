@@ -72,8 +72,8 @@
 //Gun Type-------------------------------
 #define GT_SM				0
 #define GT_SG				1
-#define GT_AR				2
-#define GT_SR				3
+#define GT_SR				2
+#define GT_AR				3
 #define GT_PT		        4
 //---------------------------------------
 
@@ -294,6 +294,7 @@ struct sc_packet_put {
 	float diry;
 	float dirz;
 	int gun_type;
+	int team;
 };
 
 struct sc_packet_login_info {
