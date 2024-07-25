@@ -140,3 +140,22 @@ uint32 Animator::GetLastAddedAnimationType() const
 {
     return _lastAddedClipIndex;
 }
+
+float Animator::GetAnimationEndTime(uint32 idx) const
+{
+    assert(idx < _animClips->size());
+
+    float endTime = 0.f;
+    if (_isPlayingSequence)
+    {
+        std::queue<uint32> tempQueue = _sequenceQueue;
+        while (!tempQueue.empty())
+        {
+            uint32 currentIdx = tempQueue.front();
+            tempQueue.pop();
+            endTime += _animClips->at(currentIdx).duration;
+        }
+    }
+
+    return endTime;
+}

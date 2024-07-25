@@ -26,6 +26,7 @@ public:
 	void AddToSequence(uint32 idx);
 	void ClearSequence(); // 큐를 비우는 함수
 	uint32 GetLastAddedAnimationType() const; // 마지막 추가된 애니메이션의 종류를 리턴하는 함수
+	float GetAnimationEndTime(uint32 idx) const; // 애니메이션 번호를 입력받아 종료 시간을 리턴하는 함수
 
 public:
 	virtual void FinalUpdate() override;

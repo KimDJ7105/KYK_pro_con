@@ -411,31 +411,6 @@ void TestCameraScript::LateUpdate()
 
 
 
-	if (isMouseMod)
-	{
-		RotationUpdate();
-		cursor->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-	}
-	else if (!isMouseMod)
-	{
-		POINT nowMousePos;
-		::GetCursorPos(&nowMousePos);
-		ScreenToClient(GetActiveWindow(), &nowMousePos);
-
-		int screenWidth = WINDOW_WIDTH;  // Example screen width
-		int screenHeight = WINDOW_HEIGHT; // Example screen height
-
-		// Assuming the screen origin (0,0) is at the top-left corner
-		Vec2 uiPos;
-		uiPos.x = nowMousePos.x - (screenWidth / 2.0f);
-		uiPos.y = (screenHeight / 2.0f) - nowMousePos.y;
-
-		if (cursor != nullptr)
-		{
-			cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
-		}
-	}
-
 
 
 #ifdef DEBUG_ON
@@ -453,84 +428,45 @@ void TestCameraScript::LateUpdate()
 		// previousTitle 배열이 비어 있는지 확인하고, 비어 있다면 windowTitle 내용을 복사합니다.
 		wcscpy_s(previousTitle, windowTitle);
 	}
-
-
-	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
+	//창의 변화가 일어났다면.
+	if (wcscmp(windowTitle, previousTitle) != 0)
 	{
-		if (isMouseMod == false)
+
+		//std::cout << "창이 변경되었음" << std::endl;
+
+		int len = WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, NULL, 0, NULL, NULL);
+		char* buffer = new char[len];
+		WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, buffer, len, NULL, NULL);
+
+		const char* compareString = "PROJECT_ReWork";
+
+		// strcmp 함수를 사용하여 buffer와 비교하고자 하는 문자열을 비교
+		if (strstr(buffer, compareString) != nullptr)
 		{
+
+			std::cout << "현재 화면은 게임화면입니다" << std::endl;
+
+			//현재 활성화된 화면이 게임화면이라면
 			isMouseMod = true;
-			std::cout << "마우스 모드 true 348" << std::endl;
-
-
-			isWindowCapture = true;
-			::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
-			//std::cout << "윈도우의 상태 체크모드가 발동중" << std::endl;
 		}
-		else if (isMouseMod == true)
-		{
+		else {
+
+			std::cout << "현재 화면은 게임화면이 아닙니다." << std::endl;
+
+			//현재 활성화된 화면이 게임이 아니라면
 			isMouseMod = false;
-			std::cout << "마우스 모드 false 358" << std::endl;
-			isWindowCapture = false;
-			//std::cout << "윈도우의 상태 체크모드가 해제됨" << std::endl;
 		}
-	}
-	
-	if (isWindowCapture == true)
-	{
-		//창의 변화가 일어났다면.
-		if (wcscmp(windowTitle, previousTitle) != 0)
-		{
 
-			//std::cout << "창이 변경되었음" << std::endl;
-
-			int len = WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, NULL, 0, NULL, NULL);
-			char* buffer = new char[len];
-			WideCharToMultiByte(CP_ACP, 0, windowTitle, -1, buffer, len, NULL, NULL);
-
-			const char* compareString = "PROJECT_ReWork";
-
-			// strcmp 함수를 사용하여 buffer와 비교하고자 하는 문자열을 비교
-			if (strstr(buffer, compareString) != nullptr)
-			{
-
-				//std::cout << "현재 화면은 게임화면입니다" << std::endl;
-
-				//현재 활성화된 화면이 게임화면이라면
-				isMouseMod = true;
-				std::cout << "마우스 모드 true 386" << std::endl;
-				::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
-			}
-			else {
-
-				//std::cout << "현재 화면은 게임화면이 아닙니다." << std::endl;
-
-				//현재 활성화된 화면이 게임이 아니라면
-				isMouseMod = false;
-				std::cout << "마우스 모드 false 395" << std::endl;
-			}
-
-			delete[] buffer;
-		}
-		else
-		{
-			//std::cout << "창이 변경되지 않음" << std::endl;
-		}
-	}
-	else if(isWindowCapture == false)
-	{
-		
+		delete[] buffer;
 	}
 
 	if (main_session->get_isMapOpen() == false)
 	{
-		if (isMouseMod == false)
+		if (isMouseMod != false)
 		{
-			isMouseMod = true;
-			std::cout << "마우스 모드 true 415" << std::endl;
+			RotationUpdate();
+			cursor->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 		}
-		
-
 		//Picking 입력을 확인
 		if (INPUT->GetButton(KEY_TYPE::LBUTTON))
 		{
@@ -598,7 +534,22 @@ void TestCameraScript::LateUpdate()
 	}
 	else if (main_session->get_isMapOpen() == true)
 	{
-		isMouseMod = false;
+		POINT nowMousePos;
+		::GetCursorPos(&nowMousePos);
+		ScreenToClient(GetActiveWindow(), &nowMousePos);
+
+		int screenWidth = WINDOW_WIDTH;  // Example screen width
+		int screenHeight = WINDOW_HEIGHT; // Example screen height
+
+		// Assuming the screen origin (0,0) is at the top-left corner
+		Vec2 uiPos;
+		uiPos.x = nowMousePos.x - (screenWidth / 2.0f);
+		uiPos.y = (screenHeight / 2.0f) - nowMousePos.y;
+
+		if (cursor != nullptr)
+		{
+			cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
+		}
 
 		if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
 		{
