@@ -1067,7 +1067,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"AR01_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\AR01_Main_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SR01_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\SR01_Main_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -1121,7 +1121,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SR01_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\SR01_Main_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"AR01_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\AR01_Main_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -1521,7 +1521,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.1, WINDOW_HEIGHT * 0.1, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(11111111111111111, 11111111111111111, 500.f));//0, 0, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -1703,7 +1703,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(0, 150 -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -1711,18 +1711,122 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"GunUI", L"..\\Resources\\Texture\\PR_SMG01_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_SMG01_UI", L"..\\Resources\\Texture\\PR_SMG01_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
 			meshRenderer->SetMaterial(material);
 		}
 		sphere->AddComponent(meshRenderer);
-		sphere->GetTransform()->SetObjectType(OT_UI_SMG);
+		sphere->GetTransform()->SetObjectType(OT_UI_GUN);
+		sphere->GetTransform()->SetObjectID(0);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_SG01_UI", L"..\\Resources\\Texture\\PR_SG01_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		sphere->GetTransform()->SetObjectType(OT_UI_GUN);
 		sphere->GetTransform()->SetObjectID(1);
 
 		mainGameScene->AddGameObject(sphere);
 	}
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_SR01_UI", L"..\\Resources\\Texture\\PR_SR01_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		sphere->GetTransform()->SetObjectType(OT_UI_GUN);
+		sphere->GetTransform()->SetObjectID(2);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_AR01_UI", L"..\\Resources\\Texture\\PR_AR01_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		sphere->GetTransform()->SetObjectType(OT_UI_GUN);
+		sphere->GetTransform()->SetObjectID(3);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.5, WINDOW_HEIGHT * 0.5, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));//0, 0, 500;
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_P01_UI", L"..\\Resources\\Texture\\PR_P01_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		sphere->GetTransform()->SetObjectType(OT_UI_GUN);
+		sphere->GetTransform()->SetObjectID(4);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+
+
+
 	//Rabbit Foot
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
@@ -1946,9 +2050,29 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		particle->SetCheckFrustum(false);
 		//particle->GetTransform()->SetLocalPosition(Vec3(1200.f, 40.f, 1200.f));
 		particle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-		particle->GetTransform()->SetObjectType(9876);
+		particle->GetTransform()->SetObjectType(OT_PARTICLE_GUNSHOT);
 		particle->GetTransform()->SetObjectID(5432);
 		mainGameScene->AddGameObject(particle);
+	}
+#pragma endregion
+
+#pragma region BlueLight
+	{
+		shared_ptr<GameObject> light = make_shared<GameObject>();
+		light->AddComponent(make_shared<Transform>());
+		light->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		light->AddComponent(make_shared<Light>());
+		//light->GetLight()->SetLightDirection(Vec3(-1.f, -1.f, 0.f));
+		light->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
+		light->GetLight()->SetDiffuse(Vec3(0.5f, 0.5f, 1.f));		// BLUE
+		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
+		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
+		light->GetLight()->SetLightRange(50.f);
+		//light->GetLight()->SetLightAngle(XM_PI / 4);
+
+		light->GetTransform()->SetObjectType(OT_LIGHT_GUNSHOT);
+		light->GetTransform()->SetObjectID(5432);
+		mainGameScene->AddGameObject(light);
 	}
 #pragma endregion
 
@@ -3699,12 +3823,7 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
-
-	//0이면 기관단총	(GT_SM				0)
-	//1이면 산탄총		(GT_SG				1)
-	//2이면 돌격소총	(GT_AR				2)
-	//3이면 저격소총	(GT_SR				3)
-	if (GetMainWeapon_type() == 2)
+	if (GetMainWeapon_type() == 3)
 	{
 		//AR_FPS
 		{
@@ -3788,7 +3907,7 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 		}
 
 	}
-	else if (GetMainWeapon_type() == 3)
+	else if (GetMainWeapon_type() == 2)
 	{
 
 		//SR_FPS
@@ -3820,7 +3939,7 @@ void SceneManager::CreatePlayerGunObject(int object_id, float x, float y, float 
 	else
 	{
 		//아무것도 고르지 않았다면 디폴트로 AR을 소환하도록 한다.
-		SetMainWeapon_Type(2);
+		SetMainWeapon_Type(3);
 		//AR_FPS
 		{
 			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_FPS(L"..\\Resources\\FBX\\Player_Hand_GUN_AR\\IDLE\\AR01_FP_Shoot.fbx");
@@ -5184,6 +5303,31 @@ void SceneManager::SetMaxBullet(int magazin)
 	}
 }
 
+void SceneManager::SetGunUI(int gun_type)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != OT_UI_GUN)
+			continue;
+		if (gameObject->GetTransform()->GetObjectID() == gun_type)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = 0;
+			pos.y = 150 - (WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+		else
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = OUT_OF_RENDER;
+			pos.y = OUT_OF_RENDER;
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
+}
+
+
 void SceneManager::SetRabbitFootUI()
 {
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
@@ -5284,6 +5428,17 @@ void SceneManager::CreateMovingObject(float x, float y, float z, float dirx, flo
 
 
 			mainGameScene->AddGameObject(gameObject);
+		}
+	}
+}
+
+void SceneManager::PlayerWeaponChanging(int player_id)
+{
+	for (auto& otherPlayer : _otherPlayer)
+	{
+		if (otherPlayer->GetTransform()->GetObjectID() == player_id)
+		{
+			otherPlayer->GetTransform()->SetIsWeaponChange(true);
 		}
 	}
 }

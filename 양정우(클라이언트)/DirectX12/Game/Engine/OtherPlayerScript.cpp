@@ -25,9 +25,7 @@ void OtherPlayerScript::LateUpdate()
 
 
 	uint32 state = GetAnimator()->GetCurrentClipIndex();
-	if (state == 2
-		|| state == 7
-		|| state == 12)
+	if (GetTransform()->GetIsWeaponChange() == true)
 	{
 		if (nowGunObject != nullptr
 			&& playerSubGunObject != nullptr
@@ -37,10 +35,14 @@ void OtherPlayerScript::LateUpdate()
 			if (nowGunObject == playerSubGunObject)
 			{
 				nowGunObject = playerMainGunObject;
+				playerSubGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				GetTransform()->SetIsWeaponChange(false);
 			}
 			else if (nowGunObject == playerMainGunObject)
 			{
 				nowGunObject = playerSubGunObject;
+				playerMainGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				GetTransform()->SetIsWeaponChange(false);
 			}
 		}
 	}

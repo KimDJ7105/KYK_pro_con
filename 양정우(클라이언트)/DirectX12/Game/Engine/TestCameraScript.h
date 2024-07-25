@@ -69,7 +69,11 @@ private:
 
 private:
 	shared_ptr<GameObject> cursor;
+
+private:
 	shared_ptr<GameObject> flameParticle;
 	double flameDuration = 0.125;
 	double flameTimeElapse = 1;
+
+	shared_ptr<GameObject> flameLight;
 };

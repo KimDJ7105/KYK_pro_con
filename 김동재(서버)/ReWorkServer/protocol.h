@@ -47,7 +47,7 @@
 #define OT_UI_MAP				103
 #define OT_UI_HP				104
 #define OT_UI_KEYCARD			105
-#define OT_UI_SMG				106
+#define OT_UI_GUN				106
 #define OT_UI_SLASH				107
 #define OT_UI_MAXBULLET			108
 #define OT_UI_CURRENTBULLET		109
@@ -67,6 +67,8 @@
 #define OT_UI_WEAPON_SELECT		123
 #define OT_OTHER_PLAYER_SUB		124
 #define OT_OTHER_PLAYER_MAIN	125
+#define OT_PARTICLE_GUNSHOT		126
+#define OT_LIGHT_GUNSHOT		127
 //---------------------------------------
 
 //Gun Type-------------------------------

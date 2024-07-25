@@ -143,6 +143,8 @@ public:
 	void SetBullet(int BulletCount);
 	void SetMaxBullet(int magazin);
 
+	void SetGunUI(int gun_type);
+
 	void SetRabbitFootUI();
 
 	void CreateMapObjectsUI(int object_type, int loc_type, int loc_num);
@@ -193,5 +195,7 @@ private:
 public:
 	void SetMainWeapon_Type(uint32 type) { mainWeapon_Type = type; }
 	uint32 GetMainWeapon_type() { return mainWeapon_Type; }
+
+	void PlayerWeaponChanging(int player_id);
 };
 

@@ -216,7 +216,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//id와 총 타입이 전송됨
 		//본인의 경우 무기 변경, 타인의 경우에 무기 동기화 하면 됨
 
-
+		_activeSessionScene->PlayerWeaponChanging(p->id);
 		break;
 	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
