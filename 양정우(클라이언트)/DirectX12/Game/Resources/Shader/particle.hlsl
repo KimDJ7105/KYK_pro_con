@@ -185,7 +185,8 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             float3 dir = (noise - 0.5f) * 2.f;
 
             g_particle[threadIndex.x].worldDir = normalize(dir);
-            g_particle[threadIndex.x].worldPos = (noise.xyz - 0.5f) * 25;
+            //g_particle[threadIndex.x].worldPos = (noise.xyz - 0.5f) * 25;
+            g_particle[threadIndex.x].worldPos = float3(0, 0, 0);
             g_particle[threadIndex.x].lifeTime = ((maxLifeTime - minLifeTime) * noise.x) + minLifeTime;
             g_particle[threadIndex.x].curTime = 0.f;
         }

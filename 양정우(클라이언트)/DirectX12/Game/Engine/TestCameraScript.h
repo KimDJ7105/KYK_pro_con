@@ -42,7 +42,7 @@ private:
 	shared_ptr<GameObject> nowGunObject;
 
 	double fireTimeElapse = 0.0;
-	double clickCooldown = 0.3;
+	double clickCooldown = 0.333;
 
 	double weaponTimeElapse = 0.0;
 
@@ -69,4 +69,7 @@ private:
 
 private:
 	shared_ptr<GameObject> cursor;
+	shared_ptr<GameObject> flameParticle;
+	double flameDuration = 0.125;
+	double flameTimeElapse = 1;
 };
