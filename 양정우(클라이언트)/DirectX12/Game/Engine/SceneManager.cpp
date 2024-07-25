@@ -4481,6 +4481,11 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_ID);
 
+			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
+
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(30.f, 30.f, 30.f));
+			std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(roomPos);
+
 			mainGameScene->AddGameObject(gameObject);
 		}
 	}
