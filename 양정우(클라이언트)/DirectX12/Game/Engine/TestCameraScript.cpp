@@ -353,9 +353,11 @@ void TestCameraScript::LateUpdate()
 
 	}
 
+
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
-
+		weaponChanging = true;
+		weaponTimeElapse = 0.0;
 		if (nowGunObject != playerMainGunObject)
 		{
 			nowGunObject->GetAnimator()->ClearSequence();
@@ -410,6 +412,8 @@ void TestCameraScript::LateUpdate()
 	}
 	else if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
 	{
+		weaponChanging = true;
+		weaponTimeElapse = 0.0;
 		if (nowGunObject != playerSubGunObject)
 		{
 			nowGunObject->GetAnimator()->ClearSequence();
@@ -507,7 +511,7 @@ void TestCameraScript::LateUpdate()
 #ifdef DEBUG_ON
 			std::cout << "COOLTIME" << std::endl;
 #endif
-			if (clickCooldown <= timeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
+			if (clickCooldown <= fireTimeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
 			{
 #ifdef DEBUG_ON
 				std::cout << "FIRE" << std::endl;
@@ -556,7 +560,7 @@ void TestCameraScript::LateUpdate()
 					main_session->Send_Packet(&ppi);
 				}
 
-				timeElapse = 0.f;
+				fireTimeElapse = 0.f;
 
 				nowGunObject->GetAnimator()->AddToSequence(1);
 				nowGunObject->GetAnimator()->AddToSequence(0);
@@ -747,6 +751,13 @@ void TestCameraScript::LateUpdate()
 		//메인게임 씬의 오브젝트들을 제거한다
 		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
 	}
+
+	if (weaponTimeElapse > weaponChangetime && weaponChanging == true)
+	{
+		weaponChanging = false;
+	}
+		
+
 	
 	if (playerObject != nullptr && nowGunObject != nullptr && playerHeadCoreObject != nullptr)
 	{
@@ -770,7 +781,10 @@ void TestCameraScript::LateUpdate()
 				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
 				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-				Vec3 gunRotationOffset(0.f, 0.f, 0.0f); // 총의 회전 오프셋
+				Vec3 gunRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+				if (weaponChanging == true)
+					gunRotationOffset.x = gunRotationOffset.x - 1.57f;
 				Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
 					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
 
@@ -841,9 +855,13 @@ void TestCameraScript::LateUpdate()
 
 	wcscpy_s(previousTitle, windowTitle);
 
-	timeElapse += DELTA_TIME;
+	fireTimeElapse += DELTA_TIME;
 
-
+	if (weaponChanging == true)
+	{
+		weaponTimeElapse += DELTA_TIME;
+	}
+	
 }
 
 void TestCameraScript::SetObjects()
@@ -859,7 +877,6 @@ void TestCameraScript::SetObjects()
 		playerSubGunObject = GET_SINGLE(SceneManager)->GetPlayerSubGun(playerID);
 
 		nowGunObject = playerSubGunObject;
-
 		/*nowGunObject->GetAnimator()->AddToSequence(3);
 		nowGunObject->GetAnimator()->AddToSequence(0);*/
 	}
@@ -881,6 +898,11 @@ void TestCameraScript::SetObjects()
 				cursor = gameObject;
 			}
 		}
+	}
+
+	if (nowGunObject != nullptr)
+	{
+		weaponChangetime = nowGunObject->GetAnimator()->GetAnimationEndTime(3);
 	}
 }
 

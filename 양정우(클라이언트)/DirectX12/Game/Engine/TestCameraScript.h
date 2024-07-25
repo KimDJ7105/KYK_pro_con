@@ -41,9 +41,13 @@ private:
 
 	shared_ptr<GameObject> nowGunObject;
 
-	double timeElapse = 0.0;
+	double fireTimeElapse = 0.0;
 	double clickCooldown = 0.3;
 
+	double weaponTimeElapse = 0.0;
+
+	float weaponChangetime = -1;
+	bool weaponChanging = false;
 
 	int haveKeycard = 0;
 
