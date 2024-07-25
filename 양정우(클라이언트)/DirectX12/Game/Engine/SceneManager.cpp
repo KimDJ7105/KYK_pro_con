@@ -3613,6 +3613,36 @@ void SceneManager::CreateOtherPlayerGunObject(int GunType_type, int object_id)
 			}
 		}
 	}
+	else
+	{
+		//돌격소총
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->Load_AR_GunModel(L"..\\Resources\\FBX\\PlayerGun_AR\\IDLE_2\\AR01_Player_Single_IShoot.fbx");
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"AR");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetObjectType(OT_OTHER_PLAYER_MAIN);
+				gameObject->GetTransform()->SetObjectID(object_id);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				//gameObject->GetTransform()->SetLocalScale(Vec3(0.13f, 0.13f, 0.13f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				// 각 게임 오브젝트에 독립적인 머티리얼 설정
+				for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
+				{
+					shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
+					gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
+				}
+
+				_otherPlayer.push_back(gameObject);
+				mainGameScene->AddGameObject(gameObject);
+			}
+		}
+	}
 }
 
 shared_ptr<GameObject> SceneManager::GetOtherPlayerMainGun(int id)
@@ -3629,6 +3659,7 @@ shared_ptr<GameObject> SceneManager::GetOtherPlayerMainGun(int id)
 			}
 		}
 	}
+	return 0;
 }
 
 shared_ptr<GameObject> SceneManager::GetOtherPlayerSubGun(int id)
@@ -3645,6 +3676,7 @@ shared_ptr<GameObject> SceneManager::GetOtherPlayerSubGun(int id)
 			}
 		}
 	}
+	return 0;
 }
 
 void SceneManager::CreateHeadCoreObject(int object_id)
@@ -5438,7 +5470,10 @@ void SceneManager::PlayerWeaponChanging(int player_id)
 	{
 		if (otherPlayer->GetTransform()->GetObjectID() == player_id)
 		{
-			otherPlayer->GetTransform()->SetIsWeaponChange(true);
+			if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+			{
+				otherPlayer->GetTransform()->SetIsWeaponChange(true);
+			}
 		}
 	}
 }

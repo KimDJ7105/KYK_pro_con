@@ -86,8 +86,9 @@ void OtherPlayerScript::GetPlayerGuns()
 	{
 		playerMainGunObject = GET_SINGLE(SceneManager)->GetOtherPlayerMainGun(GetTransform()->GetObjectID());
 	}
-	if (playerSubGunObject != nullptr)
+	if (playerSubGunObject != nullptr && isSet == false)
 	{
 		nowGunObject = playerSubGunObject;
+		isSet = true;
 	}
 }
