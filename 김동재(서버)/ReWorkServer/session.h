@@ -19,7 +19,8 @@ private:
 	int prev_data_size_;
 
 	int hp;
-	int remain_bullet;
+	int remain_bullet[2];
+	int select_gun;
 	int team;
 
 	int equip_weapon;
