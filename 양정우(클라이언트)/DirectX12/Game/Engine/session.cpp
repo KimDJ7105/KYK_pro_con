@@ -161,7 +161,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_CARD_USED : //카드 하나 사용
 	{
-		_activeSessionScene->SetKeyCardPosition(-1111111111111, -111111111111111, haveKeycard);
+		_activeSessionScene->SetKeyCardPosition(OUT_OF_RENDER, OUT_OF_RENDER, haveKeycard);
 		haveKeycard++;
 		break;
 	}
