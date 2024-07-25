@@ -1571,12 +1571,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 
 	//MaxBullet
+	for (int i = 0; i < 10; i++)
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(30, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(30, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -1584,7 +1586,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
+			wstring fileName = L"PR_NUM" + std::to_wstring(i) + L"_UI";
+			wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
+			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM3_UI", L"..\\Resources\\Texture\\Number\\PR_NUM3_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -1592,16 +1597,18 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		sphere->AddComponent(meshRenderer);
 		sphere->GetTransform()->SetObjectType(OT_UI_MAXBULLET);
-		sphere->GetTransform()->SetObjectID(1);
+		sphere->GetTransform()->SetObjectID(i);
 
 		mainGameScene->AddGameObject(sphere);
 	}
+	for (int i = 10; i < 20; i++)
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		sphere->AddComponent(make_shared<Transform>());
 		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_HEIGHT * 0.2, WINDOW_HEIGHT * 0.2, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(60, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(60, -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));//0, 0, 500;
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -1609,7 +1616,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
+
+			wstring fileName = L"PR_NUM" + std::to_wstring(i - 10) + L"_UI";
+			wstring filePath = L"..\\Resources\\Texture\\Number\\" + fileName + L".png";
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(fileName, filePath);
+			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_NUM0_UI", L"..\\Resources\\Texture\\Number\\PR_NUM0_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -1617,7 +1628,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		sphere->AddComponent(meshRenderer);
 		sphere->GetTransform()->SetObjectType(OT_UI_MAXBULLET);
-		sphere->GetTransform()->SetObjectID(1);
+		sphere->GetTransform()->SetObjectID(i);
 
 		mainGameScene->AddGameObject(sphere);
 	}
@@ -5110,6 +5121,28 @@ void SceneManager::SetBullet(int BulletCount)
 			gameObject->GetTransform()->SetLocalPosition(pos);
 		}
 	}
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() != OT_UI_MAXBULLET)
+			continue;
+		if (gameObject->GetTransform()->GetObjectID() == onesPlaceBulletCount)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = 60;
+			pos.y = -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+		if (gameObject->GetTransform()->GetObjectID() == tensPlaceBulletCount + 10)
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = 30;
+			pos.y = -(WINDOW_HEIGHT / 2) + (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
+
+
+
 }
 
 void SceneManager::SetRabbitFootUI()
