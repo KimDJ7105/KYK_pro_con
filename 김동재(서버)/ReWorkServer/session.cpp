@@ -491,8 +491,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case CS_USE_RESURRECTION: {
 		if (is_core_state) {
+			is_core_state = false;
+
 			hp = 100;
-			remain_bullet = 30;
 			sc_packet_resurrection res;
 			res.size = sizeof(sc_packet_resurrection);
 			res.type = SC_RESURRECTION;

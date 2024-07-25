@@ -125,7 +125,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				break;
 			}
 			case EV_MOVE_LASER_TRAP: {
-				std::cout << "Laser moving\n";
+				//std::cout << "Laser moving\n";
 				for (auto& obj : games[ev.game_id]->ingame_object) {
 					auto& laser = obj.second;
 					if (laser->obj_type != OT_LASER) continue;
