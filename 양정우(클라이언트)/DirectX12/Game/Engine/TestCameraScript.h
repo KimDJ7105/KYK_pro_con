@@ -42,7 +42,7 @@ private:
 	shared_ptr<GameObject> nowGunObject;
 
 	double timeElapse = 0.0;
-	const double clickCooldown = 0.067;
+	double clickCooldown = 0.3;
 
 
 	int haveKeycard = 0;

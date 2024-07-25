@@ -366,7 +366,6 @@ void TestCameraScript::LateUpdate()
 				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				nowGunObject = playerMainGunObject;
 			}
-
 			nowGunObject->GetAnimator()->AddToSequence(3);
 			nowGunObject->GetAnimator()->AddToSequence(0);
 			playerObject->GetAnimator()->AddToSequence(3);
@@ -379,6 +378,35 @@ void TestCameraScript::LateUpdate()
 		cg.pressed_key = 1;
 
 		main_session->Send_Packet(&cg);
+
+
+		//0ÀÌ¸é ±â°ü´ÜÃÑ	(GT_SM				0)
+		//1ÀÌ¸é »êÅºÃÑ		(GT_SG				1)
+		//2ÀÌ¸é µ¹°Ý¼ÒÃÑ	(GT_AR				2)
+		//3ÀÌ¸é Àú°Ý¼ÒÃÑ	(GT_SR				3)
+
+		int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
+
+		if (type == 0)//±â°ü
+		{
+			clickCooldown = 0.067;
+			GET_SINGLE(SceneManager)->SetMaxBullet(30);
+		}
+		else if (type == 1)//»êÅº
+		{
+			clickCooldown = 0.967;
+			GET_SINGLE(SceneManager)->SetMaxBullet(8);
+		}
+		else if (type == 3)//Àú°Ý
+		{
+			clickCooldown = 0.967;
+			GET_SINGLE(SceneManager)->SetMaxBullet(5);
+		}
+		else //µ¹°Ý
+		{
+			clickCooldown = 0.092;
+			GET_SINGLE(SceneManager)->SetMaxBullet(25);
+		}
 	}
 	else if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
 	{
@@ -406,6 +434,12 @@ void TestCameraScript::LateUpdate()
 		cg.pressed_key = 2;
 
 		main_session->Send_Packet(&cg);
+
+
+
+
+		clickCooldown = 0.3f;
+		GET_SINGLE(SceneManager)->SetMaxBullet(15);
 	}
 
 
@@ -473,7 +507,7 @@ void TestCameraScript::LateUpdate()
 #ifdef DEBUG_ON
 			std::cout << "COOLTIME" << std::endl;
 #endif
-			if (clickCooldown <= timeElapse)
+			if (clickCooldown <= timeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
 			{
 #ifdef DEBUG_ON
 				std::cout << "FIRE" << std::endl;
