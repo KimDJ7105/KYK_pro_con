@@ -294,6 +294,7 @@ struct sc_packet_put {
 	float diry;
 	float dirz;
 	int gun_type;
+	int team;
 };
 
 struct sc_packet_login_info {

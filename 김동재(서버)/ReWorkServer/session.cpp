@@ -736,6 +736,7 @@ void SESSION::start()
 	p.diry = view_dir[1];
 	p.dirz = view_dir[2];
 	p.gun_type = gun_type;
+	p.team = team;
 
 	//클라이언트가 입장했음을 모든 다른 유저에게 전송
 	for (auto& pl : my_game->ingame_player) {
@@ -751,6 +752,7 @@ void SESSION::start()
 			p.id = player->my_id_;
 			p.x = player->pos[0];
 			p.y = player->pos[1];
+			p.team = player->team;
 			p.gun_type = player->gun_type;
 			Send_Packet(&p);
 		}
