@@ -897,7 +897,7 @@ void TestCameraScript::LateUpdate()
 			{
 				Vec3 rotation = GetTransform()->GetLocalRotation();
 
-				Vec3 particle(2.5f, -24 + 22, 15.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+				Vec3 particle(2.5f, -24 + 22, 30.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
 
 				// 플레이어의 회전값을 쿼터니언으로 변환
 				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *

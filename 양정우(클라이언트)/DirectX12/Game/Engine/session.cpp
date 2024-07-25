@@ -206,7 +206,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		else if (playerID == p->id) {
 			//플레이어 체력을 100으로, 탄창을 꽉 채우고 코어 상태에서 다시 플레이어로 전환
 			_activeSessionScene->SetPlayerDead(false);
-			_activeSessionScene->SetBullet(30);
+			_activeSessionScene->SetMaxBullet(15);
+			_activeSessionScene->CalculateBullet(15);
 			_activeSessionScene->CalculateHP(100);
 		}
 		break;
