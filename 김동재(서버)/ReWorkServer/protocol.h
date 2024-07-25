@@ -109,6 +109,7 @@
 #define CS_CHANGE_GUN		  18
 #define CS_RUN_KEY_DOWN	      19
 #define CS_RUN_KEY_UP		  20
+#define CS_USE_MEDIKIT        21
 
 #define SC_POS             1 //오브젝트 이동 & 회전
 #define SC_PUT_PLAYER      2 //오브젝트 생성
@@ -266,6 +267,12 @@ struct cs_packet_change_gun {
 	BYTE size;
 	BYTE type;
 	int pressed_key;
+};
+
+struct cs_packet_use_medikit {
+	BYTE size;
+	BYTE type;
+	int kit_id;
 };
 
 //---------Server To Client-----------------
