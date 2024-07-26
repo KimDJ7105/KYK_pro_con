@@ -260,6 +260,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
 				if (obj->obj_type == OT_KEYCARD && obj->owner_id != -1) continue;
 				if (obj->obj_type == OT_RABBITFOOT && obj->owner_id != -1) continue;
+				if (obj->obj_type == OT_EXIT) continue;
 
 				sc_packet_show_object_loc sol;
 				sol.type = SC_SHOW_OBJECT_LOC;
