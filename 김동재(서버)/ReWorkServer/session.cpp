@@ -166,8 +166,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			
 		break;
 	}
-	case CS_USE_MEDIKIT: 
-	{
+	case CS_USE_MEDIKIT: {
+	
 		cs_packet_use_medikit* p = (cs_packet_use_medikit*)packet;
 
 		shared_ptr<OBJECT> kit = my_game->ingame_object[p->kit_id];
@@ -205,8 +205,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_TRY_GET_KEY : //카드키 획득 시도
-	{
+	case CS_TRY_GET_KEY : { //카드키 획득 시도
+	
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
 
 		shared_ptr<OBJECT> card = my_game->ingame_object[p->key_id];
@@ -227,8 +227,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_TRY_USE_TMN : //터미널 사용 시도
-	{
+	case CS_TRY_USE_TMN : { //터미널 사용 시도
+	
 		cs_packet_try_use_tmn* p = (cs_packet_try_use_tmn*)packet;
 
 		std::cout << "터미널 사용 요청 수신\n";
@@ -470,6 +470,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case CS_TRY_ESCAPE: {
 		if (my_game->get_rabbitfoot_owner() == my_id_) {
 			//탈출 성공
+			my_game->set_game_state(ST_END);
 
 			sc_packet_player_win pw;
 			pw.size = sizeof(sc_packet_player_win);

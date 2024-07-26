@@ -8,6 +8,8 @@ std::uniform_int_distribution<int> dist2(0, 24);
 
 GAME::GAME(int id)
 {
+	game_state = ST_READY;
+
 	game_id = id;
 	team_num = 0;
 	rabbitfoot_owner_id = -1;
@@ -176,4 +178,14 @@ bool GAME::is_free_room(int room_num)
 void GAME::set_room_unable(int room_num)
 {
 	room_spawn_able[room_num] = true;
+}
+
+void GAME::set_game_state(int state)
+{
+	game_state = state
+}
+
+int GAME::get_game_state()
+{
+	return game_state;
 }
