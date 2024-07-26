@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+#include "FMODSystem.h"
+
 #include "session.h"
 
 void worker_SM_thread(boost::asio::io_context* io_con)
@@ -19,6 +21,7 @@ void worker_SM_thread(boost::asio::io_context* io_con)
 
 LobbyCameraScript::LobbyCameraScript()
 {
+	GET_SINGLE(SoundManager)->soundPlay(MAIN_LOBBY);
 }
 
 LobbyCameraScript::~LobbyCameraScript()
@@ -28,6 +31,7 @@ LobbyCameraScript::~LobbyCameraScript()
 
 void LobbyCameraScript::LateUpdate()
 {
+	
 	if (cursor == nullptr)
 	{
 		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
@@ -90,6 +94,7 @@ void LobbyCameraScript::LateUpdate()
 		}
 		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_BTN)
 		{
+			GET_SINGLE(SoundManager)->soundPlay(SELECT_WEAPON);
 			GetWeaponSelectUI();
 		}
 		else if(GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_EXIT_BTN)
@@ -116,6 +121,8 @@ void LobbyCameraScript::LateUpdate()
 						//2이면 돌격소총	(GT_AR				2)
 						//3이면 저격소총	(GT_SR				3)
 						GET_SINGLE(SceneManager)->SetMainWeapon_Type(gameObject->GetTransform()->GetObjectID());
+
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_SELECTED);
 					}
 					else
 					{

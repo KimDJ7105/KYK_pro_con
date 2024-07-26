@@ -174,7 +174,6 @@
     <ClCompile Include="BinaryMeshData.cpp">
       <Filter>Binary</Filter>
     </ClCompile>
-    <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="LobbyCameraScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
@@ -199,6 +198,7 @@
     <ClCompile Include="OtherPlayerScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
+    <ClCompile Include="FMODSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -342,7 +342,6 @@
     <ClInclude Include="BinaryMeshData.h">
       <Filter>Binary</Filter>
     </ClInclude>
-    <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="LobbyCameraScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
@@ -367,6 +366,7 @@
     <ClInclude Include="OtherPlayerScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
+    <ClInclude Include="FMODSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

@@ -8,12 +8,13 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "BoxCollider.h"
-#include "SoundPlayer.h"
 #include "Animator.h"
 
 #include "session.h"
 
 #include "Quaternion.h"
+
+#include "FMODSystem.h"
 
 
 extern int playerID;
@@ -31,6 +32,30 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::LateUpdate()
 {
+	
+	{
+		FMOD_VECTOR pos = {
+			GetTransform()->GetLocalPosition().x,
+			GetTransform()->GetLocalPosition().y,
+			GetTransform()->GetLocalPosition().z
+		};
+
+		FMOD_VECTOR velocity = { 0, 0, 0 };
+
+		FMOD_VECTOR forward = {
+			GetTransform()->GetLook().x,
+			GetTransform()->GetLook().y,
+			GetTransform()->GetLook().z
+		};
+
+		FMOD_VECTOR up = {
+			GetTransform()->GetUp().x,
+			GetTransform()->GetUp().y,
+			GetTransform()->GetUp().z
+		};
+
+		GET_SINGLE(FMODSystem)->Set3DListenerAttributes(0, pos, velocity, forward, up);
+	}
 
 	SetObjects();
 

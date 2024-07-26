@@ -9,6 +9,8 @@
 #include "Resources.h"
 #include "InstancingManager.h"
 
+#include "FMODSystem.h"
+
 void Engine::Init(const WindowInfo& info)
 {
 	_window				= info;
@@ -35,13 +37,21 @@ void Engine::Init(const WindowInfo& info)
 
 	GET_SINGLE(Input)->Init(info.hwnd);
 	GET_SINGLE(Timer)->Init();
+
+	GET_SINGLE(SoundManager)->Init();
+
 	GET_SINGLE(Resources)->Init();
+
+	
 }
 
 void Engine::Update()
 {
 	GET_SINGLE(Input)->Update();
 	GET_SINGLE(Timer)->Update();
+
+	//GET_SINGLE(FMODSystem)->Update();
+
 	GET_SINGLE(SceneManager)->Update();
 	GET_SINGLE(InstancingManager)->ClearBuffer();
 
