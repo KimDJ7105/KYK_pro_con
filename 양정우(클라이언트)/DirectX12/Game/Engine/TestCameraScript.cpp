@@ -333,6 +333,11 @@ void TestCameraScript::LateUpdate()
 				if (overlap_blade != NULL)
 				{
 					// µÎ³úÄÚ¾î »óÅÂÀÏ¶§ ºĞ¼â±â¿¡ ´ê¾ÒÀ»‹š
+					cs_packet_hit_by_grinder hbg;
+					hbg.type = CS_HIT_BY_GRINDER;
+					hbg.size = sizeof(cs_packet_hit_by_grinder);
+
+					main_session->Send_Packet(&hbg);
 				}
 				else
 				{
