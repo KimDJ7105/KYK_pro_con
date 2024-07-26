@@ -92,6 +92,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 
 			_activeSessionScene->CreateHeadCoreObject(p->id);
 			_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
+			_activeSessionScene->RemoveObject(OT_OTHER_PLAYER_MAIN ,p->id);
+			_activeSessionScene->RemoveObject(OT_OTHER_PLAYER_SUB ,p->id);
 
 			// 죽인 플레이어 오브젝트의 아이디와 같은 두뇌코어 오브젝트를 생성
 		}
@@ -159,7 +161,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_CARD_USED : //카드 하나 사용
 	{
-		_activeSessionScene->SetKeyCardPosition(-1111111111111, -111111111111111, haveKeycard);
+		_activeSessionScene->SetKeyCardPosition(OUT_OF_RENDER, OUT_OF_RENDER, haveKeycard);
 		haveKeycard++;
 		break;
 	}
@@ -204,7 +206,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		else if (playerID == p->id) {
 			//플레이어 체력을 100으로, 탄창을 꽉 채우고 코어 상태에서 다시 플레이어로 전환
 			_activeSessionScene->SetPlayerDead(false);
-			_activeSessionScene->SetBullet(30);
+			_activeSessionScene->SetMaxBullet(15);
+			_activeSessionScene->CalculateBullet(15);
 			_activeSessionScene->CalculateHP(100);
 		}
 		break;
@@ -216,7 +219,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		//id와 총 타입이 전송됨
 		//본인의 경우 무기 변경, 타인의 경우에 무기 동기화 하면 됨
 
-
+		_activeSessionScene->PlayerWeaponChanging(p->id);
 		break;
 	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기

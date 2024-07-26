@@ -15,6 +15,7 @@ private:
 	boost::asio::steady_timer timer_;
 
 	int next_port;
+	char server_ip[16];
 private:
 	void do_accept();
 	
@@ -24,7 +25,10 @@ public:
 	std::priority_queue<TIMER_EVENT> timer_queue;
 
 public:
-	SERVER(boost::asio::io_context& io_service, int port);
+	SERVER(boost::asio::io_context& io_service, int port, char _ip[16]);
+
+	void set_ip(char ip[16]);
+	char* get_ip();
 
 	void event_excuter(const boost::system::error_code& ec);
 };

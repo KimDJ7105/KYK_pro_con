@@ -18,5 +18,7 @@ private:
 
 	shared_ptr<GameObject> nowGunObject;
 
+	bool isSet = false;
+
 };
 

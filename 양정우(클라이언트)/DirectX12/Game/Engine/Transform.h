@@ -88,5 +88,13 @@ private:
 	//115번 - 맵 방 UI버튼 - ID는 0번부터24번까지 방 번호로 지정한다.
 	//116번 - 마우스커서 오브젝트
 	//117번 - 두뇌코어(디폴트)
+
+
+private:
+	bool isChange = false;
+
+public:
+	void SetIsWeaponChange(bool ischanging) { isChange = ischanging; }
+	bool GetIsWeaponChange() { return isChange; }
 };
 

@@ -141,6 +141,45 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			
 		break;
 	}
+	case CS_USE_MEDIKIT: 
+	{
+		cs_packet_use_medikit* p = (cs_packet_use_medikit*)packet;
+
+		shared_ptr<OBJECT> kit = my_game->ingame_object[p->kit_id];
+		if (kit == nullptr) break;
+
+		my_game->set_free_space(OT_MEDIKIT, kit->spawn_num);
+
+		//플레이어 체력을 증가
+		hp += 30;
+		if (hp > 100) hp = 100;
+
+		sc_packet_apply_damage pad;
+		pad.type = SC_APPLY_DAMAGE;
+		pad.size = sizeof(sc_packet_apply_damage);
+		pad.id = my_id_;
+		pad.hp = hp;
+
+		Send_Packet(&pad);
+
+		//사용된 메디킷을 삭제
+		sc_packet_remove_player rmp;
+		rmp.type = SC_REMOVE_PLAYER;
+		rmp.size = sizeof(sc_packet_remove_player);
+		rmp.id = kit->obj_id;
+		rmp.obj_type = OT_MEDIKIT;
+
+		for (auto& player : my_game->ingame_player) {
+			player.second->Send_Packet(&rmp);
+		}
+
+		auto it = my_game->ingame_object.find(p->kit_id);
+		if (it != my_game->ingame_object.end()) {
+			my_game->ingame_object.erase(it);
+		}
+
+		break;
+	}
 	case CS_TRY_GET_KEY : //카드키 획득 시도
 	{
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
@@ -157,8 +196,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.size = sizeof(sc_packet_remove_player);
 		rmp.id = card->obj_id;
 		rmp.obj_type = OT_KEYCARD;
-		for (auto& p : my_game->ingame_player) {
-			p.second->Send_Packet(&rmp);
+		for (auto& player : my_game->ingame_player) {
+			player.second->Send_Packet(&rmp);
 		}
 
 		break;
@@ -221,6 +260,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
 				if (obj->obj_type == OT_KEYCARD && obj->owner_id != -1) continue;
 				if (obj->obj_type == OT_RABBITFOOT && obj->owner_id != -1) continue;
+				if (obj->obj_type == OT_EXIT) continue;
 
 				sc_packet_show_object_loc sol;
 				sol.type = SC_SHOW_OBJECT_LOC;
@@ -358,7 +398,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RUN_KEY_DOWN: {
-		std::cout << "달리기 키 눌림\n";
 
 		is_running = true;
 
@@ -378,7 +417,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RUN_KEY_UP: {
-		std::cout << "달리기 키 떨어짐\n";
 
 		is_running = false;
 		break;
@@ -562,13 +600,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
-		TIMER_EVENT tm_grind;
-		tm_grind.event_id = EV_MOVE_GRINDER;
-		tm_grind.game_id = my_game->get_game_id();
-		tm_grind.target_id = -1;
-		tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+		std::cout << "테스트 패킷 수신\n";
+		hp -= 30;
 
-		my_server->timer_queue.emplace(tm_grind);
+		sc_packet_apply_damage pad;
+		pad.type = SC_APPLY_DAMAGE;
+		pad.size = sizeof(sc_packet_apply_damage);
+		pad.id = my_id_;
+		pad.hp = hp;
+
+		Send_Packet(&pad);
+
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
@@ -713,6 +755,13 @@ void SESSION::start()
 	do_read();
 
 	if (my_id_ == LOBBY_ID) {
+		sl_packet_set_ip s_ip;
+		s_ip.type = SL_SET_IP;
+		s_ip.size = sizeof(sl_packet_set_ip);
+		strcpy_s(s_ip.ip, my_server->get_ip());
+
+		Send_Packet(&s_ip);
+
 		sl_packet_set_port sip;
 		sip.type = SL_SET_PORT;
 		sip.size = sizeof(sl_packet_set_port);
