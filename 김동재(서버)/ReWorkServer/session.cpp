@@ -144,23 +144,39 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					obj->owner_id = -1;
 					obj->set_pos(my_game->select_pos());
 
-					for (auto& player : my_game->ingame_player) {
-						sc_packet_put_object put_obj;
-						put_obj.size = sizeof(sc_packet_put_object);
-						put_obj.type = SC_PUT_OBJECT;
-						put_obj.id = obj->obj_id;
-						put_obj.obj_type = obj->obj_type;
-						put_obj.approx_num = obj->spawn_num;
+					sc_packet_put_object put_obj;
+					put_obj.size = sizeof(sc_packet_put_object);
+					put_obj.type = SC_PUT_OBJECT;
+					put_obj.id = obj->obj_id;
+					put_obj.obj_type = obj->obj_type;
+					put_obj.approx_num = obj->spawn_num;
 
+					for (auto& player : my_game->ingame_player) {
 						player.second->Send_Packet(&put_obj);
 					}
 				}
 
-				/*else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
-				obj->owner_id = -1;
-				my_game->set_rabbitfoot_owner(-1);
-				obj->set_pos(my_game->select_room_pos());
-			}*/
+				else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+					obj->owner_id = -1;
+					my_game->set_rabbitfoot_owner(-1);
+					obj->set_pos(my_game->select_room_pos());
+
+					sc_packet_put_object_coor poc;
+					poc.type = SC_PUT_OBJECT_COOR;
+					poc.size = sizeof(sc_packet_put_object_coor);
+					poc.obj_type = obj->obj_type;
+					poc.obj_id = obj->obj_id;
+					poc.x = pos[0];
+					poc.y = pos[1];
+					poc.z = pos[2];
+					poc.dirx = 0.f;
+					poc.diry = 0.f;
+					poc.dirz = 0.f;
+
+					for (auto& player : my_game->ingame_player) {
+						player.second->Send_Packet(&poc);
+					}
+				}
 			}
 		}
 			
@@ -524,11 +540,22 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				}
 			}
 
-			/*else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+			else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
 				obj->owner_id = -1;
 				my_game->set_rabbitfoot_owner(-1);
 				obj->set_pos(my_game->select_room_pos());
-			}*/
+
+				sc_packet_put_object_pos pop;
+				pop.size = sizeof(sc_packet_put_object_pos);
+				pop.type = SC_PUT_OBJECT_POS;
+				pop.id = obj->obj_id;
+				pop.obj_type = obj->obj_type;
+				pop.approx_num = obj->spawn_num;
+
+				for (auto& p : my_game->ingame_player) {
+					p.second->Send_Packet(&pop);
+				}
+			}
 		}
 
 		sc_packet_player_lose pl;
@@ -589,11 +616,27 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				}
 			}
 
-			/*else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+			else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
 				obj->owner_id = -1;
 				my_game->set_rabbitfoot_owner(-1);
 				obj->set_pos(my_game->select_room_pos());
-			}*/
+
+				sc_packet_put_object_coor poc;
+				poc.type = SC_PUT_OBJECT_COOR;
+				poc.size = sizeof(sc_packet_put_object_coor);
+				poc.obj_type = obj->obj_type;
+				poc.obj_id = obj->obj_id;
+				poc.x = pos[0];
+				poc.y = pos[1];
+				poc.z = pos[2];
+				poc.dirx = -1.57f;
+				poc.diry = 0.f;
+				poc.dirz = 0.f;
+
+				for (auto& player : my_game->ingame_player) {
+					player.second->Send_Packet(&poc);
+				}
+			}
 		}
 		break;
 	}
@@ -671,16 +714,19 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
 		std::cout << "테스트 패킷 수신\n";
-		hp -= 30;
 
-		sc_packet_apply_damage pad;
-		pad.type = SC_APPLY_DAMAGE;
-		pad.size = sizeof(sc_packet_apply_damage);
-		pad.id = my_id_;
-		pad.hp = hp;
+		auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
 
-		Send_Packet(&pad);
+		sc_packet_put_object_pos pop;
+		pop.size = sizeof(sc_packet_put_object_pos);
+		pop.type = SC_PUT_OBJECT_POS;
+		pop.id = rabbitfoot->obj_id;
+		pop.obj_type = rabbitfoot->obj_type;
+		pop.approx_num = rabbitfoot->spawn_num;
 
+		for (auto& p : my_game->ingame_player) {
+			p.second->Send_Packet(&pop);
+		}
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);

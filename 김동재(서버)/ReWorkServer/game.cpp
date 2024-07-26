@@ -182,7 +182,7 @@ void GAME::set_room_unable(int room_num)
 
 void GAME::set_game_state(int state)
 {
-	game_state = state
+	game_state = state;
 }
 
 int GAME::get_game_state()
