@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FMODSystem.h"
+#include "Engine.h"
 
 
 void FMODSystem::Init()
@@ -35,34 +36,56 @@ void FMODSystem::Set3DListenerAttributes(int listenerIndex, const FMOD_VECTOR& p
 
 void SoundManager::Init()
 {
-    FMOD::System_Create(&m_soundSystem);
-    m_soundSystem->init(256, FMOD_INIT_NORMAL, 0);
+    FMOD::System* system;
+    FMOD::System_Create(&system);
+    m_soundSystem.reset(system);
+    m_soundSystem->init(256, FMOD_INIT_NORMAL, nullptr);
 
-    m_soundSystem->createSound("..\Resources\Sound\BGM_Space.mp3", FMOD_LOOP_NORMAL, 0, &m_sound[BGM_SPACE]);
-    m_soundSystem->createSound("..\Resources\Sound\BGM_Desert.mp3", FMOD_LOOP_NORMAL, 0, &m_sound[BGM_DESERT]);
-    m_soundSystem->createSound("..\Resources\Sound\Weapon_Assult_Fire.wav", FMOD_DEFAULT, 0, &m_sound[WEAPON_ASSULT_FIRE]);
-    m_soundSystem->createSound("..\Resources\Sound\Env_Hit_Enemy.wav", FMOD_DEFAULT, 0, &m_sound[ENV_HIT_ENEMY]);
-    m_soundSystem->createSound("..\Resources\Sound\Env_Eat_Item.wav", FMOD_DEFAULT, 0, &m_sound[ENV_EAT_ITEM]);
+    auto createSound = [this](const char* path, FMOD_MODE mode, Sounds sound) {
+        FMOD::Sound* soundPtr;
+        m_soundSystem->createSound(path, mode, nullptr, &soundPtr);
+        m_sound[static_cast<size_t>(sound)].reset(soundPtr, [](FMOD::Sound* sound) {
+            if (sound) {
+                sound->release();
+            }
+            });
+        };
+
+    createSound("..\\Resources\\Sound\\BGM\\Main_Lobby_Sound.mp3", FMOD_LOOP_NORMAL, Sounds::MAIN_LOBBY);
+    createSound("..\\Resources\\Sound\\UI\\Lobby_Select_Weapon.mp3", FMOD_DEFAULT, Sounds::SELECT_WEAPON);
+    createSound("..\\Resources\\Sound\\UI\\Lobby_Weapon_Selected.mp3", FMOD_DEFAULT, Sounds::WEAPON_SELECTED);
 }
 
-void SoundManager::soundPlay(int _type)
+void SoundManager::soundPlay(Sounds soundType)
 {
-    m_soundSystem->playSound(m_sound[_type], 0, false, &m_channel[_type]);
+    auto index = static_cast<size_t>(soundType);
+    m_soundSystem->playSound(m_sound[index].get(), nullptr, false, nullptr);
 
-    if (_type == WEAPON_ASSULT_FIRE)
+    FMOD::Channel* channel;
+    m_soundSystem->getChannel(index, &channel);
+    m_channel[index].reset(channel, [](FMOD::Channel* channel) {});
+
+    if (soundType == Sounds::SELECT_WEAPON)
     {
-        m_channel[_type]->setVolume(0.5f); // 볼륨을 10%로 설정
+        m_channel[index]->setVolume(0.7f); // 볼륨을 50%로 설정
     }
-    if (_type == BGM_SPACE)
+    else if(soundType == Sounds::WEAPON_SELECTED)
     {
-        m_channel[_type]->setVolume(0.7f); // 볼륨을 10%로 설정
+        m_channel[index]->setVolume(0.7f); // 볼륨을 50%로 설정
+    }
+    else if (soundType == Sounds::MAIN_LOBBY)
+    {
+        m_channel[index]->setVolume(0.1f); // 볼륨을 30%로 설정
     }
 
     m_soundSystem->update();
 }
 
-void SoundManager::soundStop(int _type)
+void SoundManager::soundStop(Sounds soundType)
 {
-    m_channel[_type]->stop();
-    m_soundSystem->update();
+    auto index = static_cast<size_t>(soundType);
+    if (m_channel[index]) {
+        m_channel[index]->stop();
+        m_soundSystem->update();
+    }
 }

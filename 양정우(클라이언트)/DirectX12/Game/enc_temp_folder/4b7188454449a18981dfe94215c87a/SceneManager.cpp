@@ -386,7 +386,7 @@ shared_ptr<Scene> SceneManager::LoadGoodEndingScene()
 		}
 		sphere->AddComponent(meshRenderer);
 
-		goodEndingGameScene->AddGameObject(sphere);
+		badEndingGameScene->AddGameObject(sphere);
 	}
 #pragma endregion
 

@@ -1,6 +1,13 @@
 #pragma once
 #include <memory>
 
+enum Sounds
+{
+	MAIN_LOBBY,
+	SELECT_WEAPON,
+	WEAPON_SELECTED,
+	SOUND_TYPE_COUNT
+};
 
 class FMODSystem
 {
@@ -21,26 +28,17 @@ private:
 
 //============================================================
 
-enum Sounds
-{
-	BGM_SPACE,
-	BGM_DESERT,
-	WEAPON_ASSULT_FIRE,
-	ENV_HIT_ENEMY,
-	ENV_EAT_ITEM,
-	SOUND_TYPE_COUNT
-};
+
 class SoundManager
 {
 	DECLARE_SINGLE(SoundManager);
 
 private:
-	FMOD::System* m_soundSystem;
-	FMOD::Sound* m_sound[SOUND_TYPE_COUNT];
-	FMOD::Channel* m_channel[SOUND_TYPE_COUNT];
-
+	std::shared_ptr<FMOD::System> m_soundSystem;
+	std::array<std::shared_ptr<FMOD::Sound>, static_cast<size_t>(Sounds::SOUND_TYPE_COUNT)> m_sound;
+	std::array<std::shared_ptr<FMOD::Channel>, static_cast<size_t>(Sounds::SOUND_TYPE_COUNT)> m_channel;
 public:
 	void Init();
-	void soundPlay(int enumSounds);
-	void soundStop(int enumSounds);
+	void soundPlay(Sounds soundType);
+	void soundStop(Sounds soundType);
 };
