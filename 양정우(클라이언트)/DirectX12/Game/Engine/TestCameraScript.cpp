@@ -67,6 +67,9 @@ void TestCameraScript::LateUpdate()
 	}
 
 
+
+	// 이동칼
+#pragma region Moving
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -241,6 +244,7 @@ void TestCameraScript::LateUpdate()
 				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_WALLAABB);
 				if (overlap != NULL)
 				{
+					//벽충돌칼
 					isOverlap = true;
 					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
 				}
@@ -287,6 +291,7 @@ void TestCameraScript::LateUpdate()
 				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_WALLAABB);
 				if (overlap != NULL)
 				{
+					//벽충돌칼
 					isOverlap = true;
 					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
 				}
@@ -351,6 +356,7 @@ void TestCameraScript::LateUpdate()
 
 	}
 
+#pragma endregion
 
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
