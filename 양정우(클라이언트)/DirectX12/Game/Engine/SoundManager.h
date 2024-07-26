@@ -31,9 +31,13 @@ public:
     void Init();
     void Update();
 
-    void soundPlay(int _type, const Vec3& position);
+    void soundPlay(int _type, const Vec3& position, bool loop);
     void soundStop(int enumSounds);
 
     void UpdateListener(const Vec3& l_Position, const Vec3& l_Velocity, const Vec3& l_Forward, const Vec3& l_Up);
     void SetSoundProperties(int _type, float minDistance, float maxDistance);
+
+    bool IsSoundPlaying(int _type);
+
+    void UpdateSoundPosition(int _type, const Vec3& position);
 };
