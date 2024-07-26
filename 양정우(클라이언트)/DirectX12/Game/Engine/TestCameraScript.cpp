@@ -267,8 +267,10 @@ void TestCameraScript::LateUpdate()
 					//  //else 인 경우 해당 방향으로 이동, 즉 아무것도 하지 않음
 					//------------------------------------------------------------
 
-					is_moveable(moveDirection, overlap);
-
+					if (is_moveable(moveDirection, overlap))
+					{
+						currentPosition = previousPosition;
+					}
 				}
 				else
 				{
