@@ -92,6 +92,9 @@ void TestCameraScript::LateUpdate()
 	}
 
 
+
+	// 이동칼
+#pragma region Moving
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();
@@ -266,8 +269,33 @@ void TestCameraScript::LateUpdate()
 				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_WALLAABB);
 				if (overlap != NULL)
 				{
+					//벽충돌칼
 					isOverlap = true;
 					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
+					//------------------------------------------------------------
+					// 1. 현재 벽과 충돌한 상태
+					// 2. 필요한 함수 : 
+					// bool is_moveable(이동방향 벡터 x, 이동방향 벡터 z, overlap(내가 충돌한 벽))
+					// {
+					//		if(Ray Casting(x, z)가 overlap과 충돌) {
+					//			return true;
+					//		}
+					//		else return false;
+					// }
+					// 
+					// 3. 여기에 작성될 코드
+					// 
+					// if(is_moveable(x, z, overlap)) { // 내 이동방향이 벽과 충돌하면
+					//		currentPosition = previousPosition; // 해당 방향 이동 불가
+					// }  
+					// 
+					//  //else 인 경우 해당 방향으로 이동, 즉 아무것도 하지 않음
+					//------------------------------------------------------------
+
+					if (is_moveable(moveDirection, overlap))
+					{
+						currentPosition = previousPosition;
+					}
 				}
 				else
 				{
@@ -312,6 +340,7 @@ void TestCameraScript::LateUpdate()
 				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_WALLAABB);
 				if (overlap != NULL)
 				{
+					//벽충돌칼
 					isOverlap = true;
 					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
 				}
@@ -376,6 +405,7 @@ void TestCameraScript::LateUpdate()
 
 	}
 
+#pragma endregion
 
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
@@ -720,6 +750,12 @@ void TestCameraScript::LateUpdate()
 			if (mediKit != NULL)
 			{
 				//메디킷칼
+				cs_packet_use_medikit um;
+				um.type = CS_USE_MEDIKIT;
+				um.size = sizeof(cs_packet_use_medikit);
+				um.kit_id = mediKit->GetTransform()->GetObjectID();
+
+				main_session->Send_Packet(&um);
 			}
 
 			shared_ptr<GameObject> ammobox = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_AMMOBOX);
@@ -772,13 +808,19 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::T))
 	{
-		main_session->close_socket();
+		//main_session->close_socket();
 
-		//엔딩 씬을 불러오고
-		GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
+		////엔딩 씬을 불러오고
+		//GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
 
-		//메인게임 씬의 오브젝트들을 제거한다
-		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
+		////메인게임 씬의 오브젝트들을 제거한다
+		//GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
+
+		test_packet tp;
+		tp.size = sizeof(test_packet);
+		tp.type = TEST_SPAWN_RBF;
+
+		main_session->Send_Packet(&tp);
 	}
 
 	if (weaponTimeElapse > weaponChangetime && weaponChanging == true)
@@ -1130,4 +1172,22 @@ void TestCameraScript::RotationUpdate()
 
 	//마우스의 위치를 중앙으로 초기화 해준다.
 	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+}
+
+bool TestCameraScript::is_moveable(const Vec3& moveDirection, const shared_ptr<GameObject>& overlap)
+{
+	Vec3 rayStart3 = GetTransform()->GetLocalPosition();
+	Vec3 rayEnd3 = rayStart3 + moveDirection * moveSpeed * DELTA_TIME;
+
+	Vec4 rayStart = Vec4(rayStart3.x, rayStart3.y, rayStart3.z, 1.0f);
+	Vec4 rayDirection = Vec4(rayEnd3.x - rayStart3.x, rayEnd3.y - rayStart3.y, rayEnd3.z - rayStart3.z, 0.0f);
+
+	float distance = 0.0f;
+
+	if (overlap->GetCollider()->Intersects(rayStart, rayDirection, distance))
+	{
+		return true;
+	}
+
+	return false;
 }
