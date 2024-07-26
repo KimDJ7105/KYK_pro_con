@@ -76,4 +76,8 @@ private:
 	double flameTimeElapse = 1;
 
 	shared_ptr<GameObject> flameLight;
+
+public:
+	bool is_moveable(const Vec3& moveDirection, const shared_ptr<GameObject>& overlap);
+
 };

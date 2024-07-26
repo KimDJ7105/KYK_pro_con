@@ -247,7 +247,6 @@ void TestCameraScript::LateUpdate()
 					//벽충돌칼
 					isOverlap = true;
 					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
-
 					//------------------------------------------------------------
 					// 1. 현재 벽과 충돌한 상태
 					// 2. 필요한 함수 : 
@@ -267,6 +266,9 @@ void TestCameraScript::LateUpdate()
 					// 
 					//  //else 인 경우 해당 방향으로 이동, 즉 아무것도 하지 않음
 					//------------------------------------------------------------
+
+					is_moveable(moveDirection, overlap);
+
 				}
 				else
 				{
@@ -1143,4 +1145,22 @@ void TestCameraScript::RotationUpdate()
 
 	//마우스의 위치를 중앙으로 초기화 해준다.
 	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+}
+
+bool TestCameraScript::is_moveable(const Vec3& moveDirection, const shared_ptr<GameObject>& overlap)
+{
+	Vec3 rayStart3 = GetTransform()->GetLocalPosition();
+	Vec3 rayEnd3 = rayStart3 + moveDirection * moveSpeed * DELTA_TIME;
+
+	Vec4 rayStart = Vec4(rayStart3.x, rayStart3.y, rayStart3.z, 1.0f);
+	Vec4 rayDirection = Vec4(rayEnd3.x - rayStart3.x, rayEnd3.y - rayStart3.y, rayEnd3.z - rayStart3.z, 0.0f);
+
+	float distance = 0.0f;
+
+	if (overlap->GetCollider()->Intersects(rayStart, rayDirection, distance))
+	{
+		return true;
+	}
+
+	return false;
 }
