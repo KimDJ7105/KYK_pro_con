@@ -14,7 +14,7 @@
 
 #include "Quaternion.h"
 
-#include "FMODSystem.h"
+#include "SoundManager.h"
 
 
 extern int playerID;
@@ -23,7 +23,6 @@ TestCameraScript::TestCameraScript()
 {
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
-
 }
 
 TestCameraScript::~TestCameraScript()
@@ -54,7 +53,7 @@ void TestCameraScript::LateUpdate()
 			GetTransform()->GetUp().z
 		};
 
-		GET_SINGLE(FMODSystem)->Set3DListenerAttributes(0, pos, velocity, forward, up);
+		//GET_SINGLE(SoundManager)->Set3DListenerAttributes(0, pos, velocity, forward, up);
 	}
 
 	SetObjects();

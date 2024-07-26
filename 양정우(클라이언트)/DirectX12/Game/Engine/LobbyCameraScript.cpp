@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-#include "FMODSystem.h"
+#include "SoundManager.h"
 
 #include "session.h"
 
@@ -26,6 +26,7 @@ LobbyCameraScript::LobbyCameraScript()
 
 LobbyCameraScript::~LobbyCameraScript()
 {
+	
 }
 
 
@@ -68,6 +69,9 @@ void LobbyCameraScript::LateUpdate()
 
 		if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_START_BTN)
 		{
+			GET_SINGLE(SoundManager)->soundStop(MAIN_LOBBY);
+
+
 			cl_packet_start_game sg;
 			sg.type = CL_START_GAME;
 			sg.size = sizeof(cl_packet_start_game);

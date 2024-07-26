@@ -198,7 +198,7 @@
     <ClCompile Include="OtherPlayerScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
-    <ClCompile Include="FMODSystem.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -366,7 +366,7 @@
     <ClInclude Include="OtherPlayerScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
-    <ClInclude Include="FMODSystem.h" />
+    <ClInclude Include="SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
