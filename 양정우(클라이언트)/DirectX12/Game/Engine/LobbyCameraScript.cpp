@@ -21,7 +21,7 @@ void worker_SM_thread(boost::asio::io_context* io_con)
 
 LobbyCameraScript::LobbyCameraScript()
 {
-	GET_SINGLE(SoundManager)->soundPlay(MAIN_LOBBY);
+	GET_SINGLE(SoundManager)->soundPlay(BGM_MAIN_LOBBY, Vec3(0.f, 0.f, 0.f));
 }
 
 LobbyCameraScript::~LobbyCameraScript()
@@ -69,7 +69,7 @@ void LobbyCameraScript::LateUpdate()
 
 		if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_START_BTN)
 		{
-			GET_SINGLE(SoundManager)->soundStop(MAIN_LOBBY);
+			GET_SINGLE(SoundManager)->soundStop(BGM_MAIN_LOBBY);
 
 
 			cl_packet_start_game sg;
@@ -98,7 +98,7 @@ void LobbyCameraScript::LateUpdate()
 		}
 		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_BTN)
 		{
-			GET_SINGLE(SoundManager)->soundPlay(SELECT_WEAPON);
+			GET_SINGLE(SoundManager)->soundPlay(SELECT_WEAPON, Vec3(0.f, 0.f, 0.f));
 			GetWeaponSelectUI();
 		}
 		else if(GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_EXIT_BTN)
@@ -126,7 +126,7 @@ void LobbyCameraScript::LateUpdate()
 						//3이면 저격소총	(GT_SR				3)
 						GET_SINGLE(SceneManager)->SetMainWeapon_Type(gameObject->GetTransform()->GetObjectID());
 
-						GET_SINGLE(SoundManager)->soundPlay(WEAPON_SELECTED);
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_SELECTED, Vec3(0.f, 0.f, 0.f));
 					}
 					else
 					{
