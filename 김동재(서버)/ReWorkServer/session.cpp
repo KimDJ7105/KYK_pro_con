@@ -137,6 +137,31 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			for (auto& pl : my_game->ingame_player) {
 				pl.second->Send_Packet(&pd);
 			}
+
+			for (auto& object : my_game->ingame_object) {
+				auto& obj = object.second;
+				if (obj->obj_type == OT_KEYCARD && obj->owner_id == my_id_) {
+					obj->owner_id = -1;
+					obj->set_pos(my_game->select_pos());
+
+					for (auto& player : my_game->ingame_player) {
+						sc_packet_put_object put_obj;
+						put_obj.size = sizeof(sc_packet_put_object);
+						put_obj.type = SC_PUT_OBJECT;
+						put_obj.id = obj->obj_id;
+						put_obj.obj_type = obj->obj_type;
+						put_obj.approx_num = obj->spawn_num;
+
+						player.second->Send_Packet(&put_obj);
+					}
+				}
+
+				/*else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+				obj->owner_id = -1;
+				my_game->set_rabbitfoot_owner(-1);
+				obj->set_pos(my_game->select_room_pos());
+			}*/
+			}
 		}
 			
 		break;
@@ -480,10 +505,29 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			player->Send_Packet(&rp);
 		}
 
-		if (my_id_ == my_game->get_rabbitfoot_owner()) {
-			//Åä³¢¹ßÀ» °¡ÁøÃ¤ Á×À¸¸é Åä³¢¹ßÀ» ¶³±Å¾ß ÇÔ
-			//±Ùµ¥ ÁÂÇ¥·Î ¶³±Åµµ ±¦ÂúÀºÁö Å¬¶ó¶û ´ëÈ­ ÇÊ¿ä
-			my_game->set_rabbitfoot_owner(-1);
+		for (auto& object : my_game->ingame_object) {
+			auto& obj = object.second;
+			if (obj->obj_type == OT_KEYCARD && obj->owner_id == my_id_) {
+				obj->owner_id = -1;
+				obj->set_pos(my_game->select_pos());
+
+				for (auto& player : my_game->ingame_player) {
+					sc_packet_put_object put_obj;
+					put_obj.size = sizeof(sc_packet_put_object);
+					put_obj.type = SC_PUT_OBJECT;
+					put_obj.id = obj->obj_id;
+					put_obj.obj_type = obj->obj_type;
+					put_obj.approx_num = obj->spawn_num;
+
+					player.second->Send_Packet(&put_obj);
+				}
+			}
+
+			/*else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+				obj->owner_id = -1;
+				my_game->set_rabbitfoot_owner(-1);
+				obj->set_pos(my_game->select_room_pos());
+			}*/
 		}
 
 		sc_packet_player_lose pl;
@@ -524,6 +568,31 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& pl : my_game->ingame_player) {
 			pl.second->Send_Packet(&pd);
+		}
+
+		for (auto& object : my_game->ingame_object) {
+			auto& obj = object.second;
+			if (obj->obj_type == OT_KEYCARD && obj->owner_id == my_id_) {
+				obj->owner_id = -1;
+				obj->set_pos(my_game->select_pos());
+
+				for (auto& player : my_game->ingame_player) {
+					sc_packet_put_object put_obj;
+					put_obj.size = sizeof(sc_packet_put_object);
+					put_obj.type = SC_PUT_OBJECT;
+					put_obj.id = obj->obj_id;
+					put_obj.obj_type = obj->obj_type;
+					put_obj.approx_num = obj->spawn_num;
+
+					player.second->Send_Packet(&put_obj);
+				}
+			}
+
+			/*else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+				obj->owner_id = -1;
+				my_game->set_rabbitfoot_owner(-1);
+				obj->set_pos(my_game->select_room_pos());
+			}*/
 		}
 		break;
 	}
