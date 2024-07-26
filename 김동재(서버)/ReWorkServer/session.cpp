@@ -397,7 +397,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RUN_KEY_DOWN: {
-		std::cout << "달리기 키 눌림\n";
 
 		is_running = true;
 
@@ -417,7 +416,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_RUN_KEY_UP: {
-		std::cout << "달리기 키 떨어짐\n";
 
 		is_running = false;
 		break;
@@ -601,13 +599,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
-		TIMER_EVENT tm_grind;
-		tm_grind.event_id = EV_MOVE_GRINDER;
-		tm_grind.game_id = my_game->get_game_id();
-		tm_grind.target_id = -1;
-		tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
+		std::cout << "테스트 패킷 수신\n";
+		hp -= 30;
 
-		my_server->timer_queue.emplace(tm_grind);
+		sc_packet_apply_damage pad;
+		pad.type = SC_APPLY_DAMAGE;
+		pad.size = sizeof(sc_packet_apply_damage);
+		pad.id = my_id_;
+		pad.hp = hp;
+
+		Send_Packet(&pad);
+
 		break;
 	}
 	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);

@@ -695,6 +695,12 @@ void TestCameraScript::LateUpdate()
 			if (mediKit != NULL)
 			{
 				//메디킷칼
+				cs_packet_use_medikit um;
+				um.type = CS_USE_MEDIKIT;
+				um.size = sizeof(cs_packet_use_medikit);
+				um.kit_id = mediKit->GetTransform()->GetObjectID();
+
+				main_session->Send_Packet(&um);
 			}
 
 			shared_ptr<GameObject> ammobox = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_AMMOBOX);
@@ -747,13 +753,19 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::T))
 	{
-		main_session->close_socket();
+		//main_session->close_socket();
 
-		//엔딩 씬을 불러오고
-		GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
+		////엔딩 씬을 불러오고
+		//GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
 
-		//메인게임 씬의 오브젝트들을 제거한다
-		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
+		////메인게임 씬의 오브젝트들을 제거한다
+		//GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetMainScene());
+
+		test_packet tp;
+		tp.size = sizeof(test_packet);
+		tp.type = TEST_SPAWN_RBF;
+
+		main_session->Send_Packet(&tp);
 	}
 
 	if (weaponTimeElapse > weaponChangetime && weaponChanging == true)
