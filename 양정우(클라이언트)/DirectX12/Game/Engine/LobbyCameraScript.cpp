@@ -28,6 +28,12 @@ LobbyCameraScript::~LobbyCameraScript()
 
 void LobbyCameraScript::LateUpdate()
 {
+
+
+	
+
+
+
 	if (cursor == nullptr)
 	{
 		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();

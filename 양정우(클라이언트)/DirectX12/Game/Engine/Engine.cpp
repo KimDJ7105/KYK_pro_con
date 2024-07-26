@@ -50,7 +50,7 @@ void Engine::Update()
 	GET_SINGLE(Input)->Update();
 	GET_SINGLE(Timer)->Update();
 
-	GET_SINGLE(FMODSystem)->Update();
+	//GET_SINGLE(FMODSystem)->Update();
 
 	GET_SINGLE(SceneManager)->Update();
 	GET_SINGLE(InstancingManager)->ClearBuffer();
