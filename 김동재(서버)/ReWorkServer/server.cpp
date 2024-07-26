@@ -18,6 +18,7 @@ void SERVER::do_accept()
 				if(p_id == LOBBY_ID) {
 					std::cout << "Lobby server connected\n";
 					lobby = std::make_shared<SESSION>(std::move(socket_), p_id, -1);	
+					lobby->set_myserver(this);
 					lobby->start();
 				}
 				else {
@@ -65,17 +66,29 @@ int SERVER::GetNewClientID()
 	return g_user_ID++;
 }
 
-SERVER::SERVER(boost::asio::io_context& io_service, int port)
+SERVER::SERVER(boost::asio::io_context& io_service, int port, char _ip[16])
 	: acceptor_(io_service, tcp::endpoint(tcp::v4(), port)),
 	socket_(io_service),
 	timer_(io_service, boost::asio::chrono::microseconds(100))
 {	
+	strcpy_s(server_ip, _ip);
+
 	if (port == MY_PORT3) next_port = MY_PORT0;
 	else next_port = port + 1;
 
 	timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
 
 	do_accept();
+}
+
+void SERVER::set_ip(char ip[16])
+{
+	strcpy_s(server_ip, ip);
+}
+
+char* SERVER::get_ip()
+{
+	return server_ip;
 }
 
 void SERVER::event_excuter(const boost::system::error_code& ec)

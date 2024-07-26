@@ -754,6 +754,13 @@ void SESSION::start()
 	do_read();
 
 	if (my_id_ == LOBBY_ID) {
+		sl_packet_set_ip s_ip;
+		s_ip.type = SL_SET_IP;
+		s_ip.size = sizeof(sl_packet_set_ip);
+		strcpy_s(s_ip.ip, my_server->get_ip());
+
+		Send_Packet(&s_ip);
+
 		sl_packet_set_port sip;
 		sip.type = SL_SET_PORT;
 		sip.size = sizeof(sl_packet_set_port);
