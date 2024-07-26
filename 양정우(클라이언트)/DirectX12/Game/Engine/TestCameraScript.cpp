@@ -247,6 +247,26 @@ void TestCameraScript::LateUpdate()
 					//벽충돌칼
 					isOverlap = true;
 					currentPosition = previousPosition; // 충돌 시 이전 위치로 되돌림
+
+					//------------------------------------------------------------
+					// 1. 현재 벽과 충돌한 상태
+					// 2. 필요한 함수 : 
+					// bool is_moveable(이동방향 벡터 x, 이동방향 벡터 z, overlap(내가 충돌한 벽))
+					// {
+					//		if(Ray Casting(x, z)가 overlap과 충돌) {
+					//			return true;
+					//		}
+					//		else return false;
+					// }
+					// 
+					// 3. 여기에 작성될 코드
+					// 
+					// if(is_moveable(x, z, overlap)) { // 내 이동방향이 벽과 충돌하면
+					//		currentPosition = previousPosition; // 해당 방향 이동 불가
+					// }  
+					// 
+					//  //else 인 경우 해당 방향으로 이동, 즉 아무것도 하지 않음
+					//------------------------------------------------------------
 				}
 				else
 				{
