@@ -62,7 +62,12 @@ void SoundManager::soundPlay(int _type, const Vec3& position, bool loop)
         }
         else if (_type == Sounds::BGM_MAIN_LOBBY)
         {
-            m_channel[_type]->setVolume(0.3f);
+            m_channel[_type]->setVolume(0.2f);
+        }
+        else if (_type == Sounds::CRUSHER_MOVING)
+        {
+            m_channel[_type]->setVolume(0.8f);
+
         }
     }
     else

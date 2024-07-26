@@ -23,6 +23,8 @@ TestCameraScript::TestCameraScript()
 {
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
+
+	
 }
 
 TestCameraScript::~TestCameraScript()
@@ -32,29 +34,7 @@ TestCameraScript::~TestCameraScript()
 void TestCameraScript::LateUpdate()
 {
 	
-	{
-		FMOD_VECTOR pos = {
-			GetTransform()->GetLocalPosition().x,
-			GetTransform()->GetLocalPosition().y,
-			GetTransform()->GetLocalPosition().z
-		};
-
-		FMOD_VECTOR velocity = { 0, 0, 0 };
-
-		FMOD_VECTOR forward = {
-			GetTransform()->GetLook().x,
-			GetTransform()->GetLook().y,
-			GetTransform()->GetLook().z
-		};
-
-		FMOD_VECTOR up = {
-			GetTransform()->GetUp().x,
-			GetTransform()->GetUp().y,
-			GetTransform()->GetUp().z
-		};
-
-		//GET_SINGLE(SoundManager)->Set3DListenerAttributes(0, pos, velocity, forward, up);
-	}
+	GET_SINGLE(SoundManager)->UpdateListener(GetTransform()->GetLocalPosition(), Vec3(0.f, 0.f, 0.f), GetTransform()->GetLook(), GetTransform()->GetUp());
 
 	SetObjects();
 
@@ -67,7 +47,11 @@ void TestCameraScript::LateUpdate()
 		moveSpeed = 100.f;
 	}
 
-
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_4))
+	{
+		GET_SINGLE(SoundManager)->SetSoundProperties(CRUSHER_MOVING, 300.f, 100.f);
+		GET_SINGLE(SoundManager)->soundPlay(CRUSHER_MOVING, Vec3(2400.f, 40.f, 2400.f), true);
+	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::SHIFT))
 	{

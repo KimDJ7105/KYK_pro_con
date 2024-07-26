@@ -5,12 +5,15 @@
 #include "Scene.h"
 #include "Timer.h"
 #include "Transform.h"
+#include "SoundManager.h"
 
 
 
 
 CrusherScript::CrusherScript()
 {
+	/*GET_SINGLE(SoundManager)->SetSoundProperties(CRUSHER_MOVING, 50.f, 100.f);
+	GET_SINGLE(SoundManager)->soundPlay(CRUSHER_MOVING, GetTransform()->GetLocalPosition(), true);*/
 }
 
 CrusherScript::~CrusherScript()
@@ -19,6 +22,8 @@ CrusherScript::~CrusherScript()
 
 void CrusherScript::LateUpdate()
 {
+	
+
 	if (isStart == false)
 	{
 		int crusherID = GetTransform()->GetObjectID();
