@@ -3,9 +3,15 @@
 
 enum Sounds
 {
-	MAIN_LOBBY,
+	BGM_MAIN_LOBBY,
+    BGM_IN_GAME,
+    BGM_SECOND_WAVE,
+
 	SELECT_WEAPON,
 	WEAPON_SELECTED,
+
+    CRUSHER_MOVING,
+
 	SOUND_TYPE_COUNT
 };
 
@@ -23,6 +29,15 @@ private:
 
 public:
     void Init();
-    void soundPlay(int enumSounds);
+    void Update();
+
+    void soundPlay(int _type, const Vec3& position, bool loop);
     void soundStop(int enumSounds);
+
+    void UpdateListener(const Vec3& l_Position, const Vec3& l_Velocity, const Vec3& l_Forward, const Vec3& l_Up);
+    void SetSoundProperties(int _type, float minDistance, float maxDistance);
+
+    bool IsSoundPlaying(int _type);
+
+    void UpdateSoundPosition(int _type, const Vec3& position);
 };
