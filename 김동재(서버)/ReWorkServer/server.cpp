@@ -36,13 +36,27 @@ void SERVER::do_accept()
 
 						timer_queue.push(ev_item);
 					}
+					else if (games[g_game_ID]->get_game_state() == ST_END || games[g_game_ID]->get_game_state() == ST_RUN)
+					{
+						g_game_ID++;
+
+						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
+
+						TIMER_EVENT ev_item;
+						ev_item.event_id = EV_SPAWN_ITEM;
+						ev_item.game_id = g_game_ID;
+						ev_item.target_id = -1;
+						ev_item.wakeup_time = chrono::system_clock::now() + 60s;
+
+						timer_queue.push(ev_item);
+					}
 
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
 					games[g_game_ID]->ingame_player[p_id]->set_mygame(games[g_game_ID]);
 					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
 					games[g_game_ID]->ingame_player[p_id]->start();
 
-					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1 || games[g_game_ID]->get_game_state() == ST_END) g_game_ID++;
+					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1 ) g_game_ID++;
 					if (games.size() == MAX_GAME) {
 						sl_packet_set_port set_port;
 						set_port.size = sizeof(sl_packet_set_port);
