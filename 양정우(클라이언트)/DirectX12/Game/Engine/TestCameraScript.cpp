@@ -228,15 +228,13 @@ void TestCameraScript::LateUpdate()
 			// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
 			currentPosition += moveDirection * moveSpeed * DELTA_TIME;
 			
+			
 		}
 		else if (isDash == true)
 		{
 			// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
 			currentPosition += moveDirection * moveSpeed * 2 * DELTA_TIME;
-
-			
 		}
-
 
 		
 
@@ -359,9 +357,39 @@ void TestCameraScript::LateUpdate()
 
 			main_session->Send_Packet(&packet);
 			//-------------------------------------
+
+
+			if (isMoving)
+			{
+				if (isDash)
+				{
+					if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == false)
+					{
+						if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == true)
+						{
+							GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+						}
+						GET_SINGLE(SoundManager)->soundPlay(PLAYER_RUN, GetTransform()->GetLocalPosition(), true);
+					}
+				}
+				else if(!isDash)
+				{
+					if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == false)
+					{
+						if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == true)
+						{
+							GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+						}
+						GET_SINGLE(SoundManager)->soundPlay(PLAYER_WALK, GetTransform()->GetLocalPosition(), true);
+					}
+				}
+			}
+
 		}
 		else if (currentPosition == tempPos)
 		{
+			GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+			GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
 		}
 
 
