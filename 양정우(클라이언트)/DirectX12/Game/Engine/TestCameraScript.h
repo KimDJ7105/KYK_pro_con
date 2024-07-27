@@ -51,6 +51,8 @@ private:
 
 	int haveKeycard = 0;
 
+	int nowGun = 0;
+
 
 	bool wKeyState = false;
 	bool aKeyState = false;

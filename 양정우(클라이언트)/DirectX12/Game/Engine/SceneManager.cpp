@@ -28,6 +28,8 @@
 #include "GoodEndingCameraScript.h"
 #include "OtherPlayerScript.h"
 
+#include "SoundManager.h"
+
 #include "ObjectManager.h"
 
 #include "session.h"
@@ -3867,7 +3869,6 @@ void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z
 			if (otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_MAIN
 				&& otherPlayer->GetTransform()->GetObjectType() != OT_OTHER_PLAYER_SUB)
 			{
-
 				otherPlayer->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 				otherPlayer->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
 			}

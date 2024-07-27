@@ -47,11 +47,6 @@ void TestCameraScript::LateUpdate()
 		moveSpeed = 100.f;
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_4))
-	{
-		GET_SINGLE(SoundManager)->SetSoundProperties(CRUSHER_MOVING, 300.f, 100.f);
-		GET_SINGLE(SoundManager)->soundPlay(CRUSHER_MOVING, Vec3(2400.f, 40.f, 2400.f), true);
-	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::SHIFT))
 	{
@@ -390,11 +385,14 @@ void TestCameraScript::LateUpdate()
 			{
 				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				nowGunObject = playerMainGunObject;
+				nowGun = 1;
+				
 			}
 			nowGunObject->GetAnimator()->AddToSequence(3);
 			nowGunObject->GetAnimator()->AddToSequence(0);
 			playerObject->GetAnimator()->AddToSequence(3);
 			playerObject->GetAnimator()->AddToSequence(0);
+			GET_SINGLE(SoundManager)->soundPlay(PLAYER_GUN_CHANGE, GetTransform()->GetLocalPosition(), false);
 		}
 
 		cs_packet_change_gun cg;
@@ -407,8 +405,8 @@ void TestCameraScript::LateUpdate()
 
 		//0ÀÌ¸é ±â°ü´ÜÃÑ	(GT_SM				0)
 		//1ÀÌ¸é »êÅºÃÑ		(GT_SG				1)
-		//2ÀÌ¸é µ¹°Ý¼ÒÃÑ	(GT_AR				2)
-		//3ÀÌ¸é Àú°Ý¼ÒÃÑ	(GT_SR				3)
+		//2ÀÌ¸é Àú°Ý¼ÒÃÑ	(GT_AR				2)
+		//3ÀÌ¸é µ¹°Ý¼ÒÃÑ	(GT_SR				3)
 
 		int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
 
@@ -451,12 +449,14 @@ void TestCameraScript::LateUpdate()
 			{
 				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 				nowGunObject = playerSubGunObject;
+				nowGun = 0;
 			}
 
 			nowGunObject->GetAnimator()->AddToSequence(3);
 			nowGunObject->GetAnimator()->AddToSequence(0);
 			playerObject->GetAnimator()->AddToSequence(3);
 			playerObject->GetAnimator()->AddToSequence(0);
+			GET_SINGLE(SoundManager)->soundPlay(PLAYER_GUN_CHANGE, GetTransform()->GetLocalPosition(), false);
 		}
 
 		cs_packet_change_gun cg;
@@ -596,6 +596,37 @@ void TestCameraScript::LateUpdate()
 
 				playerObject->GetAnimator()->AddToSequence(1);
 				playerObject->GetAnimator()->AddToSequence(0);
+
+
+				int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
+				//0ÀÌ¸é ±â°ü´ÜÃÑ	(GT_SM				0)
+				//1ÀÌ¸é »êÅºÃÑ		(GT_SG				1)
+				//2ÀÌ¸é Àú°Ý¼ÒÃÑ	(GT_AR				2)
+				//3ÀÌ¸é µ¹°Ý¼ÒÃÑ	(GT_SR				3)
+				
+				if (nowGun == 0)
+				{
+					GET_SINGLE(SoundManager)->soundPlay(WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
+				}
+				else if (nowGun == 1)
+				{
+					if (type == 0)//±â°ü
+					{
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
+					}
+					else if (type == 1)//»êÅº
+					{
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
+					}
+					else if (type == 2)//Àú°Ý
+					{
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
+					}
+					else if (type == 3)//µ¹°Ý
+					{
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
+					}
+				}
 			}
 		}
 	}
@@ -774,6 +805,8 @@ void TestCameraScript::LateUpdate()
 
 		playerObject->GetAnimator()->AddToSequence(2);
 		playerObject->GetAnimator()->AddToSequence(0);
+
+		GET_SINGLE(SoundManager)->soundPlay(PLAYER_GUN_RELOAD, GetTransform()->GetLocalPosition(), false);
 	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::T))
