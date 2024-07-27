@@ -73,6 +73,8 @@ void TestCameraScript::LateUpdate()
 
 	// 이동칼
 #pragma region Moving
+
+	if(GET_SINGLE(SceneManager)->Get_isGameStart() == true)
 	{
 		// 현재 위치 저장
 		previousPosition = GetTransform()->GetLocalPosition();

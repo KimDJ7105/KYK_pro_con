@@ -204,5 +204,12 @@ private:
 public:
 	void AddCrusherNum() { crusherNUM++; }
 	int GetCrusherNum() { return crusherNUM; }
+
+private:
+	bool isGameStart = false;
+	
+public:
+	bool Get_isGameStart() { return isGameStart; }
+	void Set_isGameStart(bool start_state) { isGameStart = start_state; }
 };
 
