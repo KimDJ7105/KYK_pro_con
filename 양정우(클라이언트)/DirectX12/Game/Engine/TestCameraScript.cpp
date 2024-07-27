@@ -1154,6 +1154,17 @@ void TestCameraScript::RotationUpdate()
 
 			//playerRotation.x -= DELTA_TIME * moveY;
 
+			if (rotation.x < -1.57)
+			{
+				rotation.x = -1.56f;
+			}
+			else if (1.57f < rotation.x)
+			{
+				rotation.x = 1.56f;
+			}
+
+
+
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
@@ -1163,6 +1174,15 @@ void TestCameraScript::RotationUpdate()
 			rotation.x += DELTA_TIME * moveY;
 
 			//playerRotation.x -= DELTA_TIME * moveY;
+
+			if (rotation.x < -1.57)
+			{
+				rotation.x = -1.56f;
+			}
+			else if (1.57f < rotation.x)
+			{
+				rotation.x = 1.56f;
+			}
 
 			GetTransform()->SetLocalRotation(rotation);
 		}
