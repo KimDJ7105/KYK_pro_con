@@ -248,8 +248,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "터미널 사용 요청 수신\n";
 
-		if (using_terminal) {
-			using_terminal = false;
+		if (using_tml_id != -1) {
+			using_tml_id = -1;
 
 			sc_packet_show_map sm;
 			sm.type = SC_SHOW_MAP;
@@ -281,7 +281,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
 
-			using_terminal = true;
+			using_tml_id = terminal->obj_id;
 
 			sc_packet_card_used cu;
 			cu.size = sizeof(sc_packet_card_used);
@@ -349,7 +349,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		
 		else { //이미 활성화 된 터미널이면
-			using_terminal = true;
+			using_tml_id = terminal->obj_id;
 
 			sc_packet_show_map sm;
 			sm.type = SC_SHOW_MAP;
@@ -565,6 +565,11 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_TRIGGER_LASER: {
+		if (using_tml_id == -1) break;
+		auto& terminal = my_game->ingame_object[using_tml_id];
+		if (terminal->triggered_laser >= 2) break;
+		terminal->triggered_laser += 1;
+
 		cs_packet_trigger_laser* p = (cs_packet_trigger_laser*)packet;
 
 		std::cout << "Laser Trap Triggered\n";
@@ -859,9 +864,10 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 
 	team = team_num;
 
-	using_terminal = false;
 	is_core_state = false;
 	is_running = false;
+
+	using_tml_id = -1;
 }
 
 void SESSION::start()
