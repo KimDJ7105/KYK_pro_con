@@ -168,7 +168,9 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				poc.dirz = 0.f;
 
 				for (auto& player : games[ev.game_id]->ingame_player) {
-					player.second->Send_Packet(&poc);
+					auto& p = player.second;
+					if (p == nullptr) continue;
+					p->Send_Packet(&poc);
 				}
 
 				if (!games[ev.game_id]->is_laser_on) {
@@ -219,7 +221,9 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					laser_pos.animation_id = -1;
 
 					for (auto& player : games[ev.game_id]->ingame_player) {
-						player.second->Send_Packet(&laser_pos);
+						auto& p = player.second;
+						if (p == nullptr) continue;
+						p->Send_Packet(&laser_pos);
 					}
 				}
 
@@ -282,7 +286,10 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					grinder_pos.animation_id = -1;
 
 					for (auto& players : games[ev.game_id]->ingame_player) {
-						players.second->Send_Packet(&grinder_pos);
+						auto& p = players.second;
+						if (p == nullptr) continue;
+
+						p->Send_Packet(&grinder_pos);
 					}
 				}
 
@@ -307,7 +314,10 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				pop.approx_num = exit->spawn_num;
 
 				for (auto& player : games[ev.game_id]->ingame_player) {
-					player.second->Send_Packet(&pop);
+					auto& p = player.second;
+					if (p == nullptr) continue;
+
+					p->Send_Packet(&pop);
 				}
 
 				std::cout << "Exit Spawned\n";
@@ -327,7 +337,10 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					pop.approx_num = p->spawn_num;
 
 					for (auto& player : games[ev.game_id]->ingame_player) {
-						player.second->Send_Packet(&pop);
+						auto& p = player.second;
+						if (p == nullptr) continue;
+
+						p->Send_Packet(&pop);
 					}
 				}
 
@@ -347,8 +360,9 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				gs.type = SC_GAME_START;
 
 				for (auto& p : games[ev.game_id]->ingame_player) {
-					if (p.second == nullptr) continue;
-					p.second->Send_Packet(&gs);
+					auto& player = p.second;
+					if (player == nullptr) continue;
+					player->Send_Packet(&gs);
 				}
 
 				std::cout << "GAME START\n";
