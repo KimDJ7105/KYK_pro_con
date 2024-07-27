@@ -9,6 +9,8 @@ OBJECT::OBJECT(int id, int type)
 	way = -1;
 	spawn_num = -1;
 
+	triggered_laser = 0;
+
 	for (int i = 0; i < 3; i++) {
 		pos[i] = 0.f;
 		rot[i] = 0.f;

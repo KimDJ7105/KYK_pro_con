@@ -17,9 +17,16 @@ void SESSION::Send_Packet(void* packet, unsigned id)
 
 void SESSION::Process_Packet(unsigned char* packet, int id)
 {
+
 	auto P = my_game->ingame_player[id];
 	int y = P->pos[1];
 	int x = P->pos[0];
+	//ready 상태일때는 마우스 이동 동기화 말고는 아무것도 안하기
+	if (my_game->get_game_state() == ST_READY && packet[1] != CS_MOUSE_INFO && packet[1] != CS_SEND_GUNTYPE && packet[1] != CS_CHANGE_GUN) {
+		std::cout << "Nope\n";
+		return;
+	}
+
 	switch (packet[1]) {
 	case CS_POS_INFO: { //플레이어 이동
 		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
@@ -79,8 +86,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_PICKING_INFO : //플레이어 사격 시도
-	{
+	case CS_PICKING_INFO : { //플레이어 사격 시도
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
 		if(remain_bullet[select_gun] <= 0) break;
@@ -249,8 +255,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "터미널 사용 요청 수신\n";
 
-		if (using_terminal) {
-			using_terminal = false;
+		if (using_tml_id != -1) {
+			using_tml_id = -1;
 
 			sc_packet_show_map sm;
 			sm.type = SC_SHOW_MAP;
@@ -282,7 +288,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
 
-			using_terminal = true;
+			using_tml_id = terminal->obj_id;
 
 			sc_packet_card_used cu;
 			cu.size = sizeof(sc_packet_card_used);
@@ -350,7 +356,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		
 		else { //이미 활성화 된 터미널이면
-			using_terminal = true;
+			using_tml_id = terminal->obj_id;
 
 			sc_packet_show_map sm;
 			sm.type = SC_SHOW_MAP;
@@ -507,8 +513,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
-	case CS_HIT_BY_GRINDER :
-	{
+	case CS_HIT_BY_GRINDER : {
 		sc_packet_remove_player rp;
 		rp.size = sizeof(sc_packet_remove_player);
 		rp.type = SC_REMOVE_PLAYER;
@@ -567,9 +572,23 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_TRIGGER_LASER: {
+		if (using_tml_id == -1) break;
+		auto& terminal = my_game->ingame_object[using_tml_id];
+		if (terminal->triggered_laser >= 2) break;
+		terminal->triggered_laser += 1;
+
 		cs_packet_trigger_laser* p = (cs_packet_trigger_laser*)packet;
 
 		std::cout << "Laser Trap Triggered\n";
+
+		sc_packet_show_object_loc sol;
+		sol.type = SC_SHOW_OBJECT_LOC;
+		sol.size = sizeof(sc_packet_show_object_loc);
+		sol.obj_type = OT_LASER;
+		sol.approx_num = p->room_num;
+		sol.loc_type = OT_ROOM;
+
+		Send_Packet(&sol);
 
 		if (my_game->is_free_room(p->room_num)) {
 			my_game->set_room_unable(p->room_num);
@@ -861,9 +880,10 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 
 	team = team_num;
 
-	using_terminal = false;
 	is_core_state = false;
 	is_running = false;
+
+	using_tml_id = -1;
 }
 
 void SESSION::start()

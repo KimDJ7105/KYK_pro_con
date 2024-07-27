@@ -31,12 +31,12 @@ private:
 	std::shared_ptr<GAME> my_game;
 	SERVER* my_server;
 
-	bool using_terminal;
 	bool is_core_state;
 	bool is_running;
 	bool is_moving;
 
 	int gun_type;
+	int using_tml_id;
 private:
 	void Send_Packet(void* packet, unsigned id);
 	

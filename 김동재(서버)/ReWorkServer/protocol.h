@@ -131,6 +131,7 @@
 #define SC_PLAYER_LOSE     16 //플레이어 패배
 #define SC_RESURRECTION	   17 //플레이어 코어 상태에서 부활
 #define SC_SET_PLAYER_GUN  18 //플레이어 총 설정
+#define SC_GAME_START	   19 //게임 시작을 전달
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -421,6 +422,11 @@ struct sc_packet_set_player_gun {
 	BYTE type;
 	int id;
 	int gun_type;
+};
+
+struct sc_packet_game_start {
+	BYTE size;
+	BYTE type;
 };
 
 struct test_packet {

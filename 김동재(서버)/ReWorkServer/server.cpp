@@ -28,11 +28,41 @@ void SERVER::do_accept()
 					{
 						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
 
+						TIMER_EVENT ev_ready;
+						ev_ready.event_id = EV_SET_RUN;
+						ev_ready.game_id = g_game_ID;
+						ev_ready.target_id = -1;
+						ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
+
+						timer_queue.push(ev_ready);
+
 						TIMER_EVENT ev_item;
 						ev_item.event_id = EV_SPAWN_ITEM;
 						ev_item.game_id = g_game_ID;
 						ev_item.target_id = -1;
-						ev_item.wakeup_time = chrono::system_clock::now() + 60s;
+						ev_item.wakeup_time = chrono::system_clock::now() + 90s;
+
+						timer_queue.push(ev_item);
+					}
+					else if (games[g_game_ID]->get_game_state() == ST_END || games[g_game_ID]->get_game_state() == ST_RUN)
+					{
+						g_game_ID++;
+
+						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
+
+						TIMER_EVENT ev_ready;
+						ev_ready.event_id = EV_SET_RUN;
+						ev_ready.game_id = g_game_ID;
+						ev_ready.target_id = -1;
+						ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
+
+						timer_queue.push(ev_ready);
+
+						TIMER_EVENT ev_item;
+						ev_item.event_id = EV_SPAWN_ITEM;
+						ev_item.game_id = g_game_ID;
+						ev_item.target_id = -1;
+						ev_item.wakeup_time = chrono::system_clock::now() + 90s;
 
 						timer_queue.push(ev_item);
 					}
@@ -42,7 +72,7 @@ void SERVER::do_accept()
 					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
 					games[g_game_ID]->ingame_player[p_id]->start();
 
-					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1 || games[g_game_ID]->get_game_state() == ST_END) g_game_ID++;
+					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1 ) g_game_ID++;
 					if (games.size() == MAX_GAME) {
 						sl_packet_set_port set_port;
 						set_port.size = sizeof(sl_packet_set_port);
@@ -115,6 +145,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				std::cout << "Laser on Evnet Called\n";
 				auto& laser = games[ev.game_id]->CreateObject(OT_LASER, ev.x, ev.y, ev.z, -1.57f, 1.57f, 0.f, WAY_RIGHT);
 				laser->end_pos = ev.x + 300.f;
+				laser->set_pos(ev.target_id);
 
 				sc_packet_put_object_coor poc;
 				poc.size = sizeof(sc_packet_put_object_coor);
@@ -300,6 +331,20 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 
 				timer_queue.push(ev_item);
 
+				break;
+			}
+			case EV_SET_RUN: {
+				sc_packet_game_start gs;
+				gs.size = sizeof(sc_packet_game_start);
+				gs.type = SC_GAME_START;
+
+				for (auto& p : games[ev.game_id]->ingame_player) {
+					p.second->Send_Packet(&gs);
+				}
+
+				std::cout << "GAME START\n";
+
+				games[ev.game_id]->set_game_state(ST_RUN);
 				break;
 			}
 			}
