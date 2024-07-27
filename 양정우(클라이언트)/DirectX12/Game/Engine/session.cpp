@@ -222,6 +222,10 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->PlayerWeaponChanging(p->id);
 		break;
 	}
+	case SC_GAME_START: {
+		//게임 시작
+		break;
+	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
 	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);

@@ -32,7 +32,9 @@ void SERVER::do_accept()
 						ev_ready.event_id = EV_SET_RUN;
 						ev_ready.game_id = g_game_ID;
 						ev_ready.target_id = -1;
-						ev_ready.wakeup_time = chrono::system_clock::now() + 30s;
+						ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
+
+						timer_queue.push(ev_ready);
 
 						TIMER_EVENT ev_item;
 						ev_item.event_id = EV_SPAWN_ITEM;
@@ -52,7 +54,9 @@ void SERVER::do_accept()
 						ev_ready.event_id = EV_SET_RUN;
 						ev_ready.game_id = g_game_ID;
 						ev_ready.target_id = -1;
-						ev_ready.wakeup_time = chrono::system_clock::now() + 30s;
+						ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
+
+						timer_queue.push(ev_ready);
 
 						TIMER_EVENT ev_item;
 						ev_item.event_id = EV_SPAWN_ITEM;
@@ -330,6 +334,16 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				break;
 			}
 			case EV_SET_RUN: {
+				sc_packet_game_start gs;
+				gs.size = sizeof(sc_packet_game_start);
+				gs.type = SC_GAME_START;
+
+				for (auto& p : games[ev.game_id]->ingame_player) {
+					p.second->Send_Packet(&gs);
+				}
+
+				std::cout << "GAME START\n";
+
 				games[ev.game_id]->set_game_state(ST_RUN);
 				break;
 			}
