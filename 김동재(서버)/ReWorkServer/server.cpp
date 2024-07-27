@@ -115,6 +115,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				std::cout << "Laser on Evnet Called\n";
 				auto& laser = games[ev.game_id]->CreateObject(OT_LASER, ev.x, ev.y, ev.z, -1.57f, 1.57f, 0.f, WAY_RIGHT);
 				laser->end_pos = ev.x + 300.f;
+				laser->set_pos(ev.target_id);
 
 				sc_packet_put_object_coor poc;
 				poc.size = sizeof(sc_packet_put_object_coor);

@@ -79,8 +79,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
-	case CS_PICKING_INFO : //플레이어 사격 시도
-	{
+	case CS_PICKING_INFO : { //플레이어 사격 시도
 		cs_packet_picking_info* p = (cs_packet_picking_info*)packet;
 
 		if(remain_bullet[select_gun] <= 0) break;
@@ -507,8 +506,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
-	case CS_HIT_BY_GRINDER :
-	{
+	case CS_HIT_BY_GRINDER : {
 		sc_packet_remove_player rp;
 		rp.size = sizeof(sc_packet_remove_player);
 		rp.type = SC_REMOVE_PLAYER;
