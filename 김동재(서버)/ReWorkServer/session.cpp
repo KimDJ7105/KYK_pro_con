@@ -137,7 +137,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		target->Send_Packet(&pad);
 
 		if (target->hp <= 0) { //플레이어 체력이 0보다 낮아지면 모든 플레이어에게 사망을 전달한다.
-			is_core_state = true;
+			target->is_core_state = true;
 			sc_packet_player_dead pd;
 			pd.type = SC_PLAYER_DEAD;
 			pd.size = sizeof(sc_packet_player_dead);
