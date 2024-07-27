@@ -3583,28 +3583,31 @@ void SceneManager::RevivePlayerObject(int object_id)
 		}
 	}
 
+
 	{
-		//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBlueTeamModel(L"..\\Resources\\FBX\\PlayerBlue\\IDLE_2\\Blue_Player_Single_IShoot.fbx");
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Player");
+			gameObject->SetName(L"Blue_Player");
 			gameObject->SetCheckFrustum(false);
+
+			gameObject->GetTransform()->SetObjectType(OT_PLAYER);
+			gameObject->GetTransform()->SetObjectID(object_id);
+
 			gameObject->GetTransform()->SetLocalPosition(pos);
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, dir.y - 3.14f, 0.f));
-			gameObject->GetTransform()->SetObjectType(OT_PLAYER);
-			gameObject->GetTransform()->SetObjectID(object_id);
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-
 			// 각 게임 오브젝트에 독립적인 머티리얼 설정
 			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
 			{
 				shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
 				gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
 			}
+			//gameObject->AddComponent(make_shared<TestDragon>());
+			gameObject->AddComponent(make_shared<OtherPlayerScript>());
 
 			//히트박스
 			gameObject->AddComponent(make_shared<BoxCollider>());
@@ -3614,7 +3617,6 @@ void SceneManager::RevivePlayerObject(int object_id)
 
 			_otherPlayer.push_back(gameObject);
 			mainGameScene->AddGameObject(gameObject);
-
 		}
 	}
 }
