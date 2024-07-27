@@ -68,6 +68,7 @@ private:
 
 	bool isDash = false;
 
+	int can_laser = 2;
 
 private:
 	shared_ptr<GameObject> cursor;

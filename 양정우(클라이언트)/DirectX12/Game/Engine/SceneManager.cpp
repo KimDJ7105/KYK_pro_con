@@ -3141,6 +3141,33 @@ void SceneManager::CreateMapObjectsUI(int object_type, int loc_type, int loc_num
 
 			mainGameScene->AddGameObject(sphere);
 		}
+		else if (object_type == OT_LASER)
+		{
+			shared_ptr<GameObject> sphere = make_shared<GameObject>();
+			sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+			sphere->AddComponent(make_shared<Transform>());
+			sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH * 0.04, WINDOW_WIDTH * 0.04, 500.f));
+			sphere->GetTransform()->SetLocalPosition(mapPos);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"UI_Laser", L"..\\Resources\\Texture\\UI_Laser.png");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				material->SetTexture(0, texture);
+				meshRenderer->SetMaterial(material);
+			}
+			sphere->AddComponent(meshRenderer);
+
+			sphere->GetTransform()->SetObjectType(OT_UI_MAPOBJECTS);
+			sphere->GetTransform()->SetObjectID(666);
+
+			mainGameScene->AddGameObject(sphere);
+		}
 	}
 }
 

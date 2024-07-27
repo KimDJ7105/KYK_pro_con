@@ -684,21 +684,29 @@ void TestCameraScript::LateUpdate()
 
 			std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
 			std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
+			if (can_laser != 0)
+			{
+				Vec3 laser_pos = GET_SINGLE(SceneManager)->GetLaserPosition(GET_SINGLE(SceneManager)->GetButtonID());
 
-			Vec3 laser_pos = GET_SINGLE(SceneManager)->GetLaserPosition(GET_SINGLE(SceneManager)->GetButtonID());
+				Vec3 laser_dir = Vec3(-1.57f, 1.57f, 0.f);
 
-			Vec3 laser_dir = Vec3(-1.57f, 1.57f, 0.f);
+				// ¹æ¹øÈ£Ä®
+				cs_packet_trigger_laser tl;
+				tl.size = sizeof(cs_packet_trigger_laser);
+				tl.type = CS_TRIGGER_LASER;
+				tl.room_num = GET_SINGLE(SceneManager)->GetButtonID();
+				tl.x = laser_pos.x;
+				tl.y = laser_pos.y;
+				tl.z = laser_pos.z;
 
-			// ¹æ¹øÈ£Ä®
-			cs_packet_trigger_laser tl;
-			tl.size = sizeof(cs_packet_trigger_laser);
-			tl.type = CS_TRIGGER_LASER;
-			tl.room_num = GET_SINGLE(SceneManager)->GetButtonID();
-			tl.x = laser_pos.x;
-			tl.y = laser_pos.y;
-			tl.z = laser_pos.z;
+				main_session->Send_Packet(&tl);
 
-			main_session->Send_Packet(&tl);
+				can_laser--;
+			}
+			else
+			{
+
+			}
 
 		}
 	}
