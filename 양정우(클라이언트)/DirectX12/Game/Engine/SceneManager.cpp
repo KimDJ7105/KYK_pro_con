@@ -4987,11 +4987,17 @@ void SceneManager::AddComputeShader(int threadX, int threadY, int threadZ)
 void SceneManager::CalculateHP(int damagedHP)
 {
 	int tensPlaceBeforeCalculate = (playerHP / 10) % 10;
-
 	int tensPlaceAfterCalculate = (damagedHP / 10) % 10;
+	if (100 <= damagedHP)
+	{
+		tensPlaceAfterCalculate = 10;
+	}
+
+
 	playerHP = damagedHP;
 
-	// 체력 감소
+	std::cout << "Updated HP: " << playerHP << std::endl;
+
 	if (tensPlaceBeforeCalculate > tensPlaceAfterCalculate)
 	{
 		int HPnum = tensPlaceAfterCalculate;
@@ -5004,26 +5010,22 @@ void SceneManager::CalculateHP(int damagedHP)
 					continue;
 				if (gameObject->GetTransform()->GetObjectID() != i)
 					continue;
-				if (gameObject->GetTransform()->GetObjectID() == i)
-				{
-					if (gameObject->GetTransform()->GetLocalPosition().x == OUT_OF_RENDER)
-						continue;
-					Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-
-					pos.x = OUT_OF_RENDER;
-					pos.y = OUT_OF_RENDER;
-
-					gameObject->GetTransform()->SetLocalPosition(pos);
-				}
+				if (gameObject->GetTransform()->GetLocalPosition().x == OUT_OF_RENDER)
+					continue;
+				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+				pos.x = OUT_OF_RENDER;
+				pos.y = OUT_OF_RENDER;
+				gameObject->GetTransform()->SetLocalPosition(pos);
 			}
 		}
-	}//체력 증가
+	}
 	else if (tensPlaceBeforeCalculate < tensPlaceAfterCalculate)
 	{
-		int HPnum = tensPlaceAfterCalculate / 10;
+		// 수정된 부분: HPnum 계산
+		int HPnum = tensPlaceAfterCalculate;
 		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-		for (int i = 1; i < HPnum + 1; i++)
+		for (int i = 1; i <= HPnum; i++)
 		{
 			for (auto& gameObject : gameObjects)
 			{
@@ -5031,15 +5033,12 @@ void SceneManager::CalculateHP(int damagedHP)
 					continue;
 				if (gameObject->GetTransform()->GetObjectID() != i)
 					continue;
-				if (gameObject->GetTransform()->GetObjectID() == i)
-				{
-					if (gameObject->GetTransform()->GetLocalPosition().x != OUT_OF_RENDER)
-						continue;
-					Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-					pos.x = -(WINDOW_WIDTH / 2) + 510 + 65 * i;
-					pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));
-					gameObject->GetTransform()->SetLocalPosition(pos);
-				}
+				if (gameObject->GetTransform()->GetLocalPosition().x != OUT_OF_RENDER)
+					continue;
+				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+				pos.x = -(WINDOW_WIDTH / 2) + 510 + 65 * i;
+				pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / 100);  // 수정된 위치 계산
+				gameObject->GetTransform()->SetLocalPosition(pos);
 			}
 		}
 	}
