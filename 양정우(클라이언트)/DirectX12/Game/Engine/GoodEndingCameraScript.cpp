@@ -3,11 +3,13 @@
 #include "SceneManager.h"
 #include "Input.h"
 #include "Timer.h"
+#include "SoundManager.h"
 
 #include "session.h"
 
 GoodEndingCameraScript::GoodEndingCameraScript()
 {
+	GET_SINGLE(SoundManager)->StopAllSounds();
 }
 
 GoodEndingCameraScript::~GoodEndingCameraScript()

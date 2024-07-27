@@ -169,7 +169,7 @@ public:
 
 	shared_ptr<Scene> GetBadEndingScene() { return badEndingGameScene; }
 
-	shared_ptr<Scene> GetGoodEndingScene() { return badEndingGameScene; }
+	shared_ptr<Scene> GetGoodEndingScene() { return goodEndingGameScene; }
 
 private:
 	int button_type = -1;

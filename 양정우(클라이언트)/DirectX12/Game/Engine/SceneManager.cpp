@@ -302,6 +302,7 @@ shared_ptr<Scene> SceneManager::LoadGoodEndingScene()
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>());		// N = 1, F = 1000, FOV = 45
+		camera->AddComponent(make_shared<GoodEndingCameraScript>());
 
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
@@ -309,7 +310,6 @@ shared_ptr<Scene> SceneManager::LoadGoodEndingScene()
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
 
-		camera->AddComponent(make_shared<GoodEndingCameraScript>());
 
 		goodEndingGameScene->AddGameObject(camera);
 	}
@@ -413,14 +413,13 @@ shared_ptr<Scene> SceneManager::LoadBadEndingScene()
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>());		// N = 1, F = 1000, FOV = 45
+		camera->AddComponent(make_shared<EndingCameraScript>());
 
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
-
-		camera->AddComponent(make_shared<EndingCameraScript>());
 
 		badEndingGameScene->AddGameObject(camera);
 	}
@@ -2859,8 +2858,6 @@ void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
 
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject == nullptr)
-			continue;
 		objectsToRemove.push_back(gameObject);
 	}
 

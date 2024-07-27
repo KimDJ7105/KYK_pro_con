@@ -159,7 +159,7 @@ void SoundManager::StopAllSounds()
         }
         channels.clear();
     }
-    m_soundSystem->update(); // Ensure the system is updated
+    //m_soundSystem->update(); // Ensure the system is updated
 }
 
 void SoundManager::UpdateListener(const Vec3& l_Position, const Vec3& l_Velocity, const Vec3& l_Forward, const Vec3& l_Up)

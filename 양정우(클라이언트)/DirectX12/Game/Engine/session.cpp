@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "session.h"
 #include "SceneManager.cpp"
+#include "SoundManager.h"
 
 int playerID = -1;
 
@@ -175,6 +176,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PLAYER_WIN: {
 		main_session->close_socket();
 
+		GET_SINGLE(SoundManager)->StopAllSounds();
+
 		//엔딩 씬을 불러오고
 		GET_SINGLE(SceneManager)->LoadGoodEndingGameScene(L"GoodEndingScene");
 
@@ -184,6 +187,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_PLAYER_LOSE: {
 		main_session->close_socket();
+
+		GET_SINGLE(SoundManager)->StopAllSounds();
 		
 		//엔딩 씬을 불러오고
 		GET_SINGLE(SceneManager)->LoadBadEndingGameScene(L"EndingScene");
