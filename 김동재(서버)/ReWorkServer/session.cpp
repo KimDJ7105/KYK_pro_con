@@ -574,6 +574,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "Laser Trap Triggered\n";
 
+		sc_packet_show_object_loc sol;
+		sol.type = SC_SHOW_OBJECT_LOC;
+		sol.size = sizeof(sc_packet_show_object_loc);
+		sol.obj_type = OT_LASER;
+		sol.approx_num = p->room_num;
+		sol.loc_type = OT_ROOM;
+
+		Send_Packet(&sol);
+
 		if (my_game->is_free_room(p->room_num)) {
 			my_game->set_room_unable(p->room_num);
 
