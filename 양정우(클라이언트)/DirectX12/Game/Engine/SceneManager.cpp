@@ -773,7 +773,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SMG01_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\SMG01_Main_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SMG02_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\SMG02_Main_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -961,7 +961,7 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SMG01_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\SMG01_Main_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SMG02_Main_UI", L"..\\Resources\\Texture\\Lobby_UI_Weapon\\SMG02_Main_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -1713,7 +1713,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_SMG01_UI", L"..\\Resources\\Texture\\PR_SMG01_UI.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PR_SMG02_UI", L"..\\Resources\\Texture\\PR_SMG02_UI.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -2852,6 +2852,28 @@ void SceneManager::RemoveObject(int object_type, int object_id)
 	}
 }
 
+void SceneManager::OUT_OF_RENDERING(int object_type, int object_id)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject == nullptr)
+			continue;
+		//if (gameObject->GetTransform()->GetObjectID() != object_type)
+		//	continue;
+		//if (gameObject->GetTransform()->GetObjectID() != object_id)
+		//	continue;
+
+		if (gameObject->GetTransform()->GetObjectID() == object_id
+			&& gameObject->GetTransform()->GetObjectType() == object_type)
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			break;
+		}
+	}
+}
+
 void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
 {
 	auto& gameObjects = scene_erase->GetGameObjects();
@@ -3245,40 +3267,6 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 	vp_ObjectManager.push_back(obj);
 
-	//{
-	//	//플레이어의 애니메이션 모델이 복합적으로 있는 모델을 불러오는 함수
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadPlayerModel(L"..\\Resources\\FBX\\Player2\\Player_Walk.fbx");
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"Player");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(dirX, dirY, dirZ));
-	//		gameObject->GetTransform()->SetObjectType(object_type);
-	//		gameObject->GetTransform()->SetObjectID(object_id);
-	//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-
-	//		// 각 게임 오브젝트에 독립적인 머티리얼 설정
-	//		for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
-	//		{
-	//			shared_ptr<Material> clonedMaterial = gameObject->GetMeshRenderer()->GetMaterial(i)->Clone();
-	//			gameObject->GetMeshRenderer()->SetMaterial(clonedMaterial, i);
-	//		}
-
-	//		//히트박스
-	//		gameObject->AddComponent(make_shared<BoxCollider>());
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(5.f, 40.f, 5.f));
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(x, y + 40.f, z));
-	//		std::dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetStatic(false);
-
-	//		_otherPlayer.push_back(gameObject);
-	//		mainGameScene->AddGameObject(gameObject);
-
-	//	}
-	//}
 
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadBlueTeamModel(L"..\\Resources\\FBX\\PlayerBlue\\IDLE_2\\Blue_Player_Single_IShoot.fbx");
