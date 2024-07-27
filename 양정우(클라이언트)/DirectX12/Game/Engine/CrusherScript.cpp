@@ -22,8 +22,6 @@ CrusherScript::~CrusherScript()
 
 void CrusherScript::LateUpdate()
 {
-	
-
 	if (isStart == false)
 	{
 		int crusherID = GetTransform()->GetObjectID();
@@ -56,8 +54,13 @@ void CrusherScript::LateUpdate()
 				}
 			}
 		}
-	}
 
+		GET_SINGLE(SoundManager)->soundPlay(CRUSHER_MOVING, GetTransform()->GetLocalPosition(), true);
+
+		my_NUM = GET_SINGLE(SceneManager)->GetCrusherNum();
+		GET_SINGLE(SceneManager)->AddCrusherNum();
+	}
+	GET_SINGLE(SoundManager)->UpdateSoundPosition(CRUSHER_MOVING, my_NUM, GetTransform()->GetLocalPosition());
 
 
 	// Crusher의 현재 회전값을 가져옴
