@@ -197,5 +197,12 @@ public:
 	uint32 GetMainWeapon_type() { return mainWeapon_Type; }
 
 	void PlayerWeaponChanging(int player_id);
+
+private:
+	int crusherNUM = 0;
+
+public:
+	void AddCrusherNum() { crusherNUM++; }
+	int GetCrusherNum() { return crusherNUM; }
 };
 
