@@ -18,6 +18,7 @@ void SoundManager::Init()
     //UI
     m_soundSystem->createSound("..\\Resources\\Sound\\UI\\Lobby_Select_Weapon.mp3", FMOD_DEFAULT, 0, &m_sound[SELECT_WEAPON]);
     m_soundSystem->createSound("..\\Resources\\Sound\\UI\\Lobby_Weapon_Selected.mp3", FMOD_DEFAULT, 0, &m_sound[WEAPON_SELECTED]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\UI\\Lobby_Game_Start.mp3", FMOD_DEFAULT, 0, &m_sound[GAME_START]);
 
     //Trap
     m_soundSystem->createSound("..\\Resources\\Sound\\Trap\\Crusher_Moving.mp3", FMOD_3D, 0, &m_sound[CRUSHER_MOVING]);
@@ -40,12 +41,22 @@ void SoundManager::Init()
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Death_Sound.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_DEATH]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Gun_Change.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_GUN_CHANGE]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Gun_Reload.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_GUN_RELOAD]);
-    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\HeadCore_Move.mp3", FMOD_3D, 0, &m_sound[PLAYER_HEADCORE_MOVE]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\HeadCore_Move.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_HEADCORE_MOVE]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Heal_Sound.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_HEAL]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Item_Pickup.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_ITEM_PICK]);
-    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Run_Sound.mp3", FMOD_3D, 0, &m_sound[PLAYER_RUN]);
-    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Walk_Sound.mp3", FMOD_3D, 0, &m_sound[PLAYER_WALK]);
-    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Revive_Sound.mp3", FMOD_3D, 0, &m_sound[PLAYER_REVIVE]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Run_Sound.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_RUN]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Walk_Sound.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_WALK]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Revive_Sound.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_REVIVE]);
+
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Death_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_DEATH]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Gun_Change.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_GUN_CHANGE]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Gun_Reload.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_GUN_RELOAD]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\HeadCore_Move.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_HEADCORE_MOVE]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Heal_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_HEAL]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Item_Pickup.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_ITEM_PICK]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Run_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_RUN]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Walk_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_WALK]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Revive_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_REVIVE]);
 }
 
 void SoundManager::Update()
@@ -79,7 +90,7 @@ void SoundManager::soundPlay(int _type, const Vec3& position, bool loop)
         
 
         // 사운드의 3D 속성을 설정
-        SetSoundProperties(_type, 10.0f, 1000.0f);//->내가 임의로 적은 속성(300.f, 100.f)
+        SetSoundProperties(_type, 10.0f, 1000.0f);//->내가 임의로 적은 속성(10.0f, 1000.0f)
 
         if (_type == Sounds::SELECT_WEAPON || _type == Sounds::WEAPON_SELECTED)
         {

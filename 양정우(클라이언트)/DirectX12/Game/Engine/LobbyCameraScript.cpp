@@ -71,7 +71,7 @@ void LobbyCameraScript::LateUpdate()
 		{
 			GET_SINGLE(SoundManager)->soundStop(BGM_MAIN_LOBBY);
 
-
+			GET_SINGLE(SoundManager)->soundPlay(GAME_START, Vec3(0.f, 0.f, 0.f), false);
 			cl_packet_start_game sg;
 			sg.type = CL_START_GAME;
 			sg.size = sizeof(cl_packet_start_game);
