@@ -108,6 +108,14 @@ SERVER::SERVER(boost::asio::io_context& io_service, int port, char _ip[16])
 
 	timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
 
+	TIMER_EVENT ev;
+	ev.event_id = EV_CLEAR_GAME;
+	ev.game_id = -1;
+	ev.target_id = -1;
+	ev.wakeup_time = chrono::system_clock::now() + 240s;
+
+	timer_queue.push(ev);
+
 	do_accept();
 }
 
@@ -345,6 +353,18 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				std::cout << "GAME START\n";
 
 				games[ev.game_id]->set_game_state(ST_RUN);
+				break;
+			}
+			case EV_CLEAR_GAME: {
+				for (auto it = games.begin(); it != games.end(); ) {
+					if (it->second->get_game_state() == ST_END || it->second->ingame_player.size() == 0 && it->second->get_game_state() != ST_READY) {
+						it = games.erase(it);  // 게임 삭제 후 다음 게임으로 이동
+					}
+					else {
+						++it;
+					}
+				}
+
 				break;
 			}
 			}
