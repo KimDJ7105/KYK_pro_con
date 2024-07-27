@@ -744,6 +744,7 @@ void TestCameraScript::LateUpdate()
 
 			if (terminal != NULL)
 			{
+				::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
 				cs_packet_try_use_tmn tut;
 				tut.size = sizeof(cs_packet_try_use_tmn);
 				tut.type = CS_TRY_USE_TMN;
