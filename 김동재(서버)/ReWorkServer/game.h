@@ -52,6 +52,8 @@ public:
 
 	void set_game_state(int state);
 	int get_game_state();
+
+	int count_medikit();
 public:
 	int grind_core;
 	bool is_laser_on;

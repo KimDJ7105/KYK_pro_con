@@ -189,3 +189,10 @@ int GAME::get_game_state()
 {
 	return game_state;
 }
+
+int GAME::count_medikit()
+{
+	return std::count_if(ingame_object.begin(), ingame_object.end(), [](const std::pair<const int, std::shared_ptr<OBJECT>>& entry) {
+		return entry.second->obj_type == OT_MEDIKIT;
+		});
+}

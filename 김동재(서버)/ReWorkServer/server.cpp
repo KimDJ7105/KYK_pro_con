@@ -276,6 +276,8 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 			}
 			case EV_SPAWN_ITEM: {
 				for (int i = 0; i < 4; i++) {
+					if (games[ev.game_id]->count_medikit() >= 8) break;
+
 					auto& p = games[ev.game_id]->CreateObjectApprox(OT_MEDIKIT);
 
 					sc_packet_put_object_pos pop;
