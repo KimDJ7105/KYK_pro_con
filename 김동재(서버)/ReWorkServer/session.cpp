@@ -49,6 +49,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& pl : my_game->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 
 			player->Send_Packet(&pos_pack);
@@ -79,6 +80,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& pl : my_game->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 
 			player->Send_Packet(&pos_pack);
@@ -101,6 +103,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&set_anima);
 		}
@@ -217,7 +220,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.obj_type = OT_MEDIKIT;
 
 		for (auto& player : my_game->ingame_player) {
-			player.second->Send_Packet(&rmp);
+			auto& p = player.second;
+			if (p == nullptr) continue;
+			p->Send_Packet(&rmp);
 		}
 
 		auto it = my_game->ingame_object.find(p->kit_id);
@@ -244,7 +249,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.id = card->obj_id;
 		rmp.obj_type = OT_KEYCARD;
 		for (auto& player : my_game->ingame_player) {
-			player.second->Send_Packet(&rmp);
+			auto& p = player.second;
+			if (p == nullptr) continue;
+			p->Send_Packet(&rmp);
 		}
 
 		break;
@@ -332,7 +339,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				pop.approx_num = rabbitfoot->spawn_num;
 
 				for (auto& p : my_game->ingame_player) {
-					p.second->Send_Packet(&pop);
+					auto& player = p.second;
+					if (player == nullptr) continue;
+					player->Send_Packet(&pop);
 				}
 
 				TIMER_EVENT tm_grind;
@@ -398,6 +407,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&set_anima);
 		}
@@ -422,6 +432,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&set_anima);
 		}
@@ -438,6 +449,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&set_anima);
 		}
@@ -457,6 +469,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			for (auto& p : my_game->ingame_player) {
 				shared_ptr<SESSION> player = p.second;
+				if (player == nullptr) continue;
 				if (player->my_id_ == my_id_) continue;
 				player->Send_Packet(&set_anima);
 			}
@@ -485,6 +498,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.obj_type = OT_RABBITFOOT;
 
 		for (auto& p : my_game->ingame_player) {
+			auto& player = p.second;
+			if (player == nullptr) continue;
 			p.second->Send_Packet(&rmp);
 		}
 		break;
@@ -504,12 +519,23 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			for (auto& p : my_game->ingame_player) {
 				auto& player = p.second;
+				if (player == nullptr) continue;
+
 				if (player->team == team) {
 					player->Send_Packet(&pw);
 				}
 
 				else player->Send_Packet(&pl);
+
 			}
+
+			for (auto& p : my_game->ingame_player) {
+				auto& player = p.second;
+				if (player == nullptr) continue;
+
+				player->socket_.close();
+			}
+			my_game->ingame_player.clear();
 		}
 		break;
 	}
@@ -522,6 +548,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			auto& player = p.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 
 			player->Send_Packet(&rp);
@@ -533,15 +560,18 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				obj->owner_id = -1;
 				obj->set_pos(my_game->select_pos());
 
-				for (auto& player : my_game->ingame_player) {
-					sc_packet_put_object put_obj;
-					put_obj.size = sizeof(sc_packet_put_object);
-					put_obj.type = SC_PUT_OBJECT;
-					put_obj.id = obj->obj_id;
-					put_obj.obj_type = obj->obj_type;
-					put_obj.approx_num = obj->spawn_num;
+				sc_packet_put_object put_obj;
+				put_obj.size = sizeof(sc_packet_put_object);
+				put_obj.type = SC_PUT_OBJECT;
+				put_obj.id = obj->obj_id;
+				put_obj.obj_type = obj->obj_type;
+				put_obj.approx_num = obj->spawn_num;
 
-					player.second->Send_Packet(&put_obj);
+				for (auto& player : my_game->ingame_player) {
+					auto& p = player.second;
+					if (p == nullptr) continue;
+
+					p->Send_Packet(&put_obj);
 				}
 			}
 
@@ -557,8 +587,11 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				pop.obj_type = obj->obj_type;
 				pop.approx_num = obj->spawn_num;
 
-				for (auto& p : my_game->ingame_player) {
-					p.second->Send_Packet(&pop);
+				for (auto& player : my_game->ingame_player) {
+					auto& p = player.second;
+					if (p == nullptr) continue;
+
+					p->Send_Packet(&pop);
 				}
 			}
 		}
@@ -568,6 +601,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pl.type = SC_PLAYER_LOSE;
 
 		Send_Packet(&pl);
+
+		socket_.close();
+
+		my_game->ingame_player.erase(my_id_);
 
 		break;
 	}
@@ -623,15 +660,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				obj->owner_id = -1;
 				obj->set_pos(my_game->select_pos());
 
-				for (auto& player : my_game->ingame_player) {
-					sc_packet_put_object put_obj;
-					put_obj.size = sizeof(sc_packet_put_object);
-					put_obj.type = SC_PUT_OBJECT;
-					put_obj.id = obj->obj_id;
-					put_obj.obj_type = obj->obj_type;
-					put_obj.approx_num = obj->spawn_num;
+				sc_packet_put_object put_obj;
+				put_obj.size = sizeof(sc_packet_put_object);
+				put_obj.type = SC_PUT_OBJECT;
+				put_obj.id = obj->obj_id;
+				put_obj.obj_type = obj->obj_type;
+				put_obj.approx_num = obj->spawn_num;
 
-					player.second->Send_Packet(&put_obj);
+				for (auto& player : my_game->ingame_player) {
+					auto& p = player.second;
+					if (p == nullptr) continue;
+					p->Send_Packet(&put_obj);
 				}
 			}
 
@@ -653,7 +692,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				poc.dirz = 0.f;
 
 				for (auto& player : my_game->ingame_player) {
-					player.second->Send_Packet(&poc);
+					auto& p = player.second;
+					if (p == nullptr) continue;
+					p->Send_Packet(&poc);
 				}
 			}
 		}
@@ -670,7 +711,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			res.id = my_id_;
 
 			for (auto& p : my_game->ingame_player) {
-				p.second->Send_Packet(&res);
+				auto& player = p.second;
+				if (player == nullptr) continue;
+
+				player->Send_Packet(&res);
 			}
 		}
 		break;
@@ -705,6 +749,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		for (auto& p : my_game->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
+			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&set_anima);
 		}
@@ -716,16 +761,19 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		spg.gun_type = equip_weapon;
 
 		for (auto& p : my_game->ingame_player) {
-			if (p.second->my_id_ == my_id_) {
+			auto& player = p.second;
+			if (player == nullptr) continue;
+
+			if (player->my_id_ == my_id_) {
 				sc_packet_modify_bullet mb;
 				mb.type = SC_MODIFY_BULLET;
 				mb.size = sizeof(sc_packet_modify_bullet);
 				mb.amount = remain_bullet[select_gun];
 
-				p.second->Send_Packet(&mb);
+				player->Send_Packet(&mb);
 				continue;
 			}
-			p.second->Send_Packet(&spg);
+			player->Send_Packet(&spg);
 		}
 
 		break;
@@ -744,7 +792,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pop.approx_num = rabbitfoot->spawn_num;
 
 		for (auto& p : my_game->ingame_player) {
-			p.second->Send_Packet(&pop);
+			auto& player = p.second;
+			if (player == nullptr) continue;
+			player->Send_Packet(&pop);
 		}
 		break;
 	}

@@ -347,6 +347,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				gs.type = SC_GAME_START;
 
 				for (auto& p : games[ev.game_id]->ingame_player) {
+					if (p.second == nullptr) continue;
 					p.second->Send_Packet(&gs);
 				}
 
