@@ -17,9 +17,16 @@ void SESSION::Send_Packet(void* packet, unsigned id)
 
 void SESSION::Process_Packet(unsigned char* packet, int id)
 {
+
 	auto P = my_game->ingame_player[id];
 	int y = P->pos[1];
 	int x = P->pos[0];
+	//ready 상태일때는 마우스 이동 동기화 말고는 아무것도 안하기
+	if (my_game->get_game_state() == ST_READY && packet[1] != CS_MOUSE_INFO && packet[1] != CS_SEND_GUNTYPE && packet[1] != CS_CHANGE_GUN) {
+		std::cout << "Nope\n";
+		return;
+	}
+
 	switch (packet[1]) {
 	case CS_POS_INFO: { //플레이어 이동
 		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
