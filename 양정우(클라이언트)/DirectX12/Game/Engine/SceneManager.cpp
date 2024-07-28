@@ -2939,13 +2939,11 @@ void SceneManager::PlayDeadAnimation(int object_id)
 	{
 		if (gameObject == nullptr)
 			continue;
-		//if (gameObject->GetTransform()->GetObjectID() != object_type)
-		//	continue;
-		//if (gameObject->GetTransform()->GetObjectID() != object_id)
-		//	continue;
 
 		if (gameObject->GetTransform()->GetObjectID() == object_id)
 		{
+			if (gameObject->GetTransform()->GetObjectType() == OT_HEADCORE)
+				continue;
 			gameObject->GetAnimator()->ClearSequence();
 			gameObject->GetAnimator()->AddToSequence(15);
 			gameObject->GetAnimator()->AddToSequence(0);
