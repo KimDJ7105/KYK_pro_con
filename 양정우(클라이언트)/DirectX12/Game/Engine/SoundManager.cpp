@@ -90,7 +90,7 @@ void SoundManager::soundPlay(int _type, const Vec3& position, bool loop)
         
 
         // 사운드의 3D 속성을 설정
-        SetSoundProperties(_type, 10.0f, 1000.0f);//->내가 임의로 적은 속성(10.0f, 1000.0f)
+        SetSoundProperties(_type, 20.0f, 1500.0f);//->내가 임의로 적은 속성(10.0f, 1000.0f)
 
         if (_type == Sounds::SELECT_WEAPON || _type == Sounds::WEAPON_SELECTED)
         {
