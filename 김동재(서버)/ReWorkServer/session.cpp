@@ -120,7 +120,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		if (target == nullptr) break;
 
-		std::cout << "플레이어 " << my_id_ << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
+		//std::cout << "플레이어 " << my_id_ << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
 		
 		target->hp -= WP_DMG[equip_weapon];
 
@@ -149,7 +149,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			for (auto& object : my_game->ingame_object) {
 				auto& obj = object.second;
-				if (obj->obj_type == OT_KEYCARD && obj->owner_id == my_id_) {
+				if (obj->obj_type == OT_KEYCARD && obj->owner_id == target->my_id_) {
 					obj->owner_id = -1;
 					obj->set_pos(my_game->select_pos());
 
@@ -165,7 +165,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					}
 				}
 
-				else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
+				else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == target->my_id_) {
 					obj->owner_id = -1;
 					my_game->set_rabbitfoot_owner(-1);
 					obj->set_pos(my_game->select_room_pos());
@@ -255,7 +255,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	
 		cs_packet_try_use_tmn* p = (cs_packet_try_use_tmn*)packet;
 
-		std::cout << "터미널 사용 요청 수신\n";
+		//std::cout << "터미널 사용 요청 수신\n";
 
 		if (using_tml_id != -1) {
 			using_tml_id = -1;
@@ -612,19 +612,19 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		std::cout << "Laser Trap Triggered\n";
 
-		sc_packet_show_object_loc sol;
-		sol.type = SC_SHOW_OBJECT_LOC;
-		sol.size = sizeof(sc_packet_show_object_loc);
-		sol.obj_type = OT_LASER;
-		sol.approx_num = p->room_num;
-		sol.loc_type = OT_ROOM;
-
-		Send_Packet(&sol);
-
 		if (my_game->is_free_room(p->room_num)) {
 			my_game->set_room_unable(p->room_num);
 
 			terminal->triggered_laser += 1;
+
+			sc_packet_show_object_loc sol;
+			sol.type = SC_SHOW_OBJECT_LOC;
+			sol.size = sizeof(sc_packet_show_object_loc);
+			sol.obj_type = OT_LASER;
+			sol.approx_num = p->room_num;
+			sol.loc_type = OT_ROOM;
+
+			Send_Packet(&sol);
 
 			TIMER_EVENT tm_laser;
 			tm_laser.event_id = EV_LASER_TRAP_ON;
@@ -668,6 +668,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					if (p == nullptr) continue;
 					p->Send_Packet(&put_obj);
 				}
+				std::cout << "소유하던 카드키 드랍\n";
 			}
 
 			else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
@@ -685,6 +686,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				for (auto& player : my_game->ingame_player) {
 					player.second->Send_Packet(&put_obj);
 				}
+				std::cout << "소유하던 토끼발 드랍\n";
 			}
 		}
 		break;
