@@ -40,6 +40,7 @@ void OtherPlayerScript::LateUpdate()
 		GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_OTHER_PLAYER_SUB , GetTransform()->GetObjectID());
 		nowGunObject = nullptr;
 		isRevive = true;
+		GET_SINGLE(SceneManager)->Update();
 	}
 
 	uint32 state = GetAnimator()->GetCurrentClipIndex();
