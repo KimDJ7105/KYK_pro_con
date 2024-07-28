@@ -80,7 +80,7 @@ public:
 	void CreatePlayerGunObject(int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHeadCoreObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	
-	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID);
+	void ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ);
 	void ChangeObjectAnimation(int object_id, int animationID);
 	
 	void CreateHeadCoreObject(int object_id);

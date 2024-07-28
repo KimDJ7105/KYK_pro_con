@@ -3975,7 +3975,7 @@ void SceneManager::CreatePlayerHeadCoreObject(int object_type, int object_id, fl
 	}
 }
 
-void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ, int animationID)
+void SceneManager::ChangeObjectMovement(int object_id, float x, float y, float z, float dirX, float dirY, float dirZ)
 {
 	for (auto& otherPlayer : _otherPlayer)
 	{
