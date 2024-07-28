@@ -2874,6 +2874,47 @@ void SceneManager::OUT_OF_RENDERING(int object_type, int object_id)
 	}
 }
 
+void SceneManager::PlayDeadAnimation(int object_id)
+{
+	auto& gameObjects = _otherPlayer;
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject == nullptr)
+			continue;
+		//if (gameObject->GetTransform()->GetObjectID() != object_type)
+		//	continue;
+		//if (gameObject->GetTransform()->GetObjectID() != object_id)
+		//	continue;
+
+		if (gameObject->GetTransform()->GetObjectID() == object_id)
+		{
+			gameObject->GetAnimator()->ClearSequence();
+			gameObject->GetAnimator()->AddToSequence(15);
+			gameObject->GetAnimator()->AddToSequence(0);
+		}
+	}
+}
+
+void SceneManager::RemoveObject_otherPlayer(int object_type, int object_id)
+{
+	auto& gameObjects = _otherPlayer;
+
+	// 조건에 맞는 오브젝트를 제외한 새로운 벡터를 생성
+	std::vector<std::shared_ptr<GameObject>> filteredGameObjects;
+
+	std::copy_if(gameObjects.begin(), gameObjects.end(), std::back_inserter(filteredGameObjects),
+		[object_type, object_id](const std::shared_ptr<GameObject>& gameObject) {
+			if (gameObject == nullptr) return true;
+
+			// 특정 조건을 확인
+			return gameObject->GetTransform()->GetObjectID() != object_id;
+		});
+
+	// 기존 벡터를 필터링된 벡터로 교체
+	gameObjects = std::move(filteredGameObjects);
+}
+
 void SceneManager::RemoveSceneObject(shared_ptr<Scene> scene_erase)
 {
 	auto& gameObjects = scene_erase->GetGameObjects();
@@ -3576,10 +3617,12 @@ void SceneManager::RevivePlayerObject(int object_id)
 
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject->GetTransform()->GetObjectID() == object_id)
+		if (gameObject->GetTransform()->GetObjectID() == object_id
+			&& gameObject->GetTransform()->GetObjectID() == OT_HEADCORE)
 		{
 			pos = gameObject->GetTransform()->GetLocalPosition();
 			dir = gameObject->GetTransform()->GetLocalRotation();
+			break;
 		}
 	}
 
