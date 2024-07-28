@@ -103,6 +103,22 @@ void OtherPlayerScript::LateUpdate()
 		}
 	}
 
+
+	if (GetAnimator()->GetCurrentClipIndex() == 5)
+	{
+		if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_PLAYER_WALK) == false)
+			GET_SINGLE(SoundManager)->soundPlay(OTHER_PLAYER_WALK, GetTransform()->GetLocalPosition(), true);
+	}
+	else if (GetAnimator()->GetCurrentClipIndex() == 10)
+	{
+		if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_PLAYER_RUN) == false)
+			GET_SINGLE(SoundManager)->soundPlay(OTHER_PLAYER_RUN, GetTransform()->GetLocalPosition(), true);
+	}
+	else if(GetAnimator()->GetCurrentClipIndex() == 0)
+	{
+		GET_SINGLE(SoundManager)->soundStop(OTHER_PLAYER_WALK);
+		GET_SINGLE(SoundManager)->soundStop(OTHER_PLAYER_RUN);
+	}
 	
 
 
