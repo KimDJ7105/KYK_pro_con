@@ -70,6 +70,8 @@ private:
 
 	bool isDash = false;
 
+	float StartUI_END = 3.f;
+
 private:
 	shared_ptr<GameObject> cursor;
 

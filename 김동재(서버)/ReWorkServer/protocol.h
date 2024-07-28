@@ -69,6 +69,10 @@
 #define OT_OTHER_PLAYER_MAIN	125
 #define OT_PARTICLE_GUNSHOT		126
 #define OT_LIGHT_GUNSHOT		127
+
+#define OT_UI_LOADING			128
+#define OT_UI_WATING			129
+#define OT_UI_STARTING			130
 //---------------------------------------
 
 //Gun Type-------------------------------

@@ -236,6 +236,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_GAME_START: {
 		//게임 시작
 		_activeSessionScene->Set_isGameStart(true);
+		_activeSessionScene->ClearWaitingUI();
+		_activeSessionScene->SetStartUI(Vec3(0, 0, 500.f));
 		break;
 	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기

@@ -61,6 +61,40 @@ void LobbyCameraScript::LateUpdate()
 		cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
 	}
 
+
+
+	if (isStart)
+	{
+
+		GET_SINGLE(SoundManager)->soundStop(BGM_MAIN_LOBBY);
+		GET_SINGLE(SoundManager)->soundPlay(GAME_START, Vec3(0.f, 0.f, 0.f), false);
+
+		cl_packet_start_game sg;
+		sg.type = CL_START_GAME;
+		sg.size = sizeof(cl_packet_start_game);
+
+		session->Send_Packet(&sg);
+
+		GET_SINGLE(SceneManager)->LoadMainScene(L"TestScene");
+
+		//서버칼(메인 씬 구성 종료지점)
+		tcp::resolver resolver(main_io_con);
+		auto endpoint = resolver.resolve(main_server_ip, main_server_port);
+
+		tcp::socket sock(main_io_con);
+
+		main_session = new SESSION(std::move(sock));
+
+		MoveGuntype();
+
+		main_session->do_connect(endpoint);
+
+		serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
+
+		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
+	}
+
+
 	if(INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
 	{
 
@@ -69,32 +103,31 @@ void LobbyCameraScript::LateUpdate()
 
 		if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_START_BTN)
 		{
-			GET_SINGLE(SoundManager)->soundStop(BGM_MAIN_LOBBY);
 
-			GET_SINGLE(SoundManager)->soundPlay(GAME_START, Vec3(0.f, 0.f, 0.f), false);
-			cl_packet_start_game sg;
-			sg.type = CL_START_GAME;
-			sg.size = sizeof(cl_packet_start_game);
 
-			session->Send_Packet(&sg);
+			auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-			GET_SINGLE(SceneManager)->LoadMainScene(L"TestScene");
+			for (auto& gameObject : gameObjects)
+			{
+				if (gameObject->GetTransform()->GetObjectType() == OT_UI_TITLE)
+				{
+					gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				}
+				if (gameObject->GetTransform()->GetObjectType() == OT_UI_WEAPON_CHANGE)
+				{
+					gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				}
+				if (gameObject->GetTransform()->GetObjectType() == OT_UI_WEAPON_SELECT)
+				{
+					gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				}
+				if (gameObject->GetTransform()->GetObjectType() == OT_UI_LOADING)
+				{
+					gameObject->GetTransform()->SetLocalPosition(Vec3(-220.f, 0.f, 500.f));
+				}
+			}
+			isStart = true;
 
-			//서버칼(메인 씬 구성 종료지점)
-			tcp::resolver resolver(main_io_con);
-			auto endpoint = resolver.resolve(main_server_ip, main_server_port);
-
-			tcp::socket sock(main_io_con);
-
-			main_session = new SESSION(std::move(sock));
-
-			MoveGuntype();
-			
-			main_session->do_connect(endpoint);
-
-			serverthread_p = new std::thread(worker_SM_thread, &main_io_con);
-
-			GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetLobbyScene());
 		}
 		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_BTN)
 		{

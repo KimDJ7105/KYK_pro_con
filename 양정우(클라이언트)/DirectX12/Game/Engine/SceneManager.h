@@ -228,5 +228,8 @@ public:
 
 public:
 	float CalculateRange(Vec3 myPos, Vec3 opPos);
+
+	void ClearWaitingUI();
+	void SetStartUI(Vec3 pos);
 };
 
