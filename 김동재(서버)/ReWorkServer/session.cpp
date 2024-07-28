@@ -170,20 +170,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					my_game->set_rabbitfoot_owner(-1);
 					obj->set_pos(my_game->select_room_pos());
 
-					sc_packet_put_object_coor poc;
-					poc.type = SC_PUT_OBJECT_COOR;
-					poc.size = sizeof(sc_packet_put_object_coor);
-					poc.obj_type = obj->obj_type;
-					poc.obj_id = obj->obj_id;
-					poc.x = pos[0];
-					poc.y = pos[1];
-					poc.z = pos[2];
-					poc.dirx = 0.f;
-					poc.diry = 0.f;
-					poc.dirz = 0.f;
+					sc_packet_put_object put_obj;
+					put_obj.size = sizeof(sc_packet_put_object);
+					put_obj.type = SC_PUT_OBJECT;
+					put_obj.id = obj->obj_id;
+					put_obj.obj_type = obj->obj_type;
+					put_obj.approx_num = obj->spawn_num;
 
 					for (auto& player : my_game->ingame_player) {
-						player.second->Send_Packet(&poc);
+						player.second->Send_Packet(&put_obj);
 					}
 				}
 			}
@@ -680,22 +675,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				my_game->set_rabbitfoot_owner(-1);
 				obj->set_pos(my_game->select_room_pos());
 
-				sc_packet_put_object_coor poc;
-				poc.type = SC_PUT_OBJECT_COOR;
-				poc.size = sizeof(sc_packet_put_object_coor);
-				poc.obj_type = obj->obj_type;
-				poc.obj_id = obj->obj_id;
-				poc.x = pos[0];
-				poc.y = pos[1];
-				poc.z = pos[2];
-				poc.dirx = -1.57f;
-				poc.diry = 0.f;
-				poc.dirz = 0.f;
+				sc_packet_put_object put_obj;
+				put_obj.size = sizeof(sc_packet_put_object);
+				put_obj.type = SC_PUT_OBJECT;
+				put_obj.id = obj->obj_id;
+				put_obj.obj_type = obj->obj_type;
+				put_obj.approx_num = obj->spawn_num;
 
 				for (auto& player : my_game->ingame_player) {
-					auto& p = player.second;
-					if (p == nullptr) continue;
-					p->Send_Packet(&poc);
+					player.second->Send_Packet(&put_obj);
 				}
 			}
 		}
