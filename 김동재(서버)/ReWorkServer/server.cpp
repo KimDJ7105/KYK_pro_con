@@ -218,7 +218,6 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					laser_pos.dirx = laser->rot[0];
 					laser_pos.diry = laser->rot[1];
 					laser_pos.dirz = laser->rot[2];
-					laser_pos.animation_id = -1;
 
 					for (auto& player : games[ev.game_id]->ingame_player) {
 						auto& p = player.second;
@@ -283,7 +282,6 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					grinder_pos.dirx = obj->rot[0];
 					grinder_pos.diry = obj->rot[1];
 					grinder_pos.dirz = obj->rot[2];
-					grinder_pos.animation_id = -1;
 
 					for (auto& players : games[ev.game_id]->ingame_player) {
 						auto& p = players.second;

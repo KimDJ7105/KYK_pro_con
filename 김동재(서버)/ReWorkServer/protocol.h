@@ -290,7 +290,6 @@ struct sc_packet_pos {
 	float dirx;
 	float diry;
 	float dirz;
-	int animation_id;
 };
 
 struct sc_packet_put {
