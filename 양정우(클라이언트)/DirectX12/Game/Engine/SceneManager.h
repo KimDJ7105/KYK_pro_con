@@ -189,10 +189,13 @@ public:
 
 private:
 	bool isPlayerDead = false;
+	bool isPlayerRevive = false;
 
 public:
 	void SetPlayerDead(bool isdead) { isPlayerDead = isdead; }
 	bool GetPlayerDead() { return isPlayerDead; }
+	void SetPlayerRevive(bool isdead) { isPlayerRevive = isdead; }
+	bool GetPlayerRevive() { return isPlayerRevive; }
 
 private:
 	uint32 mainWeapon_Type = -1;
