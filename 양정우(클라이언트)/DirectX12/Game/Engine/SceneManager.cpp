@@ -4006,89 +4006,194 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 				{
 					if (animationID == AT_IDLE)
 					{
-						
+						/*otherPlayer->GetAnimator()->ClearSequence();
+						otherPlayer->GetAnimator()->AddToSequence(0);*/
 						otherPlayer->GetAnimator()->Play(0);
-						//otherPlayer->GetAnimator()->AddToSequence(1);
+
+						std::cout << "standing" << std::endl;
 					}
 					if (animationID == AT_WALKING)
 					{
-						
+						/*otherPlayer->GetAnimator()->ClearSequence();
+						otherPlayer->GetAnimator()->AddToSequence(5);*/
+
 						otherPlayer->GetAnimator()->Play(5);
-						//otherPlayer->GetAnimator()->AddToSequence(6);
+
+						std::cout << "walking" << std::endl;
 					}
 					if (animationID == AT_RUNNING)
 					{
-						
+						/*otherPlayer->GetAnimator()->ClearSequence();
+						otherPlayer->GetAnimator()->AddToSequence(10);*/
+
 						otherPlayer->GetAnimator()->Play(10);
-						//otherPlayer->GetAnimator()->AddToSequence(11);
+
+						std::cout << "running" << std::endl;
 					}
 					if (animationID == AT_CHANGE)
 					{
-						uint32 state = otherPlayer->GetAnimator()->GetLastAddedAnimationType();
-						
+						uint32 state = otherPlayer->GetAnimator()->GetCurrentClipIndex();
 						if (state == AT_IDLE)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(2);
 							otherPlayer->GetAnimator()->AddToSequence(0);
+
+							std::cout << "stand changing" << std::endl;
+
+
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_PLAYER_GUN_CHANGE,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
+								
+
+
 						}
-						else if (state == AT_WALKING)
+						else if (state == 5)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(7);
 							otherPlayer->GetAnimator()->AddToSequence(5);
+							std::cout << "walk changing" << std::endl;
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_PLAYER_GUN_CHANGE,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
 						}
-						else if(state == AT_RUNNING)
+						else if(state == 10)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(12);
 							otherPlayer->GetAnimator()->AddToSequence(10);
+
+							std::cout << "run changing" << std::endl;
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_PLAYER_GUN_CHANGE,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
 						}
 					}
 					if (animationID == AT_RELOADING)
 					{
-						uint32 state = otherPlayer->GetAnimator()->GetLastAddedAnimationType();
+						uint32 state = otherPlayer->GetAnimator()->GetCurrentClipIndex();
 
 						if (state == AT_IDLE)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(3);
 							otherPlayer->GetAnimator()->AddToSequence(0);
+
+							std::cout << "stand reloading" << std::endl;
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_PLAYER_GUN_RELOAD,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
 						}
-						else if (state == AT_WALKING)
+						else if (state == 5)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(8);
 							otherPlayer->GetAnimator()->AddToSequence(5);
+
+							std::cout << "walk reloading" << std::endl;
+
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_PLAYER_GUN_RELOAD,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
+							
 						}
-						else if (state == AT_RUNNING)
+						else if (state == 10)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(13);
 							otherPlayer->GetAnimator()->AddToSequence(10);
+
+							std::cout << "run reloading" << std::endl;
+
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_PLAYER_GUN_RELOAD,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
 						}
 					}
 					if (animationID == AT_SHOOTING)
 					{
-						uint32 state = otherPlayer->GetAnimator()->GetLastAddedAnimationType();
+						uint32 state = otherPlayer->GetAnimator()->GetCurrentClipIndex();
 
 						if (state == AT_IDLE)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(4);
 							otherPlayer->GetAnimator()->AddToSequence(0);
+
+							std::cout << "stand shooting" << std::endl;
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_WEAPON_PISTOL,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
+							
 						}
-						else if (state == AT_WALKING)
+						else if (state == 5)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(9);
 							otherPlayer->GetAnimator()->AddToSequence(5);
+
+							std::cout << "walk shooting" << std::endl;
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_WEAPON_PISTOL,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
 						}
-						else if (state == AT_RUNNING)
+						else if (state == 10)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(14);
 							otherPlayer->GetAnimator()->AddToSequence(10);
+
+							std::cout << "run shooting" << std::endl;
+							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+								GET_SINGLE(SoundManager)->soundPlay(
+									OTHER_WEAPON_PISTOL,
+									otherPlayer->GetTransform()->GetLocalPosition(),
+									false
+								);
+							}
 						}
 					}
 				}
