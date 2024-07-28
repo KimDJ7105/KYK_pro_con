@@ -33,6 +33,7 @@ public:
 	uint8 LayerNameToIndex(const wstring& name);
 
 	shared_ptr<class GameObject> Pick(int32 screenX, int32 screenY);
+	shared_ptr<class GameObject> PickPlayer(int32 screenX, int32 screenY);
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }

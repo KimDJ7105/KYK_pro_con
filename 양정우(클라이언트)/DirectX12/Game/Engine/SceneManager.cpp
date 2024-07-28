@@ -174,6 +174,63 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 	return picked;	//맞은 오브젝트를 리턴한다.
 }
 
+shared_ptr<GameObject> SceneManager::PickPlayer(int32 screenX, int32 screenY)
+{
+	shared_ptr<Camera> camera = GetActiveScene()->GetMainCamera();
+
+	float width = static_cast<float>(GEngine->GetWindow().width);
+	float height = static_cast<float>(GEngine->GetWindow().height);
+
+	Matrix projectionMatrix = camera->GetProjectionMatrix();
+
+	// ViewSpace에서 Picking 진행
+	float viewX = (+2.0f * screenX / width - 1.0f) / projectionMatrix(0, 0);
+	float viewY = (-2.0f * screenY / height + 1.0f) / projectionMatrix(1, 1);
+
+	Matrix viewMatrix = camera->GetViewMatrix();
+	Matrix viewMatrixInv = viewMatrix.Invert();
+
+	float minDistance = FLT_MAX;
+	shared_ptr<GameObject> picked;
+
+	// ViewSpace에서의 Ray 정의
+	Vec4 rayOrigin = Vec4(0.0f, 0.0f, 0.0f, 1.0f);		//중심에서
+	Vec4 rayDir = Vec4(viewX, viewY, 1.0f, 0.0f);		//여기로 쐈다.
+
+	// WorldSpace에서의 Ray 정의
+	rayOrigin = XMVector3TransformCoord(rayOrigin, viewMatrixInv);	//그걸 3D로 표현
+	rayDir = XMVector3TransformNormal(rayDir, viewMatrixInv);		//그걸 3D로 표현
+	rayDir.Normalize();	//방향을 노멀라이징한다.
+
+	auto& gameObjects = _otherPlayer;
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetCollider() == nullptr)
+			continue;
+
+		if (gameObject->GetTransform()->GetObjectType() != OT_PLAYER)
+			continue;
+
+		// WorldSpace에서 연산
+		float distance = 0.f;
+		if (gameObject->GetCollider()->Intersects(rayOrigin, rayDir, OUT distance) == false)
+			continue;
+
+		//만약 최소거리가 distance보다 클때, 즉 광선이 오브젝트한테 맞았을때
+		if (distance < minDistance)
+		{
+			if (gameObject->GetTransform()->GetObjectType() == OT_PLAYER && gameObject->GetTransform()->GetObjectID() == _playerID)
+				continue;
+
+			minDistance = distance;	//최소거리를 갱신해주고
+			picked = gameObject;	//맞은 오브젝트를 기록
+		}
+	}
+
+	return picked;	//맞은 오브젝트를 리턴한다.
+}
+
 shared_ptr<GameObject> SceneManager::CheckCollisionWithSceneObjects(const std::shared_ptr<GameObject>& objectToCheck, int object_Type)
 {
 	//objectToCheck->GetTransform()->GetLocalPosition();
@@ -5017,82 +5074,30 @@ void SceneManager::AddComputeShader(int threadX, int threadY, int threadZ)
 	}
 }
 
-void SceneManager::CalculateHP(int damagedHP)
+void SceneManager::CalculateHP(int nowHP)
 {
-	int tensPlaceBeforeCalculate = (playerHP / 10) % 10;
-	int tensPlaceAfterCalculate = (damagedHP / 10) % 10;
-	if (100 <= damagedHP)
-	{
-		tensPlaceAfterCalculate = 10;
-	}
-	else if (damagedHP <= 0)
-	{
-		tensPlaceAfterCalculate = 0;
-	}
+	playerHP = nowHP;
 
-	playerHP = damagedHP;
+	int nodesToRender = (nowHP + 9) / 10;
 
-
-	if (tensPlaceAfterCalculate == 0)
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
 	{
-		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
-		for (auto& gameObject : gameObjects)
+		if (gameObject->GetTransform()->GetObjectType() != OT_UI_HP)
+			continue;
+
+		int nodeID = gameObject->GetTransform()->GetObjectID();
+
+		if (nodeID < nodesToRender)
 		{
-			if (gameObject->GetTransform()->GetObjectType() != OT_UI_HP)
-				continue;
-			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-			pos.x = OUT_OF_RENDER;
-			pos.y = OUT_OF_RENDER;
-			gameObject->GetTransform()->SetLocalPosition(pos);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(-(WINDOW_WIDTH / 2) + 510 + 65 * nodeID, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)), 500.f));
+		}
+		else
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
 		}
 	}
-	else if (tensPlaceBeforeCalculate > tensPlaceAfterCalculate)
-	{
-		int HPnum = tensPlaceAfterCalculate;
-		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
-		for (int i = HPnum + 1; i < 11; i++)
-		{
-			for (auto& gameObject : gameObjects)
-			{
-				if (gameObject->GetTransform()->GetObjectType() != OT_UI_HP)
-					continue;
-				if (gameObject->GetTransform()->GetObjectID() != i)
-					continue;
-				if (gameObject->GetTransform()->GetLocalPosition().x == OUT_OF_RENDER)
-					continue;
-				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-				pos.x = OUT_OF_RENDER;
-				pos.y = OUT_OF_RENDER;
-				gameObject->GetTransform()->SetLocalPosition(pos);
-			}
-		}
-	}
-	else if (tensPlaceBeforeCalculate < tensPlaceAfterCalculate)
-	{
-		// 수정된 부분: HPnum 계산
-		int HPnum = tensPlaceAfterCalculate;
-		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-		for (int i = 0; i <= HPnum; i++)
-		{
-			for (auto& gameObject : gameObjects)
-			{
-				if (gameObject->GetTransform()->GetObjectType() != OT_UI_HP)
-					continue;
-				if (gameObject->GetTransform()->GetObjectID() != i)
-					continue;
-				if (gameObject->GetTransform()->GetLocalPosition().x != OUT_OF_RENDER)
-					continue;
-				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-
-				
-
-				pos.x = -(WINDOW_WIDTH / 2) + 510 + 65 * i;
-				pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));  // 수정된 위치 계산
-				gameObject->GetTransform()->SetLocalPosition(pos);
-			}
-		}
-	}
 }
 
 void SceneManager::CalculateBullet(int nowBullet)
