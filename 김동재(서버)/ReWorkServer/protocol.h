@@ -425,6 +425,7 @@ struct sc_packet_resurrection {
 	BYTE size;
 	BYTE type;
 	int id;
+	int team;
 };
 
 struct sc_packet_set_player_gun {

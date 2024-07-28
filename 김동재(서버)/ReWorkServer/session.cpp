@@ -718,6 +718,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			res.size = sizeof(sc_packet_resurrection);
 			res.type = SC_RESURRECTION;
 			res.id = my_id_;
+			res.team = team;
 
 			for (auto& p : my_game->ingame_player) {
 				auto& player = p.second;
