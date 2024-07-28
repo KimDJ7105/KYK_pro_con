@@ -705,6 +705,13 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			is_core_state = false;
 
 			hp = 100;
+
+			sc_packet_apply_damage ad;
+			ad.size = sizeof(sc_packet_apply_damage);
+			ad.type = SC_APPLY_DAMAGE;
+			ad.id = my_id_;
+			ad.hp = 100;
+
 			sc_packet_resurrection res;
 			res.size = sizeof(sc_packet_resurrection);
 			res.type = SC_RESURRECTION;
