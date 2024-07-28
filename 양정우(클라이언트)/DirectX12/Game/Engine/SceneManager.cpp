@@ -5026,8 +5026,11 @@ void SceneManager::CalculateHP(int damagedHP)
 				if (gameObject->GetTransform()->GetLocalPosition().x != OUT_OF_RENDER)
 					continue;
 				Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+
+				
+
 				pos.x = -(WINDOW_WIDTH / 2) + 510 + 65 * i;
-				pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / 100);  // 수정된 위치 계산
+				pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100));  // 수정된 위치 계산
 				gameObject->GetTransform()->SetLocalPosition(pos);
 			}
 		}
