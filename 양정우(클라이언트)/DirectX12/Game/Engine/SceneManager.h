@@ -214,6 +214,12 @@ public:
 	int GetCrusherNum() { return crusherNUM; }
 
 private:
+	int laserNum = 0;
+public:
+	void AddLaserNum() { laserNum++; }
+	int GetLaserNum() { return laserNum; }
+
+private:
 	bool isGameStart = false;
 	
 public:

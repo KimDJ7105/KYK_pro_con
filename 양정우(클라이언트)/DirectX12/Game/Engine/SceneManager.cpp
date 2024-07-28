@@ -27,6 +27,7 @@
 #include "EndingCameraScript.h"
 #include "GoodEndingCameraScript.h"
 #include "OtherPlayerScript.h"
+#include "LaserScript.h"
 
 #include "SoundManager.h"
 
@@ -5455,6 +5456,7 @@ void SceneManager::CreateMovingObject(float x, float y, float z, float dirx, flo
 			gameObject->GetTransform()->SetLocalScale(Vec3(obj_Size, obj_Size, obj_Size));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(dirx, diry, dirz));
 			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			gameObject->AddComponent(make_shared<LaserScript>());
 
 			// 각 게임 오브젝트에 독립적인 머티리얼 설정
 			for (uint32 i = 0; i < gameObject->GetMeshRenderer()->GetMaterialCount(); i++)
