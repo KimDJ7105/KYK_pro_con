@@ -4986,8 +4986,6 @@ void SceneManager::CalculateHP(int damagedHP)
 
 	playerHP = damagedHP;
 
-	std::cout << "Updated HP: " << playerHP << std::endl;
-
 	if (tensPlaceBeforeCalculate > tensPlaceAfterCalculate)
 	{
 		int HPnum = tensPlaceAfterCalculate;
