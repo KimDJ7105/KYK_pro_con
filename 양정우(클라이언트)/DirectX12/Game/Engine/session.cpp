@@ -213,6 +213,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 			_activeSessionScene->SetMaxBullet(15);
 			_activeSessionScene->CalculateBullet(15);
 			_activeSessionScene->CalculateHP(100);
+			_activeSessionScene->SetGunUI(4);
+			_activeSessionScene->SetPlayerRevive(true);
 		}
 		break;
 	}

@@ -38,6 +38,14 @@ void TestCameraScript::LateUpdate()
 
 	SetObjects();
 
+	if (GET_SINGLE(SceneManager)->GetPlayerRevive() == true)
+	{
+		nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+		nowGunObject = playerSubGunObject;
+		nowGun = 0;
+		GET_SINGLE(SceneManager)->SetPlayerRevive(false);
+	}
+
 	if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
 	{
 		moveSpeed = 200.f;
