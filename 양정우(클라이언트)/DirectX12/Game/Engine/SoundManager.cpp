@@ -108,6 +108,14 @@ void SoundManager::soundPlay(int _type, const Vec3& position, bool loop)
         {
             channel->setVolume(0.5f);
         }
+        else if (_type == Sounds::WEAPON_ASSAULT_RIFLE
+            || WEAPON_PISTOL
+            || WEAPON_SHOTGUN
+            || WEAPON_SNIPER
+            || WEAPON_SUB_MACHINE_GUN)
+        {
+            channel->setVolume(0.3f);
+        }
 
         m_channels[_type].push_back(channel); // 채널을 저장
     }
