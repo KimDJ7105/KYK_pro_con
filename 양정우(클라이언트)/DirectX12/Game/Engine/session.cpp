@@ -71,6 +71,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 		sc_packet_remove_player* p = reinterpret_cast<sc_packet_remove_player*>(packet);
 		
 		_activeSessionScene->RemoveObject(p->obj_type, p->id);
+		_activeSessionScene->RemoveObject(OT_OTHER_PLAYER_MAIN, p->id);
+		_activeSessionScene->RemoveObject(OT_OTHER_PLAYER_SUB, p->id);
 		break;
 	}
 	case SC_APPLY_DAMAGE : //데미지를 자신한테 적용하는 패킷
