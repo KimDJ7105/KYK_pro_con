@@ -53,6 +53,8 @@ private:
 
 	int nowGun = 0;
 
+	float gunRange = 0.f;
+
 
 	bool wKeyState = false;
 	bool aKeyState = false;

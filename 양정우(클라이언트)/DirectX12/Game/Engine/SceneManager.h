@@ -219,5 +219,8 @@ private:
 public:
 	bool Get_isGameStart() { return isGameStart; }
 	void Set_isGameStart(bool start_state) { isGameStart = start_state; }
+
+public:
+	float CalculateRange(Vec3 myPos, Vec3 opPos);
 };
 

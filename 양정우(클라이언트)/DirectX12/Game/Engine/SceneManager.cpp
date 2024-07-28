@@ -5387,3 +5387,17 @@ void SceneManager::PlayerWeaponChanging(int player_id)
 		}
 	}
 }
+
+float SceneManager::CalculateRange(Vec3 myPos, Vec3 opPos)
+{
+
+	float range = -1;
+
+	range = std::sqrt(
+		std::pow(opPos.x - myPos.x, 2) +
+		std::pow(opPos.y - myPos.y, 2) +
+		std::pow(opPos.z - myPos.z, 2)
+	);
+
+	return range;
+}

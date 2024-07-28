@@ -594,23 +594,77 @@ void TestCameraScript::LateUpdate()
 
 					shared_ptr<GameObject> pickedObject;
 
+					
+
 					pickedObject = GET_SINGLE(SceneManager)->Pick(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+
+					int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
+					//0이면 기관단총	(GT_SM				0)
+					//1이면 산탄총		(GT_SG				1)
+					//2이면 저격소총	(GT_AR				2)
+					//3이면 돌격소총	(GT_SR				3)
+
+					if (nowGun == 0)
+					{
+						GET_SINGLE(SoundManager)->soundPlay(WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
+
+						gunRange = 360.f;
+					}
+					else if (nowGun == 1)
+					{
+						if (type == 0)//기관
+						{
+							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
+							gunRange = 480.f;
+
+						}
+						else if (type == 1)//산탄
+						{
+							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
+							gunRange = 192.f;
+						}
+						else if (type == 2)//저격
+						{
+							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
+							gunRange = 1200.f;
+						}
+						else if (type == 3)//돌격
+						{
+							GET_SINGLE(SoundManager)->soundPlay(WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
+							gunRange = 600.f;
+						}
+					}
+
 
 
 					if (pickedObject != NULL)
 					{
-						int a = pickedObject->GetTransform()->GetObjectType();
-
+						
 						//여기서 타입이 플레이어일때만
 						//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
 						if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
 						{
-							cs_packet_picking_info ppi;
-							ppi.size = sizeof(cs_packet_picking_info);
-							ppi.type = CS_PICKING_INFO;
-							ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
-							main_session->Send_Packet(&ppi);
+							float range = GET_SINGLE(SceneManager)->CalculateRange(GetTransform()->GetLocalPosition(), pickedObject->GetTransform()->GetLocalPosition());
+							//이곳에 사거리를 입력
+							if (range <= gunRange)
+							{
+								cs_packet_picking_info ppi;
+								ppi.size = sizeof(cs_packet_picking_info);
+								ppi.type = CS_PICKING_INFO;
+								ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+
+								main_session->Send_Packet(&ppi);
+							}
+							else
+							{
+								cs_packet_picking_info ppi;
+								ppi.size = sizeof(cs_packet_picking_info);
+								ppi.type = CS_PICKING_INFO;
+								ppi.target_id = -1;
+
+								main_session->Send_Packet(&ppi);
+							}
 						}
 
 						else {
@@ -640,37 +694,6 @@ void TestCameraScript::LateUpdate()
 
 					playerObject->GetAnimator()->AddToSequence(1);
 					playerObject->GetAnimator()->AddToSequence(0);
-
-
-					int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
-					//0이면 기관단총	(GT_SM				0)
-					//1이면 산탄총		(GT_SG				1)
-					//2이면 저격소총	(GT_AR				2)
-					//3이면 돌격소총	(GT_SR				3)
-
-					if (nowGun == 0)
-					{
-						GET_SINGLE(SoundManager)->soundPlay(WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
-					}
-					else if (nowGun == 1)
-					{
-						if (type == 0)//기관
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
-						}
-						else if (type == 1)//산탄
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
-						}
-						else if (type == 2)//저격
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
-						}
-						else if (type == 3)//돌격
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
-						}
-					}
 				}
 			}
 		}
