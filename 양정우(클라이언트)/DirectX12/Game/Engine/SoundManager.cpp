@@ -54,8 +54,8 @@ void SoundManager::Init()
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\HeadCore_Move.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_HEADCORE_MOVE]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Heal_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_HEAL]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Item_Pickup.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_ITEM_PICK]);
-    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Run_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_RUN]);
-    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Walk_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_WALK]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Run_Sound_(Cut).mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_RUN]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Walk_Sound_(Cut).mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_WALK]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Revive_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_REVIVE]);
 }
 
