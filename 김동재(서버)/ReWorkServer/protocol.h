@@ -73,6 +73,9 @@
 #define OT_UI_LOADING			128
 #define OT_UI_WATING			129
 #define OT_UI_STARTING			130
+#define OT_UI_INTERACT			131
+#define OT_UI_REVIVE			132
+#define OT_UI_ESCAPE			133
 //---------------------------------------
 
 //Gun Type-------------------------------
