@@ -72,6 +72,10 @@ private:
 
 	float StartUI_END = 3.f;
 
+	float Escape_End = 1.f;
+
+
+
 private:
 	shared_ptr<GameObject> cursor;
 

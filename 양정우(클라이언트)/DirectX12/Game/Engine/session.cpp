@@ -34,7 +34,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		playerID = p->id;
 		_activeSessionScene->SetPlayerID(p->id);
 		_activeSessionScene->SetPlayerLocation(p->x, p->y, p->z, p->dirx, p->diry, p->dirz);
-		_activeSessionScene->CreatePlayerHandObject(OT_UI_PLAYERHAND, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->CreatePlayerHandObject(OT_UI_PLAYERHAND, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz, p->team_num);
 		_activeSessionScene->CreatePlayerGunObject(p->id, 5, 35, 15, 0, p->dirx, p->diry, p->dirz);
 		_activeSessionScene->CreatePlayerHeadCoreObject(OT_HEADCORE, p->id, OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER, -1, -1.57f, 0.f, 0.f);
 		_activeSessionScene->SetBullet(p->bullet_amount);
@@ -53,8 +53,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_PUT_PLAYER: //다른 플레이어의 정보를 받아 캐릭터 생성
 	{
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
-		
-		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz, p->gun_type);
+		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz, p->gun_type, p->team);
 		_activeSessionScene->CreateOtherPlayerGunObject(p->gun_type ,p->id);
 		break;
 	}
@@ -207,7 +206,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		// 타 플레이어가 살아났을때
 		if (playerID != p->id) {
 
-			_activeSessionScene->RevivePlayerObject(p->id);
+			_activeSessionScene->RevivePlayerObject(p->id, p->team);
 
 			_activeSessionScene->RemoveObject(OT_HEADCORE, p->id);
 		}

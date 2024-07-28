@@ -70,13 +70,13 @@ private:
 public:
 	void CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
-	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ, int gun_type);
+	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ, int gun_type, int team);
 	void CreateOtherPlayerGunObject(int object_type, int object_id);
 
 	shared_ptr<GameObject> GetOtherPlayerMainGun(int id);
 	shared_ptr<GameObject> GetOtherPlayerSubGun(int id);
 	
-	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerHandObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ, int team_num);
 	void CreatePlayerGunObject(int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	void CreatePlayerHeadCoreObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	
@@ -84,7 +84,7 @@ public:
 	void ChangeObjectAnimation(int object_id, int animationID);
 	
 	void CreateHeadCoreObject(int object_id);
-	void RevivePlayerObject(int object_id);
+	void RevivePlayerObject(int object_id, int team);
 	
 	Vec3 FindAislePosition(int aisleNum);
 	Vec3 FindRoomPosition(int roomNum);
@@ -235,5 +235,15 @@ public:
 	void SetInteractUI(Vec3 pos, int type);
 
 	void WaveChangeUI();
+
+private:
+	bool escapePOP = false;
+
+public:
+	bool Get_isEscapeShow() { return escapePOP; }
+	void Set_isEscapeShow(bool esc) { escapePOP = esc; }
+
+	void SetEscapeUI(Vec3 pos);
+
 };
 

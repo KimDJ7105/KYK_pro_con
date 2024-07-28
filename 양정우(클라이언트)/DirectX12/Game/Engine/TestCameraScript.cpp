@@ -1154,6 +1154,18 @@ void TestCameraScript::LateUpdate()
 	{
 		GET_SINGLE(SceneManager)->SetStartUI(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
 	}
+
+
+	if (GET_SINGLE(SceneManager)->Get_isEscapeShow() == true)
+	{
+		Escape_End -= DELTA_TIME;
+	}
+
+	if (-2 < Escape_End <= 0)
+	{
+		GET_SINGLE(SceneManager)->SetEscapeUI(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+	}
+
 }
 
 void TestCameraScript::SetObjects()
