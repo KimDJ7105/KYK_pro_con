@@ -594,7 +594,7 @@ void TestCameraScript::LateUpdate()
 
 					shared_ptr<GameObject> pickedObject;
 
-					pickedObject = GET_SINGLE(SceneManager)->PickPlayer(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+					pickedObject = GET_SINGLE(SceneManager)->Pick(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
 
 
 					if (pickedObject != NULL)
