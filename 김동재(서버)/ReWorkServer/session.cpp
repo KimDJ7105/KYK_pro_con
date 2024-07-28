@@ -612,8 +612,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		if (using_tml_id == -1) break;
 		auto& terminal = my_game->ingame_object[using_tml_id];
 		if (terminal->triggered_laser >= 2) break;
-		terminal->triggered_laser += 1;
-
+		
 		cs_packet_trigger_laser* p = (cs_packet_trigger_laser*)packet;
 
 		std::cout << "Laser Trap Triggered\n";
@@ -629,6 +628,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		if (my_game->is_free_room(p->room_num)) {
 			my_game->set_room_unable(p->room_num);
+
+			terminal->triggered_laser += 1;
 
 			TIMER_EVENT tm_laser;
 			tm_laser.event_id = EV_LASER_TRAP_ON;
