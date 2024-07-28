@@ -93,8 +93,13 @@ private:
 private:
 	bool isChange = false;
 
+	int gunType = -1;
+
 public:
 	void SetIsWeaponChange(bool ischanging) { isChange = ischanging; }
 	bool GetIsWeaponChange() { return isChange; }
+
+	void SetGunType(int type) { gunType = type; }
+	int GetGunType() { return gunType; }
 };
 

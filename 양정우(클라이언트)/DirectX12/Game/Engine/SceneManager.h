@@ -70,7 +70,7 @@ private:
 public:
 	void CreateAvatar(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
 	shared_ptr<GameObject> CreateBoxObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
-	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ);
+	void CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ, int gun_type);
 	void CreateOtherPlayerGunObject(int object_type, int object_id);
 
 	shared_ptr<GameObject> GetOtherPlayerMainGun(int id);

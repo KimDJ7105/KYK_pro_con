@@ -3353,7 +3353,7 @@ shared_ptr<GameObject> SceneManager::CreateBoxObject(int object_type, int object
 	//scene->AddGameObject(cube);
 }
 
-void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ)
+void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, float y, float z, int animation_id, float dirX, float dirY, float dirZ, int gun_type)
 {
 	MyGameObject obj;
 	obj.m_ObjectType = object_type;
@@ -3376,6 +3376,7 @@ void SceneManager::CreatePlayerObject(int object_type, int object_id, float x, f
 
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_id);
+			gameObject->GetTransform()->SetGunType(gun_type);
 
 			gameObject->GetTransform()->SetLocalPosition(Vec3(x, y, z));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
@@ -3627,12 +3628,17 @@ void SceneManager::CreateHeadCoreObject(int object_id)
 	vector<shared_ptr<GameObject>> gameObjects = _otherPlayer;
 
 	Vec3 pos;
+	int gunType;
 
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->GetTransform()->GetObjectID() == object_id)
 		{
-			pos = gameObject->GetTransform()->GetLocalPosition();
+			if (gameObject->GetTransform()->GetObjectType() == OT_PLAYER)
+			{
+				pos = gameObject->GetTransform()->GetLocalPosition();
+				gunType = gameObject->GetTransform()->GetGunType();
+			}
 		}
 	}
 
@@ -3650,6 +3656,7 @@ void SceneManager::CreateHeadCoreObject(int object_id)
 			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.57f, 0.f, 0.f));
 			gameObject->GetTransform()->SetObjectType(OT_HEADCORE);
 			gameObject->GetTransform()->SetObjectID(object_id);
+			gameObject->GetTransform()->SetGunType(gunType);
 
 			//히트박스
 			gameObject->AddComponent(make_shared<BoxCollider>());
@@ -3670,6 +3677,7 @@ void SceneManager::RevivePlayerObject(int object_id)
 
 	Vec3 pos;
 	Vec3 dir;
+	int gunType;
 
 	for (auto& gameObject : gameObjects)
 	{
@@ -3678,6 +3686,7 @@ void SceneManager::RevivePlayerObject(int object_id)
 		{
 			pos = gameObject->GetTransform()->GetLocalPosition();
 			dir = gameObject->GetTransform()->GetLocalRotation();
+			gunType = gameObject->GetTransform()->GetGunType();
 			break;
 		}
 	}
@@ -3694,6 +3703,7 @@ void SceneManager::RevivePlayerObject(int object_id)
 
 			gameObject->GetTransform()->SetObjectType(OT_PLAYER);
 			gameObject->GetTransform()->SetObjectID(object_id);
+			gameObject->GetTransform()->SetGunType(gunType);
 
 			gameObject->GetTransform()->SetLocalPosition(pos);
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.05f, 0.05f, 0.05f));
@@ -4154,14 +4164,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(0);
 
 							std::cout << "stand shooting" << std::endl;
-							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
-							{
-								GET_SINGLE(SoundManager)->soundPlay(
-									OTHER_WEAPON_PISTOL,
-									otherPlayer->GetTransform()->GetLocalPosition(),
-									false
-								);
-							}
 							
 						}
 						else if (state == 5)
@@ -4171,14 +4173,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(5);
 
 							std::cout << "walk shooting" << std::endl;
-							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
-							{
-								GET_SINGLE(SoundManager)->soundPlay(
-									OTHER_WEAPON_PISTOL,
-									otherPlayer->GetTransform()->GetLocalPosition(),
-									false
-								);
-							}
 						}
 						else if (state == 10)
 						{
@@ -4187,14 +4181,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(10);
 
 							std::cout << "run shooting" << std::endl;
-							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
-							{
-								GET_SINGLE(SoundManager)->soundPlay(
-									OTHER_WEAPON_PISTOL,
-									otherPlayer->GetTransform()->GetLocalPosition(),
-									false
-								);
-							}
 						}
 					}
 				}

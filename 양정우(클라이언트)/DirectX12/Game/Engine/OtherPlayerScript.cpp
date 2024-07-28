@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Animator.h"
+#include "SoundManager.h"
 
 #include "Quaternion.h"
 
@@ -42,6 +43,44 @@ void OtherPlayerScript::LateUpdate()
 	//	isRevive = true;
 	//	GET_SINGLE(SceneManager)->Update();
 	//}
+
+	if (GetAnimator()->GetCurrentClipIndex() == 4
+		|| GetAnimator()->GetCurrentClipIndex() == 9
+		|| GetAnimator()->GetCurrentClipIndex() == 14)
+	{
+		if (nowGunObject == playerSubGunObject)
+		{
+			if(GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_PISTOL) == false)
+				GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
+			
+		}
+		else if (nowGunObject == playerMainGunObject)
+		{
+			if (myGunType == GT_AR)
+			{
+				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_ASSAULT_RIFLE) == false)
+					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
+			}
+			else if (myGunType == GT_SM)
+			{
+				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_SUB_MACHINE_GUN) == false)
+					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
+			}
+			else if (myGunType == GT_SG)
+			{
+				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_SHOTGUN) == false)
+					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
+			}
+			else if (myGunType == GT_SR)
+			{
+				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_SNIPER) == false)
+					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
+			}
+		}
+	}
+
+	
+
 
 	uint32 state = GetAnimator()->GetCurrentClipIndex();
 	if (GetTransform()->GetIsWeaponChange() == true)
@@ -104,6 +143,7 @@ void OtherPlayerScript::GetPlayerGuns()
 	if (playerMainGunObject == nullptr)
 	{
 		playerMainGunObject = GET_SINGLE(SceneManager)->GetOtherPlayerMainGun(GetTransform()->GetObjectID());
+		myGunType = GetTransform()->GetGunType();
 	}
 	if (playerSubGunObject != nullptr && isSet == false)
 	{

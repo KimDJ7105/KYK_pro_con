@@ -23,5 +23,7 @@ private:
 	double deadSequence_Start = 0;
 
 	bool isRevive = false;
+
+	int myGunType = -1;
 };
 
