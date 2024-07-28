@@ -92,13 +92,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		if (playerID != p->id) {
 			// 죽인 플레이어 오브잭트를 제거
 
-			_activeSessionScene->PlayDeadAnimation(p->id);
+			//_activeSessionScene->PlayDeadAnimation(p->id);
 			//_activeSessionScene->RemoveObject_otherPlayer(OT_PLAYER, p->id);
 
-			//_activeSessionScene->CreateHeadCoreObject(p->id);
-			/*_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
+			_activeSessionScene->CreateHeadCoreObject(p->id);
+			_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
 			_activeSessionScene->OUT_OF_RENDERING(OT_OTHER_PLAYER_MAIN ,p->id);
-			_activeSessionScene->OUT_OF_RENDERING(OT_OTHER_PLAYER_SUB ,p->id);*/
+			_activeSessionScene->OUT_OF_RENDERING(OT_OTHER_PLAYER_SUB ,p->id);
 
 			// 죽인 플레이어 오브젝트의 아이디와 같은 두뇌코어 오브젝트를 생성
 		}
