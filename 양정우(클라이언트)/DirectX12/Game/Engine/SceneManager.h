@@ -231,5 +231,9 @@ public:
 
 	void ClearWaitingUI();
 	void SetStartUI(Vec3 pos);
+
+	void SetInteractUI(Vec3 pos, int type);
+
+	void WaveChangeUI();
 };
 

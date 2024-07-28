@@ -242,6 +242,8 @@ void SESSION::Process_Packet(unsigned char* packet)
 	}
 	case SC_CHANGE_PHASE: {
 		//페이즈 변경, 목표 UI 바꾸면 됨
+
+		_activeSessionScene->WaveChangeUI();
 		break;
 	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
