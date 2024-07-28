@@ -116,7 +116,7 @@ int GAME::get_team_num()
 
 void GAME::set_free_space(int obj_type, int spawn_num)
 {
-	if (obj_type == OT_RABBITFOOT && obj_type == OT_MEDIKIT) room_spawn_able[spawn_num] = false;
+	if (obj_type == OT_RABBITFOOT || obj_type == OT_MEDIKIT) room_spawn_able[spawn_num] = false;
 	else spawn_able[spawn_num] = false;
 }
 
