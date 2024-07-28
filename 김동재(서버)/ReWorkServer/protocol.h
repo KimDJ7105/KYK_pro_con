@@ -20,7 +20,7 @@
 #define MY_PORT3 55003
 
 //Lobby Info-----------------------------
-#define LOBBY_IP "221.153.148.198"
+#define LOBBY_IP "127.0.0.1"
 #define MY_LOBBY_PORT "50000"
 #define LOBBY_PORT 50000
 #define LOBBY_ID 0
