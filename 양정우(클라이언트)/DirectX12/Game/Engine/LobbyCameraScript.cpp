@@ -103,6 +103,8 @@ void LobbyCameraScript::LateUpdate()
 		}
 		else if(GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_EXIT_BTN)
 		{
+			GET_SINGLE(SoundManager)->StopAllSounds();
+			GET_SINGLE(SoundManager)->Update();
 			PostQuitMessage(0);
 		}
 		else if (GET_SINGLE(SceneManager)->GetButtonType() == OT_UI_WEAPON_CHANGE)

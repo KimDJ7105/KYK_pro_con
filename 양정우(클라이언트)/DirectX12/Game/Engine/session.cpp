@@ -54,7 +54,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	{
 		sc_packet_put* p = reinterpret_cast<sc_packet_put*>(packet);
 		
-		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 40.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
+		_activeSessionScene->CreatePlayerObject(OT_PLAYER, p->id, p->x, p->y - 80.f, p->z, 0, p->dirx, p->diry + 3.14f, p->dirz);
 		_activeSessionScene->CreateOtherPlayerGunObject(p->gun_type ,p->id);
 		break;
 	}
@@ -90,10 +90,13 @@ void SESSION::Process_Packet(unsigned char* packet)
 		if (playerID != p->id) {
 			// 죽인 플레이어 오브잭트를 제거
 
-			_activeSessionScene->CreateHeadCoreObject(p->id);
-			_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
-			_activeSessionScene->RemoveObject(OT_OTHER_PLAYER_MAIN ,p->id);
-			_activeSessionScene->RemoveObject(OT_OTHER_PLAYER_SUB ,p->id);
+			_activeSessionScene->PlayDeadAnimation(p->id);
+			//_activeSessionScene->RemoveObject_otherPlayer(OT_PLAYER, p->id);
+
+			//_activeSessionScene->CreateHeadCoreObject(p->id);
+			/*_activeSessionScene->RemoveObject(OT_PLAYER ,p->id);
+			_activeSessionScene->OUT_OF_RENDERING(OT_OTHER_PLAYER_MAIN ,p->id);
+			_activeSessionScene->OUT_OF_RENDERING(OT_OTHER_PLAYER_SUB ,p->id);*/
 
 			// 죽인 플레이어 오브젝트의 아이디와 같은 두뇌코어 오브젝트를 생성
 		}
@@ -200,6 +203,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 		if (playerID != p->id) {
 
 			_activeSessionScene->RevivePlayerObject(p->id);
+
 			_activeSessionScene->RemoveObject(OT_HEADCORE, p->id);
 		}
 		// 내가 살아났을때

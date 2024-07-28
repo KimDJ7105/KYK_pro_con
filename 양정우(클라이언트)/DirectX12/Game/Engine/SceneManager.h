@@ -123,6 +123,10 @@ public:
 
 
 	void RemoveObject(int object_type, int object_id);
+	void OUT_OF_RENDERING(int object_type, int object_id);
+	void PlayDeadAnimation(int object_id);
+
+	void RemoveObject_otherPlayer(int object_type, int object_id);
 
 
 public:

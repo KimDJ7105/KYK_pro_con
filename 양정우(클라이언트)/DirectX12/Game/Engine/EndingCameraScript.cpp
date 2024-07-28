@@ -20,11 +20,13 @@ void EndingCameraScript::LateUpdate()
 	{
 		//엔딩스크립트
 
-		// 로비 씬을 불러오고
-		GET_SINGLE(SceneManager)->LoadLobbyScene(L"LobbyScene");
+		PostQuitMessage(0);
 
-		//엔딩 씬에 있던 오브젝트들을 제거
-		GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetBadEndingScene());
+		//// 로비 씬을 불러오고
+		//GET_SINGLE(SceneManager)->LoadLobbyScene(L"LobbyScene");
+
+		////엔딩 씬에 있던 오브젝트들을 제거
+		//GET_SINGLE(SceneManager)->RemoveSceneObject(GET_SINGLE(SceneManager)->GetBadEndingScene());
 	}
 
 
