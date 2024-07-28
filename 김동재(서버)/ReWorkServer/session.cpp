@@ -324,6 +324,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			if (my_game->IsTerminalOn()) {
 				auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
 
+				sc_packet_change_phase cp;
+				cp.size = sizeof(sc_packet_change_phase);
+				cp.type = SC_CHANGE_PHASE;
+
 				sc_packet_put_object_pos pop;
 				pop.size = sizeof(sc_packet_put_object_pos);
 				pop.type = SC_PUT_OBJECT_POS;
@@ -335,6 +339,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					auto& player = p.second;
 					if (player == nullptr) continue;
 					player->Send_Packet(&pop);
+					player->Send_Packet(&cp);
 				}
 
 				TIMER_EVENT tm_grind;

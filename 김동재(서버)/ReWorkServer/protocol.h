@@ -132,6 +132,7 @@
 #define SC_RESURRECTION	   17 //플레이어 코어 상태에서 부활
 #define SC_SET_PLAYER_GUN  18 //플레이어 총 설정
 #define SC_GAME_START	   19 //게임 시작을 전달
+#define SC_CHANGE_PHASE    20 //게임 단계 변환
 
 #define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
 #define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
@@ -424,6 +425,11 @@ struct sc_packet_set_player_gun {
 };
 
 struct sc_packet_game_start {
+	BYTE size;
+	BYTE type;
+};
+
+struct sc_packet_change_phase {
 	BYTE size;
 	BYTE type;
 };
