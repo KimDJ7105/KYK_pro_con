@@ -1280,6 +1280,36 @@ shared_ptr<Scene> SceneManager::LoadLobbyScene()
 
 #pragma endregion
 
+#pragma region Loading
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(((WINDOW_WIDTH / 1600.f) * 531), ((WINDOW_HEIGHT / 1200.f) * 101), 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(-220.f, 0.f, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Loading_UI", L"..\\Resources\\Texture\\Lobby_UI\\Loading_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+		sphere->GetTransform()->SetObjectType(OT_UI_LOADING);
+		//sphere->GetTransform()->SetObjectID();
+
+		lobbyGameScene->AddGameObject(sphere);
+	}
+#pragma endregion
+
+#pragma endregion
 	//Cursor
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
@@ -1997,6 +2027,65 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		mainGameScene->AddGameObject(sphere);
 	}
+
+
+	// 다른 플레이어 기다리는 중...
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 19.20 * 70, (WINDOW_HEIGHT / 1200) * 3.04 * 70, 50.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Main_Loading_UI", L"..\\Resources\\Texture\\MainGameUI\\Main_Loading_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_WATING);
+		
+		mainGameScene->AddGameObject(sphere);
+	}
+
+
+	//실험 시작
+
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 19.20 * 70, (WINDOW_HEIGHT / 1200) * 3.20 * 70, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(0, 0, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Start_UI", L"..\\Resources\\Texture\\MainGameUI\\Start_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_STARTING);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
 
 #pragma endregion
 
@@ -5496,4 +5585,32 @@ float SceneManager::CalculateRange(Vec3 myPos, Vec3 opPos)
 	);
 
 	return range;
+}
+
+void SceneManager::ClearWaitingUI()
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_WATING)
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			break;
+		}
+	}
+}
+
+void SceneManager::SetStartUI(Vec3 pos)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_STARTING)
+		{
+			gameObject->GetTransform()->SetLocalPosition(pos);
+			break;
+		}
+	}
 }

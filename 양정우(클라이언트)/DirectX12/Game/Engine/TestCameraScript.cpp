@@ -1088,6 +1088,15 @@ void TestCameraScript::LateUpdate()
 		weaponTimeElapse += DELTA_TIME;
 	}
 	
+	if (GET_SINGLE(SceneManager)->Get_isGameStart() == true)
+	{
+		StartUI_END -= DELTA_TIME;
+	}
+
+	if (-2 < StartUI_END <= 0)
+	{
+		GET_SINGLE(SceneManager)->SetStartUI(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+	}
 }
 
 void TestCameraScript::SetObjects()

@@ -13,7 +13,11 @@ public:
 private:
 	shared_ptr<GameObject> cursor;
 
+	bool isStart = false;
+
 public:
 	void GetWeaponSelectUI();
+
+
 };
 
