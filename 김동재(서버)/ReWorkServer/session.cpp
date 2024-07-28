@@ -712,6 +712,13 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			ad.id = my_id_;
 			ad.hp = 100;
 
+			sc_packet_set_player_gun spg;
+			spg.size = sizeof(sc_packet_set_player_gun);
+			spg.type = SC_SET_PLAYER_GUN;
+			spg.id = my_id_;
+			spg.gun_type = GT_PT;
+			select_gun = 1;
+
 			sc_packet_resurrection res;
 			res.size = sizeof(sc_packet_resurrection);
 			res.type = SC_RESURRECTION;
@@ -722,6 +729,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				if (player == nullptr) continue;
 
 				player->Send_Packet(&res);
+				if (player->my_id_ != my_id_) player->Send_Packet(&spg);
 			}
 		}
 		break;
