@@ -523,14 +523,14 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				else player->Send_Packet(&pl);
 
 			}
+			TIMER_EVENT te;
+			te.game_id = my_game->get_game_id();
+			te.event_id = EV_GAME_END;
+			te.target_id = -1;
+			te.wakeup_time = chrono::system_clock::now() + 5s;
 
-			for (auto& p : my_game->ingame_player) {
-				auto& player = p.second;
-				if (player == nullptr) continue;
-
-				player->socket_.close();
-			}
-			my_game->ingame_player.clear();
+			my_server->timer_queue.push(te);
+			
 		}
 		break;
 	}
@@ -1082,6 +1082,11 @@ void SESSION::Send_Packet(void* packet)
 void SESSION::set_mygame(std::shared_ptr<GAME> p)
 {
 	my_game = p;
+}
+
+void SESSION::close_socket()
+{
+	socket_.close();
 }
 
 void SESSION::set_myserver(SERVER* p)

@@ -57,6 +57,8 @@ public:
 
 	void set_mygame(std::shared_ptr<GAME> p);
 	void set_myserver(SERVER* p);
+
+	void close_socket();
 };
 
 extern shared_ptr<SESSION> lobby; //만일 이게 여러 쓰레드에서 호출되면 락을 걸어야 함.... 현재 상태는 그럼
