@@ -240,6 +240,10 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->SetStartUI(Vec3(0, 0, 500.f));
 		break;
 	}
+	case SC_CHANGE_PHASE: {
+		//페이즈 변경, 목표 UI 바꾸면 됨
+		break;
+	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
 	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);
