@@ -723,6 +723,27 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		cs_packet_send_guntype* p = (cs_packet_send_guntype*)packet;
 		gun_type = p->gun_type;
 		remain_bullet[0] = WP_MAG[gun_type];
+
+		sc_packet_put put;
+		put.id = my_id_;
+		put.size = sizeof(sc_packet_put);
+		put.type = SC_PUT_PLAYER;
+		put.x = pos[0];
+		put.y = pos[1];
+		put.z = pos[2];
+		put.dirx = view_dir[0];
+		put.diry = view_dir[1];
+		put.dirz = view_dir[2];
+		put.gun_type = gun_type;
+		put.team = team;
+
+		//클라이언트가 입장했음을 모든 다른 유저에게 전송
+		for (auto& pl : my_game->ingame_player) {
+			shared_ptr<SESSION> player = pl.second;
+			if (player->my_id_ == my_id_) continue;
+			player->Send_Packet(&put);
+		}
+
 		break;
 	}
 	case CS_CHANGE_GUN: {
@@ -974,35 +995,22 @@ void SESSION::start()
 
 	//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
 
-	sc_packet_put p;
-	p.id = my_id_;
-	p.size = sizeof(sc_packet_put);
-	p.type = SC_PUT_PLAYER;
-	p.x = pos[0];
-	p.y = pos[1];
-	p.z = pos[2];
-	p.dirx = view_dir[0];
-	p.diry = view_dir[1];
-	p.dirz = view_dir[2];
-	p.gun_type = gun_type;
-	p.team = team;
-
-	//클라이언트가 입장했음을 모든 다른 유저에게 전송
-	for (auto& pl : my_game->ingame_player) {
-		shared_ptr<SESSION> player = pl.second;
-		if (player->my_id_ == my_id_) continue;
-		player->Send_Packet(&p);
-	}
-
 	//다른 유저들의 정보를 클라이언트에게 전송
 	for (auto& pl : my_game->ingame_player) {
 		shared_ptr<SESSION> player = pl.second;
 		if (player->my_id_ != my_id_) {
+			sc_packet_put p;
 			p.id = player->my_id_;
+			p.size = sizeof(sc_packet_put);
+			p.type = SC_PUT_PLAYER;
 			p.x = player->pos[0];
 			p.y = player->pos[1];
-			p.team = player->team;
+			p.z = player->pos[2];
+			p.dirx = player->view_dir[0];
+			p.diry = player->view_dir[1];
+			p.dirz = player->view_dir[2];
 			p.gun_type = player->gun_type;
+			p.team = player->team;
 			Send_Packet(&p);
 		}
 	}
