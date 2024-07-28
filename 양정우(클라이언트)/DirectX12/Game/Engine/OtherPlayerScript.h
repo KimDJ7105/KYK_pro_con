@@ -25,5 +25,9 @@ private:
 	bool isRevive = false;
 
 	int myGunType = -1;
+
+	bool isFired = false;
+	double gunShot = 0.f;
+	double fireTimeElapse = 0.f;
 };
 

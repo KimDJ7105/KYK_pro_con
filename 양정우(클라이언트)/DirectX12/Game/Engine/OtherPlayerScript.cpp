@@ -48,33 +48,57 @@ void OtherPlayerScript::LateUpdate()
 		|| GetAnimator()->GetCurrentClipIndex() == 9
 		|| GetAnimator()->GetCurrentClipIndex() == 14)
 	{
+
+		isFired = true;
+
 		if (nowGunObject == playerSubGunObject)
 		{
-			if(GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_PISTOL) == false)
+			gunShot = 0.333f;
+			if (gunShot <= fireTimeElapse)
+			{
 				GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
+				fireTimeElapse = 0.f;
+			}
+				
 			
 		}
 		else if (nowGunObject == playerMainGunObject)
 		{
 			if (myGunType == GT_AR)
 			{
-				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_ASSAULT_RIFLE) == false)
+				gunShot = 0.125;
+				if (gunShot <= fireTimeElapse)
+				{
 					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
+					fireTimeElapse = 0.f;
+				}
 			}
 			else if (myGunType == GT_SM)
 			{
-				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_SUB_MACHINE_GUN) == false)
+				gunShot = 0.1f;
+				if (gunShot <= fireTimeElapse)
+				{
 					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
+					fireTimeElapse = 0.f;
+				}
 			}
 			else if (myGunType == GT_SG)
 			{
-				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_SHOTGUN) == false)
+				gunShot = 1.f;
+				if (gunShot <= fireTimeElapse)
+				{
 					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
+					fireTimeElapse = 0.f;
+				}
 			}
 			else if (myGunType == GT_SR)
 			{
-				if (GET_SINGLE(SoundManager)->IsSoundPlaying(OTHER_WEAPON_SNIPER) == false)
+				gunShot = 1.f;
+				if (gunShot <= fireTimeElapse)
+				{
 					GET_SINGLE(SoundManager)->soundPlay(OTHER_WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
+					fireTimeElapse = 0.f;
+				}
 			}
 		}
 	}
@@ -132,6 +156,9 @@ void OtherPlayerScript::LateUpdate()
 		gun->GetTransform()->SetLocalPosition(newPosition);
 
 	}
+
+
+	fireTimeElapse += DELTA_TIME;
 }
 
 void OtherPlayerScript::GetPlayerGuns()
