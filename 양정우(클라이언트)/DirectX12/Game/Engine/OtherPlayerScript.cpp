@@ -23,25 +23,25 @@ void OtherPlayerScript::LateUpdate()
 {
 	GetPlayerGuns();
 
-	if (GetAnimator()->GetCurrentClipIndex() == 15)
-	{
-		deadSequence_Start += DELTA_TIME;
-	}
+	//if (GetAnimator()->GetCurrentClipIndex() == 15)
+	//{
+	//	deadSequence_Start += DELTA_TIME;
+	//}
 
-	if (0.992357 < deadSequence_Start && isRevive == false)
-	{
-		/*GET_SINGLE(SceneManager)->RemoveObject_otherPlayer(OT_PLAYER, GetTransform()->GetObjectID());
-		GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_PLAYER, GetTransform()->GetObjectID());
-		GET_SINGLE(SceneManager)->CreateHeadCoreObject(GetTransform()->GetObjectID());*/
+	//if (0.992357 < deadSequence_Start && isRevive == false)
+	//{
+	//	/*GET_SINGLE(SceneManager)->RemoveObject_otherPlayer(OT_PLAYER, GetTransform()->GetObjectID());
+	//	GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_PLAYER, GetTransform()->GetObjectID());
+	//	GET_SINGLE(SceneManager)->CreateHeadCoreObject(GetTransform()->GetObjectID());*/
 
-		GET_SINGLE(SceneManager)->CreateHeadCoreObject(GetTransform()->GetObjectID());
-		GET_SINGLE(SceneManager)->RemoveObject(OT_PLAYER , GetTransform()->GetObjectID());
-		GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_OTHER_PLAYER_MAIN , GetTransform()->GetObjectID());
-		GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_OTHER_PLAYER_SUB , GetTransform()->GetObjectID());
-		nowGunObject = nullptr;
-		isRevive = true;
-		GET_SINGLE(SceneManager)->Update();
-	}
+	//	GET_SINGLE(SceneManager)->CreateHeadCoreObject(GetTransform()->GetObjectID());
+	//	GET_SINGLE(SceneManager)->RemoveObject(OT_PLAYER , GetTransform()->GetObjectID());
+	//	GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_OTHER_PLAYER_MAIN , GetTransform()->GetObjectID());
+	//	GET_SINGLE(SceneManager)->OUT_OF_RENDERING(OT_OTHER_PLAYER_SUB , GetTransform()->GetObjectID());
+	//	nowGunObject = nullptr;
+	//	isRevive = true;
+	//	GET_SINGLE(SceneManager)->Update();
+	//}
 
 	uint32 state = GetAnimator()->GetCurrentClipIndex();
 	if (GetTransform()->GetIsWeaponChange() == true)
