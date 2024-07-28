@@ -28,6 +28,8 @@
 #include "GoodEndingCameraScript.h"
 #include "OtherPlayerScript.h"
 #include "LaserScript.h"
+#include "RotationComponent.h"
+#include "FloatingComponent.h"
 
 #include "SoundManager.h"
 
@@ -4555,7 +4557,7 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_ID);
-
+			gameObject->AddComponent(make_shared<RotationComponent>());
 
 			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 
@@ -4611,6 +4613,7 @@ void SceneManager::CreateGameObject(int aisleNum, int object_type, int object_ID
 			gameObject->GetTransform()->SetObjectType(object_type);
 			gameObject->GetTransform()->SetObjectID(object_ID);
 
+			gameObject->AddComponent(make_shared<FloatingComponent>());
 
 			gameObject->AddComponent(make_shared<BoxCollider>());	// 바운딩 박스 생성
 

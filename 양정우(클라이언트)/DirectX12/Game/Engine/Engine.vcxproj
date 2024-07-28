@@ -181,7 +181,9 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="FBXLoader.h" />
+    <ClInclude Include="FloatingComponent.h" />
     <ClInclude Include="LaserScript.h" />
+    <ClInclude Include="RotationComponent.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
@@ -239,7 +241,9 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
+    <ClCompile Include="FloatingComponent.cpp" />
     <ClCompile Include="LaserScript.cpp" />
+    <ClCompile Include="RotationComponent.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameObject.cpp" />
