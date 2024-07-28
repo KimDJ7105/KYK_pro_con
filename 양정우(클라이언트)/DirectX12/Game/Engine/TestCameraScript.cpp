@@ -244,7 +244,7 @@ void TestCameraScript::LateUpdate()
 		else if (isDash == true)
 		{
 			// 플레이어의 위치를 이동 방향과 속도에 따라 업데이트
-			currentPosition += moveDirection * moveSpeed * 2 * DELTA_TIME;
+			currentPosition += moveDirection * moveSpeed * 1.3 * DELTA_TIME;
 		}
 
 		

@@ -199,6 +199,7 @@
       <Filter>Object\Test</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="LaserScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -367,6 +368,7 @@
       <Filter>Object\Test</Filter>
     </ClInclude>
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="LaserScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
