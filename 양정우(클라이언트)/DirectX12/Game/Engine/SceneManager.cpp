@@ -5270,7 +5270,7 @@ void SceneManager::SetGunUI(int gun_type)
 }
 
 
-void SceneManager::SetRabbitFootUI()
+void SceneManager::SetRabbitFootUI(float x, float y)
 {
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 	for (auto& gameObject : gameObjects)
@@ -5280,8 +5280,8 @@ void SceneManager::SetRabbitFootUI()
 		if (gameObject->GetTransform()->GetObjectID() == 1)
 		{
 			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-			pos.x = -150;
-			pos.y = (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130;//이곳에 좌표 입력
+			pos.x = x; // -150;
+			pos.y = y; // (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130;//이곳에 좌표 입력
 			gameObject->GetTransform()->SetLocalPosition(pos);
 		}
 	}

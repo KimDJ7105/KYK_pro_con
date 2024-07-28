@@ -150,7 +150,7 @@ public:
 
 	void SetGunUI(int gun_type);
 
-	void SetRabbitFootUI();
+	void SetRabbitFootUI(float x, float y);
 
 	void CreateMapObjectsUI(int object_type, int loc_type, int loc_num);
 	Vec3 CalculateMapUIPosition(int loc_num);

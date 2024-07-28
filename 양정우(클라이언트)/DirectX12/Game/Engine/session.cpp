@@ -105,6 +105,11 @@ void SESSION::Process_Packet(unsigned char* packet)
 			std::cout << "I'm Dead\n";
 			//나의 두뇌코어 오브젝트를 생성
 			_activeSessionScene->SetPlayerDead(true);
+			haveKeycard = 0;
+			_activeSessionScene->SetKeyCardPosition(OUT_OF_RENDER, OUT_OF_RENDER, 0);
+			_activeSessionScene->SetKeyCardPosition(OUT_OF_RENDER, OUT_OF_RENDER, 1);
+			_activeSessionScene->SetKeyCardPosition(OUT_OF_RENDER, OUT_OF_RENDER, 2);
+			_activeSessionScene->SetRabbitFootUI(OUT_OF_RENDER, OUT_OF_RENDER);
 		}
 		break;
 	}

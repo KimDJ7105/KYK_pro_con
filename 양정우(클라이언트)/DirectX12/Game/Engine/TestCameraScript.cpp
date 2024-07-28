@@ -44,6 +44,7 @@ void TestCameraScript::LateUpdate()
 		nowGunObject = playerSubGunObject;
 		nowGun = 0;
 		GET_SINGLE(SceneManager)->SetPlayerRevive(false);
+		haveKeycard = 0;
 	}
 
 	if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
@@ -777,7 +778,7 @@ void TestCameraScript::LateUpdate()
 
 				main_session->Send_Packet(&tgr);
 
-				GET_SINGLE(SceneManager)->SetRabbitFootUI();
+				GET_SINGLE(SceneManager)->SetRabbitFootUI(-150, (WINDOW_HEIGHT / 2) - (WINDOW_HEIGHT / (WINDOW_HEIGHT / 100)) - 130);
 			}
 
 			shared_ptr<GameObject> exit = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_EXIT);
