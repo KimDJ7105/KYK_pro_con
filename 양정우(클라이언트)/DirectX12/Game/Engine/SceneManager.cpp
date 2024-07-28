@@ -5025,11 +5025,28 @@ void SceneManager::CalculateHP(int damagedHP)
 	{
 		tensPlaceAfterCalculate = 10;
 	}
-
+	else if (damagedHP <= 0)
+	{
+		tensPlaceAfterCalculate = 0;
+	}
 
 	playerHP = damagedHP;
 
-	if (tensPlaceBeforeCalculate > tensPlaceAfterCalculate)
+
+	if (tensPlaceAfterCalculate == 0)
+	{
+		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+		for (auto& gameObject : gameObjects)
+		{
+			if (gameObject->GetTransform()->GetObjectType() != OT_UI_HP)
+				continue;
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			pos.x = OUT_OF_RENDER;
+			pos.y = OUT_OF_RENDER;
+			gameObject->GetTransform()->SetLocalPosition(pos);
+		}
+	}
+	else if (tensPlaceBeforeCalculate > tensPlaceAfterCalculate)
 	{
 		int HPnum = tensPlaceAfterCalculate;
 		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
@@ -5056,7 +5073,7 @@ void SceneManager::CalculateHP(int damagedHP)
 		int HPnum = tensPlaceAfterCalculate;
 		auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-		for (int i = 1; i <= HPnum; i++)
+		for (int i = 0; i <= HPnum; i++)
 		{
 			for (auto& gameObject : gameObjects)
 			{
