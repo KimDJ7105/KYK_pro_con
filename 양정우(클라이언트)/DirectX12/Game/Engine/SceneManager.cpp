@@ -2058,7 +2058,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 
 	//실험 시작
-
 	{
 		shared_ptr<GameObject> sphere = make_shared<GameObject>();
 		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
@@ -2085,6 +2084,65 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		mainGameScene->AddGameObject(sphere);
 	}
+
+	//상호작용
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 1027 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Interact", L"..\\Resources\\Texture\\Interaction_Message\\E_Interact.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_INTERACT);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+	//부활
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 800 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Revive", L"..\\Resources\\Texture\\Interaction_Message\\E_Revive.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType();
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+
+	//탈출
 
 
 #pragma endregion
