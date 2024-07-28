@@ -1606,6 +1606,148 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		mainGameScene->AddGameObject(sphere);
 	}
 
+	//상호작용
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 1027 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Interact", L"..\\Resources\\Texture\\Interaction_Message\\E_Interact.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_INTERACT);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+	//부활
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 800 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Revive", L"..\\Resources\\Texture\\Interaction_Message\\E_Revive.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_REVIVE);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+
+	//탈출
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 800 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Escape", L"..\\Resources\\Texture\\Interaction_Message\\E_Escape.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_ESCAPE);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+	//FirstWave
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 1920 * 0.2, (WINDOW_HEIGHT / 1200) * 429 * 0.2, 50.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(-600, 200, 500.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"FirstWave_UI", L"..\\Resources\\Texture\\MainGameUI\\FirstWave_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_FIRSTWAVE);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+	//SecondWave
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 1920 * 0.2, (WINDOW_HEIGHT / 1200) * 547 * 0.2, 50.f));
+		//sphere->GetTransform()->SetLocalPosition(Vec3(-600, 200, 500.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SecondWave_UI", L"..\\Resources\\Texture\\MainGameUI\\SecondWave_UI.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_SECONDWAVE);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+
 	//KeyCard
 	for(int i = 0; i < 3; i++)
 	{
@@ -2085,64 +2227,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		mainGameScene->AddGameObject(sphere);
 	}
 
-	//상호작용
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 1027 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
-		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Interact", L"..\\Resources\\Texture\\Interaction_Message\\E_Interact.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-
-		sphere->GetTransform()->SetObjectType(OT_UI_INTERACT);
-
-		mainGameScene->AddGameObject(sphere);
-	}
-
-	//부활
-	{
-		shared_ptr<GameObject> sphere = make_shared<GameObject>();
-		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		sphere->AddComponent(make_shared<Transform>());
-		sphere->GetTransform()->SetLocalScale(Vec3((WINDOW_WIDTH / 1600) * 800 * 0.5, (WINDOW_HEIGHT / 1200) * 285 * 0.5, 50.f));
-		//sphere->GetTransform()->SetLocalPosition(Vec3(0, -100, 500.f));
-		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"E_Revive", L"..\\Resources\\Texture\\Interaction_Message\\E_Revive.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		sphere->AddComponent(meshRenderer);
-
-		sphere->GetTransform()->SetObjectType();
-
-		mainGameScene->AddGameObject(sphere);
-	}
-
-
-	//탈출
+	
 
 
 #pragma endregion
@@ -4169,8 +4254,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 						/*otherPlayer->GetAnimator()->ClearSequence();
 						otherPlayer->GetAnimator()->AddToSequence(0);*/
 						otherPlayer->GetAnimator()->Play(0);
-
-						std::cout << "standing" << std::endl;
 					}
 					if (animationID == AT_WALKING)
 					{
@@ -4178,8 +4261,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 						otherPlayer->GetAnimator()->AddToSequence(5);*/
 
 						otherPlayer->GetAnimator()->Play(5);
-
-						std::cout << "walking" << std::endl;
 					}
 					if (animationID == AT_RUNNING)
 					{
@@ -4187,8 +4268,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 						otherPlayer->GetAnimator()->AddToSequence(10);*/
 
 						otherPlayer->GetAnimator()->Play(10);
-
-						std::cout << "running" << std::endl;
 					}
 					if (animationID == AT_CHANGE)
 					{
@@ -4198,8 +4277,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(2);
 							otherPlayer->GetAnimator()->AddToSequence(0);
-
-							std::cout << "stand changing" << std::endl;
 
 
 							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
@@ -4219,7 +4296,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(7);
 							otherPlayer->GetAnimator()->AddToSequence(5);
-							std::cout << "walk changing" << std::endl;
 							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
 							{
 								GET_SINGLE(SoundManager)->soundPlay(
@@ -4235,7 +4311,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(12);
 							otherPlayer->GetAnimator()->AddToSequence(10);
 
-							std::cout << "run changing" << std::endl;
 							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
 							{
 								GET_SINGLE(SoundManager)->soundPlay(
@@ -4256,7 +4331,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(3);
 							otherPlayer->GetAnimator()->AddToSequence(0);
 
-							std::cout << "stand reloading" << std::endl;
 							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
 							{
 								GET_SINGLE(SoundManager)->soundPlay(
@@ -4272,7 +4346,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(8);
 							otherPlayer->GetAnimator()->AddToSequence(5);
 
-							std::cout << "walk reloading" << std::endl;
 
 							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
 							{
@@ -4290,7 +4363,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(13);
 							otherPlayer->GetAnimator()->AddToSequence(10);
 
-							std::cout << "run reloading" << std::endl;
 
 							if (otherPlayer->GetTransform()->GetObjectType() == OT_PLAYER)
 							{
@@ -4312,7 +4384,6 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(4);
 							otherPlayer->GetAnimator()->AddToSequence(0);
 
-							std::cout << "stand shooting" << std::endl;
 							
 						}
 						else if (state == 5)
@@ -4321,15 +4392,12 @@ void SceneManager::ChangeObjectAnimation(int object_id, int animationID)
 							otherPlayer->GetAnimator()->AddToSequence(9);
 							otherPlayer->GetAnimator()->AddToSequence(5);
 
-							std::cout << "walk shooting" << std::endl;
 						}
 						else if (state == 10)
 						{
 							otherPlayer->GetAnimator()->ClearSequence();
 							otherPlayer->GetAnimator()->AddToSequence(14);
 							otherPlayer->GetAnimator()->AddToSequence(10);
-
-							std::cout << "run shooting" << std::endl;
 						}
 					}
 				}
@@ -5668,6 +5736,43 @@ void SceneManager::SetStartUI(Vec3 pos)
 		if (gameObject->GetTransform()->GetObjectType() == OT_UI_STARTING)
 		{
 			gameObject->GetTransform()->SetLocalPosition(pos);
+			break;
+		}
+	}
+}
+
+void SceneManager::SetInteractUI(Vec3 pos, int type)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == type)
+		{
+			gameObject->GetTransform()->SetLocalPosition(pos);
+			break;
+		}
+	}
+}
+
+void SceneManager::WaveChangeUI()
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_FIRSTWAVE)
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			break;
+		}
+	}
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_SECONDWAVE)
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(-600.f, 200.f, 500.f));
 			break;
 		}
 	}

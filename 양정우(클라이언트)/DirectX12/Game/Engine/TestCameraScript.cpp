@@ -579,12 +579,12 @@ void TestCameraScript::LateUpdate()
 			if (INPUT->GetButton(KEY_TYPE::LBUTTON))
 			{
 #ifdef DEBUG_ON
-				std::cout << "COOLTIME" << std::endl;
+				
 #endif
 				if (clickCooldown <= fireTimeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
 				{
 #ifdef DEBUG_ON
-					std::cout << "FIRE" << std::endl;
+					
 #endif
 
 					nowGunObject->GetAnimator()->ClearSequence();
@@ -859,6 +859,63 @@ void TestCameraScript::LateUpdate()
 
 	}
 	
+
+
+	// 상호작용 UI
+	if (GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_KEYCARD) != nullptr)
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(0, -100, 500.f), OT_UI_INTERACT);
+	}
+	else if (GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_TERMINAL) != nullptr)
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(0, -100, 500.f), OT_UI_INTERACT);
+	}
+	else if (GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_RABBITFOOT) != nullptr)
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(0, -100, 500.f), OT_UI_INTERACT);
+	}
+	else if (GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_MEDIKIT) != nullptr)
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(0, -100, 500.f), OT_UI_INTERACT);
+	}
+	else
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f), OT_UI_INTERACT);
+	}
+	
+	//부활 UI
+	if (GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(GET_SINGLE(SceneManager)->GetPlayerHeadCoreQbject(playerID) , OT_RESURRECTION_PAD) != nullptr)
+	{
+		if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+		{
+			GET_SINGLE(SceneManager)->SetInteractUI(Vec3(0, -100, 500.f), OT_UI_REVIVE);
+		}
+	}
+	else
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f), OT_UI_REVIVE);
+	}
+
+	// 탈출 UI
+	if (GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_EXIT) != nullptr)
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(0, -100, 500.f), OT_UI_ESCAPE);
+	}
+	else
+	{
+		GET_SINGLE(SceneManager)->SetInteractUI(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f), OT_UI_ESCAPE);
+	}
+
+
+
+
+
+
+
+
+
+
+
 	if (INPUT->GetButtonDown(KEY_TYPE::R))
 	{
 		cs_packet_reload_mag lm;
