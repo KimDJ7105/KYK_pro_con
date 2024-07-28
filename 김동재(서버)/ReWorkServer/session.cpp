@@ -322,7 +322,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			//만약 모든 터미널이 활성화 되었으면 토끼발을 생성
 			if (my_game->IsTerminalOn()) {
-				auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+				auto& rabbitfoot = my_game->CreateObjectApprox_nr(OT_RABBITFOOT, 7);
+				//auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
 
 				sc_packet_change_phase cp;
 				cp.size = sizeof(sc_packet_change_phase);
@@ -354,7 +355,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				tm_exit.event_id = EV_SPAWN_EXIT;
 				tm_exit.game_id = my_game->get_game_id();
 				tm_exit.target_id = -1;
-				tm_exit.wakeup_time = chrono::system_clock::now() + 90s;
+				tm_exit.wakeup_time = chrono::system_clock::now() + 5s;
 
 				my_server->timer_queue.emplace(tm_exit);
 			}

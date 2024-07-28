@@ -302,7 +302,8 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				break;
 			}
 			case EV_SPAWN_EXIT: {
-				auto& exit = games[ev.game_id]->CreateObjectApprox(OT_EXIT);
+				//auto& exit = games[ev.game_id]->CreateObjectApprox(OT_EXIT);
+				auto& exit = games[ev.game_id]->CreateObjectApprox_nr(OT_EXIT, 0);
 
 				sc_packet_put_object_pos pop;
 				pop.type = SC_PUT_OBJECT_POS;
