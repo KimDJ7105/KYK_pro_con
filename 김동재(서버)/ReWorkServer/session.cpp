@@ -1084,17 +1084,13 @@ void SESSION::Send_Packet(void* packet)
 	do_write(buff, packet_size);
 }
 
-void SESSION::set_mygame(std::shared_ptr<GAME> p)
+void SESSION::set_serverinfo(std::shared_ptr<GAME> p, SERVER* server)
 {
 	my_game = p;
+	my_server = server;
 }
 
 void SESSION::close_socket()
 {
 	socket_.close();
-}
-
-void SESSION::set_myserver(SERVER* p)
-{
-	my_server = p;
 }

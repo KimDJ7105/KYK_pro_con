@@ -21,6 +21,8 @@ private:
 	
 	int GetNewClientID();
 
+	void SetGameStartTimer();
+
 public:
 	std::priority_queue<TIMER_EVENT> timer_queue;
 

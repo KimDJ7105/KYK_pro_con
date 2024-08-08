@@ -55,8 +55,7 @@ public:
 
 	void Send_Packet(void* packet);
 
-	void set_mygame(std::shared_ptr<GAME> p);
-	void set_myserver(SERVER* p);
+	void set_serverinfo(std::shared_ptr<GAME> p, SERVER* server);
 
 	void close_socket();
 };
