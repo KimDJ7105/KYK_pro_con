@@ -18,7 +18,7 @@ void SERVER::do_accept()
 				if(p_id == LOBBY_ID) {
 					std::cout << "Lobby server connected\n";
 					lobby = std::make_shared<SESSION>(std::move(socket_), p_id, -1);	
-					lobby->set_myserver(this);
+					lobby->set_serverinfo(nullptr, this);
 					lobby->start();
 				}
 				else {
@@ -28,21 +28,7 @@ void SERVER::do_accept()
 					{
 						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
 
-						TIMER_EVENT ev_ready;
-						ev_ready.event_id = EV_SET_RUN;
-						ev_ready.game_id = g_game_ID;
-						ev_ready.target_id = -1;
-						ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
-
-						timer_queue.push(ev_ready);
-
-						TIMER_EVENT ev_item;
-						ev_item.event_id = EV_SPAWN_ITEM;
-						ev_item.game_id = g_game_ID;
-						ev_item.target_id = -1;
-						ev_item.wakeup_time = chrono::system_clock::now() + 90s;
-
-						timer_queue.push(ev_item);
+						SetGameStartTimer();
 					}
 					else if (games[g_game_ID]->get_game_state() == ST_END || games[g_game_ID]->get_game_state() == ST_RUN)
 					{
@@ -50,26 +36,11 @@ void SERVER::do_accept()
 
 						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
 
-						TIMER_EVENT ev_ready;
-						ev_ready.event_id = EV_SET_RUN;
-						ev_ready.game_id = g_game_ID;
-						ev_ready.target_id = -1;
-						ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
-
-						timer_queue.push(ev_ready);
-
-						TIMER_EVENT ev_item;
-						ev_item.event_id = EV_SPAWN_ITEM;
-						ev_item.game_id = g_game_ID;
-						ev_item.target_id = -1;
-						ev_item.wakeup_time = chrono::system_clock::now() + 90s;
-
-						timer_queue.push(ev_item);
+						SetGameStartTimer();
 					}
 
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
-					games[g_game_ID]->ingame_player[p_id]->set_mygame(games[g_game_ID]);
-					games[g_game_ID]->ingame_player[p_id]->set_myserver(this);
+					games[g_game_ID]->ingame_player[p_id]->set_serverinfo(games[g_game_ID], this);
 					games[g_game_ID]->ingame_player[p_id]->start();
 
 					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1 ) g_game_ID++;
@@ -398,4 +369,23 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 	//timer_.expires_at(timer_.expiry() + boost::asio::chrono::seconds(0));
 	timer_.expires_from_now(boost::asio::chrono::microseconds(100));
 	timer_.async_wait(boost::bind(&SERVER::event_excuter, this, boost::asio::placeholders::error));
+}
+
+void SERVER::SetGameStartTimer()
+{
+	TIMER_EVENT ev_ready;
+	ev_ready.event_id = EV_SET_RUN;
+	ev_ready.game_id = g_game_ID;
+	ev_ready.target_id = -1;
+	ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
+
+	timer_queue.push(ev_ready);
+
+	TIMER_EVENT ev_item;
+	ev_item.event_id = EV_SPAWN_ITEM;
+	ev_item.game_id = g_game_ID;
+	ev_item.target_id = -1;
+	ev_item.wakeup_time = chrono::system_clock::now() + 90s;
+
+	timer_queue.push(ev_item);
 }
