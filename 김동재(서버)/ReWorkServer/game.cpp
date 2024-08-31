@@ -22,14 +22,14 @@ GAME::GAME(int id)
 	for (int i = 0; i < 3; i++) {
 		int o_id = GetNewObjectID(); //랜덤 위치 키카드 생성
 		ingame_object[o_id] = std::make_shared<OBJECT>(o_id, OT_KEYCARD);
-		//ingame_object[o_id]->set_pos(select_pos());
-		ingame_object[o_id]->set_pos(i);
+		ingame_object[o_id]->set_pos(select_pos());
+		//ingame_object[o_id]->set_pos(i);
 		ingame_object[o_id]->show_approx_pos();
 
 		int t_id = GetNewObjectID(); //랜덤 위치 터미널 생성
 		ingame_object[t_id] = std::make_shared<OBJECT>(t_id, OT_TERMINAL);
-		//ingame_object[t_id]->set_pos(select_pos());
-		ingame_object[t_id]->set_pos(i + 3);
+		ingame_object[t_id]->set_pos(select_pos());
+		//ingame_object[t_id]->set_pos(i + 3);
 		ingame_object[t_id]->show_approx_pos();
 	}
 
