@@ -19,8 +19,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 {
 
 	auto P = my_game->ingame_player[id];
-	int y = P->pos[1];
-	int x = P->pos[0];
+	if (P == nullptr) return;
+
 	//ready 상태일때는 마우스 이동 동기화 말고는 아무것도 안하기
 	if (my_game->get_game_state() == ST_READY && packet[1] != CS_MOUSE_INFO && packet[1] != CS_SEND_GUNTYPE && packet[1] != CS_CHANGE_GUN) {
 		std::cout << "Nope\n";
@@ -122,7 +122,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		
 		target->hp -= WP_DMG[equip_weapon];
 
-		std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
+		//std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
 
 
 		
@@ -159,7 +159,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					put_obj.approx_num = obj->spawn_num;
 
 					for (auto& player : my_game->ingame_player) {
-						player.second->Send_Packet(&put_obj);
+						auto& p = player.second;
+						if (p == nullptr) continue;
+						p->Send_Packet(&put_obj);
 					}
 				}
 
@@ -176,7 +178,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					put_obj.approx_num = obj->spawn_num;
 
 					for (auto& player : my_game->ingame_player) {
-						player.second->Send_Packet(&put_obj);
+						auto& p = player.second;
+						if (p == nullptr) continue;
+						p->Send_Packet(&put_obj);
 					}
 				}
 			}
@@ -322,8 +326,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			//만약 모든 터미널이 활성화 되었으면 토끼발을 생성
 			if (my_game->IsTerminalOn()) {
-				auto& rabbitfoot = my_game->CreateObjectApprox_nr(OT_RABBITFOOT, 7);
-				//auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+				//auto& rabbitfoot = my_game->CreateObjectApprox_nr(OT_RABBITFOOT, 7);
+				auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
 
 				sc_packet_change_phase cp;
 				cp.size = sizeof(sc_packet_change_phase);
@@ -355,7 +359,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				tm_exit.event_id = EV_SPAWN_EXIT;
 				tm_exit.game_id = my_game->get_game_id();
 				tm_exit.target_id = -1;
-				tm_exit.wakeup_time = chrono::system_clock::now() + 5s;
+				tm_exit.wakeup_time = chrono::system_clock::now() + 90s;
 
 				my_server->timer_queue.emplace(tm_exit);
 			}
