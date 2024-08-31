@@ -338,6 +338,15 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				std::cout << "GAME START\n";
 
 				games[ev.game_id]->set_game_state(ST_RUN);
+
+				TIMER_EVENT ev_item;
+				ev_item.event_id = EV_SPAWN_ITEM;
+				ev_item.game_id = g_game_ID;
+				ev_item.target_id = -1;
+				ev_item.wakeup_time = chrono::system_clock::now() + 90s;
+
+				timer_queue.push(ev_item);
+
 				break;
 			}
 			case EV_CLEAR_GAME: {
@@ -377,15 +386,8 @@ void SERVER::SetGameStartTimer()
 	ev_ready.event_id = EV_SET_RUN;
 	ev_ready.game_id = g_game_ID;
 	ev_ready.target_id = -1;
-	ev_ready.wakeup_time = chrono::system_clock::now() + 15s;
+	ev_ready.wakeup_time = chrono::system_clock::now() + 60s;
 
 	timer_queue.push(ev_ready);
 
-	TIMER_EVENT ev_item;
-	ev_item.event_id = EV_SPAWN_ITEM;
-	ev_item.game_id = g_game_ID;
-	ev_item.target_id = -1;
-	ev_item.wakeup_time = chrono::system_clock::now() + 90s;
-
-	timer_queue.push(ev_item);
 }
