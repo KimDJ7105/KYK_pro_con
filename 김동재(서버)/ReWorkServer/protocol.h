@@ -80,6 +80,7 @@
 #define OT_UI_FIRSTWAVE			134
 #define OT_UI_SECONDWAVE		135
 #define OT_UI_SHOW_ESCAPE		136
+#define OT_UI_DAMAGED_RED		137
 //---------------------------------------
 
 //Gun Type-------------------------------

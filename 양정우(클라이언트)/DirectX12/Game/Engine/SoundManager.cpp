@@ -57,6 +57,11 @@ void SoundManager::Init()
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Run_Sound_(Cut).mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_RUN]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Player_Walk_Sound_(Cut).mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_WALK]);
     m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Revive_Sound.mp3", FMOD_3D, 0, &m_sound[OTHER_PLAYER_REVIVE]);
+
+
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Bullet_Hit_01.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_HIT_01]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Bullet_Hit_02.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_HIT_02]);
+    m_soundSystem->createSound("..\\Resources\\Sound\\Player\\Bullet_Hit_03.mp3", FMOD_DEFAULT, 0, &m_sound[PLAYER_HIT_03]);
 }
 
 void SoundManager::Update()
