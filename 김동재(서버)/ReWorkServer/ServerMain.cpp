@@ -29,10 +29,10 @@ int main()
 	vector <thread > worker_threads;
 	vector <std::unique_ptr<SERVER>> servers;
 
-	servers.emplace_back(std::make_unique<SERVER>(io_service[0], MY_PORT0, input_ip));
-	servers.emplace_back(std::make_unique<SERVER>(io_service[1], MY_PORT1, input_ip));
-	servers.emplace_back(std::make_unique<SERVER>(io_service[2], MY_PORT2, input_ip));
-	servers.emplace_back(std::make_unique<SERVER>(io_service[3], MY_PORT3, input_ip));
+	for (int i = 0; i < 4; i++)
+	{
+		servers.emplace_back(std::make_unique<SERVER>(io_service[i], MY_PORT0 + i, input_ip));
+	}
 
 	Init_Server();
 
