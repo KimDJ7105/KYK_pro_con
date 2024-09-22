@@ -14,7 +14,6 @@ void SERVER::do_accept()
 			{
 				int p_id = GetNewClientID();
 				
-				//if (p_id == LOBBY_ID) {
 				if(p_id == LOBBY_ID) {
 					std::cout << "Lobby server connected\n";
 					lobby = std::make_shared<SESSION>(std::move(socket_), p_id, -1);	
@@ -23,14 +22,14 @@ void SERVER::do_accept()
 				}
 				else {
 					std::cout << "Client " << p_id << " loged in\n";
-					auto it = games.find(g_game_ID);
-					if (it == games.end())
+					auto it = games.find(g_game_ID); //생성된 게임이 있는지 확인
+					if (it == games.end()) //없는 경우 새로운 게임을 생성
 					{
 						games[g_game_ID] = std::make_shared<GAME>(g_game_ID);
 
 						SetGameStartTimer();
 					}
-					else if (games[g_game_ID]->get_game_state() == ST_END || games[g_game_ID]->get_game_state() == ST_RUN)
+					else if (games[g_game_ID]->get_game_state() != ST_READY) //게임이 있지만 진행중이거나 끝난 경우도 새로운 게임을 생성
 					{
 						g_game_ID++;
 
@@ -38,13 +37,14 @@ void SERVER::do_accept()
 
 						SetGameStartTimer();
 					}
-
+					//게임에 플레이어 추가
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
 					games[g_game_ID]->ingame_player[p_id]->set_serverinfo(games[g_game_ID], this);
 					games[g_game_ID]->ingame_player[p_id]->start();
 
-					if (games[g_game_ID]->ingame_player.size() > MAX_USER + 1 ) g_game_ID++;
-					if (games.size() == MAX_GAME) {
+					if (games[g_game_ID]->ingame_player.size() == MAX_USER) g_game_ID++; //게임에 플레이어가 다 차면 다음 게임 지정
+					if (games.size() == MAX_GAME) { //제한된 게임 수에 도달하면 다른 스레드에 Connect 하도록 조치
+						//로비 서버에게 다음 스레드 포트번호를 전달
 						sl_packet_set_port set_port;
 						set_port.size = sizeof(sl_packet_set_port);
 						set_port.type = SL_SET_PORT;
