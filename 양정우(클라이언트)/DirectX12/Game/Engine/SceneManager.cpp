@@ -30,6 +30,7 @@
 #include "LaserScript.h"
 #include "RotationComponent.h"
 #include "FloatingComponent.h"
+#include "DamagedScript.h"
 
 #include "SoundManager.h"
 
@@ -1847,6 +1848,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>());		// N = 1, F = 1000, FOV = 45
 		camera->AddComponent(make_shared<TestCameraScript>());
+		camera->AddComponent(make_shared<DamagedScript>());
 
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 40.f, 0.f));
@@ -2734,6 +2736,34 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		sphere->AddComponent(meshRenderer);
 
 		sphere->GetTransform()->SetObjectType(OT_UI_SHOW_ESCAPE);
+
+		mainGameScene->AddGameObject(sphere);
+	}
+
+
+	//Damaged_Red
+	{
+		shared_ptr<GameObject> sphere = make_shared<GameObject>();
+		sphere->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		sphere->AddComponent(make_shared<Transform>());
+		sphere->GetTransform()->SetLocalScale(Vec3(WINDOW_WIDTH, WINDOW_HEIGHT, 50.f));
+		sphere->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Damaged_Red", L"..\\Resources\\Texture\\PR_Hit_Image.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		sphere->AddComponent(meshRenderer);
+
+		sphere->GetTransform()->SetObjectType(OT_UI_DAMAGED_RED);
 
 		mainGameScene->AddGameObject(sphere);
 	}
@@ -6233,6 +6263,12 @@ void SceneManager::AddComputeShader(int threadX, int threadY, int threadZ)
 
 void SceneManager::CalculateHP(int nowHP)
 {
+
+	if (playerHP > nowHP)
+	{
+		Set_Damaged(true);
+	}
+
 	playerHP = nowHP;
 
 	int nodesToRender = (nowHP + 9) / 10;
@@ -6634,6 +6670,20 @@ void SceneManager::SetEscapeUI(Vec3 pos)
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->GetTransform()->GetObjectType() == OT_UI_SHOW_ESCAPE)
+		{
+			gameObject->GetTransform()->SetLocalPosition(pos);
+			break;
+		}
+	}
+}
+
+void SceneManager::SetDamagedUI(Vec3 pos)
+{
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	for (auto& gameObject : gameObjects)
+	{
+		if (gameObject->GetTransform()->GetObjectType() == OT_UI_DAMAGED_RED)
 		{
 			gameObject->GetTransform()->SetLocalPosition(pos);
 			break;

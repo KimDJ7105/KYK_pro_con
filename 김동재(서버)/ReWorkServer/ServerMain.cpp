@@ -22,8 +22,8 @@ int main()
 {
 	char input_ip[16]{"127.0.0.1"};
 
-	std::cout << "서버의 ip 입력 : ";
-	std::cin >> input_ip;
+	/*std::cout << "서버의 ip 입력 : ";
+	std::cin >> input_ip;*/
 
 	std::array<boost::asio::io_context, 4> io_service;
 	vector <thread > worker_threads;

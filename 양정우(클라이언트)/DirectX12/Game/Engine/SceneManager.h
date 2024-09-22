@@ -245,5 +245,13 @@ public:
 
 	void SetEscapeUI(Vec3 pos);
 
+private:
+	bool damaged = false;
+
+public:
+	bool Get_Damaged() { return damaged; }
+	void Set_Damaged(bool dmg) { damaged = dmg; }
+
+	void SetDamagedUI(Vec3 pos);
 };
 
