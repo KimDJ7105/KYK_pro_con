@@ -365,6 +365,14 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 					}
 				}
 
+				TIMER_EVENT ev;
+				ev.event_id = EV_CLEAR_GAME;
+				ev.game_id = -1;
+				ev.target_id = -1;
+				ev.wakeup_time = chrono::system_clock::now() + 240s;
+
+				timer_queue.push(ev);
+
 				break;
 			}
 			case EV_GAME_END: {
