@@ -536,13 +536,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				else player->Send_Packet(&pl);
 
 			}
-			TIMER_EVENT te;
-			te.game_id = mg->get_game_id();
-			te.event_id = EV_GAME_END;
-			te.target_id = -1;
-			te.wakeup_time = chrono::system_clock::now() + 5s;
 
-			my_server->timer_queue.push(te);
+			mg->ingame_player.clear();
 			
 		}
 		break;
@@ -609,8 +604,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pl.type = SC_PLAYER_LOSE;
 
 		Send_Packet(&pl);
-
-		socket_.close();
 
 		mg->ingame_player.erase(my_id_);
 

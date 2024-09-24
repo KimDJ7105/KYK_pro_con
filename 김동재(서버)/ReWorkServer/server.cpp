@@ -375,16 +375,6 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 
 				break;
 			}
-			case EV_GAME_END: {
-				for (auto& p : games[ev.game_id]->ingame_player) {
-					auto& player = p.second;
-					if (player == nullptr) continue;
-
-					player->close_socket();
-				}
-				games[ev.game_id]->ingame_player.clear();
-				break;
-			}
 			}
 		}
 	}
