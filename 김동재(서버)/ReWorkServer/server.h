@@ -31,6 +31,7 @@ public:
 
 	void set_ip(char ip[16]);
 	char* get_ip();
+	int get_next_port_number();
 
 	void event_excuter(const boost::system::error_code& ec);
 };

@@ -45,10 +45,11 @@ void SERVER::do_accept()
 					if (games[g_game_ID]->ingame_player.size() == MAX_USER) g_game_ID++; //게임에 플레이어가 다 차면 다음 게임 지정
 					if (games.size() == MAX_GAME) { //제한된 게임 수에 도달하면 다른 스레드에 Connect 하도록 조치
 						//로비 서버에게 다음 스레드 포트번호를 전달
+						int n_port = get_next_port_number();
 						sl_packet_set_port set_port;
 						set_port.size = sizeof(sl_packet_set_port);
 						set_port.type = SL_SET_PORT;
-						strcpy_s(set_port.port, std::to_string(next_port).c_str());
+						strcpy_s(set_port.port, std::to_string(n_port).c_str());
 
 						lobby->Send_Packet(&set_port);
 					}
@@ -98,6 +99,11 @@ void SERVER::set_ip(char ip[16])
 char* SERVER::get_ip()
 {
 	return server_ip;
+}
+
+int SERVER::get_next_port_number()
+{
+	return next_port;
 }
 
 void SERVER::event_excuter(const boost::system::error_code& ec)
