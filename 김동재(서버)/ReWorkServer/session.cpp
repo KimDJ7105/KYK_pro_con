@@ -12,17 +12,22 @@ void SESSION::Send_Packet(void* packet, unsigned id)
 	int packet_size = reinterpret_cast<unsigned char*>(packet)[0];
 	unsigned char* buff = new unsigned char[packet_size];
 	memcpy(buff, packet, packet_size);
-	my_game->ingame_player[id]->do_write(buff, packet_size);
+	
+	auto mg = my_game.lock();
+	if (mg == nullptr) return;
+	mg->ingame_player[id]->do_write(buff, packet_size);
 }
 
 void SESSION::Process_Packet(unsigned char* packet, int id)
 {
+	auto mg = my_game.lock();
+	if (mg == nullptr) return;
 
-	auto P = my_game->ingame_player[id];
+	auto P = mg->ingame_player[id];
 	if (P == nullptr) return;
 
 	//ready 상태일때는 마우스 이동 동기화 말고는 아무것도 안하기
-	if (my_game->get_game_state() == ST_READY && packet[1] != CS_MOUSE_INFO && packet[1] != CS_SEND_GUNTYPE && packet[1] != CS_CHANGE_GUN) {
+	if (my_game.lock()->get_game_state() == ST_READY && packet[1] != CS_MOUSE_INFO && packet[1] != CS_SEND_GUNTYPE && packet[1] != CS_CHANGE_GUN) {
 		std::cout << "Nope\n";
 		return;
 	}
@@ -46,7 +51,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.diry = P->view_dir[1];
 		pos_pack.dirz = P->view_dir[2];
 
-		for (auto& pl : my_game->ingame_player) {
+		for (auto& pl : mg->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -76,7 +81,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos_pack.diry = p->y;
 		pos_pack.dirz = p->z;
 
-		for (auto& pl : my_game->ingame_player) {
+		for (auto& pl : mg->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -99,7 +104,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.obj_id = my_id_;
 		set_anima.animation_id = AT_SHOOTING;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -114,7 +119,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		
 		if (p->target_id == -1) break;
 
-		shared_ptr<SESSION> target = my_game->ingame_player[p->target_id];
+		shared_ptr<SESSION> target = my_game.lock()->ingame_player[p->target_id];
 
 		if (target == nullptr) break;
 
@@ -141,15 +146,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			pd.size = sizeof(sc_packet_player_dead);
 			pd.id = target->my_id_;
 
-			for (auto& pl : my_game->ingame_player) {
+			for (auto& pl : mg->ingame_player) {
 				pl.second->Send_Packet(&pd);
 			}
 
-			for (auto& object : my_game->ingame_object) {
+			for (auto& object : mg->ingame_object) {
 				auto& obj = object.second;
 				if (obj->obj_type == OT_KEYCARD && obj->owner_id == target->my_id_) {
 					obj->owner_id = -1;
-					obj->set_pos(my_game->select_pos());
+					obj->set_pos(mg->select_pos());
 
 					sc_packet_put_object put_obj;
 					put_obj.size = sizeof(sc_packet_put_object);
@@ -158,7 +163,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					put_obj.obj_type = obj->obj_type;
 					put_obj.approx_num = obj->spawn_num;
 
-					for (auto& player : my_game->ingame_player) {
+					for (auto& player : mg->ingame_player) {
 						auto& p = player.second;
 						if (p == nullptr) continue;
 						p->Send_Packet(&put_obj);
@@ -167,8 +172,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 				else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == target->my_id_) {
 					obj->owner_id = -1;
-					my_game->set_rabbitfoot_owner(-1);
-					obj->set_pos(my_game->select_room_pos());
+					mg->set_rabbitfoot_owner(-1);
+					obj->set_pos(my_game.lock()->select_room_pos());
 
 					sc_packet_put_object put_obj;
 					put_obj.size = sizeof(sc_packet_put_object);
@@ -177,7 +182,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 					put_obj.obj_type = obj->obj_type;
 					put_obj.approx_num = obj->spawn_num;
 
-					for (auto& player : my_game->ingame_player) {
+					for (auto& player : mg->ingame_player) {
 						auto& p = player.second;
 						if (p == nullptr) continue;
 						p->Send_Packet(&put_obj);
@@ -192,10 +197,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	
 		cs_packet_use_medikit* p = (cs_packet_use_medikit*)packet;
 
-		shared_ptr<OBJECT> kit = my_game->ingame_object[p->kit_id];
+		shared_ptr<OBJECT> kit = mg->ingame_object[p->kit_id];
 		if (kit == nullptr) break;
 
-		my_game->set_free_space(OT_MEDIKIT, kit->spawn_num);
+		mg->set_free_space(OT_MEDIKIT, kit->spawn_num);
 
 		//플레이어 체력을 증가
 		hp += 30;
@@ -216,15 +221,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.id = kit->obj_id;
 		rmp.obj_type = OT_MEDIKIT;
 
-		for (auto& player : my_game->ingame_player) {
+		for (auto& player : mg->ingame_player) {
 			auto& p = player.second;
 			if (p == nullptr) continue;
 			p->Send_Packet(&rmp);
 		}
 
-		auto it = my_game->ingame_object.find(p->kit_id);
-		if (it != my_game->ingame_object.end()) {
-			my_game->ingame_object.erase(it);
+		auto it = mg->ingame_object.find(p->kit_id);
+		if (it != mg->ingame_object.end()) {
+			mg->ingame_object.erase(it);
 		}
 
 		break;
@@ -233,19 +238,19 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	
 		cs_packet_try_get_key* p = (cs_packet_try_get_key*)packet;
 
-		shared_ptr<OBJECT> card = my_game->ingame_object[p->key_id];
+		shared_ptr<OBJECT> card = mg->ingame_object[p->key_id];
 		if (card == nullptr) break;
 
 		std::cout << "카드키 획득 요청 수신\n";
 		card->owner_id = my_id_;
-		my_game->set_free_space(OT_KEYCARD,card->spawn_num);
+		mg->set_free_space(OT_KEYCARD,card->spawn_num);
 
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
 		rmp.size = sizeof(sc_packet_remove_player);
 		rmp.id = card->obj_id;
 		rmp.obj_type = OT_KEYCARD;
-		for (auto& player : my_game->ingame_player) {
+		for (auto& player : mg->ingame_player) {
 			auto& p = player.second;
 			if (p == nullptr) continue;
 			p->Send_Packet(&rmp);
@@ -270,10 +275,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			break;
 		}
 
-		shared_ptr<SESSION> user = my_game->ingame_player[my_id_];
+		shared_ptr<SESSION> user = mg->ingame_player[my_id_];
 		if (user == nullptr) break;
 
-		shared_ptr<OBJECT> terminal = my_game->ingame_object[p->terminal_id];
+		shared_ptr<OBJECT> terminal = mg->ingame_object[p->terminal_id];
 		if (terminal == nullptr) break;
 
 		int key_id = find_useable_key();
@@ -285,9 +290,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			terminal->owner_id = my_id_;
 
 			//플레이어가 가진 카드키를 삭제
-			auto it = my_game->ingame_object.find(key_id);
-			if (it != my_game->ingame_object.end()) {
-				my_game->ingame_object.erase(it);
+			auto it = mg->ingame_object.find(key_id);
+			if (it != mg->ingame_object.end()) {
+				mg->ingame_object.erase(it);
 			}
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
@@ -305,7 +310,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			Send_Packet(&cu);
 			Send_Packet(&sm);
 
-			for (auto& object : my_game->ingame_object) {
+			for (auto& object : mg->ingame_object) {
 				shared_ptr<OBJECT> obj = object.second;
 				if (obj->obj_type == OT_GRINDER) continue; //분쇄기는 맵에 표시 X
 				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
@@ -325,9 +330,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			}
 
 			//만약 모든 터미널이 활성화 되었으면 토끼발을 생성
-			if (my_game->IsTerminalOn()) {
+			if (mg->IsTerminalOn()) {
 				//auto& rabbitfoot = my_game->CreateObjectApprox_nr(OT_RABBITFOOT, 7);
-				auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+				auto& rabbitfoot = mg->CreateObjectApprox(OT_RABBITFOOT);
 
 				sc_packet_change_phase cp;
 				cp.size = sizeof(sc_packet_change_phase);
@@ -340,7 +345,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				pop.obj_type = rabbitfoot->obj_type;
 				pop.approx_num = rabbitfoot->spawn_num;
 
-				for (auto& p : my_game->ingame_player) {
+				for (auto& p : mg->ingame_player) {
 					auto& player = p.second;
 					if (player == nullptr) continue;
 					player->Send_Packet(&pop);
@@ -349,7 +354,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 				TIMER_EVENT tm_grind;
 				tm_grind.event_id = EV_MOVE_GRINDER;
-				tm_grind.game_id = my_game->get_game_id();
+				tm_grind.game_id = mg->get_game_id();
 				tm_grind.target_id = -1;
 				tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
 
@@ -357,7 +362,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 				TIMER_EVENT tm_exit;
 				tm_exit.event_id = EV_SPAWN_EXIT;
-				tm_exit.game_id = my_game->get_game_id();
+				tm_exit.game_id = mg->get_game_id();
 				tm_exit.target_id = -1;
 				tm_exit.wakeup_time = chrono::system_clock::now() + 90s;
 
@@ -378,7 +383,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			//다른 오브젝트의 위치를 전달
 			//현재 존재하는 오브젝트 : 키카드, 터미널, 토끼발, 부활패드, 탈출구, 분쇄기
-			for (auto& object : my_game->ingame_object) {
+			for (auto& object : mg->ingame_object) {
 				shared_ptr<OBJECT> obj = object.second;
 				if (obj->obj_type == OT_GRINDER) continue; //분쇄기는 맵에 표시 X
 				//아직 주인이 없는 키카드, 터미널, 토끼발이 있다면 토끼발 위치
@@ -408,7 +413,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.obj_id = my_id_;
 		set_anima.animation_id = AT_RELOADING;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -433,7 +438,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		if (!is_running) set_anima.animation_id = AT_WALKING;
 		else set_anima.animation_id = AT_RUNNING;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -450,7 +455,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.obj_id = my_id_;
 		set_anima.animation_id = AT_IDLE;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -470,7 +475,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			set_anima.obj_id = my_id_;
 			set_anima.animation_id = AT_RUNNING;
 
-			for (auto& p : my_game->ingame_player) {
+			for (auto& p : mg->ingame_player) {
 				shared_ptr<SESSION> player = p.second;
 				if (player == nullptr) continue;
 				if (player->my_id_ == my_id_) continue;
@@ -487,12 +492,12 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	case CS_TRY_GET_RABBITFOOT: {
 		cs_packet_try_get_rabbitfoot* p = (cs_packet_try_get_rabbitfoot*)packet;
 
-		shared_ptr<OBJECT> foot = my_game->ingame_object[p->obj_id];
+		shared_ptr<OBJECT> foot = mg->ingame_object[p->obj_id];
 		if (foot == nullptr) break;
 
 		std::cout << "토끼발 획득 요청 수신\n";
 		foot->owner_id = my_id_;
-		my_game->set_rabbitfoot_owner(my_id_);
+		mg->set_rabbitfoot_owner(my_id_);
 
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
@@ -500,7 +505,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rmp.id = foot->obj_id;
 		rmp.obj_type = OT_RABBITFOOT;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			auto& player = p.second;
 			if (player == nullptr) continue;
 			p.second->Send_Packet(&rmp);
@@ -508,9 +513,9 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		break;
 	}
 	case CS_TRY_ESCAPE: {
-		if (my_game->get_rabbitfoot_owner() == my_id_) {
+		if (mg->get_rabbitfoot_owner() == my_id_) {
 			//탈출 성공
-			my_game->set_game_state(ST_END);
+			mg->set_game_state(ST_END);
 
 			sc_packet_player_win pw;
 			pw.size = sizeof(sc_packet_player_win);
@@ -520,7 +525,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			pl.size = sizeof(sc_packet_player_lose);
 			pl.type = SC_PLAYER_LOSE;
 
-			for (auto& p : my_game->ingame_player) {
+			for (auto& p : mg->ingame_player) {
 				auto& player = p.second;
 				if (player == nullptr) continue;
 
@@ -532,7 +537,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			}
 			TIMER_EVENT te;
-			te.game_id = my_game->get_game_id();
+			te.game_id = mg->get_game_id();
 			te.event_id = EV_GAME_END;
 			te.target_id = -1;
 			te.wakeup_time = chrono::system_clock::now() + 5s;
@@ -549,7 +554,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		rp.id = my_id_;
 		rp.obj_type = OT_PLAYER;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			auto& player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -557,11 +562,11 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			player->Send_Packet(&rp);
 		}
 
-		for (auto& object : my_game->ingame_object) {
+		for (auto& object : mg->ingame_object) {
 			auto& obj = object.second;
 			if (obj->obj_type == OT_KEYCARD && obj->owner_id == my_id_) {
 				obj->owner_id = -1;
-				obj->set_pos(my_game->select_pos());
+				obj->set_pos(mg->select_pos());
 
 				sc_packet_put_object put_obj;
 				put_obj.size = sizeof(sc_packet_put_object);
@@ -570,7 +575,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				put_obj.obj_type = obj->obj_type;
 				put_obj.approx_num = obj->spawn_num;
 
-				for (auto& player : my_game->ingame_player) {
+				for (auto& player : mg->ingame_player) {
 					auto& p = player.second;
 					if (p == nullptr) continue;
 
@@ -580,8 +585,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
 				obj->owner_id = -1;
-				my_game->set_rabbitfoot_owner(-1);
-				obj->set_pos(my_game->select_room_pos());
+				mg->set_rabbitfoot_owner(-1);
+				obj->set_pos(mg->select_room_pos());
 
 				sc_packet_put_object_pos pop;
 				pop.size = sizeof(sc_packet_put_object_pos);
@@ -590,7 +595,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				pop.obj_type = obj->obj_type;
 				pop.approx_num = obj->spawn_num;
 
-				for (auto& player : my_game->ingame_player) {
+				for (auto& player : mg->ingame_player) {
 					auto& p = player.second;
 					if (p == nullptr) continue;
 
@@ -607,21 +612,21 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		socket_.close();
 
-		my_game->ingame_player.erase(my_id_);
+		mg->ingame_player.erase(my_id_);
 
 		break;
 	}
 	case CS_TRIGGER_LASER: {
 		if (using_tml_id == -1) break;
-		auto& terminal = my_game->ingame_object[using_tml_id];
+		auto& terminal = mg->ingame_object[using_tml_id];
 		if (terminal->triggered_laser >= 2) break;
 		
 		cs_packet_trigger_laser* p = (cs_packet_trigger_laser*)packet;
 
 		std::cout << "Laser Trap Triggered\n";
 
-		if (my_game->is_free_room(p->room_num)) {
-			my_game->set_room_unable(p->room_num);
+		if (mg->is_free_room(p->room_num)) {
+			mg->set_room_unable(p->room_num);
 
 			terminal->triggered_laser += 1;
 
@@ -636,7 +641,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			TIMER_EVENT tm_laser;
 			tm_laser.event_id = EV_LASER_TRAP_ON;
-			tm_laser.game_id = my_game->get_game_id();
+			tm_laser.game_id = mg->get_game_id();
 			tm_laser.target_id = p->room_num;
 			tm_laser.wakeup_time = chrono::system_clock::now() + 3ms;
 			tm_laser.x = p->x - 150.0f;
@@ -654,15 +659,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pd.size = sizeof(sc_packet_player_dead);
 		pd.id = my_id_;
 
-		for (auto& pl : my_game->ingame_player) {
+		for (auto& pl : mg->ingame_player) {
 			pl.second->Send_Packet(&pd);
 		}
 
-		for (auto& object : my_game->ingame_object) {
+		for (auto& object : mg->ingame_object) {
 			auto& obj = object.second;
 			if (obj->obj_type == OT_KEYCARD && obj->owner_id == my_id_) {
 				obj->owner_id = -1;
-				obj->set_pos(my_game->select_pos());
+				obj->set_pos(mg->select_pos());
 
 				sc_packet_put_object put_obj;
 				put_obj.size = sizeof(sc_packet_put_object);
@@ -671,7 +676,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				put_obj.obj_type = obj->obj_type;
 				put_obj.approx_num = obj->spawn_num;
 
-				for (auto& player : my_game->ingame_player) {
+				for (auto& player : mg->ingame_player) {
 					auto& p = player.second;
 					if (p == nullptr) continue;
 					p->Send_Packet(&put_obj);
@@ -681,8 +686,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			else if (obj->obj_type == OT_RABBITFOOT && obj->owner_id == my_id_) {
 				obj->owner_id = -1;
-				my_game->set_rabbitfoot_owner(-1);
-				obj->set_pos(my_game->select_room_pos());
+				mg->set_rabbitfoot_owner(-1);
+				obj->set_pos(mg->select_room_pos());
 
 				sc_packet_put_object put_obj;
 				put_obj.size = sizeof(sc_packet_put_object);
@@ -691,7 +696,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				put_obj.obj_type = obj->obj_type;
 				put_obj.approx_num = obj->spawn_num;
 
-				for (auto& player : my_game->ingame_player) {
+				for (auto& player : mg->ingame_player) {
 					player.second->Send_Packet(&put_obj);
 				}
 				std::cout << "소유하던 토끼발 드랍\n";
@@ -724,7 +729,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			res.id = my_id_;
 			res.team = team;
 
-			for (auto& p : my_game->ingame_player) {
+			for (auto& p : mg->ingame_player) {
 				auto& player = p.second;
 				if (player == nullptr) continue;
 
@@ -753,7 +758,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		put.team = team;
 
 		//클라이언트가 입장했음을 모든 다른 유저에게 전송
-		for (auto& pl : my_game->ingame_player) {
+		for (auto& pl : mg->ingame_player) {
 			shared_ptr<SESSION> player = pl.second;
 			if (player->my_id_ == my_id_) continue;
 			player->Send_Packet(&put);
@@ -783,7 +788,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		set_anima.animation_id = AT_CHANGE;
 		
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			shared_ptr<SESSION> player = p.second;
 			if (player == nullptr) continue;
 			if (player->my_id_ == my_id_) continue;
@@ -796,7 +801,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		spg.id = my_id_;
 		spg.gun_type = equip_weapon;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			auto& player = p.second;
 			if (player == nullptr) continue;
 
@@ -818,7 +823,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		//-------------Test
 		std::cout << "테스트 패킷 수신\n";
 
-		auto& rabbitfoot = my_game->CreateObjectApprox(OT_RABBITFOOT);
+		auto& rabbitfoot = mg->CreateObjectApprox(OT_RABBITFOOT);
 
 		sc_packet_put_object_pos pop;
 		pop.size = sizeof(sc_packet_put_object_pos);
@@ -827,7 +832,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pop.obj_type = rabbitfoot->obj_type;
 		pop.approx_num = rabbitfoot->spawn_num;
 
-		for (auto& p : my_game->ingame_player) {
+		for (auto& p : mg->ingame_player) {
 			auto& player = p.second;
 			if (player == nullptr) continue;
 			player->Send_Packet(&pop);
@@ -840,15 +845,19 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 void SESSION::do_read()
 {
+
 	auto self(shared_from_this());
 	socket_.async_read_some(boost::asio::buffer(data_),
 		[this, self](boost::system::error_code ec, std::size_t length)
 		{
+			auto mg = my_game.lock();
+			if (mg == nullptr) return;
+
 			if (ec)
 			{
 				if (ec.value() == boost::asio::error::operation_aborted) return;
 				cout << "Receive Error on Session[" << my_id_ << "] EC[" << ec << "]\n";
-				my_game->ingame_player[my_id_] = nullptr;
+				mg->ingame_player[my_id_] = nullptr;
 				//players.unsafe_erase(my_id_);
 				return;
 			}
@@ -901,7 +910,10 @@ void SESSION::do_write(unsigned char* packet, std::size_t length)
 
 int SESSION::find_useable_key()
 {
-	for (auto& object : my_game->ingame_object) {
+	auto mg = my_game.lock();
+	if (mg == nullptr) return;
+
+	for (auto& object : mg->ingame_object) {
 		shared_ptr<OBJECT> key = object.second;
 		if (key->obj_type != OT_KEYCARD) continue;
 		if (key->owner_id == my_id_) return key->obj_id;
@@ -993,90 +1005,93 @@ void SESSION::start()
 
 		return;
 	}
+	else {
+		auto mg = my_game.lock();
+		if (mg == nullptr) return;
 
-	sc_packet_login_info pl;
-	pl.id = my_id_;
-	pl.size = sizeof(sc_packet_login_info);
-	pl.type = SC_LOGIN_INFO;
-	pl.x = pos[0];
-	pl.y = pos[1];
-	pl.z = pos[2];
-	pl.dirx = view_dir[0];
-	pl.diry = view_dir[1];
-	pl.dirz = view_dir[2];
-	pl.team_num = team;
-	pl.bullet_amount = WP_MAG[GT_PT]; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
-	Send_Packet(&pl);
+		sc_packet_login_info pl;
+		pl.id = my_id_;
+		pl.size = sizeof(sc_packet_login_info);
+		pl.type = SC_LOGIN_INFO;
+		pl.x = pos[0];
+		pl.y = pos[1];
+		pl.z = pos[2];
+		pl.dirx = view_dir[0];
+		pl.diry = view_dir[1];
+		pl.dirz = view_dir[2];
+		pl.team_num = team;
+		pl.bullet_amount = WP_MAG[GT_PT]; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
+		Send_Packet(&pl);
 
-	//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
+		//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
 
-	//다른 유저들의 정보를 클라이언트에게 전송
-	for (auto& pl : my_game->ingame_player) {
-		shared_ptr<SESSION> player = pl.second;
-		if (player->my_id_ != my_id_) {
-			sc_packet_put p;
-			p.id = player->my_id_;
-			p.size = sizeof(sc_packet_put);
-			p.type = SC_PUT_PLAYER;
-			p.x = player->pos[0];
-			p.y = player->pos[1];
-			p.z = player->pos[2];
-			p.dirx = player->view_dir[0];
-			p.diry = player->view_dir[1];
-			p.dirz = player->view_dir[2];
-			p.gun_type = player->gun_type;
-			p.team = player->team;
-			Send_Packet(&p);
+		//다른 유저들의 정보를 클라이언트에게 전송
+		for (auto& pl : mg->ingame_player) {
+			shared_ptr<SESSION> player = pl.second;
+			if (player->my_id_ != my_id_) {
+				sc_packet_put p;
+				p.id = player->my_id_;
+				p.size = sizeof(sc_packet_put);
+				p.type = SC_PUT_PLAYER;
+				p.x = player->pos[0];
+				p.y = player->pos[1];
+				p.z = player->pos[2];
+				p.dirx = player->view_dir[0];
+				p.diry = player->view_dir[1];
+				p.dirz = player->view_dir[2];
+				p.gun_type = player->gun_type;
+				p.team = player->team;
+				Send_Packet(&p);
+			}
+		}
+
+		//생성되어있는 기본 오브젝트의 위치를 전송
+		for (auto& object : mg->ingame_object) {
+			shared_ptr<OBJECT> obj = object.second;
+			if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
+
+			//복도에 생성될 객체들(키카드, 터미널)
+			if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) {
+				sc_packet_put_object put_obj;
+				put_obj.size = sizeof(sc_packet_put_object);
+				put_obj.type = SC_PUT_OBJECT;
+				put_obj.id = obj->obj_id;
+				put_obj.obj_type = obj->obj_type;
+				put_obj.approx_num = obj->spawn_num;
+
+				Send_Packet(&put_obj);
+			}
+
+			//방에 생성될 객체들(토끼발, 부활패드, 탈출구 등등)
+			if (obj->obj_type == OT_RABBITFOOT || obj->obj_type == OT_RESURRECTION_PAD || obj->obj_type == OT_EXIT) {
+				sc_packet_put_object_pos pop;
+				pop.type = SC_PUT_OBJECT_POS;
+				pop.size = sizeof(sc_packet_put_object_pos);
+				pop.obj_type = obj->obj_type;
+				pop.id = obj->obj_id;
+				pop.approx_num = obj->spawn_num;
+
+				Send_Packet(&pop);
+			}
+
+			//좌표로 생성될 객체들(분쇄기)
+			if (obj->obj_type == OT_GRINDER) {
+				sc_packet_put_object_coor poc;
+				poc.type = SC_PUT_OBJECT_COOR;
+				poc.size = sizeof(sc_packet_put_object_coor);
+				poc.obj_type = obj->obj_type;
+				poc.obj_id = obj->obj_id;
+				poc.x = obj->pos[0];
+				poc.y = obj->pos[1];
+				poc.z = obj->pos[2];
+				poc.dirx = obj->rot[0];
+				poc.diry = obj->rot[1];
+				poc.dirz = obj->rot[2];
+
+				Send_Packet(&poc);
+			}
 		}
 	}
-
-	//생성되어있는 기본 오브젝트의 위치를 전송
-	for (auto& object : my_game->ingame_object) {
-		shared_ptr<OBJECT> obj = object.second;
-		if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
-
-		//복도에 생성될 객체들(키카드, 터미널)
-		if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) {
-			sc_packet_put_object put_obj;
-			put_obj.size = sizeof(sc_packet_put_object);
-			put_obj.type = SC_PUT_OBJECT;
-			put_obj.id = obj->obj_id;
-			put_obj.obj_type = obj->obj_type;
-			put_obj.approx_num = obj->spawn_num;
-
-			Send_Packet(&put_obj);
-		}
-		
-		//방에 생성될 객체들(토끼발, 부활패드, 탈출구 등등)
-		if (obj->obj_type == OT_RABBITFOOT || obj->obj_type == OT_RESURRECTION_PAD || obj->obj_type == OT_EXIT) {
-			sc_packet_put_object_pos pop;
-			pop.type = SC_PUT_OBJECT_POS;
-			pop.size = sizeof(sc_packet_put_object_pos);
-			pop.obj_type = obj->obj_type;
-			pop.id = obj->obj_id;
-			pop.approx_num = obj->spawn_num;
-			
-			Send_Packet(&pop);
-		}
-
-		//좌표로 생성될 객체들(분쇄기)
-		if (obj->obj_type == OT_GRINDER) {
-			sc_packet_put_object_coor poc;
-			poc.type = SC_PUT_OBJECT_COOR;
-			poc.size = sizeof(sc_packet_put_object_coor);
-			poc.obj_type = obj->obj_type;
-			poc.obj_id = obj->obj_id;
-			poc.x = obj->pos[0];
-			poc.y = obj->pos[1];
-			poc.z = obj->pos[2];
-			poc.dirx = obj->rot[0];
-			poc.diry = obj->rot[1];
-			poc.dirz = obj->rot[2];
-
-			Send_Packet(&poc);
-		}
-	}
-
 	
 }
 

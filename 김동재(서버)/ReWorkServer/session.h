@@ -28,7 +28,7 @@ private:
 	array<float, 3> pos;
 	array<float, 3> view_dir;
 
-	std::shared_ptr<GAME> my_game;
+	std::weak_ptr<GAME> my_game;
 	SERVER* my_server;
 
 	bool is_core_state;
