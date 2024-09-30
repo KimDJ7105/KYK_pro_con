@@ -904,7 +904,7 @@ void SESSION::do_write(unsigned char* packet, std::size_t length)
 int SESSION::find_useable_key()
 {
 	auto mg = my_game.lock();
-	if (mg == nullptr) return;
+	if (mg == nullptr) return -1;
 
 	for (auto& object : mg->ingame_object) {
 		shared_ptr<OBJECT> key = object.second;
