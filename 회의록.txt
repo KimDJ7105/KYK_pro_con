@@ -839,5 +839,5 @@
 
 --------
 10월 7일 회의 시 질문사항
-SESSION이 생성될 때 tcp::socket socket_ 맴버 변수를 SERVER의 socket_으로 부터 std::move() 를 통해 받는데,
-이러면 SERVER의 socket_이 유효하지 않은 소켓이 되어  이후 accept를 수행할 수 없어야 하는게 아닌가?
+SESSION의 생성자에서 tcp::socket socket_ 맴버 변수를 SERVER의 socket_으로 부터 std::move() 를 통해 받는데,
+이러면 SERVER의 socket_이 유효하지 않은 소켓이 되어  이후 accept를 수행할 수 없어야 하는게 아닌가요?
