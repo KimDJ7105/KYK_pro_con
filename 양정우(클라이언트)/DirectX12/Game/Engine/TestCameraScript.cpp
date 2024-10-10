@@ -344,6 +344,7 @@ void TestCameraScript::LateUpdate()
 			}
 		}
 
+		//전송칼2
 
 		//위치가 변경되었을때만 서버에 전송하도록 수정
 		if (currentPosition != tempPos)
@@ -1308,6 +1309,7 @@ void TestCameraScript::RotationUpdate()
 			GetTransform()->SetLocalRotation(rotation);
 		}
 
+		//전송칼1
 
 		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
 		{
