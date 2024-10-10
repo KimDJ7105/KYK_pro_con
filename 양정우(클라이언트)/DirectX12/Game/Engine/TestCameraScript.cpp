@@ -19,12 +19,15 @@
 
 extern int playerID;
 
+
+
 TestCameraScript::TestCameraScript()
 {
 	// 플레이어의 수직 속도 초기화
 	verticalVelocity = 0.0f;
 
-	
+	next_send_time = std::chrono::steady_clock::now();
+	next_send_time_for_eye = std::chrono::steady_clock::now();
 }
 
 TestCameraScript::~TestCameraScript()
@@ -349,27 +352,32 @@ void TestCameraScript::LateUpdate()
 		//위치가 변경되었을때만 서버에 전송하도록 수정
 		if (currentPosition != tempPos)
 		{
+			auto now = std::chrono::steady_clock::now();
 
-			float addedPos_Y;
-			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-			{
-				addedPos_Y = -40.f;
+			if (now >= next_send_time) {
+
+				float addedPos_Y;
+				if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+				{
+					addedPos_Y = -40.f;
+				}
+				else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+				{
+					addedPos_Y = -35.f;
+				}
+				//------------------------------------
+				cs_packet_pos_info packet;
+				packet.size = sizeof(cs_packet_pos_info);
+				packet.type = CS_POS_INFO;
+				packet.x = currentPosition.x;
+				packet.y = currentPosition.y + addedPos_Y;
+				packet.z = currentPosition.z;
+
+				main_session->Send_Packet(&packet);
+				//-------------------------------------
+
+				next_send_time = now + interval;
 			}
-			else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
-			{
-				addedPos_Y = -35.f;
-			}
-			//------------------------------------
-			cs_packet_pos_info packet;
-			packet.size = sizeof(cs_packet_pos_info);
-			packet.type = CS_POS_INFO;
-			packet.x = currentPosition.x;
-			packet.y = currentPosition.y + addedPos_Y;
-			packet.z = currentPosition.z;
-
-			main_session->Send_Packet(&packet);
-			//-------------------------------------
-
 
 			if (isMoving)
 			{
@@ -1310,38 +1318,41 @@ void TestCameraScript::RotationUpdate()
 		}
 
 		//전송칼1
+		auto now = std::chrono::steady_clock::now();
+		if (now >= next_send_time_for_eye) {
+			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+			{
+				//---------------------------------
+				// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+				cs_packet_mouse_info mi;
+				mi.size = sizeof(cs_packet_mouse_info);
+				mi.type = CS_MOUSE_INFO;
+				//mi.x = rotation.x;
+				mi.x = 0.f;
+				mi.y = rotation.y + 3.14f;
+				mi.z = 0.0f;
 
-		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-		{
-			//---------------------------------
-			// 이곳에서 rotation정보를 server에 넘겨주면 된다.
-			cs_packet_mouse_info mi;
-			mi.size = sizeof(cs_packet_mouse_info);
-			mi.type = CS_MOUSE_INFO;
-			//mi.x = rotation.x;
-			mi.x = 0.f;
-			mi.y = rotation.y + 3.14f;
-			mi.z = 0.0f;
+				main_session->Send_Packet(&mi);
+				//---------------------------------
+			}
+			else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+			{
+				//---------------------------------
+				// 이곳에서 rotation정보를 server에 넘겨주면 된다.
+				cs_packet_mouse_info mi;
+				mi.size = sizeof(cs_packet_mouse_info);
+				mi.type = CS_MOUSE_INFO;
+				//mi.x = rotation.x;
+				mi.x = -1.57f;
+				mi.y = rotation.y;
+				mi.z = 0.0f;
 
-			main_session->Send_Packet(&mi);
-			//---------------------------------
+				main_session->Send_Packet(&mi);
+				//---------------------------------
+			}
+
+			next_send_time_for_eye = now + interval;
 		}
-		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
-		{
-			//---------------------------------
-			// 이곳에서 rotation정보를 server에 넘겨주면 된다.
-			cs_packet_mouse_info mi;
-			mi.size = sizeof(cs_packet_mouse_info);
-			mi.type = CS_MOUSE_INFO;
-			//mi.x = rotation.x;
-			mi.x = -1.57f;
-			mi.y = rotation.y;
-			mi.z = 0.0f;
-
-			main_session->Send_Packet(&mi);
-			//---------------------------------
-		}
-		
 	}
 
 	//마우스의 위치를 중앙으로 초기화 해준다.

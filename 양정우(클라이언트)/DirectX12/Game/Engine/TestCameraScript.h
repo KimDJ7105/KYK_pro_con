@@ -1,5 +1,8 @@
 #pragma once
 #include "MonoBehaviour.h"
+#include <chrono>
+
+const auto interval = std::chrono::milliseconds(33);
 
 class TestCameraScript : public MonoBehaviour
 {
@@ -74,8 +77,8 @@ private:
 
 	float Escape_End = 1.f;
 
-
-
+	std::chrono::steady_clock::time_point next_send_time;
+	std::chrono::steady_clock::time_point next_send_time_for_eye;
 private:
 	shared_ptr<GameObject> cursor;
 
