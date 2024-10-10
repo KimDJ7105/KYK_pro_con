@@ -6,9 +6,6 @@
 #define MAX_BUFF_SIZE   4000
 #define MAX_PACKET_SIZE  255
 
-#define BOARD_WIDTH   52
-#define BOARD_HEIGHT  30
-
 #define MAX_USER 12
 #define MAX_GAME 6
 
@@ -27,133 +24,133 @@
 //---------------------------------------
 
 //Object Type----------------------------
-#define OT_PLAYER			0
-#define OT_KEYCARD			1
-#define OT_ROOM				2
-#define OT_CORRIDOR			3
-#define OT_TERMINAL			4
-#define OT_RESURRECTION_PAD 5
-#define OT_GRINDER          6
-#define OT_RABBITFOOT       7
-#define OT_EXIT				8
-#define OT_LASER			9
-#define OT_AMMOBOX			10
-#define OT_MEDIKIT			11
+constexpr int OT_PLAYER = 0;
+constexpr int OT_KEYCARD = 1;
+constexpr int OT_ROOM = 2;
+constexpr int OT_CORRIDOR = 3;
+constexpr int OT_TERMINAL = 4;
+constexpr int OT_RESURRECTION_PAD = 5;
+constexpr int OT_GRINDER = 6;
+constexpr int OT_RABBITFOOT = 7;
+constexpr int OT_EXIT = 8;
+constexpr int OT_LASER = 9;
+constexpr int OT_AMMOBOX = 10;
+constexpr int OT_MEDIKIT = 11;
 
-#define OT_WALLAABB				99
-#define OT_UI_MAIN_WEAPON_3D	100
-#define OT_UI_PLAYERHAND		101
-#define OT_UI_SUB_WEAPON_3D		102
-#define OT_UI_MAP				103
-#define OT_UI_HP				104
-#define OT_UI_KEYCARD			105
-#define OT_UI_GUN				106
-#define OT_UI_SLASH				107
-#define OT_UI_MAXBULLET			108
-#define OT_UI_CURRENTBULLET		109
-#define OT_UI_RABBITFOOT		110
-#define OT_UI_MAPOBJECTS		111
-#define OT_PLAYER_CAMERA		112
-#define OT_CRUSHER				113
-#define OT_CRUSHER_BLADE		114
-#define OT_UI_MAP_BUTTON		115
-#define OT_CURSOR				116
-#define OT_HEADCORE				117
-#define OT_UI_START_BTN			118
-#define OT_UI_WEAPON_BTN		119
-#define OT_UI_EXIT_BTN			120
-#define OT_UI_TITLE				121
-#define OT_UI_WEAPON_CHANGE		122
-#define OT_UI_WEAPON_SELECT		123
-#define OT_OTHER_PLAYER_SUB		124
-#define OT_OTHER_PLAYER_MAIN	125
-#define OT_PARTICLE_GUNSHOT		126
-#define OT_LIGHT_GUNSHOT		127
+constexpr int OT_WALLAABB = 99;
+constexpr int OT_UI_MAIN_WEAPON_3D = 100;
+constexpr int OT_UI_PLAYERHAND = 101;
+constexpr int OT_UI_SUB_WEAPON_3D = 102;
+constexpr int OT_UI_MAP = 103;
+constexpr int OT_UI_HP = 104;
+constexpr int OT_UI_KEYCARD = 105;
+constexpr int OT_UI_GUN = 106;
+constexpr int OT_UI_SLASH = 107;
+constexpr int OT_UI_MAXBULLET = 108;
+constexpr int OT_UI_CURRENTBULLET = 109;
+constexpr int OT_UI_RABBITFOOT = 110;
+constexpr int OT_UI_MAPOBJECTS = 111;
+constexpr int OT_PLAYER_CAMERA = 112;
+constexpr int OT_CRUSHER = 113;
+constexpr int OT_CRUSHER_BLADE = 114;
+constexpr int OT_UI_MAP_BUTTON = 115;
+constexpr int OT_CURSOR = 116;
+constexpr int OT_HEADCORE = 117;
+constexpr int OT_UI_START_BTN = 118;
+constexpr int OT_UI_WEAPON_BTN = 119;
+constexpr int OT_UI_EXIT_BTN = 120;
+constexpr int OT_UI_TITLE = 121;
+constexpr int OT_UI_WEAPON_CHANGE = 122;
+constexpr int OT_UI_WEAPON_SELECT = 123;
+constexpr int OT_OTHER_PLAYER_SUB = 124;
+constexpr int OT_OTHER_PLAYER_MAIN = 125;
+constexpr int OT_PARTICLE_GUNSHOT = 126;
+constexpr int OT_LIGHT_GUNSHOT = 127;
 
-#define OT_UI_LOADING			128
-#define OT_UI_WATING			129
-#define OT_UI_STARTING			130
-#define OT_UI_INTERACT			131
-#define OT_UI_REVIVE			132
-#define OT_UI_ESCAPE			133
+constexpr int OT_UI_LOADING = 128;
+constexpr int OT_UI_WATING = 129;
+constexpr int OT_UI_STARTING = 130;
+constexpr int OT_UI_INTERACT = 131;
+constexpr int OT_UI_REVIVE = 132;
+constexpr int OT_UI_ESCAPE = 133;
 
-#define OT_UI_FIRSTWAVE			134
-#define OT_UI_SECONDWAVE		135
-#define OT_UI_SHOW_ESCAPE		136
-#define OT_UI_DAMAGED_RED		137
+constexpr int OT_UI_FIRSTWAVE = 134;
+constexpr int OT_UI_SECONDWAVE = 135;
+constexpr int OT_UI_SHOW_ESCAPE = 136;
+constexpr int OT_UI_DAMAGED_RED = 137;
 //---------------------------------------
 
 //Gun Type-------------------------------
-#define GT_SM				0
-#define GT_SG				1
-#define GT_SR				2
-#define GT_AR				3
-#define GT_PT		        4
+constexpr int GT_SM = 0;
+constexpr int GT_SG = 1;
+constexpr int GT_SR = 2;
+constexpr int GT_AR = 3;
+constexpr int GT_PT = 4;
 //---------------------------------------
 
 
 //Animation Type-------------------------
-#define AT_IDLE				0
-#define AT_WALKING			1
-#define AT_RUNNING			2
+constexpr int AT_IDLE = 0;
+constexpr int AT_WALKING = 1;
+constexpr int AT_RUNNING = 2;
 
-#define AT_SHOOTING			3
-#define AT_RELOADING		4
-#define AT_CHANGE			5
+constexpr int AT_SHOOTING = 3;
+constexpr int AT_RELOADING = 4;
+constexpr int AT_CHANGE = 5;
 //---------------------------------------
 
 //Packet type----------------------------
-#define CS_POS_INFO			  1
-#define CS_BOX_CREATE         2
-#define CS_MOUSE_INFO         3
-#define CS_PICKING_INFO       4
-#define CS_TRY_GET_KEY        5
-#define CS_TRY_USE_TMN        6
-#define CS_RELOAD_MAG         7
-#define CS_MOVE_KEY_DOWN      8
-#define CS_MOVE_KEY_UP        9
-#define CS_TRY_GET_RABBITFOOT 10
-#define CS_SET_LASER_TRAP     11
-#define CS_TRY_ESCAPE		  12
-#define CS_HIT_BY_GRINDER	  13
-#define CS_TRIGGER_LASER	  14
-#define CS_HIT_BY_LASER		  15
-#define CS_USE_RESURRECTION	  16
-#define CS_SEND_GUNTYPE		  17
-#define CS_CHANGE_GUN		  18
-#define CS_RUN_KEY_DOWN	      19
-#define CS_RUN_KEY_UP		  20
-#define CS_USE_MEDIKIT        21
+constexpr BYTE CS_POS_INFO = 1;
+constexpr BYTE CS_BOX_CREATE = 2;
+constexpr BYTE CS_MOUSE_INFO = 3;
+constexpr BYTE CS_PICKING_INFO = 4;
+constexpr BYTE CS_TRY_GET_KEY = 5;
+constexpr BYTE CS_TRY_USE_TMN = 6;
+constexpr BYTE CS_RELOAD_MAG = 7;
+constexpr BYTE CS_MOVE_KEY_DOWN = 8;
+constexpr BYTE CS_MOVE_KEY_UP = 9;
+constexpr BYTE CS_TRY_GET_RABBITFOOT = 10;
+constexpr BYTE CS_SET_LASER_TRAP = 11;
+constexpr BYTE CS_TRY_ESCAPE = 12;
+constexpr BYTE CS_HIT_BY_GRINDER = 13;
+constexpr BYTE CS_TRIGGER_LASER = 14;
+constexpr BYTE CS_HIT_BY_LASER = 15;
+constexpr BYTE CS_USE_RESURRECTION = 16;
+constexpr BYTE CS_SEND_GUNTYPE = 17;
+constexpr BYTE CS_CHANGE_GUN = 18;
+constexpr BYTE CS_RUN_KEY_DOWN = 19;
+constexpr BYTE CS_RUN_KEY_UP = 20;
+constexpr BYTE CS_USE_MEDIKIT = 21;
 
-#define SC_POS             1 //오브젝트 이동 & 회전
-#define SC_PUT_PLAYER      2 //오브젝트 생성
-#define SC_REMOVE_PLAYER   3 //오브젝트 제거
-#define SC_LOGIN_INFO	   4 //로그인 정보
-#define SC_APPLY_DAMAGE    5 //플레이어의 HP를 감소시킴
-#define SC_PLAYER_DEAD     6 //플레이어의 HP가 0이 될때
-#define SC_PUT_OBJECT      7 //오브젝트를 생성
-#define SC_MODIFY_BULLET   8 //총알 개수를 변경
-#define SC_SHOW_MAP        9 //단말기를 통해 맵을 출력
-#define SC_SET_ANIMATION   10 //객체의 애니메이션을 세팅
-#define SC_CARD_USED       11 //카드가 사용되었음을 알림
-#define SC_PUT_OBJECT_POS  12 //오브젝트를 방에 생성
-#define SC_SHOW_OBJECT_LOC 13 //터미널 사용시 오브젝트 위치를 화면에 표시
-#define SC_PUT_OBJECT_COOR 14 //오브젝트를 특정 좌표에 생성
-#define SC_PLAYER_WIN	   15 //플레이어 팀이 토끼발 들고 탈출
-#define SC_PLAYER_LOSE     16 //플레이어 패배
-#define SC_RESURRECTION	   17 //플레이어 코어 상태에서 부활
-#define SC_SET_PLAYER_GUN  18 //플레이어 총 설정
-#define SC_GAME_START	   19 //게임 시작을 전달
-#define SC_CHANGE_PHASE    20 //게임 단계 변환
+constexpr BYTE SC_POS = 1; //오브젝트 이동 & 회전
+constexpr BYTE SC_PUT_PLAYER = 2; //오브젝트 생성
+constexpr BYTE SC_REMOVE_PLAYER = 3; //오브젝트 제거
+constexpr BYTE SC_LOGIN_INFO = 4; //로그인 정보
+constexpr BYTE SC_APPLY_DAMAGE = 5; //플레이어의 HP를 감소시킴
+constexpr BYTE SC_PLAYER_DEAD = 6; //플레이어의 HP가 0이 될때
+constexpr BYTE SC_PUT_OBJECT = 7; //오브젝트를 생성
+constexpr BYTE SC_MODIFY_BULLET = 8; //총알 개수를 변경
+constexpr BYTE SC_SHOW_MAP = 9; //단말기를 통해 맵을 출력
+constexpr BYTE SC_SET_ANIMATION = 10; //객체의 애니메이션을 세팅
+constexpr BYTE SC_CARD_USED = 11; //카드가 사용되었음을 알림
+constexpr BYTE SC_PUT_OBJECT_POS = 12; //오브젝트를 방에 생성
+constexpr BYTE SC_SHOW_OBJECT_LOC = 13; //터미널 사용시 오브젝트 위치를 화면에 표시
+constexpr BYTE SC_PUT_OBJECT_COOR = 14; //오브젝트를 특정 좌표에 생성
+constexpr BYTE SC_PLAYER_WIN = 15; //플레이어 팀이 토끼발 들고 탈출
+constexpr BYTE SC_PLAYER_LOSE = 16; //플레이어 패배
+constexpr BYTE SC_RESURRECTION = 17; //플레이어 코어 상태에서 부활
+constexpr BYTE SC_SET_PLAYER_GUN = 18; //플레이어 총 설정
+constexpr BYTE SC_GAME_START = 19; //게임 시작을 전달
+constexpr BYTE SC_CHANGE_PHASE = 20; //게임 단계 변환
 
-#define SL_SET_PORT    101 //로비서버가 관리하는 서버의 포트번호를 변경
-#define SL_SET_IP      102 //로비서버가 관리하는 서버의 ip를 변경
+constexpr BYTE SL_SET_PORT = 101; //로비서버가 관리하는 서버의 포트번호를 변경
+constexpr BYTE SL_SET_IP = 102; //로비서버가 관리하는 서버의 ip를 변경
 
-#define LS_PLAYER_INFO    201 //서버에 플레이어의 정보(id, 장비, 팀 등)을 전달
+constexpr BYTE LS_PLAYER_INFO = 201; //서버에 플레이어의 정보(id, 장비, 팀 등)을 전달
 
-#define LC_SET_SERVER_INFO 255 //로비가 클라이언트에 메인 서버의 ip, port 전송
+constexpr BYTE LC_SET_SERVER_INFO = 255; //로비가 클라이언트에 메인 서버의 ip, port 전송
 
-#define CL_START_GAME      150 //로비 씬에서 메인 씬으로 전환
+constexpr BYTE CL_START_GAME = 150; //로비 씬에서 메인 씬으로 전환
 
 #define TEST_SPAWN_RBF 80
 //---------------------------------------
