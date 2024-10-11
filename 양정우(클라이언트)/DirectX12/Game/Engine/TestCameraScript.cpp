@@ -27,7 +27,6 @@ TestCameraScript::TestCameraScript()
 	verticalVelocity = 0.0f;
 
 	next_send_time = std::chrono::steady_clock::now();
-	next_send_time_for_eye = std::chrono::steady_clock::now();
 }
 
 TestCameraScript::~TestCameraScript()
