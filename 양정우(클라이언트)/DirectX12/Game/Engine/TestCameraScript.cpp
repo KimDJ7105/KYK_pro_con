@@ -347,74 +347,448 @@ void TestCameraScript::LateUpdate()
 			}
 		}
 
-		//전송칼2
+		
 
-		//위치가 변경되었을때만 서버에 전송하도록 수정
-		if (currentPosition != tempPos)
+		if (main_session->get_isMapOpen() == false)
 		{
-			auto now = std::chrono::steady_clock::now();
-
-			if (now >= next_send_time) {
-
-				float addedPos_Y;
-				if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-				{
-					addedPos_Y = -40.f;
-				}
-				else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
-				{
-					addedPos_Y = -35.f;
-				}
-				//------------------------------------
-				cs_packet_pos_info packet;
-				packet.size = sizeof(cs_packet_pos_info);
-				packet.type = CS_POS_INFO;
-				packet.x = currentPosition.x;
-				packet.y = currentPosition.y + addedPos_Y;
-				packet.z = currentPosition.z;
-
-				main_session->Send_Packet(&packet);
-				//-------------------------------------
-
-				next_send_time = now + interval;
-			}
-
-			if (isMoving)
+			if (isMouseMod != false)
 			{
-				if (isDash)
+
+				//먼저 현재 마우스의 포지션값을 읽어와서 저장한다.
+				POINT nowMousePos;
+				::GetCursorPos(&nowMousePos);
+
+				Vec3 rotation = GetTransform()->GetLocalRotation();
+
+				//만약 마우스가 움직임이 발생했다면
+				if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
 				{
-					if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == false)
+					//움직인 값을 저장한다.
+					int moveX = nowMousePos.x - WINDOW_MIDDLE_X;
+					int moveY = nowMousePos.y - WINDOW_MIDDLE_Y;
+
+					//오른쪽
+					if (moveX > 0)
 					{
-						if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == true)
+						rotation.y += DELTA_TIME * moveX;
+
+						GetTransform()->SetLocalRotation(rotation);
+					}
+
+					// 왼쪽
+					if (moveX < 0)
+					{
+						rotation.y += DELTA_TIME * moveX;
+
+						GetTransform()->SetLocalRotation(rotation);
+					}
+
+					// 아래
+					if (moveY > 0)
+					{
+						rotation.x += DELTA_TIME * moveY;
+
+						//playerRotation.x -= DELTA_TIME * moveY;
+
+						if (rotation.x < -1.57)
 						{
-							GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+							rotation.x = -1.56f;
 						}
-						GET_SINGLE(SoundManager)->soundPlay(PLAYER_RUN, GetTransform()->GetLocalPosition(), true);
+						else if (1.57f < rotation.x)
+						{
+							rotation.x = 1.56f;
+						}
+
+
+
+						GetTransform()->SetLocalRotation(rotation);
+					}
+
+					//위
+					if (moveY < 0)
+					{
+						rotation.x += DELTA_TIME * moveY;
+
+						//playerRotation.x -= DELTA_TIME * moveY;
+
+						if (rotation.x < -1.57)
+						{
+							rotation.x = -1.56f;
+						}
+						else if (1.57f < rotation.x)
+						{
+							rotation.x = 1.56f;
+						}
+
+						GetTransform()->SetLocalRotation(rotation);
+					}
+
+
+					auto now = std::chrono::steady_clock::now();
+					if (now >= next_send_time_for_eye) {
+
+						if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+						{
+
+
+
+							
+							if (currentPosition != tempPos)
+							{
+								auto now = std::chrono::steady_clock::now();
+
+								if (now >= next_send_time) {
+
+									float addedPos_Y;
+									if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+									{
+										addedPos_Y = -40.f;
+									}
+									else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+									{
+										addedPos_Y = -35.f;
+									}
+
+
+//전송칼 통합1 플레이어 생존 상태일떄===========================================
+									//이전 포지션 보내던 패킷
+									//------------------------------------
+									cs_packet_pos_info packet;
+									packet.size = sizeof(cs_packet_pos_info);
+									packet.type = CS_POS_INFO;
+									packet.x = currentPosition.x;
+									packet.y = currentPosition.y + addedPos_Y;
+									packet.z = currentPosition.z;
+
+									main_session->Send_Packet(&packet);
+									//-------------------------------------
+
+									//이전 로테이션 보내던 패킷
+									//-------------------------------------
+									cs_packet_mouse_info mi;
+									mi.size = sizeof(cs_packet_mouse_info);
+									mi.type = CS_MOUSE_INFO;
+									//mi.x = rotation.x;
+									mi.x = 0.f;
+									mi.y = rotation.y + 3.14f;
+									mi.z = 0.0f;
+
+									main_session->Send_Packet(&mi);
+									//-------------------------------------
+
+									next_send_time = now + interval;
+
+//전송칼 통합1 플레이어 생존 상태일떄===========================================
+								}
+
+								if (isMoving)
+								{
+									if (isDash)
+									{
+										if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == false)
+										{
+											if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == true)
+											{
+												GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+											}
+											GET_SINGLE(SoundManager)->soundPlay(PLAYER_RUN, GetTransform()->GetLocalPosition(), true);
+										}
+									}
+									else if (!isDash)
+									{
+										if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == false)
+										{
+											if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == true)
+											{
+												GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+											}
+											GET_SINGLE(SoundManager)->soundPlay(PLAYER_WALK, GetTransform()->GetLocalPosition(), true);
+										}
+									}
+								}
+
+							}
+							else if (currentPosition == tempPos)
+							{
+								GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+								GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+							}
+
+
+							// 업데이트된 위치를 플레이어에 반영
+							GetTransform()->SetLocalPosition(currentPosition);
+							
+						}
+						else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+						{
+
+							
+							if (currentPosition != tempPos)
+							{
+								auto now = std::chrono::steady_clock::now();
+
+								if (now >= next_send_time) {
+
+									float addedPos_Y;
+									if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+									{
+										addedPos_Y = -40.f;
+									}
+									else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+									{
+										addedPos_Y = -35.f;
+									}
+
+//전송칼 통합2 플레이어 사망상태일떄===========================================
+									//이전 포지션 보내던 패킷
+									//------------------------------------
+									cs_packet_pos_info packet;
+									packet.size = sizeof(cs_packet_pos_info);
+									packet.type = CS_POS_INFO;
+									packet.x = currentPosition.x;
+									packet.y = currentPosition.y + addedPos_Y;
+									packet.z = currentPosition.z;
+
+									main_session->Send_Packet(&packet);
+									//-------------------------------------
+
+									//이전 로테이션 보내던 패킷
+									//---------------------------------
+									cs_packet_mouse_info mi;
+									mi.size = sizeof(cs_packet_mouse_info);
+									mi.type = CS_MOUSE_INFO;
+									//mi.x = rotation.x;
+									mi.x = -1.57f;
+									mi.y = rotation.y;
+									mi.z = 0.0f;
+
+									main_session->Send_Packet(&mi);
+									//---------------------------------
+
+									next_send_time = now + interval;
+
+//전송칼 통합2 플레이어 사망상태일떄===========================================
+								}
+
+								if (isMoving)
+								{
+									if (isDash)
+									{
+										if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == false)
+										{
+											if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == true)
+											{
+												GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+											}
+											GET_SINGLE(SoundManager)->soundPlay(PLAYER_RUN, GetTransform()->GetLocalPosition(), true);
+										}
+									}
+									else if (!isDash)
+									{
+										if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == false)
+										{
+											if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == true)
+											{
+												GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+											}
+											GET_SINGLE(SoundManager)->soundPlay(PLAYER_WALK, GetTransform()->GetLocalPosition(), true);
+										}
+									}
+								}
+
+							}
+							else if (currentPosition == tempPos)
+							{
+								GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
+								GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+							}
+
+
+							// 업데이트된 위치를 플레이어에 반영
+							GetTransform()->SetLocalPosition(currentPosition);
+						}
+
+						next_send_time_for_eye = now + interval;
+
 					}
 				}
-				else if(!isDash)
+
+				//마우스의 위치를 중앙으로 초기화 해준다.
+				::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+
+
+				cursor->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			}
+			//Picking 입력을 확인
+
+			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+			{
+				if (INPUT->GetButton(KEY_TYPE::LBUTTON))
 				{
-					if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_WALK) == false)
+#ifdef DEBUG_ON
+
+#endif
+					if (clickCooldown <= fireTimeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
 					{
-						if (GET_SINGLE(SoundManager)->IsSoundPlaying(PLAYER_RUN) == true)
+#ifdef DEBUG_ON
+
+#endif
+
+						nowGunObject->GetAnimator()->ClearSequence();
+						playerObject->GetAnimator()->ClearSequence();
+
+						const POINT& pos = INPUT->GetMousePos();
+
+						shared_ptr<GameObject> pickedObject;
+
+
+
+						pickedObject = GET_SINGLE(SceneManager)->Pick(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+
+						int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
+						//0이면 기관단총	(GT_SM				0)
+						//1이면 산탄총		(GT_SG				1)
+						//2이면 저격소총	(GT_AR				2)
+						//3이면 돌격소총	(GT_SR				3)
+
+						if (nowGun == 0)
 						{
-							GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+							GET_SINGLE(SoundManager)->soundPlay(WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
+
+							gunRange = 360.f;
 						}
-						GET_SINGLE(SoundManager)->soundPlay(PLAYER_WALK, GetTransform()->GetLocalPosition(), true);
+						else if (nowGun == 1)
+						{
+							if (type == 0)//기관
+							{
+								GET_SINGLE(SoundManager)->soundPlay(WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
+								gunRange = 480.f;
+
+							}
+							else if (type == 1)//산탄
+							{
+								GET_SINGLE(SoundManager)->soundPlay(WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
+								gunRange = 192.f;
+							}
+							else if (type == 2)//저격
+							{
+								GET_SINGLE(SoundManager)->soundPlay(WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
+								gunRange = 1200.f;
+							}
+							else if (type == 3)//돌격
+							{
+								GET_SINGLE(SoundManager)->soundPlay(WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
+								gunRange = 600.f;
+							}
+						}
+
+
+
+						if (pickedObject != NULL)
+						{
+
+							//여기서 타입이 플레이어일때만
+							//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
+							if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
+							{
+
+								float range = GET_SINGLE(SceneManager)->CalculateRange(GetTransform()->GetLocalPosition(), pickedObject->GetTransform()->GetLocalPosition());
+								//이곳에 사거리를 입력
+								if (range <= gunRange)
+								{
+									cs_packet_picking_info ppi;
+									ppi.size = sizeof(cs_packet_picking_info);
+									ppi.type = CS_PICKING_INFO;
+									ppi.target_id = pickedObject->GetTransform()->GetObjectID();
+
+									main_session->Send_Packet(&ppi);
+								}
+								else
+								{
+									cs_packet_picking_info ppi;
+									ppi.size = sizeof(cs_packet_picking_info);
+									ppi.type = CS_PICKING_INFO;
+									ppi.target_id = -1;
+
+									main_session->Send_Packet(&ppi);
+								}
+							}
+
+							else {
+								cs_packet_picking_info ppi;
+								ppi.size = sizeof(cs_packet_picking_info);
+								ppi.type = CS_PICKING_INFO;
+								ppi.target_id = -1;
+
+								main_session->Send_Packet(&ppi);
+							}
+						}
+
+						else {
+							cs_packet_picking_info ppi;
+							ppi.size = sizeof(cs_packet_picking_info);
+							ppi.type = CS_PICKING_INFO;
+							ppi.target_id = -1;
+
+							main_session->Send_Packet(&ppi);
+						}
+
+						fireTimeElapse = 0.f;
+						flameTimeElapse = 0.f;
+
+						nowGunObject->GetAnimator()->AddToSequence(1);
+						nowGunObject->GetAnimator()->AddToSequence(0);
+
+						playerObject->GetAnimator()->AddToSequence(1);
+						playerObject->GetAnimator()->AddToSequence(0);
 					}
 				}
 			}
-
 		}
-		else if (currentPosition == tempPos)
+		else if (main_session->get_isMapOpen() == true)
 		{
-			GET_SINGLE(SoundManager)->soundStop(PLAYER_WALK);
-			GET_SINGLE(SoundManager)->soundStop(PLAYER_RUN);
+			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+			{
+				POINT nowMousePos;
+				::GetCursorPos(&nowMousePos);
+				ScreenToClient(GetActiveWindow(), &nowMousePos);
+
+				int screenWidth = WINDOW_WIDTH;  // Example screen width
+				int screenHeight = WINDOW_HEIGHT; // Example screen height
+
+				// Assuming the screen origin (0,0) is at the top-left corner
+				Vec2 uiPos;
+				uiPos.x = nowMousePos.x - (screenWidth / 2.0f);
+				uiPos.y = (screenHeight / 2.0f) - nowMousePos.y;
+
+				if (cursor != nullptr)
+				{
+					cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
+				}
+
+				if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
+				{
+
+					std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
+					std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
+					Vec3 laser_pos = GET_SINGLE(SceneManager)->GetLaserPosition(GET_SINGLE(SceneManager)->GetButtonID());
+
+					Vec3 laser_dir = Vec3(-1.57f, 1.57f, 0.f);
+
+					// 방번호칼
+					cs_packet_trigger_laser tl;
+					tl.size = sizeof(cs_packet_trigger_laser);
+					tl.type = CS_TRIGGER_LASER;
+					tl.room_num = GET_SINGLE(SceneManager)->GetButtonID();
+					tl.x = laser_pos.x;
+					tl.y = laser_pos.y;
+					tl.z = laser_pos.z;
+
+					main_session->Send_Packet(&tl);
+
+				}
+			}
 		}
-
-
-		// 업데이트된 위치를 플레이어에 반영
-		GetTransform()->SetLocalPosition(currentPosition);
 
 	}
 
@@ -574,184 +948,7 @@ void TestCameraScript::LateUpdate()
 		delete[] buffer;
 	}
 
-	if (main_session->get_isMapOpen() == false)
-	{
-		if (isMouseMod != false)
-		{
-			RotationUpdate();
-			cursor->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-		}
-		//Picking 입력을 확인
-
-		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-		{
-			if (INPUT->GetButton(KEY_TYPE::LBUTTON))
-			{
-#ifdef DEBUG_ON
-				
-#endif
-				if (clickCooldown <= fireTimeElapse && GET_SINGLE(SceneManager)->GetBullet() != 0)
-				{
-#ifdef DEBUG_ON
-					
-#endif
-
-					nowGunObject->GetAnimator()->ClearSequence();
-					playerObject->GetAnimator()->ClearSequence();
-
-					const POINT& pos = INPUT->GetMousePos();
-
-					shared_ptr<GameObject> pickedObject;
-
-					
-
-					pickedObject = GET_SINGLE(SceneManager)->Pick(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
-
-					int type = GET_SINGLE(SceneManager)->GetMainWeapon_type();
-					//0이면 기관단총	(GT_SM				0)
-					//1이면 산탄총		(GT_SG				1)
-					//2이면 저격소총	(GT_AR				2)
-					//3이면 돌격소총	(GT_SR				3)
-
-					if (nowGun == 0)
-					{
-						GET_SINGLE(SoundManager)->soundPlay(WEAPON_PISTOL, GetTransform()->GetLocalPosition(), false);
-
-						gunRange = 360.f;
-					}
-					else if (nowGun == 1)
-					{
-						if (type == 0)//기관
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SUB_MACHINE_GUN, GetTransform()->GetLocalPosition(), false);
-							gunRange = 480.f;
-
-						}
-						else if (type == 1)//산탄
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SHOTGUN, GetTransform()->GetLocalPosition(), false);
-							gunRange = 192.f;
-						}
-						else if (type == 2)//저격
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_SNIPER, GetTransform()->GetLocalPosition(), false);
-							gunRange = 1200.f;
-						}
-						else if (type == 3)//돌격
-						{
-							GET_SINGLE(SoundManager)->soundPlay(WEAPON_ASSAULT_RIFLE, GetTransform()->GetLocalPosition(), false);
-							gunRange = 600.f;
-						}
-					}
-
-
-
-					if (pickedObject != NULL)
-					{
-						
-						//여기서 타입이 플레이어일때만
-						//즉 OT_PLAYER일때만 정보를 전달하도록 한다.
-						if (pickedObject->GetTransform()->GetObjectType() == OT_PLAYER)
-						{
-
-							float range = GET_SINGLE(SceneManager)->CalculateRange(GetTransform()->GetLocalPosition(), pickedObject->GetTransform()->GetLocalPosition());
-							//이곳에 사거리를 입력
-							if (range <= gunRange)
-							{
-								cs_packet_picking_info ppi;
-								ppi.size = sizeof(cs_packet_picking_info);
-								ppi.type = CS_PICKING_INFO;
-								ppi.target_id = pickedObject->GetTransform()->GetObjectID();
-
-								main_session->Send_Packet(&ppi);
-							}
-							else
-							{
-								cs_packet_picking_info ppi;
-								ppi.size = sizeof(cs_packet_picking_info);
-								ppi.type = CS_PICKING_INFO;
-								ppi.target_id = -1;
-
-								main_session->Send_Packet(&ppi);
-							}
-						}
-
-						else {
-							cs_packet_picking_info ppi;
-							ppi.size = sizeof(cs_packet_picking_info);
-							ppi.type = CS_PICKING_INFO;
-							ppi.target_id = -1;
-
-							main_session->Send_Packet(&ppi);
-						}
-					}
-
-					else {
-						cs_packet_picking_info ppi;
-						ppi.size = sizeof(cs_packet_picking_info);
-						ppi.type = CS_PICKING_INFO;
-						ppi.target_id = -1;
-
-						main_session->Send_Packet(&ppi);
-					}
-
-					fireTimeElapse = 0.f;
-					flameTimeElapse = 0.f;
-
-					nowGunObject->GetAnimator()->AddToSequence(1);
-					nowGunObject->GetAnimator()->AddToSequence(0);
-
-					playerObject->GetAnimator()->AddToSequence(1);
-					playerObject->GetAnimator()->AddToSequence(0);
-				}
-			}
-		}
-	}
-	else if (main_session->get_isMapOpen() == true)
-	{
-		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-		{
-			POINT nowMousePos;
-			::GetCursorPos(&nowMousePos);
-			ScreenToClient(GetActiveWindow(), &nowMousePos);
-
-			int screenWidth = WINDOW_WIDTH;  // Example screen width
-			int screenHeight = WINDOW_HEIGHT; // Example screen height
-
-			// Assuming the screen origin (0,0) is at the top-left corner
-			Vec2 uiPos;
-			uiPos.x = nowMousePos.x - (screenWidth / 2.0f);
-			uiPos.y = (screenHeight / 2.0f) - nowMousePos.y;
-
-			if (cursor != nullptr)
-			{
-				cursor->GetTransform()->SetLocalPosition(Vec3(uiPos.x, uiPos.y * 1.1 - 60.f, 500.f));
-			}
-
-			if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
-			{
-
-				std::cout << "Pressed Button Type : " << GET_SINGLE(SceneManager)->GetButtonType() << std::endl;
-				std::cout << "Pressed Button ID : " << GET_SINGLE(SceneManager)->GetButtonID() << std::endl;
-				Vec3 laser_pos = GET_SINGLE(SceneManager)->GetLaserPosition(GET_SINGLE(SceneManager)->GetButtonID());
-
-				Vec3 laser_dir = Vec3(-1.57f, 1.57f, 0.f);
-
-				// 방번호칼
-				cs_packet_trigger_laser tl;
-				tl.size = sizeof(cs_packet_trigger_laser);
-				tl.type = CS_TRIGGER_LASER;
-				tl.room_num = GET_SINGLE(SceneManager)->GetButtonID();
-				tl.x = laser_pos.x;
-				tl.y = laser_pos.y;
-				tl.z = laser_pos.z;
-
-				main_session->Send_Packet(&tl);
-
-			}
-		}
-	}
-
+	
 	if (INPUT->GetButtonDown(KEY_TYPE::E))
 	{
 		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
@@ -1248,115 +1445,7 @@ void TestCameraScript::SetObjects()
 
 void TestCameraScript::RotationUpdate()
 {
-	//먼저 현재 마우스의 포지션값을 읽어와서 저장한다.
-	POINT nowMousePos;
-	::GetCursorPos(&nowMousePos);
-
-	Vec3 rotation = GetTransform()->GetLocalRotation();
-
-	//만약 마우스가 움직임이 발생했다면
-	if (nowMousePos.x != WINDOW_MIDDLE_X || nowMousePos.y != WINDOW_MIDDLE_Y)
-	{
-		//움직인 값을 저장한다.
-		int moveX = nowMousePos.x - WINDOW_MIDDLE_X;
-		int moveY = nowMousePos.y - WINDOW_MIDDLE_Y;
-
-		//오른쪽
-		if (moveX > 0)
-		{
-			rotation.y += DELTA_TIME * moveX;
-
-			GetTransform()->SetLocalRotation(rotation);
-		}
-
-		// 왼쪽
-		if (moveX < 0)
-		{
-			rotation.y += DELTA_TIME * moveX;
-
-			GetTransform()->SetLocalRotation(rotation);
-		}
-
-		// 아래
-		if (moveY > 0)
-		{
-			rotation.x += DELTA_TIME * moveY;
-
-			//playerRotation.x -= DELTA_TIME * moveY;
-
-			if (rotation.x < -1.57)
-			{
-				rotation.x = -1.56f;
-			}
-			else if (1.57f < rotation.x)
-			{
-				rotation.x = 1.56f;
-			}
-
-
-
-			GetTransform()->SetLocalRotation(rotation);
-		}
-
-		//위
-		if (moveY < 0)
-		{
-			rotation.x += DELTA_TIME * moveY;
-
-			//playerRotation.x -= DELTA_TIME * moveY;
-
-			if (rotation.x < -1.57)
-			{
-				rotation.x = -1.56f;
-			}
-			else if (1.57f < rotation.x)
-			{
-				rotation.x = 1.56f;
-			}
-
-			GetTransform()->SetLocalRotation(rotation);
-		}
-
-		//전송칼1
-		auto now = std::chrono::steady_clock::now();
-		if (now >= next_send_time_for_eye) {
-			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-			{
-				//---------------------------------
-				// 이곳에서 rotation정보를 server에 넘겨주면 된다.
-				cs_packet_mouse_info mi;
-				mi.size = sizeof(cs_packet_mouse_info);
-				mi.type = CS_MOUSE_INFO;
-				//mi.x = rotation.x;
-				mi.x = 0.f;
-				mi.y = rotation.y + 3.14f;
-				mi.z = 0.0f;
-
-				main_session->Send_Packet(&mi);
-				//---------------------------------
-			}
-			else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
-			{
-				//---------------------------------
-				// 이곳에서 rotation정보를 server에 넘겨주면 된다.
-				cs_packet_mouse_info mi;
-				mi.size = sizeof(cs_packet_mouse_info);
-				mi.type = CS_MOUSE_INFO;
-				//mi.x = rotation.x;
-				mi.x = -1.57f;
-				mi.y = rotation.y;
-				mi.z = 0.0f;
-
-				main_session->Send_Packet(&mi);
-				//---------------------------------
-			}
-
-			next_send_time_for_eye = now + interval;
-		}
-	}
-
-	//마우스의 위치를 중앙으로 초기화 해준다.
-	::SetCursorPos(WINDOW_MIDDLE_X, WINDOW_MIDDLE_Y);
+	
 }
 
 bool TestCameraScript::is_moveable(const Vec3& moveDirection, const shared_ptr<GameObject>& overlap)
