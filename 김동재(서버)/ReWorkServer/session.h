@@ -6,6 +6,13 @@
 class GAME;
 class SERVER;
 
+struct MOVE_LOG
+{
+	float x;
+	float y;
+	long move_time;
+};
+
 class SESSION
 	: public std::enable_shared_from_this<SESSION>
 {
@@ -37,6 +44,9 @@ private:
 
 	int gun_type;
 	int using_tml_id;
+
+	std::array<MOVE_LOG, 3> m_move_log;
+	int log_index;
 private:
 	void Send_Packet(void* packet, unsigned id);
 	

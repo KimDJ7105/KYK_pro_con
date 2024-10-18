@@ -184,6 +184,7 @@ struct cs_packet_picking_info {
 	BYTE size;
 	BYTE type;
 	int target_id;
+	long hit_time;
 };
 
 struct cs_packet_try_get_key {

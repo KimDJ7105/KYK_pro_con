@@ -8,6 +8,7 @@
 #include <queue>
 #include <random>
 #include <cstring>
+#include <chrono>
 
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>

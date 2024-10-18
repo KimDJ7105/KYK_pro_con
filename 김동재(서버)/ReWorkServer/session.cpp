@@ -39,6 +39,15 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		pos[0] = p->x;
 		pos[1] = p->y;
 		pos[2] = p->z;
+		auto d_since_epoch = std::chrono::system_clock::now().time_since_epoch();
+		long move_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(d_since_epoch).count();
+
+		m_move_log[log_index].x = p->x;
+		m_move_log[log_index].x = p->y;
+		m_move_log[log_index].move_time = move_stamp;
+
+		log_index += 1;
+		log_index %= 3;
 
 		sc_packet_pos pos_pack;
 		pos_pack.id = id;
@@ -975,6 +984,8 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	is_running = false;
 
 	using_tml_id = -1;
+
+	log_index = 0;
 }
 
 void SESSION::start()
