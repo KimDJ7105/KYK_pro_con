@@ -9,7 +9,7 @@ class SERVER;
 struct MOVE_LOG
 {
 	float x;
-	float y;
+	float z;
 	long move_time;
 };
 

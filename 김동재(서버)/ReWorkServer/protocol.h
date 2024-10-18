@@ -185,7 +185,6 @@ struct cs_packet_picking_info {
 	BYTE type;
 	int target_id;
 	float target_x;
-	float target_y;
 	float target_z;
 	long hit_time;
 };

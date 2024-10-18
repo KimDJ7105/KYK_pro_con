@@ -43,7 +43,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		long move_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(d_since_epoch).count();
 
 		m_move_log[log_index].x = p->x;
-		m_move_log[log_index].x = p->y;
+		m_move_log[log_index].z = p->z;
 		m_move_log[log_index].move_time = move_stamp;
 
 		log_index += 1;
