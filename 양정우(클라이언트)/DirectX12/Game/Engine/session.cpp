@@ -245,6 +245,20 @@ void SESSION::Process_Packet(unsigned char* packet)
 		_activeSessionScene->WaveChangeUI();
 		break;
 	}
+	case SC_SEND_RTT_TEST: {
+		//서버와의 지연시간 측정
+		auto r = std::chrono::system_clock::now().time_since_epoch();
+		long long c_recved = std::chrono::duration_cast<std::chrono::milliseconds>(r).count();
+
+		cs_packet_recved_rtt_test rtt_test;
+		rtt_test.size = sizeof(cs_packet_recved_rtt_test);
+		rtt_test.type = CS_RECVED_RTT_TEST;
+		rtt_test.recved_t = c_recved;
+		auto s = std::chrono::system_clock::now().time_since_epoch();
+		rtt_test.send_t = std::chrono::duration_cast<std::chrono::milliseconds>(s).count();
+		Send_Packet(&rtt_test);
+		break;
+	}
 	case LC_SET_SERVER_INFO: //로비에서 서버 정보 받기
 	{
 		lc_packet_set_server_info* p = reinterpret_cast<lc_packet_set_server_info*>(packet);

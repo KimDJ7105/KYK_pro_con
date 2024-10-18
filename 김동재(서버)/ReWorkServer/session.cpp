@@ -812,6 +812,17 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		break;
 	}
+	case CS_RECVED_RTT_TEST: {
+		auto r = std::chrono::system_clock::now().time_since_epoch();
+		s_recved = std::chrono::duration_cast<std::chrono::milliseconds>(r).count();
+
+		cs_packet_recved_rtt_test* p = (cs_packet_recved_rtt_test*)packet;
+		c_recved = p->recved_t;
+		c_send = p->send_t;
+
+		latency = (s_recved - s_send) - (c_send - c_recved);
+		break;
+	}
 	case TEST_SPAWN_RBF: { //test
 		//-------------Test
 		std::cout << "테스트 패킷 수신\n";
@@ -998,94 +1009,101 @@ void SESSION::start()
 
 		return;
 	}
-	else {
-		auto mg = my_game.lock();
-		if (mg == nullptr) return;
 
-		sc_packet_login_info pl;
-		pl.id = my_id_;
-		pl.size = sizeof(sc_packet_login_info);
-		pl.type = SC_LOGIN_INFO;
-		pl.x = pos[0];
-		pl.y = pos[1];
-		pl.z = pos[2];
-		pl.dirx = view_dir[0];
-		pl.diry = view_dir[1];
-		pl.dirz = view_dir[2];
-		pl.team_num = team;
-		pl.bullet_amount = WP_MAG[GT_PT]; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
-		Send_Packet(&pl);
+	sc_packet_send_rtt_test rtt_test;
+	rtt_test.size = sizeof(sc_packet_send_rtt_test);
+	rtt_test.type = SC_SEND_RTT_TEST;
+	Send_Packet(&rtt_test);
+	auto d_since_epoch = std::chrono::system_clock::now().time_since_epoch();
+	s_send = std::chrono::duration_cast<std::chrono::milliseconds>(d_since_epoch).count();
 
-		//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
+	auto mg = my_game.lock();
+	if (mg == nullptr) return;
 
-		//다른 유저들의 정보를 클라이언트에게 전송
-		for (auto& pl : mg->ingame_player) {
-			shared_ptr<SESSION> player = pl.second;
-			if (player->my_id_ != my_id_) {
-				sc_packet_put p;
-				p.id = player->my_id_;
-				p.size = sizeof(sc_packet_put);
-				p.type = SC_PUT_PLAYER;
-				p.x = player->pos[0];
-				p.y = player->pos[1];
-				p.z = player->pos[2];
-				p.dirx = player->view_dir[0];
-				p.diry = player->view_dir[1];
-				p.dirz = player->view_dir[2];
-				p.gun_type = player->gun_type;
-				p.team = player->team;
-				Send_Packet(&p);
-			}
-		}
+	sc_packet_login_info pl;
+	pl.id = my_id_;
+	pl.size = sizeof(sc_packet_login_info);
+	pl.type = SC_LOGIN_INFO;
+	pl.x = pos[0];
+	pl.y = pos[1];
+	pl.z = pos[2];
+	pl.dirx = view_dir[0];
+	pl.diry = view_dir[1];
+	pl.dirz = view_dir[2];
+	pl.team_num = team;
+	pl.bullet_amount = WP_MAG[GT_PT]; //현재 유일한 무기 기관단총의 장탄 수 차후 수정 필요
+	Send_Packet(&pl);
 
-		//생성되어있는 기본 오브젝트의 위치를 전송
-		for (auto& object : mg->ingame_object) {
-			shared_ptr<OBJECT> obj = object.second;
-			if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
+	//std::cout << pos[0] << ", " << pos[1] << ", " << pos[2] << std::endl;
 
-			//복도에 생성될 객체들(키카드, 터미널)
-			if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) {
-				sc_packet_put_object put_obj;
-				put_obj.size = sizeof(sc_packet_put_object);
-				put_obj.type = SC_PUT_OBJECT;
-				put_obj.id = obj->obj_id;
-				put_obj.obj_type = obj->obj_type;
-				put_obj.approx_num = obj->spawn_num;
-
-				Send_Packet(&put_obj);
-			}
-
-			//방에 생성될 객체들(토끼발, 부활패드, 탈출구 등등)
-			if (obj->obj_type == OT_RABBITFOOT || obj->obj_type == OT_RESURRECTION_PAD || obj->obj_type == OT_EXIT) {
-				sc_packet_put_object_pos pop;
-				pop.type = SC_PUT_OBJECT_POS;
-				pop.size = sizeof(sc_packet_put_object_pos);
-				pop.obj_type = obj->obj_type;
-				pop.id = obj->obj_id;
-				pop.approx_num = obj->spawn_num;
-
-				Send_Packet(&pop);
-			}
-
-			//좌표로 생성될 객체들(분쇄기)
-			if (obj->obj_type == OT_GRINDER) {
-				sc_packet_put_object_coor poc;
-				poc.type = SC_PUT_OBJECT_COOR;
-				poc.size = sizeof(sc_packet_put_object_coor);
-				poc.obj_type = obj->obj_type;
-				poc.obj_id = obj->obj_id;
-				poc.x = obj->pos[0];
-				poc.y = obj->pos[1];
-				poc.z = obj->pos[2];
-				poc.dirx = obj->rot[0];
-				poc.diry = obj->rot[1];
-				poc.dirz = obj->rot[2];
-
-				Send_Packet(&poc);
-			}
+	//다른 유저들의 정보를 클라이언트에게 전송
+	for (auto& pl : mg->ingame_player) {
+		shared_ptr<SESSION> player = pl.second;
+		if (player->my_id_ != my_id_) {
+			sc_packet_put p;
+			p.id = player->my_id_;
+			p.size = sizeof(sc_packet_put);
+			p.type = SC_PUT_PLAYER;
+			p.x = player->pos[0];
+			p.y = player->pos[1];
+			p.z = player->pos[2];
+			p.dirx = player->view_dir[0];
+			p.diry = player->view_dir[1];
+			p.dirz = player->view_dir[2];
+			p.gun_type = player->gun_type;
+			p.team = player->team;
+			Send_Packet(&p);
 		}
 	}
-	
+
+	//생성되어있는 기본 오브젝트의 위치를 전송
+	for (auto& object : mg->ingame_object) {
+		shared_ptr<OBJECT> obj = object.second;
+		if (obj->owner_id != -1 && obj->obj_type == OT_KEYCARD) continue;
+
+		//복도에 생성될 객체들(키카드, 터미널)
+		if (obj->obj_type == OT_KEYCARD || obj->obj_type == OT_TERMINAL) {
+			sc_packet_put_object put_obj;
+			put_obj.size = sizeof(sc_packet_put_object);
+			put_obj.type = SC_PUT_OBJECT;
+			put_obj.id = obj->obj_id;
+			put_obj.obj_type = obj->obj_type;
+			put_obj.approx_num = obj->spawn_num;
+
+			Send_Packet(&put_obj);
+		}
+
+		//방에 생성될 객체들(토끼발, 부활패드, 탈출구 등등)
+		if (obj->obj_type == OT_RABBITFOOT || obj->obj_type == OT_RESURRECTION_PAD || obj->obj_type == OT_EXIT) {
+			sc_packet_put_object_pos pop;
+			pop.type = SC_PUT_OBJECT_POS;
+			pop.size = sizeof(sc_packet_put_object_pos);
+			pop.obj_type = obj->obj_type;
+			pop.id = obj->obj_id;
+			pop.approx_num = obj->spawn_num;
+
+			Send_Packet(&pop);
+		}
+
+		//좌표로 생성될 객체들(분쇄기)
+		if (obj->obj_type == OT_GRINDER) {
+			sc_packet_put_object_coor poc;
+			poc.type = SC_PUT_OBJECT_COOR;
+			poc.size = sizeof(sc_packet_put_object_coor);
+			poc.obj_type = obj->obj_type;
+			poc.obj_id = obj->obj_id;
+			poc.x = obj->pos[0];
+			poc.y = obj->pos[1];
+			poc.z = obj->pos[2];
+			poc.dirx = obj->rot[0];
+			poc.diry = obj->rot[1];
+			poc.dirz = obj->rot[2];
+
+			Send_Packet(&poc);
+		}
+	}
+
+
 }
 
 void SESSION::Send_Packet(void* packet)

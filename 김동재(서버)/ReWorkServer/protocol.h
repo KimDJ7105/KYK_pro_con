@@ -121,6 +121,7 @@ constexpr BYTE CS_CHANGE_GUN = 18;
 constexpr BYTE CS_RUN_KEY_DOWN = 19;
 constexpr BYTE CS_RUN_KEY_UP = 20;
 constexpr BYTE CS_USE_MEDIKIT = 21;
+constexpr BYTE CS_RECVED_RTT_TEST = 22;
 
 constexpr BYTE SC_POS = 1; //오브젝트 이동 & 회전
 constexpr BYTE SC_PUT_PLAYER = 2; //오브젝트 생성
@@ -142,6 +143,7 @@ constexpr BYTE SC_RESURRECTION = 17; //플레이어 코어 상태에서 부활
 constexpr BYTE SC_SET_PLAYER_GUN = 18; //플레이어 총 설정
 constexpr BYTE SC_GAME_START = 19; //게임 시작을 전달
 constexpr BYTE SC_CHANGE_PHASE = 20; //게임 단계 변환
+constexpr BYTE SC_SEND_RTT_TEST = 21; //지연시간 확인
 
 constexpr BYTE SL_SET_PORT = 101; //로비서버가 관리하는 서버의 포트번호를 변경
 constexpr BYTE SL_SET_IP = 102; //로비서버가 관리하는 서버의 ip를 변경
@@ -286,6 +288,13 @@ struct cs_packet_use_medikit {
 	BYTE size;
 	BYTE type;
 	int kit_id;
+};
+
+struct cs_packet_recved_rtt_test {
+	BYTE size;
+	BYTE type;
+	long long recved_t;
+	long long send_t;
 };
 
 //---------Server To Client-----------------
@@ -440,6 +449,11 @@ struct sc_packet_game_start {
 };
 
 struct sc_packet_change_phase {
+	BYTE size;
+	BYTE type;
+};
+
+struct sc_packet_send_rtt_test {
 	BYTE size;
 	BYTE type;
 };
