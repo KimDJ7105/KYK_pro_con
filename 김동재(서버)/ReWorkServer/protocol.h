@@ -167,6 +167,7 @@ struct cs_packet_pos_info {
 	float x;
 	float y;
 	float z;
+	long move_time;
 };
 
 struct cs_packet_logout {
@@ -293,8 +294,8 @@ struct cs_packet_use_medikit {
 struct cs_packet_recved_rtt_test {
 	BYTE size;
 	BYTE type;
-	long long recved_t;
-	long long send_t;
+	long recved_t;
+	long send_t;
 };
 
 //---------Server To Client-----------------

@@ -452,6 +452,8 @@ void TestCameraScript::LateUpdate()
 							packet.x = currentPosition.x;
 							packet.y = currentPosition.y + addedPos_Y;
 							packet.z = currentPosition.z;
+							auto d_since_epoch = std::chrono::system_clock::now().time_since_epoch();
+							packet.move_time = std::chrono::duration_cast<std::chrono::milliseconds>(d_since_epoch).count();;
 
 							main_session->Send_Packet(&packet);
 							//-------------------------------------

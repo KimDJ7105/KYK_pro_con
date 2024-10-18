@@ -248,7 +248,7 @@ void SESSION::Process_Packet(unsigned char* packet)
 	case SC_SEND_RTT_TEST: {
 		//서버와의 지연시간 측정
 		auto r = std::chrono::system_clock::now().time_since_epoch();
-		long long c_recved = std::chrono::duration_cast<std::chrono::milliseconds>(r).count();
+		long c_recved = std::chrono::duration_cast<std::chrono::milliseconds>(r).count();
 
 		cs_packet_recved_rtt_test rtt_test;
 		rtt_test.size = sizeof(cs_packet_recved_rtt_test);

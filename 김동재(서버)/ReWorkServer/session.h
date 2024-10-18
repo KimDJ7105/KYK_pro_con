@@ -38,11 +38,11 @@ private:
 	int gun_type;
 	int using_tml_id;
 
-	long long s_send;
-	long long c_recved;
-	long long c_send;
-	long long s_recved;
-	long long latency;
+	long s_send;
+	long c_recved;
+	long c_send;
+	long s_recved;
+	long latency;
 private:
 	void Send_Packet(void* packet, unsigned id);
 	

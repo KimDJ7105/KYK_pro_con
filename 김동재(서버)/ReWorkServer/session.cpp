@@ -60,7 +60,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 
 		//std::cout << "Packet Sended From Client " << id << " x : " << p->x << " y : " << p->y << " z : " << p->z << std::endl;
-
+		//여기서 플레이어가 이동한 시간 저장
 		break;
 	}
 	case CS_MOUSE_INFO: { //플레이어 마우스 움직임
