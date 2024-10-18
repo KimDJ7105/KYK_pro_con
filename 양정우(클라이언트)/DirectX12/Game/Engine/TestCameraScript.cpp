@@ -698,22 +698,19 @@ void TestCameraScript::LateUpdate()
 								if (range <= gunRange)
 								{
 									cs_packet_picking_info ppi;
+									//==================
+									//½Ã°£ ÀúÀå
+									auto h = std::chrono::system_clock::now().time_since_epoch();
+									ppi.hit_time = std::chrono::duration_cast<std::chrono::milliseconds>(h).count();
+
 									ppi.size = sizeof(cs_packet_picking_info);
 									ppi.type = CS_PICKING_INFO;
 									ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
 									//================
 									//¸ÂÀº³ð x, y, z
-
-									float ¸ÂÀº³ð_X, ¸ÂÀº³ð_Y, ¸ÂÀº³ð_Z;
-
-									¸ÂÀº³ð_X = pickedObject->GetTransform()->GetLocalPosition().x;
-									¸ÂÀº³ð_Y = pickedObject->GetTransform()->GetLocalPosition().y;
-									¸ÂÀº³ð_Z = pickedObject->GetTransform()->GetLocalPosition().z;
-
-									//==================
-
-
+									ppi.target_x = pickedObject->GetTransform()->GetLocalPosition().x;
+									ppi.target_z = pickedObject->GetTransform()->GetLocalPosition().z;
 
 									main_session->Send_Packet(&ppi);
 								}
