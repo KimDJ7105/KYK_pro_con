@@ -702,6 +702,19 @@ void TestCameraScript::LateUpdate()
 									ppi.type = CS_PICKING_INFO;
 									ppi.target_id = pickedObject->GetTransform()->GetObjectID();
 
+									//================
+									//¸ÂÀº³ð x, y, z
+
+									float ¸ÂÀº³ð_X, ¸ÂÀº³ð_Y, ¸ÂÀº³ð_Z;
+
+									¸ÂÀº³ð_X = pickedObject->GetTransform()->GetLocalPosition().x;
+									¸ÂÀº³ð_Y = pickedObject->GetTransform()->GetLocalPosition().y;
+									¸ÂÀº³ð_Z = pickedObject->GetTransform()->GetLocalPosition().z;
+
+									//==================
+
+
+
 									main_session->Send_Packet(&ppi);
 								}
 								else
