@@ -129,8 +129,27 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		if (p->target_id == -1) break;
 
 		shared_ptr<SESSION> target = my_game.lock()->ingame_player[p->target_id];
-
 		if (target == nullptr) break;
+		//여기서 이제 타겟이 해당 시간에 해당 위치에 있었는지 파악해야함
+		//p->target_x;
+		//p->target_z;
+		//p->hit_time;
+		//target->m_move_log;
+
+		float temp_x, temp_z;
+		long temp_time{ 0 };
+
+		for (auto& log : target->m_move_log)
+		{
+			if (log.move_time == 0) continue;
+			if (log.move_time <= p->hit_time && log.move_time > temp_time) {
+				temp_x = log.x;
+				temp_z = log.z;
+				temp_time = log.move_time;
+			}
+		}
+
+		if (temp_x != p->target_x || temp_z != p->target_z) break;
 
 		//std::cout << "플레이어 " << my_id_ << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
 		
@@ -986,6 +1005,11 @@ SESSION::SESSION(tcp::socket socket, int new_id, int team_num)
 	using_tml_id = -1;
 
 	log_index = 0;
+	for (int i = 0; i < 3; i++) {
+		m_move_log[i].move_time = 0;
+		m_move_log[i].x = 0;
+		m_move_log[i].z = 0;
+	}
 }
 
 void SESSION::start()
