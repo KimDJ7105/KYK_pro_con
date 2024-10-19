@@ -167,6 +167,7 @@ void SERVER::event_excuter(const boost::system::error_code& ec)
 				//std::cout << "Laser moving\n";
 				for (auto& obj : games[ev.game_id]->ingame_object) {
 					auto& laser = obj.second;
+					if (laser == nullptr) continue;
 					if (laser->obj_type != OT_LASER) continue;
 
 					if (laser->way == WAY_RIGHT) {

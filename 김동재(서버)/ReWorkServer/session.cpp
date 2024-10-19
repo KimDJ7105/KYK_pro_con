@@ -888,6 +888,8 @@ void SESSION::do_read()
 void SESSION::do_write(unsigned char* packet, std::size_t length)
 {
 	auto self(shared_from_this());
+	if (self == nullptr) return;
+
 	socket_.async_write_some(boost::asio::buffer(packet, length),
 		[this, self, packet, length](boost::system::error_code ec, std::size_t bytes_transferred)
 		{
