@@ -31,6 +31,7 @@
 #include "RotationComponent.h"
 #include "FloatingComponent.h"
 #include "DamagedScript.h"
+#include "UICameraScript.h"
 
 #include "SoundManager.h"
 
@@ -1877,6 +1878,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ ÂïÀ½
+
+		camera->AddComponent(make_shared<UICameraScript>());
+
 		mainGameScene->AddGameObject(camera);
 	}
 #pragma endregion
@@ -2816,7 +2820,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0.f, -1.f, 1.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		light->GetLight()->SetDiffuse(Vec3(0.1f, 0.1f, 0.1f));		// WHITE
+		light->GetLight()->SetDiffuse(Vec3(0.5f, 0.5f, 0.5f));		// WHITE
 		light->GetLight()->SetAmbient(Vec3(0.f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
 

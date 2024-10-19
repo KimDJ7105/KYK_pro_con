@@ -40,6 +40,26 @@ void TestCameraScript::LateUpdate()
 
 	SetObjects();
 
+
+	if (INPUT->GetButtonDown(KEY_TYPE::Q))
+	{
+		if (cameraMod == false)
+			cameraMod = true;
+		else if (cameraMod == true)
+		{
+			Vec3 currentPosition = GetTransform()->GetLocalPosition();
+			currentPosition.y = 40.f;
+			GetTransform()->SetLocalPosition(currentPosition);
+
+			cameraMod = false;
+			
+		}
+			
+	}
+
+
+
+
 	if (GET_SINGLE(SceneManager)->GetPlayerRevive() == true)
 	{
 		nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
@@ -213,11 +233,18 @@ void TestCameraScript::LateUpdate()
 		{
 			if (wKeyState)
 			{
-				moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+				if (cameraMod == false)
+					moveDirection += XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+				else if (cameraMod == true)
+					moveDirection += GetTransform()->GetLook();
+				
 			}
 			if (sKeyState)
 			{
-				moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+				if (cameraMod == false)
+					moveDirection -= XMVector3Cross(GetTransform()->GetRight(), Vec3(0.f, 1.f, 0.f));
+				else if (cameraMod == true)
+					moveDirection -= GetTransform()->GetLook();
 			}
 			if (aKeyState)
 			{
@@ -251,100 +278,104 @@ void TestCameraScript::LateUpdate()
 
 		
 
-		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+		if (cameraMod == false)
 		{
-			if (playerObject != NULL)
+			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
 			{
-				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_WALLAABB);
-				if (overlap != NULL)
+				if (playerObject != NULL)
 				{
-					//벽충돌칼
-					if (is_moveable(moveDirection, overlap))
+					shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_WALLAABB);
+					if (overlap != NULL)
 					{
-						isOverlap = true;
-						currentPosition = previousPosition;
+						//벽충돌칼
+						if (is_moveable(moveDirection, overlap))
+						{
+							isOverlap = true;
+							currentPosition = previousPosition;
+						}
 					}
-				}
-				else
-				{
-					isOverlap = false;
-				}
-				shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
-				if (overlap_blade != NULL)
-				{
-					//isCrushed = true;
-					cs_packet_hit_by_grinder hbg;
-					hbg.type = CS_HIT_BY_GRINDER;
-					hbg.size = sizeof(cs_packet_hit_by_grinder);
+					else
+					{
+						isOverlap = false;
+					}
+					shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_CRUSHER_BLADE);
+					if (overlap_blade != NULL)
+					{
+						//isCrushed = true;
+						cs_packet_hit_by_grinder hbg;
+						hbg.type = CS_HIT_BY_GRINDER;
+						hbg.size = sizeof(cs_packet_hit_by_grinder);
 
-					main_session->Send_Packet(&hbg);
+						main_session->Send_Packet(&hbg);
+					}
+					else
+					{
+						//isCrushed = false;
+
+					}
+
+					shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
+					if (overlap_Laser != NULL)
+					{
+						//레이저칼
+						cs_packet_hit_by_laser hbl;
+						hbl.size = sizeof(cs_packet_hit_by_laser);
+						hbl.type = CS_HIT_BY_LASER;
+
+						main_session->Send_Packet(&hbl);
+					}
+					else
+					{
+					}
+
 				}
-				else
+			}
+			else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+			{
+				if (playerHeadCoreObject != NULL)
 				{
-					//isCrushed = false;
+					shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_WALLAABB);
+					if (overlap != NULL)
+					{
+						//벽충돌칼
+						if (is_moveable(moveDirection, overlap))
+						{
+							isOverlap = true;
+							currentPosition = previousPosition;
+						}
+					}
+					else
+					{
+						isOverlap = false;
+					}
+					shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_CRUSHER_BLADE);
+					if (overlap_blade != NULL)
+					{
+						// 두뇌코어 상태일때 분쇄기에 닿았을떄
+						cs_packet_hit_by_grinder hbg;
+						hbg.type = CS_HIT_BY_GRINDER;
+						hbg.size = sizeof(cs_packet_hit_by_grinder);
+
+						main_session->Send_Packet(&hbg);
+					}
+					else
+					{
+
+					}
+
+					shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_LASER);
+					if (overlap_Laser != NULL)
+					{
+						// 두뇌코어 상태일떄 레이저에 닿았을떄
+					}
+					else
+					{
+					}
 
 				}
-
-				shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerObject, OT_LASER);
-				if (overlap_Laser != NULL)
-				{
-					//레이저칼
-					cs_packet_hit_by_laser hbl;
-					hbl.size = sizeof(cs_packet_hit_by_laser);
-					hbl.type = CS_HIT_BY_LASER;
-
-					main_session->Send_Packet(&hbl);
-				}
-				else
-				{
-				}
-
 			}
 		}
-		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
-		{
-			if (playerHeadCoreObject != NULL)
-			{
-				shared_ptr<GameObject> overlap = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_WALLAABB);
-				if (overlap != NULL)
-				{
-					//벽충돌칼
-					if (is_moveable(moveDirection, overlap))
-					{
-						isOverlap = true;
-						currentPosition = previousPosition;
-					}
-				}
-				else
-				{
-					isOverlap = false;
-				}
-				shared_ptr<GameObject> overlap_blade = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_CRUSHER_BLADE);
-				if (overlap_blade != NULL)
-				{
-					// 두뇌코어 상태일때 분쇄기에 닿았을떄
-					cs_packet_hit_by_grinder hbg;
-					hbg.type = CS_HIT_BY_GRINDER;
-					hbg.size = sizeof(cs_packet_hit_by_grinder);
-
-					main_session->Send_Packet(&hbg);
-				}
-				else
-				{
-					
-				}
-
-				shared_ptr<GameObject> overlap_Laser = GET_SINGLE(SceneManager)->CheckCollisionWithSceneObjects(playerHeadCoreObject, OT_LASER);
-				if (overlap_Laser != NULL)
-				{
-					// 두뇌코어 상태일떄 레이저에 닿았을떄
-				}
-				else
-				{
-				}
-
-			}
-		}
+		
 
 		
 
@@ -1166,179 +1197,186 @@ void TestCameraScript::LateUpdate()
 		weaponChanging = false;
 	}
 		
+	if (cameraMod == false)
+	{
+		if (playerObject != nullptr && nowGunObject != nullptr && playerHeadCoreObject != nullptr)
+		{
+			if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
+			{
+				playerHeadCoreObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				{
 
+					Vec3 rotation = GetTransform()->GetLocalRotation();
+
+					Vec3 gunOffset(2.5f, -24 + 20, 9.5f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+					// 플레이어의 회전값을 쿼터니언으로 변환
+					Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+					// gunOffset을 회전시킴
+					Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+					// playerGunObject의 위치를 플레이어의 위치로 이동
+					if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+					// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+					Vec3 gunRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+					if (weaponChanging == true)
+						gunRotationOffset.x = gunRotationOffset.x - 1.57f;
+					Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+					// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+					Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+					Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+					// 회전을 적용
+					if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalRotation(gunRotation);
+
+					// 플레이어를 기준으로 한 반대 방향으로 이동
+					Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+					if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(newPosition);
+				}
+				{
+					Vec3 rotation = GetTransform()->GetLocalRotation();
+
+					Vec3 gunOffset(0.0f, -24.0f, 0.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+					// 플레이어의 회전값을 쿼터니언으로 변환
+					Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+					// gunOffset을 회전시킴
+					Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
+
+					// playerGunObject의 위치를 플레이어의 위치로 이동
+					if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+					// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+					Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
+					Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
+
+					// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+					Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
+
+					Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
+
+					// 회전을 적용
+					if (playerObject != NULL) playerObject->GetTransform()->SetLocalRotation(gunRotation);
+
+					// 플레이어를 기준으로 한 반대 방향으로 이동
+					Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+					if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(newPosition);
+
+					if (playerObject != NULL) Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
+				}
+			}
+			else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
+			{
+				nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				playerObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+
+				{
+					playerHeadCoreObject->GetTransform()->SetLocalPosition(Vec3(
+						GetTransform()->GetLocalPosition().x,
+						GetTransform()->GetLocalPosition().y - 35.f,
+						GetTransform()->GetLocalPosition().z)
+					);
+					Vec3 rot = playerHeadCoreObject->GetTransform()->GetLocalRotation();
+					rot.y = GetTransform()->GetLocalRotation().y;
+					playerHeadCoreObject->GetTransform()->SetLocalRotation(rot);
+				}
+			}
+		}
+
+		if (flameParticle != nullptr && flameLight != nullptr)
+		{
+			if (flameTimeElapse < flameDuration)
+			{
+				{
+					Vec3 rotation = GetTransform()->GetLocalRotation();
+
+					Vec3 particle(2.5f, -24 + 22, 15.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+					// 플레이어의 회전값을 쿼터니언으로 변환
+					Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+					// gunOffset을 회전시킴
+					Vec3 rotatedOffset = playerRotationQuat.Rotate(particle);
+
+					// playerGunObject의 위치를 플레이어의 위치로 이동
+					if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+					// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+					Vec3 particleRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+					Quaternion particleRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), particleRotationOffset.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), particleRotationOffset.x);
+
+					// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+					Quaternion finalParticleRotationQuat = playerRotationQuat * particleRotationQuat;
+
+					Vec3 particleRotation = finalParticleRotationQuat.ToEulerAngles();
+
+					// 회전을 적용
+					if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalRotation(particleRotation);
+
+					// 플레이어를 기준으로 한 반대 방향으로 이동
+					Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+					if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(newPosition);
+				}
+				{
+					Vec3 rotation = GetTransform()->GetLocalRotation();
+
+					Vec3 particle(2.5f, -24 + 22, 30.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
+
+					// 플레이어의 회전값을 쿼터니언으로 변환
+					Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
+
+					// gunOffset을 회전시킴
+					Vec3 rotatedOffset = playerRotationQuat.Rotate(particle);
+
+					// playerGunObject의 위치를 플레이어의 위치로 이동
+					if (flameLight != NULL) flameLight->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+					// 총의 회전 오프셋을 적용하여 쿼터니언 생성
+					Vec3 particleRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
+
+					Quaternion particleRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), particleRotationOffset.y) *
+						QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), particleRotationOffset.x);
+
+					// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
+					Quaternion finalParticleRotationQuat = playerRotationQuat * particleRotationQuat;
+
+					Vec3 particleRotation = finalParticleRotationQuat.ToEulerAngles();
+
+					// 회전을 적용
+					if (flameLight != NULL) flameLight->GetTransform()->SetLocalRotation(particleRotation);
+
+					// 플레이어를 기준으로 한 반대 방향으로 이동
+					Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
+					if (flameLight != NULL) flameLight->GetTransform()->SetLocalPosition(newPosition);
+				}
+			}
+			else
+			{
+				flameParticle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+				flameLight->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
+			}
+		}
+	}
+	else if (cameraMod == true)
+	{
+
+	}
 	
-	if (playerObject != nullptr && nowGunObject != nullptr && playerHeadCoreObject != nullptr)
-	{
-		if (GET_SINGLE(SceneManager)->GetPlayerDead() == false)
-		{
-			playerHeadCoreObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-			{
-
-				Vec3 rotation = GetTransform()->GetLocalRotation();
-
-				Vec3 gunOffset(2.5f, -24 + 20, 9.5f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
-
-				// 플레이어의 회전값을 쿼터니언으로 변환
-				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
-
-				// gunOffset을 회전시킴
-				Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
-
-				// playerGunObject의 위치를 플레이어의 위치로 이동
-				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-				Vec3 gunRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
-
-				if (weaponChanging == true)
-					gunRotationOffset.x = gunRotationOffset.x - 1.57f;
-				Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
-
-				// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
-				Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
-
-				Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
-
-				// 회전을 적용
-				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalRotation(gunRotation);
-
-				// 플레이어를 기준으로 한 반대 방향으로 이동
-				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-				if (nowGunObject != NULL) nowGunObject->GetTransform()->SetLocalPosition(newPosition);
-			}
-			{
-				Vec3 rotation = GetTransform()->GetLocalRotation();
-
-				Vec3 gunOffset(0.0f, -24.0f, 0.0f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
-
-				// 플레이어의 회전값을 쿼터니언으로 변환
-				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
-
-				// gunOffset을 회전시킴
-				Vec3 rotatedOffset = playerRotationQuat.Rotate(gunOffset);
-
-				// playerGunObject의 위치를 플레이어의 위치로 이동
-				if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-				Vec3 gunRotationOffset(0.f, 3.14f, 0.0f); // 총의 회전 오프셋
-				Quaternion gunRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), gunRotationOffset.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), gunRotationOffset.x);
-
-				// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
-				Quaternion finalGunRotationQuat = playerRotationQuat * gunRotationQuat;
-
-				Vec3 gunRotation = finalGunRotationQuat.ToEulerAngles();
-
-				// 회전을 적용
-				if (playerObject != NULL) playerObject->GetTransform()->SetLocalRotation(gunRotation);
-
-				// 플레이어를 기준으로 한 반대 방향으로 이동
-				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-				if (playerObject != NULL) playerObject->GetTransform()->SetLocalPosition(newPosition);
-
-				if (playerObject != NULL) Vec3 hispos = playerObject->GetTransform()->GetLocalPosition();
-			}
-		}
-		else if (GET_SINGLE(SceneManager)->GetPlayerDead() == true)
-		{
-			nowGunObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-			playerObject->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-
-			{
-				playerHeadCoreObject->GetTransform()->SetLocalPosition(Vec3(
-					GetTransform()->GetLocalPosition().x,
-					GetTransform()->GetLocalPosition().y - 35.f,
-					GetTransform()->GetLocalPosition().z)
-				);
-				Vec3 rot = playerHeadCoreObject->GetTransform()->GetLocalRotation();
-				rot.y = GetTransform()->GetLocalRotation().y;
-				playerHeadCoreObject->GetTransform()->SetLocalRotation(rot);
-			}
-		}
-	}
-
-	if (flameParticle != nullptr && flameLight != nullptr)
-	{
-		if(flameTimeElapse < flameDuration)
-		{
-			{
-				Vec3 rotation = GetTransform()->GetLocalRotation();
-
-				Vec3 particle(2.5f, -24 + 22, 15.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
-
-				// 플레이어의 회전값을 쿼터니언으로 변환
-				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
-
-				// gunOffset을 회전시킴
-				Vec3 rotatedOffset = playerRotationQuat.Rotate(particle);
-
-				// playerGunObject의 위치를 플레이어의 위치로 이동
-				if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-				Vec3 particleRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
-
-				Quaternion particleRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), particleRotationOffset.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), particleRotationOffset.x);
-
-				// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
-				Quaternion finalParticleRotationQuat = playerRotationQuat * particleRotationQuat;
-
-				Vec3 particleRotation = finalParticleRotationQuat.ToEulerAngles();
-
-				// 회전을 적용
-				if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalRotation(particleRotation);
-
-				// 플레이어를 기준으로 한 반대 방향으로 이동
-				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-				if (flameParticle != NULL) flameParticle->GetTransform()->SetLocalPosition(newPosition);
-			}
-			{
-				Vec3 rotation = GetTransform()->GetLocalRotation();
-
-				Vec3 particle(2.5f, -24 + 22, 30.f); // 아래로 2, 오른쪽으로 2, z축은 이전과 동일하게 유지
-
-				// 플레이어의 회전값을 쿼터니언으로 변환
-				Quaternion playerRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), rotation.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), rotation.x);
-
-				// gunOffset을 회전시킴
-				Vec3 rotatedOffset = playerRotationQuat.Rotate(particle);
-
-				// playerGunObject의 위치를 플레이어의 위치로 이동
-				if (flameLight != NULL) flameLight->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-				// 총의 회전 오프셋을 적용하여 쿼터니언 생성
-				Vec3 particleRotationOffset(0.f, 0.f, 0.f); // 총의 회전 오프셋
-
-				Quaternion particleRotationQuat = QuaternionFromAxisAngle(Vec3(0.0f, 1.0f, 0.0f), particleRotationOffset.y) *
-					QuaternionFromAxisAngle(Vec3(1.0f, 0.0f, 0.0f), particleRotationOffset.x);
-
-				// 플레이어의 회전값에 총의 회전을 추가하여 총의 최종 회전 쿼터니언 생성
-				Quaternion finalParticleRotationQuat = playerRotationQuat * particleRotationQuat;
-
-				Vec3 particleRotation = finalParticleRotationQuat.ToEulerAngles();
-
-				// 회전을 적용
-				if (flameLight != NULL) flameLight->GetTransform()->SetLocalRotation(particleRotation);
-
-				// 플레이어를 기준으로 한 반대 방향으로 이동
-				Vec3 newPosition = GetTransform()->GetLocalPosition() + rotatedOffset;
-				if (flameLight != NULL) flameLight->GetTransform()->SetLocalPosition(newPosition);
-			}
-		}
-		else
-		{
-			flameParticle->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-			flameLight->GetTransform()->SetLocalPosition(Vec3(OUT_OF_RENDER, OUT_OF_RENDER, OUT_OF_RENDER));
-		}
-	}
+	
 
 
 	wcscpy_s(previousTitle, windowTitle);

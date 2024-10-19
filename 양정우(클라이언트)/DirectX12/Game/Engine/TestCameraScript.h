@@ -91,4 +91,7 @@ private:
 public:
 	bool is_moveable(const Vec3& moveDirection, const shared_ptr<GameObject>& overlap);
 
+private:
+	bool cameraMod = false;
+
 };

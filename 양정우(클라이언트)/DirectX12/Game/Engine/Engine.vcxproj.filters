@@ -207,6 +207,7 @@
     <ClCompile Include="RotationComponent.cpp" />
     <ClCompile Include="FloatingComponent.cpp" />
     <ClCompile Include="DamagedScript.cpp" />
+    <ClCompile Include="UICameraScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -383,6 +384,7 @@
     <ClInclude Include="RotationComponent.h" />
     <ClInclude Include="FloatingComponent.h" />
     <ClInclude Include="DamagedScript.h" />
+    <ClInclude Include="UICameraScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
