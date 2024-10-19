@@ -7,6 +7,11 @@ int WP_DMG[5]{ 8,80,70,20,10 };
 int WP_MAG[5]{ 30,8,5,25,15 };
 float WP_COOLTIME[5]{ 0.1f, 1.f, 1.f, 0.125f, 0.333f };
 
+bool SESSION::are_pos_equal(const float x1, const float y1, const float z1, const float x2, const float y2, const float z2) const
+{
+	return ((std::fabs(x1 - x2) <= 1e-5f) && (std::fabs(y1 - y2) <= 1e-5f) && (std::fabs(z1 - z2) <= 1e-5f));
+}
+
 void SESSION::Send_Packet(void* packet, unsigned id)
 {
 	int packet_size = reinterpret_cast<unsigned char*>(packet)[0];
@@ -34,20 +39,23 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 	switch (packet[1]) {
 	case CS_POS_INFO: { //플레이어 이동
-		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
-
-		pos[0] = p->x;
-		pos[1] = p->y;
-		pos[2] = p->z;
+		//패킷 수신한 시간 측정
 		auto d_since_epoch = std::chrono::system_clock::now().time_since_epoch();
 		long move_stamp = std::chrono::duration_cast<std::chrono::milliseconds>(d_since_epoch).count();
 
+		cs_packet_pos_info* p = (cs_packet_pos_info*)packet;
+		//플레이어 위치 정보 저장
+		pos[0] = p->x;
+		pos[1] = p->y;
+		pos[2] = p->z;
+
+		//로그에 위치와 시간 저장
 		m_move_log[log_index].x = p->x;
 		m_move_log[log_index].z = p->z;
 		m_move_log[log_index].move_time = move_stamp;
 
-		log_index += 1;
-		log_index %= 3;
+		//로그 인덱스 증가
+		log_index += 1; log_index %= 3;
 
 		sc_packet_pos pos_pack;
 		pos_pack.id = id;
@@ -128,28 +136,26 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		
 		if (p->target_id == -1) break;
 
+		//맞춘 대상이 플레이어일 경우 체크 필요
 		shared_ptr<SESSION> target = my_game.lock()->ingame_player[p->target_id];
 		if (target == nullptr) break;
-		//여기서 이제 타겟이 해당 시간에 해당 위치에 있었는지 파악해야함
-		//p->target_x;
-		//p->target_z;
-		//p->hit_time;
-		//target->m_move_log;
 
 		float temp_x, temp_z;
 		long temp_time{ 0 };
 
-		for (auto& log : target->m_move_log)
+		for (auto& log : target->m_move_log) //맞은 플레이어의 이동 로그 확인
 		{
-			if (log.move_time == 0) continue;
-			if (log.move_time <= p->hit_time && log.move_time > temp_time) {
+			if (log.move_time == 0) continue; //시간이 0인 경우 통과
+			if (log.move_time <= p->hit_time && log.move_time > temp_time) //맞춘 시간 이전에, 가장 최근에 이동한 좌표 구하기
+			{
 				temp_x = log.x;
 				temp_z = log.z;
 				temp_time = log.move_time;
 			}
 		}
 
-		if (temp_x != p->target_x || temp_z != p->target_z) break;
+		//구한 좌표와 사격한 클라이언트에서 전송한 정보가 일치하면 통과
+		if (!are_pos_equal(temp_x,0.f,temp_z,p->target_x, 0.f,p->target_z)) break;
 
 		//std::cout << "플레이어 " << my_id_ << "가 플레이어 " << p->target_id << "를 공격했습니다.\n";
 		
@@ -157,8 +163,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		//std::cout << "플레이어 " << p->target_id << " Remain HP : " << target->hp << std::endl;
 
-
-		
 		sc_packet_apply_damage pad;
 		pad.type = SC_APPLY_DAMAGE;
 		pad.size = sizeof(sc_packet_apply_damage);

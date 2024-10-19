@@ -47,6 +47,8 @@ private:
 
 	std::array<MOVE_LOG, 3> m_move_log;
 	int log_index;
+
+	bool are_pos_equal(const float x1, const float y1, const float z1, const float x2, const float y2, const float z2) const;
 private:
 	void Send_Packet(void* packet, unsigned id);
 	
