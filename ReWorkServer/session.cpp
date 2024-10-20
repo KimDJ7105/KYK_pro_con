@@ -494,11 +494,14 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 		shared_ptr<OBJECT> foot = mg->ingame_object[p->obj_id];
 		if (foot == nullptr) break;
+		if (foot->obj_type != OT_RABBITFOOT) break; //잘못된 id인 경우 무시
+		if (foot->owner_id == -1) break; //이미 다른 유저가 토끼발을 들고있으면 무시
 
-		std::cout << "토끼발 획득 요청 수신\n";
+		//토끼발 주인 설정
 		foot->owner_id = my_id_;
 		mg->set_rabbitfoot_owner(my_id_);
 
+		//토끼발 오브젝트를 삭제하도록 브로드 캐스트
 		sc_packet_remove_player rmp;
 		rmp.type = SC_REMOVE_PLAYER;
 		rmp.size = sizeof(sc_packet_remove_player);
@@ -851,34 +854,40 @@ void SESSION::do_read()
 				if (ec.value() == boost::asio::error::operation_aborted) return;
 				cout << "Receive Error on Session[" << my_id_ << "] EC[" << ec << "]\n";
 				mg->ingame_player[my_id_] = nullptr;
-				//players.unsafe_erase(my_id_);
 				return;
 			}
 
+			//패킷 재조립
 			int data_to_process = static_cast<int>(length);
 			unsigned char* buf = data_;
 			while (0 < data_to_process) {
-				if (0 == curr_packet_size_) {
+				if (0 == curr_packet_size_) { //패킷 크기 확인
 					curr_packet_size_ = buf[0];
 					if (buf[0] > 200) {
-						cout << "Invalid Packet Size [ << buf[0] << ] Terminating Server!\n";
+						cout << "Invalid Packet Size [ " << buf[0] << " ] Terminating Server!\n";
 						exit(-1);
 					}
 				}
+
 				int need_to_build = curr_packet_size_ - prev_data_size_;
+
+				//현재 데이터로 패킷을 완성할 수 있는 경우
 				if (need_to_build <= data_to_process) {
 					memcpy(packet_ + prev_data_size_, buf, need_to_build);
-					Process_Packet(packet_, my_id_);
+					Process_Packet(packet_, my_id_); //패킷 처리
+
+					//재조립 정보 초기화
 					curr_packet_size_ = 0;
 					prev_data_size_ = 0;
+
+					//남은 데이터 및 버퍼 포인터 업데이트
 					data_to_process -= need_to_build;
 					buf += need_to_build;
 				}
-				else {
+				else { //데이터가 모두 도착하지 않은 경우
 					memcpy(packet_ + prev_data_size_, buf, data_to_process);
 					prev_data_size_ += data_to_process;
 					data_to_process = 0;
-					buf += data_to_process;
 				}
 			}
 			do_read();
@@ -890,12 +899,13 @@ void SESSION::do_write(unsigned char* packet, std::size_t length)
 	auto self(shared_from_this());
 	if (self == nullptr) return;
 
+	//비동기 Write
 	socket_.async_write_some(boost::asio::buffer(packet, length),
 		[this, self, packet, length](boost::system::error_code ec, std::size_t bytes_transferred)
 		{
 			if (!ec)
 			{
-				if (length != bytes_transferred) {
+				if (length != bytes_transferred) { //패킷이 전부 전송되지 않은 경우
 					cout << "Incomplete Send occured on session[" << my_id_ << "]. This session should be closed.\n";
 				}
 				delete packet;
@@ -1092,10 +1102,10 @@ void SESSION::start()
 
 void SESSION::Send_Packet(void* packet)
 {
-	int packet_size = reinterpret_cast<unsigned char*>(packet)[0];
-	unsigned char* buff = new unsigned char[packet_size];
-	memcpy(buff, packet, packet_size);
-	do_write(buff, packet_size);
+	int packet_size = reinterpret_cast<unsigned char*>(packet)[0]; // 패킷 크기 확인
+	unsigned char* buff = new unsigned char[packet_size]; //패킷 크기만큼 버퍼 확보
+	memcpy(buff, packet, packet_size); //패킷 내용을 버퍼에 복사
+	do_write(buff, packet_size); //전송
 }
 
 void SESSION::set_serverinfo(std::shared_ptr<GAME> p, SERVER* server)

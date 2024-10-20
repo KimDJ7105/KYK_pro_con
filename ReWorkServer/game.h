@@ -13,7 +13,7 @@ enum {ST_READY, ST_RUN, ST_END };
 class GAME
 {
 private:
-	int game_state;						//현재 게임의 진행 상태 (대기, 진행, 종료 등)
+	int game_state;	 //현재 게임의 진행 상태 (대기, 진행, 종료 등)
 	atomic_int g_object_ID = MAX_USER + 1;  //인게임 오브젝트 id
 
 	int team_num;
