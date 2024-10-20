@@ -10,6 +10,6 @@ FBX폴더를 생성하여 생성한 폴더 내에 위에서 다운로드한 incl
 다시 "KYK_pro_con\양정우(클라이언트)\DirectX12\Game\Library" 폴더 내에 Lib폴더로 들어가서
 FBX폴더를 생성하고 해당 폴더 내에 위에서 다운로드한 lib폴더에x64내의 debug와 release를 폴더채로 붙여넣기한다.
 
-
-김동재(서버)\RewalkSever를 먼저 실행 후 Lobby 실행
-서버의 ip를 명시적으로 설정하고 싶다면 servermain.cpp의 주석을 해제하면 됨
+1. ReWalkServer.exe 실행 후 ip입력
+2. Lobby.exe 실행 
+3. 클라이언트 실행
