@@ -64,10 +64,6 @@ bool GAME::IsTerminalOn()
 	return true;
 }
 
-bool GAME::operator==(const GAME& other) const {
-	return game_id == other.game_id;
-}
-
 std::shared_ptr<OBJECT>& GAME::CreateObjectApprox(int obj_type)
 {
 	int o_id = GetNewObjectID();

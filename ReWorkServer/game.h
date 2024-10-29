@@ -31,7 +31,6 @@ private :
 public:
 	GAME(int id);
 	bool IsTerminalOn();
-	bool operator==(const GAME&other) const; //같은 인스턴스에 존재하는 플레이어인지 확인하기 위해 사용될 수 있음
 	std::shared_ptr<OBJECT>& CreateObjectApprox(int obj_type);
 	std::shared_ptr<OBJECT>& CreateObjectApprox_nr(int obj_type, int approx_pos);
 	std::shared_ptr<OBJECT>& CreateObject(int obj_type, float x, float y, float z, float dir_x, float dir_y, float dir_z, int way);

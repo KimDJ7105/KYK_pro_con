@@ -29,7 +29,7 @@ private:
 	array<float, 3> view_dir;
 
 	std::weak_ptr<GAME> my_game;
-	SERVER* my_server;
+	std::weak_ptr<SERVER> my_server;
 
 	bool is_core_state;
 	bool is_running;
@@ -55,7 +55,7 @@ public:
 
 	void Send_Packet(void* packet);
 
-	void set_serverinfo(std::shared_ptr<GAME> p, SERVER* server);
+	void set_serverinfo(std::shared_ptr<GAME> p, std::shared_ptr<SERVER> server);
 
 	void close_socket();
 };

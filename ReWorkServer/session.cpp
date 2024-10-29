@@ -23,6 +23,10 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 	auto mg = my_game.lock();
 	if (mg == nullptr) return;
 
+	auto ms = my_server.lock();
+	if(ms == nullptr) return;
+
+
 	auto P = mg->ingame_player[id];
 	if (P == nullptr) return;
 
@@ -227,10 +231,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			p->Send_Packet(&rmp);
 		}
 
-		auto it = mg->ingame_object.find(p->kit_id);
-		if (it != mg->ingame_object.end()) {
-			mg->ingame_object.erase(it);
-		}
+		mg->ingame_object.erase(p->kit_id);
 
 		break;
 	}
@@ -275,9 +276,6 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			break;
 		}
 
-		shared_ptr<SESSION> user = mg->ingame_player[my_id_];
-		if (user == nullptr) break;
-
 		shared_ptr<OBJECT> terminal = mg->ingame_object[p->terminal_id];
 		if (terminal == nullptr) break;
 
@@ -290,10 +288,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			terminal->owner_id = my_id_;
 
 			//플레이어가 가진 카드키를 삭제
-			auto it = mg->ingame_object.find(key_id);
-			if (it != mg->ingame_object.end()) {
-				mg->ingame_object.erase(it);
-			}
+			mg->ingame_object.erase(key_id);
 
 			std::cout << "카드키" << key_id << "사용됨, 단말기" << p->terminal_id << " 활성화\n";
 
@@ -358,7 +353,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				tm_grind.target_id = -1;
 				tm_grind.wakeup_time = chrono::system_clock::now() + 1s;
 
-				my_server->timer_queue.emplace(tm_grind);
+				ms->timer_queue.emplace(tm_grind);
 
 				TIMER_EVENT tm_exit;
 				tm_exit.event_id = EV_SPAWN_EXIT;
@@ -366,7 +361,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 				tm_exit.target_id = -1;
 				tm_exit.wakeup_time = chrono::system_clock::now() + 90s;
 
-				my_server->timer_queue.emplace(tm_exit);
+				ms->timer_queue.emplace(tm_exit);
 			}
 
 			
@@ -495,7 +490,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		shared_ptr<OBJECT> foot = mg->ingame_object[p->obj_id];
 		if (foot == nullptr) break;
 		if (foot->obj_type != OT_RABBITFOOT) break; //잘못된 id인 경우 무시
-		if (foot->owner_id == -1) break; //이미 다른 유저가 토끼발을 들고있으면 무시
+		if (foot->owner_id != -1) break; //이미 다른 유저가 토끼발을 들고있으면 무시
 
 		//토끼발 주인 설정
 		foot->owner_id = my_id_;
@@ -540,8 +535,8 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 
 			}
 
-			mg->ingame_player.clear();
-			
+			auto self = shared_from_this(); //자신의 참조를 유지
+			ms->del_game(mg->get_game_id()); //게임 제거
 		}
 		break;
 	}
@@ -644,7 +639,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 			tm_laser.y = p->y;
 			tm_laser.z = p->z;
 
-			my_server->timer_queue.emplace(tm_laser);
+			ms->timer_queue.emplace(tm_laser);
 		}
 		break;
 	}
@@ -835,7 +830,7 @@ void SESSION::Process_Packet(unsigned char* packet, int id)
 		}
 		break;
 	}
-	default: cout << "Invalid Packet From Client [" << id << "]\n"; system("pause"); exit(-1);
+	default: cout << "Invalid Packet From Client [" << id << "]\n"; std::system("pause"); std::exit(-1);
 	}
 }
 
@@ -865,7 +860,7 @@ void SESSION::do_read()
 					curr_packet_size_ = buf[0];
 					if (buf[0] > 200) {
 						cout << "Invalid Packet Size [ " << buf[0] << " ] Terminating Server!\n";
-						exit(-1);
+						std::exit(-1);
 					}
 				}
 
@@ -994,10 +989,13 @@ void SESSION::start()
 	do_read();
 
 	if (my_id_ == LOBBY_ID) {
+		auto ms = my_server.lock();
+		if (ms == nullptr) return;
+
 		sl_packet_set_ip s_ip;
 		s_ip.type = SL_SET_IP;
 		s_ip.size = sizeof(sl_packet_set_ip);
-		strcpy_s(s_ip.ip, my_server->get_ip());
+		strcpy_s(s_ip.ip, ms->get_ip());
 
 		Send_Packet(&s_ip);
 
@@ -1108,7 +1106,7 @@ void SESSION::Send_Packet(void* packet)
 	do_write(buff, packet_size); //전송
 }
 
-void SESSION::set_serverinfo(std::shared_ptr<GAME> p, SERVER* server)
+void SESSION::set_serverinfo(std::shared_ptr<GAME> p, std::shared_ptr<SERVER> server)
 {
 	my_game = p;
 	my_server = server;
