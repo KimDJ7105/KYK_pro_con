@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{B889B8A8-DED7-4306-8998-C61F456CF8A0}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MySetUp", "MySetUp\MySetUp.vdproj", "{F2B30674-AD3C-4CE0-A933-07ACF071C177}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KYK_Proj", "KYK_Proj\KYK_Proj.vdproj", "{9C580D54-2E9F-4525-9016-B3A605A1DCDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,10 @@ Global
 		{B889B8A8-DED7-4306-8998-C61F456CF8A0}.Release|x64.Build.0 = Release|x64
 		{B889B8A8-DED7-4306-8998-C61F456CF8A0}.Release|x86.ActiveCfg = Release|Win32
 		{B889B8A8-DED7-4306-8998-C61F456CF8A0}.Release|x86.Build.0 = Release|Win32
-		{F2B30674-AD3C-4CE0-A933-07ACF071C177}.Debug|x64.ActiveCfg = Debug
-		{F2B30674-AD3C-4CE0-A933-07ACF071C177}.Debug|x86.ActiveCfg = Debug
-		{F2B30674-AD3C-4CE0-A933-07ACF071C177}.Release|x64.ActiveCfg = Release
-		{F2B30674-AD3C-4CE0-A933-07ACF071C177}.Release|x86.ActiveCfg = Release
+		{9C580D54-2E9F-4525-9016-B3A605A1DCDA}.Debug|x64.ActiveCfg = Debug
+		{9C580D54-2E9F-4525-9016-B3A605A1DCDA}.Debug|x86.ActiveCfg = Debug
+		{9C580D54-2E9F-4525-9016-B3A605A1DCDA}.Release|x64.ActiveCfg = Release
+		{9C580D54-2E9F-4525-9016-B3A605A1DCDA}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
