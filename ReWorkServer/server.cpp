@@ -17,7 +17,7 @@ void SERVER::do_accept()
 				if(p_id == LOBBY_ID) {
 					std::cout << "Lobby server connected\n";
 					lobby = std::make_shared<SESSION>(std::move(socket_), p_id, -1);	
-					lobby->set_serverinfo(nullptr, this);
+					lobby->set_serverinfo(nullptr, shared_from_this());
 					lobby->start();
 				}
 				else {
@@ -39,7 +39,7 @@ void SERVER::do_accept()
 					}
 					//게임에 플레이어 추가
 					games[g_game_ID]->ingame_player[p_id] = std::make_shared<SESSION>(std::move(socket_), p_id, games[g_game_ID]->get_team_num());
-					games[g_game_ID]->ingame_player[p_id]->set_serverinfo(games[g_game_ID], this);
+					games[g_game_ID]->ingame_player[p_id]->set_serverinfo(games[g_game_ID], shared_from_this());
 					games[g_game_ID]->ingame_player[p_id]->start();
 
 					if (games[g_game_ID]->ingame_player.size() == MAX_USER) g_game_ID++; //게임에 플레이어가 다 차면 다음 게임 지정
@@ -104,6 +104,11 @@ char* SERVER::get_ip()
 int SERVER::get_next_port_number()
 {
 	return next_port;
+}
+
+bool SERVER::del_game(int game_id)
+{
+	return games.erase(game_id);
 }
 
 void SERVER::event_excuter(const boost::system::error_code& ec)

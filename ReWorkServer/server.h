@@ -3,7 +3,7 @@
 #include "game.h"
 #include "timer_event.h"
 
-class SERVER
+class SERVER : public std::enable_shared_from_this<SERVER>
 {
 private:
 	tcp::acceptor acceptor_;
@@ -33,5 +33,6 @@ public:
 	char* get_ip();
 	int get_next_port_number();
 
+	bool del_game(int game_id);
 	void event_excuter(const boost::system::error_code& ec);
 };
