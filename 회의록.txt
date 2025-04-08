@@ -973,3 +973,15 @@ SESSION의 생성자에서 tcp::socket socket_ 맴버 변수를 SERVER의 socket
 
 2. 다음 미팅
  - 3월 25일 오전 11시
+
+
+
+2025-04-08
+--------------
+1.  허리디스크가 터져서 3주동안 누워만 있었음.
+ - 유튜브를 보고, 친구와 토론하고 그림자에 대해 공부를 하고 있음.
+ - https://www.coupang.com/np/search?q=%EC%B9%A8%EB%8C%80%EB%88%84%EC%9B%8C%EC%84%9C%EB%85%B8%ED%8A%B8%EB%B6%81%EA%B1%B0%EC%B9%98%EB%8C%80&src=1042016&spec=10304029&addtag=200&ctag=%EC%B9%A8%EB%8C%80%EB%88%84%EC%9B%8C%EC%84%9C%EB%85%B8%ED%8A%B8%EB%B6%81%EA%B1%B0%EC%B9%98%EB%8C%80&lptag=%EC%B9%A8%EB%8C%80%EB%88%84%EC%9B%8C%EC%84%9C%EB%85%B8%ED%8A%B8%EB%B6%81%EA%B1%B0%EC%B9%98%EB%8C%80&itime=20250408111056&pageType=SEARCH&pageValue=%EC%B9%A8%EB%8C%80%EB%88%84%EC%9B%8C%EC%84%9C%EB%85%B8%ED%8A%B8%EB%B6%81%EA%B1%B0%EC%B9%98%EB%8C%80&wPcid=17440782564690559191218&wRef=www.google.com&wTime=20250408111056&redirect=landing&gclid=EAIaIQobChMIr8OV5q3HjAMVY-0WBR2_3TyLEAAYASAAEgLUWPD_BwE&mcid=88c7f4aee0fa4b26915ee57ff3603e32&network=g
+
+2. 다음 미팅
+ - 4월 22일 화요일 오전 11시
+ - 그림자 만들어 오도록.
