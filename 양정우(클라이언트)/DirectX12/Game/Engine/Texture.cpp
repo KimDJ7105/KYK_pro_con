@@ -99,9 +99,9 @@ void Texture::Load(const wstring& path)
 
 void Texture::Create(DXGI_FORMAT format, uint32 width, uint32 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
-	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
+	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor, uint32 arraysize)
 {
-	_desc = CD3DX12_RESOURCE_DESC::Tex2D(format, width, height);
+	_desc = CD3DX12_RESOURCE_DESC::Tex2D(format, width, height, arraysize);
 	_desc.Flags = resFlags;
 
 	D3D12_CLEAR_VALUE optimizedClearValue = {};
@@ -134,10 +134,10 @@ void Texture::Create(DXGI_FORMAT format, uint32 width, uint32 height,
 
 	assert(SUCCEEDED(hr));
 
-	CreateFromResource(_tex2D);
+	CreateFromResource(_tex2D, arraysize);
 }
 
-void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
+void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D, uint32 arraysize)
 {
 	_tex2D = tex2D;
 
@@ -158,7 +158,22 @@ void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
 		DEVICE->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&_dsvHeap));
 
 		D3D12_CPU_DESCRIPTOR_HANDLE hDSVHandle = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		DEVICE->CreateDepthStencilView(_tex2D.Get(), nullptr, hDSVHandle);
+
+		if (arraysize > 1)
+		{
+			D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+			dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+			dsvDesc.Format = _image.GetMetadata().format;
+			dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DARRAY;
+			dsvDesc.Texture2DArray.MipSlice = 0;
+			dsvDesc.Texture2DArray.FirstArraySlice = 0;
+			dsvDesc.Texture2DArray.ArraySize = arraysize;
+			DEVICE->CreateDepthStencilView(_tex2D.Get(), &dsvDesc, hDSVHandle);
+		}
+		else
+		{
+			DEVICE->CreateDepthStencilView(_tex2D.Get(), nullptr, hDSVHandle);
+		}
 	}
 	else
 	{
@@ -205,10 +220,25 @@ void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
 		_srvHeapBegin = _srvHeap->GetCPUDescriptorHandleForHeapStart();
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		if (arraysize > 1)
+		{
+			srvDesc.Format = _image.GetMetadata().format;
+			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+			srvDesc.Texture2DArray.MostDetailedMip = 0;
+			srvDesc.Texture2DArray.MipLevels = 1;
+			srvDesc.Texture2DArray.FirstArraySlice = 0;
+			srvDesc.Texture2DArray.ArraySize = SHADOWMAP_COUNT;
+			srvDesc.Texture2DArray.PlaneSlice = 0;
+			srvDesc.Texture2DArray.ResourceMinLODClamp = 0.0f;
+		}
+		else
+		{
+			srvDesc.Format = _image.GetMetadata().format;
+			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+			srvDesc.Texture2D.MipLevels = 1;
+		}
+
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.Format = _image.GetMetadata().format;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
 		DEVICE->CreateShaderResourceView(_tex2D.Get(), &srvDesc, _srvHeapBegin);
 	}
 }

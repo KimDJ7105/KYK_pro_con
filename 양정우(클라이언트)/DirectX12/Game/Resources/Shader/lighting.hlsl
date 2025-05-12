@@ -43,6 +43,11 @@ VS_OUT VS_DirLight(VS_IN input)
 
 PS_OUT PS_DirLight(VS_OUT input)
 {
+    float fogStart = 5000.0f;
+    float fogEnd = 10000.0f;
+    float fogDensity = 0.0f;
+    float4 fogColor = float4(0.0, 0.0, 0.0, 1.0);
+    
     PS_OUT output = (PS_OUT) 0;
 
     float3 viewPos = g_tex_0.Sample(g_sam_0, input.uv).xyz;
@@ -52,36 +57,25 @@ PS_OUT PS_DirLight(VS_OUT input)
     float3 viewNormal = g_tex_1.Sample(g_sam_0, input.uv).xyz;
 
     LightColor color = CalculateLightColor(g_int_0, viewNormal, viewPos);
-    
+
     // ±×¸²ÀÚ
     if (length(color.diffuse) != 0)
     {
-        matrix shadowCameraVP = g_mat_0;
-
         float4 worldPos = mul(float4(viewPos.xyz, 1.f), g_matViewInv);
-        float4 shadowClipPos = mul(worldPos, shadowCameraVP);
-        float depth = shadowClipPos.z / shadowClipPos.w;
-
-        // x [-1 ~ 1] -> u [0 ~ 1]
-        // y [1 ~ -1] -> v [0 ~ 1]
-        float2 uv = shadowClipPos.xy / shadowClipPos.w;
-        uv.y = -uv.y;
-        uv = uv * 0.5 + 0.5;
-
-        if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
-        {
-            float shadowDepth = g_tex_2.Sample(g_sam_0, uv).x;
-            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
-            {
-                color.diffuse *= 0.5f;
-                color.specular = (float4) 0.f;
-            }
-        }
+        float shadowFactor = CalcShadowFactor(worldPos);
+        float shadowColor = lerp(float3(0, 0, 0), float3(1, 1, 1), shadowFactor);
+        
+        color.diffuse *= shadowColor;
+        color.specular *= shadowColor;
     }
-    
-    
-    output.diffuse = color.diffuse + color.ambient;
-    output.specular = color.specular;
+    if (viewPos.z > fogEnd)
+        clip(-1);
+   
+    float fogFactor = (fogEnd - viewPos.z) / (fogEnd - fogStart);
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+        
+    output.diffuse = lerp(color.diffuse + color.ambient, fogColor, 1 - fogFactor);
+    output.specular = lerp(color.specular, fogColor, 1 - fogFactor);
 
     return output;
 }

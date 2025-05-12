@@ -7,6 +7,7 @@ void Resources::Init()
 {
 	CreateDefaultShader();
 	CreateDefaultMaterial();
+	CreateDefaultGameObject();
 }
 
 shared_ptr<Mesh> Resources::LoadPointMesh()
@@ -132,8 +133,8 @@ shared_ptr<Mesh> Resources::LoadCubeMesh()
 shared_ptr<Mesh> Resources::LoadSphereMesh()
 {
 	shared_ptr<Mesh> findMesh = Get<Mesh>(L"Sphere");
-	if (findMesh)
-		return findMesh;
+	/*if (findMesh)
+		return findMesh;*/
 
 	float radius = 0.5f; // 구의 반지름
 	uint32 stackCount = 20; // 가로 분할
@@ -301,10 +302,10 @@ shared_ptr<Mesh> Resources::LoadTerrainMesh(int32 sizeX, int32 sizeZ)
 
 shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
-	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
+	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor, uint32 arraysize)
 {
 	shared_ptr<Texture> texture = make_shared<Texture>();
-	texture->Create(format, width, height, heapProperty, heapFlags, resFlags, clearColor);
+	texture->Create(format, width, height, heapProperty, heapFlags, resFlags, clearColor, arraysize);
 	Add(name, texture);
 
 	return texture;
@@ -862,8 +863,17 @@ void Resources::CreateDefaultShader()
 			DEPTH_STENCIL_TYPE::LESS,
 		};
 
+		ShaderArg arg =
+		{
+		"VS_Main",
+		"",
+		"",
+		"GS_Main",
+		"PS_Main"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\shadow.hlsl", info);
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\shadow.hlsl", info, arg);
 		Add<Shader>(L"Shadow", shader);
 	}
 
@@ -1068,4 +1078,6 @@ void Resources::CreateDefaultMaterial()
 
 		Add<Material>(L"ComputeAnimation", material);
 	}
+
 }
+

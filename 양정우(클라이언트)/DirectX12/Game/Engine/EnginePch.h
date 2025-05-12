@@ -261,6 +261,8 @@ public:								\
 
 #define CONST_BUFFER(type)	GEngine->GetConstantBuffer(type)
 
+#define SHADOWMAP_COUNT 4
+
 struct TransformParams
 {
 	Matrix matWorld;

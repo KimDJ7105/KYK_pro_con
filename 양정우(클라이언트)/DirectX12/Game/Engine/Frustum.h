@@ -15,10 +15,13 @@ enum PLANE_TYPE : uint8
 class Frustum
 {
 public:
-	void FinalUpdate();
+	void FinalUpdate(Matrix matV, Matrix matP);
 	bool ContainsSphere(const Vec3& pos, float radius);
+
+	const vector<Vec3>& GetFrustum() { return _frustum; }
 
 private:
 	std::array<Vec4, PLANE_END> _planes;
+	vector<Vec3> _frustum;
 };
 

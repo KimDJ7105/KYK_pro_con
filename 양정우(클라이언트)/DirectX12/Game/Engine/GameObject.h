@@ -46,8 +46,16 @@ public:
 	void SetStatic(bool flag) { _static = flag; }
 	bool IsStatic() { return _static; }
 
+	void SetShadow(bool flag) { _shadow = flag; }
+	bool IsShadow() { return _shadow; }
+
 	void SetIsUpdate(bool render) { render = isUpdate; }
 	bool GetIsUpdate() { return isUpdate; }
+
+	void SetActive(bool flag) { _isActive = flag; }
+	bool IsActive() { return _isActive; }
+
+	bool _isActive = true;
 
 private:
 	std::array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
@@ -56,6 +64,7 @@ private:
 	bool _chechFrustum = true; // 디폴트로 프러스텀 컬링판단을 한다.
 	uint8 _layerIndex = 0;
 	bool _static = true;
+	bool _shadow = false;
 
 	//그릴지 말지 여부 확인. - 특히 UI관련해서 자주 쓸 예정이다.
 	bool isUpdate = true;

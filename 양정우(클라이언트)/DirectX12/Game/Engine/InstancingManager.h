@@ -8,7 +8,7 @@ class InstancingManager
 	DECLARE_SINGLE(InstancingManager);
 
 public:
-	void Render(std::vector<std::shared_ptr<GameObject>>& gameObjects);
+	void Render(std::vector<std::shared_ptr<GameObject>>& gameObjects, bool isShadow = false);
 
 	void ClearBuffer();
 	void Clear() { _buffers.clear(); }

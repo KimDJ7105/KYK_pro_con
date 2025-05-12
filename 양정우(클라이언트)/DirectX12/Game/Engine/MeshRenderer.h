@@ -33,6 +33,7 @@ public:
 	void Render();
 	void Render(std::shared_ptr<class InstancingBuffer>& buffer);
 	void RenderShadow();
+	void RenderShadow(shared_ptr<class InstancingBuffer>& buffer);
 
 	uint64 GetInstanceID();
 
@@ -40,7 +41,7 @@ private:
 	shared_ptr<Mesh> _mesh;
 	vector<shared_ptr<Material>> _materials;
 
-public:
-	uint32 GetMaterialCount() const { return static_cast<uint32>(_materials.size()); } // 새로 추가된 함수
+//public:
+//	uint32 GetMaterialCount() const { return static_cast<uint32>(_materials.size()); } // 새로 추가된 함수
 };
 
